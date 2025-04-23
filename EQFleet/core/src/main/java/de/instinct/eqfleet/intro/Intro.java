@@ -5,17 +5,13 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import de.instinct.api.auth.dto.TokenVerificationResponse;
+import de.instinct.api.core.API;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.TutorialMode;
 import de.instinct.eqfleet.menu.Menu;
-import de.instinct.eqfleet.net.GlobalStaticData;
-import de.instinct.eqfleet.net.auth.AuthenticationInterface;
-import de.instinct.eqfleet.net.auth.dto.TokenVerificationResponse;
-import de.instinct.eqfleet.net.meta.MetaInterface;
-import de.instinct.eqfleet.net.model.NetworkResponse;
-import de.instinct.eqfleet.net.model.ResponseAction;
+import de.instinct.eqfleet.net.WebManager;
 import de.instinct.eqlibgdxutils.PreferenceUtil;
 import de.instinct.eqlibgdxutils.generic.Action;
-import de.instinct.eqlibgdxutils.net.ObjectJSONMapper;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.Slide;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.Slideshow;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.interactive.BinaryLabeledDialog;
@@ -49,26 +45,22 @@ public class Intro {
 	}
 
 	private static void verifyAuthKey(String authKey, boolean loadfirst) {
-		AuthenticationInterface.verify(authKey, new ResponseAction() {
-			
-			@Override
-			public void execute(NetworkResponse response) {
-				TokenVerificationResponse tokenVerificationResponse = ObjectJSONMapper.mapJSON(response.getPayload(), TokenVerificationResponse.class);
-				if (tokenVerificationResponse == TokenVerificationResponse.VERIFIED) {
-					GlobalStaticData.authKey = authKey;
-					PreferenceUtil.save("authkey", authKey);
-					MetaInterface.loadProfile();
-					loadMenu();
-				} else {
-					if (loadfirst) {
-						loadFirstTimeSlides();
+		WebManager.enqueue(
+			    () -> API.authentication().verify(authKey),
+			    result -> {
+					if (result == TokenVerificationResponse.VERIFIED) {
+						API.authKey = authKey;
+						PreferenceUtil.save("authkey", authKey);
+						loadMenu();
 					} else {
-						authKeyInsertDialog.setResponse("INVALID KEY"); 
+						if (loadfirst) {
+							loadFirstTimeSlides();
+						} else {
+							authKeyInsertDialog.setResponse("INVALID KEY"); 
+						}
 					}
-				}
-			}
-			
-		});
+			    }
+		);
 	}
 	
 	private static void loadMenu() {
@@ -155,15 +147,15 @@ public class Intro {
 								
 								@Override
 								public void execute() {
-									AuthenticationInterface.register(new ResponseAction() {
-										
-										@Override
-										public void execute(NetworkResponse response) {
-											Menu.loadTutorial(TutorialMode.STORY_FULL);
-											triggered = true;
-										}
-										
-									});
+									WebManager.enqueue(
+										    () -> API.authentication().register(),
+										    result -> {
+										    	API.authKey = result;
+												PreferenceUtil.save("authkey", result);
+										    	Menu.loadTutorial(TutorialMode.STORY_FULL);
+												triggered = true;
+										    }
+									);
 								}
 								
 								@Override
@@ -181,15 +173,15 @@ public class Intro {
 								
 								@Override
 								public void execute() {
-									AuthenticationInterface.register(new ResponseAction() {
-										
-										@Override
-										public void execute(NetworkResponse response) {
-											Menu.loadTutorial(TutorialMode.FULL);
-											triggered = true;
-										}
-										
-									});
+									WebManager.enqueue(
+										    () -> API.authentication().register(),
+										    result -> {
+										    	API.authKey = result;
+												PreferenceUtil.save("authkey", result);
+										    	Menu.loadTutorial(TutorialMode.FULL);
+												triggered = true;
+										    }
+									);
 								}
 								
 								@Override
@@ -207,15 +199,15 @@ public class Intro {
 								
 								@Override
 								public void execute() {
-									AuthenticationInterface.register(new ResponseAction() {
-										
-										@Override
-										public void execute(NetworkResponse response) {
-											Menu.loadTutorial(TutorialMode.SHORT);
-											triggered = true;
-										}
-										
-									});
+									WebManager.enqueue(
+										    () -> API.authentication().register(),
+										    result -> {
+										    	API.authKey = result;
+												PreferenceUtil.save("authkey", result);
+										    	Menu.loadTutorial(TutorialMode.SHORT);
+												triggered = true;
+										    }
+									);
 								}
 								
 								@Override
@@ -233,15 +225,15 @@ public class Intro {
 								
 								@Override
 								public void execute() {
-									AuthenticationInterface.register(new ResponseAction() {
-										
-										@Override
-										public void execute(NetworkResponse response) {
-											loadMenu();
-											triggered = true;
-										}
-										
-									});
+									WebManager.enqueue(
+										    () -> API.authentication().register(),
+										    result -> {
+										    	API.authKey = result;
+												PreferenceUtil.save("authkey", result);
+												loadMenu();
+												triggered = true;
+										    }
+									);
 								}
 								
 								@Override

@@ -17,6 +17,8 @@
 
 - split tutorial into 2?
 
+- casino with slight win for generating stuff
+
 - maximum planet capacity
  -> replace numbers with bars
 

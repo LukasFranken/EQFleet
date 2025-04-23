@@ -4,6 +4,7 @@ import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.backend.audio.AudioManager;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.TutorialMode;
 import de.instinct.eqfleet.menu.module.main.MainMenu;
+import de.instinct.eqfleet.menu.module.main.tab.profile.ProfileTab;
 
 public class Menu {
 	
@@ -24,6 +25,7 @@ public class Menu {
 	}
 	
 	public static void activate() {
+		ProfileTab.loadData();
 		active = true;
 		AudioManager.play("neon_horizon_ambient", true);
 	}

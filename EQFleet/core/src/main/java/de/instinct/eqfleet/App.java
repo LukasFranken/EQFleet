@@ -10,7 +10,6 @@ import de.instinct.eqfleet.game.backend.audio.AudioManager;
 import de.instinct.eqfleet.intro.Intro;
 import de.instinct.eqfleet.menu.Menu;
 import de.instinct.eqfleet.net.WebManager;
-import de.instinct.eqfleet.net.WebService;
 import de.instinct.eqlibgdxutils.CursorUtil;
 import de.instinct.eqlibgdxutils.PreferenceUtil;
 import de.instinct.eqlibgdxutils.debug.DebugUtil;
@@ -24,7 +23,7 @@ public class App extends ApplicationAdapter {
     
     private DoubleMetric fpsMetric;
     
-    private static final String VERSION = "0.0.16";
+    private static final String VERSION = "0.0.17";
 
     @Override
     public void create() {
@@ -35,8 +34,6 @@ public class App extends ApplicationAdapter {
     	CursorUtil.createCursor();
     	PreferenceUtil.init("EQFleet");
     	WebManager.init();
-		WebManager.buildClient(WebService.AUTHENTICATION);
-		WebManager.buildClient(WebService.META);
         initializeDebugger();
         TextureManager.init();
         Intro.init();

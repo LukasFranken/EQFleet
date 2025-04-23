@@ -4,8 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
+import de.instinct.api.core.API;
 import de.instinct.eqfleet.menu.common.Renderer;
-import de.instinct.eqfleet.net.GlobalStaticData;
 import de.instinct.eqlibgdxutils.PreferenceUtil;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
@@ -37,7 +37,7 @@ public class SettingsTabRenderer extends Renderer {
 			@Override
 			public void execute() {
 				PreferenceUtil.save("authkey", "");
-				GlobalStaticData.authKey = "";
+				API.authKey = "";
 				System.out.println("Authkey deleted!");
 			}
 			
@@ -50,8 +50,8 @@ public class SettingsTabRenderer extends Renderer {
 		resetTokenButton.setPosition(Gdx.graphics.getWidth() / 2 - 60, Gdx.graphics.getHeight() / 2);
 		resetTokenButton.render();
 		
-		if (GlobalStaticData.authKey != null)
-		FontUtil.drawLabel(GlobalStaticData.authKey, new Rectangle(0, Gdx.graphics.getHeight() / 2 - 50, Gdx.graphics.getWidth(), 30));
+		if (API.authKey != null)
+		FontUtil.drawLabel(API.authKey, new Rectangle(0, Gdx.graphics.getHeight() / 2 - 50, Gdx.graphics.getWidth(), 30));
 	}
 
 	@Override
