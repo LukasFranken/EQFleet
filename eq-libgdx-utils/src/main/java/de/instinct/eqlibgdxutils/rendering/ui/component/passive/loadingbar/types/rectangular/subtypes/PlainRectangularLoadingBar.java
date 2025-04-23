@@ -1,0 +1,87 @@
+package de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.subtypes;
+
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Rectangle;
+
+import de.instinct.eqlibgdxutils.StringUtils;
+import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.Direction;
+import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.RectangularLoadingBar;
+import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@Data
+@EqualsAndHashCode(callSuper = false)
+public class PlainRectangularLoadingBar extends RectangularLoadingBar {
+
+	private Texture bar;
+	private String customDescriptor;
+	private Direction direction;
+
+	public PlainRectangularLoadingBar() {
+		super();
+		bar = TextureManager.createTexture(Color.BLACK);
+		direction = Direction.EAST;
+	}
+
+	@Override
+	protected float calculateWidth() {
+		return getBounds().width;
+	}
+
+	@Override
+	protected float calculateHeight() {
+		return getBounds().height;
+	}
+
+	@Override
+	protected void renderContent() {
+		float barLengthFactor = (float)(getCurrentValue() / getMaxValue());
+		float horizontalBarLength = barLengthFactor * (getBounds().width - (getBorder().getSize() * 2));
+		float verticalBarLength = barLengthFactor * (getBounds().height - (getBorder().getSize() * 2));
+		switch (direction) {
+		case NORTH:
+			TextureManager.draw(bar, new Rectangle(getBounds().x + getBorder().getSize(),
+					getBounds().y + getBorder().getSize(),
+					getBounds().width - (getBorder().getSize()) * 2,
+					verticalBarLength));
+			break;
+		case EAST:
+			TextureManager.draw(bar, new Rectangle(getBounds().x + getBorder().getSize(),
+					getBounds().y + getBorder().getSize(),
+					horizontalBarLength,
+					getBounds().height - (getBorder().getSize()) * 2));
+		case SOUTH:
+			TextureManager.draw(bar, new Rectangle(getBounds().x + getBorder().getSize(),
+					getBounds().y + + getBounds().height - getBorder().getSize() - verticalBarLength,
+					getBounds().width - (getBorder().getSize()) * 2,
+					verticalBarLength));
+			break;
+		case WEST:
+			TextureManager.draw(bar, new Rectangle(getBounds().x + getBounds().width - getBorder().getSize() - horizontalBarLength,
+					getBounds().y + getBorder().getSize(),
+					horizontalBarLength,
+					getBounds().height - (getBorder().getSize()) * 2));
+			break;
+		}
+	}
+
+	@Override
+	protected void renderLabel() {
+		String descriptor = StringUtils.barLabelFormat(getCurrentValue(), getMaxValue());
+		if (customDescriptor != null) {
+			descriptor = customDescriptor;
+		}
+		FontUtil.draw(Color.WHITE, descriptor,
+				getBounds().x + getBounds().width / 2 - (FontUtil.getFontTextWidthPx(descriptor) / 2f),
+				getBounds().y + getBounds().height / 2 + FontUtil.getFontHeightPx() / 2);
+	}
+
+	@Override
+	public void dispose() {
+
+	}
+
+}

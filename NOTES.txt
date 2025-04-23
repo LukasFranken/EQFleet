@@ -1,0 +1,89 @@
+./gradlew ios:launchIPhoneSimulator -P robovm.device.name='iPhone 16 Pro Max'
+./gradlew lwjgl3:dist
+./gradlew ios:launchIOSDevice
+
+- toggle debug and show version in debug
+- debug client status
+- custom window
+- custom desktop window start animation
+
+- externalize client prefs
+- preference manager
+
+- map with enemy strengths and types and resources
+
+- fully fix playerid/factionid confusion
+- 2v2
+
+- split tutorial into 2?
+
+- maximum planet capacity
+ -> replace numbers with bars
+
+- refactor matchmaking out of gameserver
+- load player data through game creation
+- manage playerdata in extra eqserver game service
+
+- refactor intro logic
+- proper logging especially in webcontroller
+
+- remove player from matchmaking on dc (not game)
+- allow rejoin into game after dc
+
+- add back button for intro
+- click tutorial screen to skip timed event?
+
+- audio manager update on seperate thread?
+- audio queued smooth only first time bug
+
+- inventory service
+ -> items, resources
+ 
+- store service
+ -> assistants, ships, skins etc.
+
+AI
+- consider CP to multi-planet-attack
+- aggressivity mode
+- consider enemy fleet movement to counter
+- ancient planet capture logic
+
+IDEAS
+- beautiful bar animation, because so many bars
+- request responsiblity logic on client
+ -> limit self based on server tolerance and individual usage
+ -> illegitimate requests = blocked
+ -> repeated illegitimate requests = ip+mac ban
+- web admin panel
+ - > with tools like map creator
+- buildings for resource generation
+- 2v2, 3v3?
+- cp abilities
+- market trading
+- different currencies for different upgrades
+- pvp, pve, solo duo - each give different resources
+ -> can be exchanged on the market
+- store: only a message: fuck mobile pay2win!
+- Only pay for feature expansions and skins
+- add glow effect shader to game
+- game gets more complex with milestones
+- pvp only at certain complexity
+- tutorial voice
+- music, intensified last minute
+- when fleet collide - battle
+- coop gives bonus resources
+
+Voice mod steps:
+- duplicate track into 4x
+- all 4: filter EQ: VOICE
+- 2nd and 4th: volume -5db
+- 2nd and 4th: echo: VOICE
+- 3rd and 4th: delay track by 20MS
+- all 4: compressor: VOICE
+
+Music mod steps (TRASH):
+- duplicate into 2x
+- both: filter EQ: VOICE
+- 2nd: delay track by 20MS
+- 1st: -1db volume
+- both: compressor: VOICE
