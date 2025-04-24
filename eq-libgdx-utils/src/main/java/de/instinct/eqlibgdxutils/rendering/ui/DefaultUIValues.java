@@ -7,6 +7,7 @@ public class DefaultUIValues {
 	public static Color skinColor = new Color(0.7f, 0f, 0f, 1f);
 	public static Color darkerSkinColor = new Color(0.5f, 0f, 0f, 1f);
 	public static Color lighterSkinColor = new Color(0.9f, 0f, 0f, 1f);
+	public static Color darkestSkinColor = new Color(0.2f, 0f, 0f, 1f);
 	
 	public static Color buttonColor = Color.GRAY;
 	public static Color buttonDownColor = Color.DARK_GRAY;

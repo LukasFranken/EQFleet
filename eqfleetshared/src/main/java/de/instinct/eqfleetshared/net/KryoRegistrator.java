@@ -17,14 +17,11 @@ import de.instinct.eqfleetshared.net.enums.GameMode;
 import de.instinct.eqfleetshared.net.enums.VersusMode;
 import de.instinct.eqfleetshared.net.message.NetworkMessage;
 import de.instinct.eqfleetshared.net.message.types.FleetMovementMessage;
-import de.instinct.eqfleetshared.net.message.types.MatchmakingRequest;
-import de.instinct.eqfleetshared.net.message.types.MatchmakingUpdateResponse;
 import de.instinct.eqfleetshared.net.message.types.PlayerAssigned;
 
 public class KryoRegistrator {
 	
 	public static void registerAll(Kryo kryo) {
-		kryo.register(MatchmakingRequest.class);
 		kryo.register(PlayerAssigned.class);
 		kryo.register(FleetMovementMessage.class);
 		kryo.register(String.class);
@@ -38,7 +35,6 @@ public class KryoRegistrator {
 		kryo.register(VersusMode.class);
 		kryo.register(GameEvent.class);
 		kryo.register(FleetMovementEvent.class);
-		kryo.register(MatchmakingUpdateResponse.class);
 		kryo.register(NetworkMessage.class);
 		kryo.register(AiPlayer.class);
 		kryo.register(AiDifficulty.class);

@@ -2,9 +2,11 @@ package de.instinct.eqfleetgameserver.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import de.instinct.api.game.dto.GameserverInitializationRequest;
 import de.instinct.eqfleetgameserver.config.ApplicationConfig;
 import de.instinct.eqfleetgameserver.service.GameManager;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +35,12 @@ public class AdministrationController {
 	public ResponseEntity<String> stop() {
 		gameManager.stop();
 		return ResponseEntity.ok("stopped");
+	}
+	
+	@PostMapping("/create")
+	public ResponseEntity<String> createSession(GameserverInitializationRequest lobby) {
+		gameManager.createSession(lobby);
+		return ResponseEntity.ok("created");
 	}
 
 }

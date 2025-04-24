@@ -13,9 +13,9 @@ public class OrderValidator {
 		if (order instanceof FleetMovementOrder) {
 			FleetMovementOrder fleetMovementOrder = (FleetMovementOrder)order;
 			Planet fromPlanet = EngineUtility.getPlanet(state, fleetMovementOrder.fromPlanetId);
-			Player player = EngineUtility.getPlayer(state, fleetMovementOrder.playerId);
+			Player player = EngineUtility.getPlayer(state, fleetMovementOrder.factionId);
 			
-			if (fromPlanet.ownerId != fleetMovementOrder.playerId) return false;
+			if (fromPlanet.ownerId != fleetMovementOrder.factionId) return false;
 			if (fleetMovementOrder.fromPlanetId == fleetMovementOrder.toPlanetId) return false;
 			if (fromPlanet.value < 2) return false;
 			if (player.currentCommandPoints < 1) return false;

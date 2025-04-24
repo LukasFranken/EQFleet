@@ -4,9 +4,9 @@ import de.instinct.eqfleetshared.net.message.NetworkMessage;
 import lombok.ToString;
 
 @ToString
-public class MatchmakingUpdateResponse extends NetworkMessage {
+public class JoinMessage extends NetworkMessage {
 	
-	public int foundPlayers;
-	public int requiredPlayers;
+	public String playerUUID;
+	public String lobbyUUID;
 
 }

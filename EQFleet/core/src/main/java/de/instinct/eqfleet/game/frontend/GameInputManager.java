@@ -37,7 +37,7 @@ public class GameInputManager {
 	            if (planet.id != selectedPlanetId && isClickInsidePlanet(worldTouch, planet)) {
 	                FleetMovementMessage order = new FleetMovementMessage();
 	                order.gameUUID = state.gameUUID;
-	                order.playerId = Game.factionId;
+	                order.factionId = Game.factionId;
 	                order.fromPlanetId = selectedPlanetId;
 	                order.toPlanetId = planet.id;
 	                Game.outputMessageQueue.add(order);

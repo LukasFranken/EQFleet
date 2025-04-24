@@ -13,6 +13,7 @@ import de.instinct.eqfleet.net.WebManager;
 import de.instinct.eqlibgdxutils.CursorUtil;
 import de.instinct.eqlibgdxutils.PreferenceUtil;
 import de.instinct.eqlibgdxutils.debug.DebugUtil;
+import de.instinct.eqlibgdxutils.debug.logging.Logger;
 import de.instinct.eqlibgdxutils.debug.metrics.DoubleMetric;
 import de.instinct.eqlibgdxutils.rendering.model.ModelRenderer;
 import de.instinct.eqlibgdxutils.rendering.particle.ParticleRenderer;
@@ -24,10 +25,11 @@ public class App extends ApplicationAdapter {
     private DoubleMetric fpsMetric;
     
     private static final String VERSION = "0.0.17";
+    private static final String LOGTAG = "APP";
 
     @Override
     public void create() {
-    	Gdx.app.log("EQFLEET APPLICATION", "Welcome to EQFLEET v" + VERSION);
+    	Logger.log(LOGTAG, "Welcome to EQFLEET v" + VERSION);
     	AudioManager.init();
     	FontUtil.init();
     	Gdx.input.setInputProcessor(new InputMultiplexer());
@@ -80,6 +82,7 @@ public class App extends ApplicationAdapter {
         Game.dispose();
         TextureManager.dispose();
         AudioManager.dispose();
+        Logger.log(LOGTAG, "EQFLEET TERMINATED");
     }
     
 }

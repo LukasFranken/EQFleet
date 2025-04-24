@@ -15,8 +15,6 @@
 - fully fix playerid/factionid confusion
 - 2v2
 
-- split tutorial into 2?
-
 - casino with slight win for generating stuff
 
 - maximum planet capacity
@@ -53,7 +51,7 @@ AI
 IDEAS
 - beautiful bar animation, because so many bars
 - request responsiblity logic on client
- -> limit self based on server tolerance and individual usage
+ -> limit self requests based on server tolerance and individual usage
  -> illegitimate requests = blocked
  -> repeated illegitimate requests = ip+mac ban
 - web admin panel

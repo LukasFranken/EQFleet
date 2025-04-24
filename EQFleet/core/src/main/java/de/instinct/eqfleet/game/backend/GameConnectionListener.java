@@ -12,7 +12,6 @@ import com.esotericsoftware.kryonet.Listener;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleetshared.gamelogic.model.GameState;
 import de.instinct.eqfleetshared.net.message.NetworkMessage;
-import de.instinct.eqfleetshared.net.message.types.MatchmakingUpdateResponse;
 import de.instinct.eqfleetshared.net.message.types.PlayerAssigned;
 
 public class GameConnectionListener extends Listener {
@@ -43,8 +42,6 @@ public class GameConnectionListener extends Listener {
 			Game.assignPlayer((PlayerAssigned) o);
 		} else if (o instanceof GameState) {
 			Game.update((GameState) o);
-		} else if (o instanceof MatchmakingUpdateResponse) {
-			Game.matchmakingStatus = (MatchmakingUpdateResponse) o;
 		}
 	}
 

@@ -15,10 +15,10 @@ public class OrderProcessor {
 		if (order instanceof FleetMovementOrder) {
 			FleetMovementOrder fleetMovementOrder = (FleetMovementOrder)order;
 			Planet fromPlanet = EngineUtility.getPlanet(state, fleetMovementOrder.fromPlanetId);
-			Player player = EngineUtility.getPlayer(state, fleetMovementOrder.playerId);
+			Player player = EngineUtility.getPlayer(state, fleetMovementOrder.factionId);
 			player.currentCommandPoints -= 1;
 			FleetMovementEvent newFleetMovementEvent = new FleetMovementEvent();
-			newFleetMovementEvent.playerId = fleetMovementOrder.playerId;
+			newFleetMovementEvent.playerId = fleetMovementOrder.factionId;
 			newFleetMovementEvent.fromPlanetId = fleetMovementOrder.fromPlanetId;
 			newFleetMovementEvent.toPlanetId = fleetMovementOrder.toPlanetId;
 			newFleetMovementEvent.value = (int)(fromPlanet.value / 2);

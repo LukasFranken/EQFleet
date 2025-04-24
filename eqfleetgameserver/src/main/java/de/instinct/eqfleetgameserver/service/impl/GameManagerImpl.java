@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Server;
 
+import de.instinct.api.game.dto.GameserverInitializationRequest;
 import de.instinct.eqfleetgameserver.config.GameserverConfig;
 import de.instinct.eqfleetgameserver.service.GameManager;
 import de.instinct.eqfleetshared.net.KryoRegistrator;
@@ -41,6 +42,11 @@ public class GameManagerImpl implements GameManager {
 	public void stop() {
 		server.stop();
 		connectionListener.dispose();
+	}
+
+	@Override
+	public void createSession(GameserverInitializationRequest lobby) {
+		SessionManager.create(lobby);
 	}
 
 }

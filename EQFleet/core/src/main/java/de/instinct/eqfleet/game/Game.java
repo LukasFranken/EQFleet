@@ -42,10 +42,8 @@ public class Game {
     	gameLogic = new GameLogic();
     }
     
-    public static void start(MatchmakingRequest matchmakingRequest) {
+    public static void start() {
     	renderer.init();
-    	matchmakingRequest.playerUUID = playerUUID;
-    	outputMessageQueue.add(matchmakingRequest);
     	active = true;
     	gameLogic.start();
     	inputEnabled = true;

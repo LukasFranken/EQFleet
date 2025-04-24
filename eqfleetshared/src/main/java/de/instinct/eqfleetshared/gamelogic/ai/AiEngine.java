@@ -87,7 +87,7 @@ public class AiEngine {
 			}
 			if (lowestUnorderedPlanetTarget != null) {
 				FleetMovementOrder newCaptureOrder = new FleetMovementOrder();
-				newCaptureOrder.playerId = aiPlayer.factionId;
+				newCaptureOrder.factionId = aiPlayer.factionId;
 				newCaptureOrder.fromPlanetId = lowestUnorderedPlanetTarget.fromPlanetId;
 				newCaptureOrder.toPlanetId = lowestUnorderedPlanetTarget.toPlanetId;
 				orders.add(newCaptureOrder);

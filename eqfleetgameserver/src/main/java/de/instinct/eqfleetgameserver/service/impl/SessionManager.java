@@ -6,9 +6,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import de.instinct.api.game.dto.GameserverInitializationRequest;
 import de.instinct.eqfleetgameserver.service.model.GameSession;
 import de.instinct.eqfleetgameserver.service.model.PlayerConnection;
-import de.instinct.eqfleetshared.gamelogic.OrderMapper;
 import de.instinct.eqfleetshared.gamelogic.ai.AiEngine;
 import de.instinct.eqfleetshared.gamelogic.model.AiPlayer;
 import de.instinct.eqfleetshared.gamelogic.model.GameState;
@@ -21,22 +21,20 @@ import de.instinct.eqfleetshared.net.message.types.PlayerAssigned;
 
 public class SessionManager {
 	
-	private List<GameSession> expiredSessions;
-	private List<GameSession> activeSessions;
-	private GameEngineInterface engineInterface;
-	private GameDataLoader gameDataLoader;
-	private AiEngine aiEngine;
-	private OrderMapper orderMapper;
+	private static List<GameSession> expiredSessions;
+	private static List<GameSession> activeSessions;
+	private static GameEngineInterface engineInterface;
+	private static GameDataLoader gameDataLoader;
+	private static AiEngine aiEngine;
 	
-	private int PERIODIC_UPDATE_MS = 100;
+	private static int PERIODIC_UPDATE_MS = 100;
 	
-	public SessionManager() {
+	public static void init() {
 		expiredSessions = new ArrayList<>();
 		activeSessions = new ArrayList<>();
 		engineInterface = new GameEngineInterface();
 		gameDataLoader = new GameDataLoader();
 		aiEngine = new AiEngine();
-		orderMapper = new OrderMapper();
 		
 		ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 		scheduler.scheduleAtFixedRate(() -> {
@@ -53,7 +51,7 @@ public class SessionManager {
 		}, 0, PERIODIC_UPDATE_MS, TimeUnit.MILLISECONDS);
 	}
 	
-	private void updateAi(GameSession session) {
+	private static void updateAi(GameSession session) {
 		if (session.getGameType().versusMode == VersusMode.AI) {
 			for (Player player : session.getGameState().players) {
 				if (player instanceof AiPlayer) {
@@ -64,7 +62,7 @@ public class SessionManager {
 		}
 	}
 
-	private void updateSession(GameSession session) {
+	private static void updateSession(GameSession session) {
 		boolean clientUpdateRequired = engineInterface.updateGameState(session);
         if (clientUpdateRequired) {
         	updateClients(session);
@@ -75,13 +73,13 @@ public class SessionManager {
         }
 	}
 
-	private void updateClients(GameSession session) {
+	private static void updateClients(GameSession session) {
 		for (PlayerConnection playerConnection : session.getPlayerConnections()) {
 			playerConnection.connection.sendTCP(session.getGameState());
 		}
 	}
 
-	public void add(GameSession newSession) {
+	public static void add(GameSession newSession) {
 		GameState initialGameState = gameDataLoader.generateGameState(newSession.getGameType());
 		newSession.setGameState(initialGameState);
     	newSession.setLastUpdateTimeMS(System.currentTimeMillis());
@@ -94,7 +92,7 @@ public class SessionManager {
 		activeSessions.add(newSession);
 	}
 
-	private void assignPlayers(GameSession session) {
+	private static void assignPlayers(GameSession session) {
 		List<Player> assignedPlayers = new ArrayList<>();
 		for (PlayerConnection playerConnection : session.getPlayerConnections()) {
 			PlayerAssigned playerAssigned = new PlayerAssigned();
@@ -114,15 +112,30 @@ public class SessionManager {
 		}
 	}
 
-	public void process(FleetMovementMessage fleetMovement) {
+	public static void process(FleetMovementMessage fleetMovement) {
 		for (GameSession currentSession : activeSessions) {
     	if (currentSession.getGameState().gameUUID.contentEquals(fleetMovement.gameUUID)) {
-    		FleetMovementOrder fleetMovementOrder = orderMapper.map(fleetMovement);
+    		FleetMovementOrder fleetMovementOrder = new FleetMovementOrder();
+    		fleetMovementOrder.factionId = getFactionId(currentSession, fleetMovement.userUUID);
+    		fleetMovementOrder.fromPlanetId = fleetMovement.fromPlanetId;
+    		fleetMovementOrder.toPlanetId = fleetMovement.toPlanetId;
     		engineInterface.queue(currentSession.getGameState(), fleetMovementOrder);
     		updateSession(currentSession);
     		break;
     	}
     }
+	}
+
+	private static int getFactionId(GameSession currentSession, String userUUID) {
+		PlayerConnection playerConnection = currentSession.getPlayerConnections().stream()
+				.findFirst()
+				.filter(pc -> pc.userUUID.contentEquals(userUUID))
+				.orElse(null);
+		return playerConnection == null ? -1 : playerConnection.factionId;
+	}
+
+	public static void create(GameserverInitializationRequest lobby) {
+		
 	}
 
 }

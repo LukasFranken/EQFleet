@@ -4,19 +4,18 @@ import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.backend.engine.local.LocalEngine;
 import de.instinct.eqfleetshared.gamelogic.EngineUtility;
 import de.instinct.eqfleetshared.gamelogic.EventEngine;
-import de.instinct.eqfleetshared.gamelogic.OrderMapper;
+import de.instinct.eqfleetshared.gamelogic.order.model.GameOrder;
+import de.instinct.eqfleetshared.gamelogic.order.model.subtypes.FleetMovementOrder;
 import de.instinct.eqfleetshared.net.message.NetworkMessage;
 import de.instinct.eqfleetshared.net.message.types.FleetMovementMessage;
 
 public class TutorialEngine extends LocalEngine {
 	
 	private TutorialLoader tutorialLoader;
-    private OrderMapper orderMapper;
     private EventEngine engine;
     
     public TutorialEngine() {
     	tutorialLoader = new TutorialLoader();
-    	orderMapper = new OrderMapper();
     	engine = new EventEngine();
     }
 
@@ -34,7 +33,7 @@ public class TutorialEngine extends LocalEngine {
 					NetworkMessage newMessage = Game.outputMessageQueue.next();
 					if (newMessage != null) {
 						if (newMessage instanceof FleetMovementMessage) {
-							engine.queue(Game.activeGameState, orderMapper.map((FleetMovementMessage)newMessage));
+							engine.queue(Game.activeGameState, getOrder((FleetMovementMessage)newMessage));
 						}
 					}
 					update();
@@ -42,6 +41,12 @@ public class TutorialEngine extends LocalEngine {
 			}
 			
 		};
+	}
+	
+	private GameOrder getOrder(FleetMovementMessage message) {
+		FleetMovementOrder order = new FleetMovementOrder();
+		order.factionId = 
+		return order;
 	}
 
 	private void update() {
