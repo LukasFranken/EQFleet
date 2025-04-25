@@ -7,6 +7,11 @@
 - custom window
 - custom desktop window start animation
 
+- springutils to server
+ -> gameserver to server
+ -> gameengine is own module
+ -> delete shared
+
 - externalize client prefs
 - preference manager
 
