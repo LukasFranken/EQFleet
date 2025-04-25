@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 
+import de.instinct.api.core.API;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleetshared.gamelogic.EngineUtility;
 import de.instinct.eqfleetshared.gamelogic.model.GameState;
@@ -37,7 +38,7 @@ public class GameInputManager {
 	            if (planet.id != selectedPlanetId && isClickInsidePlanet(worldTouch, planet)) {
 	                FleetMovementMessage order = new FleetMovementMessage();
 	                order.gameUUID = state.gameUUID;
-	                order.factionId = Game.factionId;
+	                order.userUUID = API.authKey;
 	                order.fromPlanetId = selectedPlanetId;
 	                order.toPlanetId = planet.id;
 	                Game.outputMessageQueue.add(order);

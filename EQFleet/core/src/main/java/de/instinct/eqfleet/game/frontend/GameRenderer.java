@@ -500,7 +500,7 @@ public class GameRenderer {
 			}
 		} else {
 			if (Game.matchmakingStatus != null) {
-				message = "Players found: " + Game.matchmakingStatus.foundPlayers + "/" + Game.matchmakingStatus.requiredPlayers;
+				message = "Players found: " + Game.matchmakingStatus.getFoundPlayers() + "/" + Game.matchmakingStatus.getRequiredPlayers();
 			}
 		}
 	    FontUtil.draw(Color.WHITE, message,

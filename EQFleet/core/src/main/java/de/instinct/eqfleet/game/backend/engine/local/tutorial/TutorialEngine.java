@@ -45,8 +45,14 @@ public class TutorialEngine extends LocalEngine {
 	
 	private GameOrder getOrder(FleetMovementMessage message) {
 		FleetMovementOrder order = new FleetMovementOrder();
-		order.factionId = 
+		order.factionId = getFactionId(message.userUUID);
+		order.fromPlanetId = message.fromPlanetId;
+		order.toPlanetId = message.toPlanetId;
 		return order;
+	}
+
+	private int getFactionId(String userUUID) {
+		return 0;
 	}
 
 	private void update() {

@@ -16,7 +16,7 @@ public class WebManager {
 	
     public static ConcurrentLinkedQueue<Request<?>> requestQueue;
 
-    private static final long NETWORK_UPDATE_CLOCK_MS = 20;
+    private static final float NETWORK_UPDATE_CLOCK_MS = 20;
 
     public static void init() {
         requestQueue = new ConcurrentLinkedQueue<>();

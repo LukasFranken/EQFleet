@@ -792,7 +792,7 @@ public class TutorialLoader {
 			@Override
 			public void executeAtEnd() {
 				FleetMovementMessage aiFleetMoveMessage = new FleetMovementMessage();
-				aiFleetMoveMessage.playerUUID = 2;
+				aiFleetMoveMessage.userUUID = "2";
 				aiFleetMoveMessage.fromPlanetId = 1;
 				aiFleetMoveMessage.toPlanetId = 7;
 				Game.outputMessageQueue.add(aiFleetMoveMessage);

@@ -4,13 +4,19 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
+import de.instinct.api.core.API;
+import de.instinct.api.matchmaking.dto.MatchmakingRegistrationRequest;
+import de.instinct.api.matchmaking.model.FactionMode;
+import de.instinct.api.matchmaking.model.GameMode;
+import de.instinct.api.matchmaking.model.GameType;
+import de.instinct.api.matchmaking.model.VersusMode;
 import de.instinct.eqfleet.menu.common.Renderer;
-import de.instinct.eqfleetshared.net.enums.FactionMode;
-import de.instinct.eqfleetshared.net.enums.VersusMode;
+import de.instinct.eqfleet.net.WebManager;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
+import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 
 public class PlayTabRenderer extends Renderer {
 	
@@ -33,9 +39,18 @@ public class PlayTabRenderer extends Renderer {
 			
 			@Override
 			public void execute() {
-				//Matchmaking
-				//Menu.deactivate();
-				//Game.start(matchmakingRequest);
+				WebManager.enqueue(
+					    () -> API.matchmaking().register(MatchmakingRegistrationRequest.builder()
+					    		.gameType(GameType.builder()
+					    				.gameMode(GameMode.KING_OF_THE_HILL)
+					    				.versusMode(selectedVersusMode)
+					    				.factionMode(selectedFactionMode)
+					    				.build())
+					    		.build()),
+					    result -> {
+					    	PlayTab.processMatchmakingResponse(result);
+					    }
+				);
 			}
 			
 		});
@@ -121,6 +136,14 @@ public class PlayTabRenderer extends Renderer {
 	
 	@Override
 	public void render() {
+		if (PlayTab.currentMatchmakingStatus == null) {
+			renderQueueSelection();
+		} else {
+			renderQueueStatus();
+		}
+	}
+
+	private void renderQueueSelection() {
 		float buttonWidth = 100f;
 		float buttonHeight = 40f;
 		
@@ -159,6 +182,14 @@ public class PlayTabRenderer extends Renderer {
 			}
 		}
 	}
+	
+	private void renderQueueStatus() {
+		FontUtil.drawLabel(PlayTab.currentMatchmakingStatus.getCode().toString(),
+				new Rectangle(0, 50, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		FontUtil.drawLabel(PlayTab.currentMatchmakingStatus.getFoundPlayers() + " / " + PlayTab.currentMatchmakingStatus.getRequiredPlayers() + " players found",
+				new Rectangle(0, -50, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+	}
+
 	@Override
 	public void dispose() {
 		startMatchmakingButton.dispose();

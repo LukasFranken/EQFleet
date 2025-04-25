@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.badlogic.gdx.Gdx;
 
+import de.instinct.api.matchmaking.dto.MatchmakingStatusResponse;
 import de.instinct.eqfleet.game.backend.GameLogic;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.TutorialMode;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.GuideEvent;
@@ -12,8 +13,6 @@ import de.instinct.eqfleet.game.frontend.GameRenderer;
 import de.instinct.eqfleet.game.frontend.GameRendererConfig;
 import de.instinct.eqfleetshared.gamelogic.model.GameState;
 import de.instinct.eqfleetshared.net.message.NetworkMessage;
-import de.instinct.eqfleetshared.net.message.types.MatchmakingRequest;
-import de.instinct.eqfleetshared.net.message.types.MatchmakingUpdateResponse;
 import de.instinct.eqfleetshared.net.message.types.PlayerAssigned;
 import de.instinct.eqlibgdxutils.net.MessageQueue;
 
@@ -26,8 +25,7 @@ public class Game {
     public static int factionId;
     public static GameState activeGameState;
     public static long lastUpdateTimestampMS;
-    public static MatchmakingUpdateResponse matchmakingStatus;
-    public static MatchmakingRequest currentMatchmakingRequest;
+    public static MatchmakingStatusResponse matchmakingStatus;
     
     public static MessageQueue<NetworkMessage> outputMessageQueue;
     public static Queue<GuideEvent> guidedEvents;
