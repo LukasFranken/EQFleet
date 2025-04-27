@@ -14,22 +14,13 @@ public class EngineUtility {
 	public static final Vector2 MAP_BOUNDS = new Vector2(1000, 2000);
 	public static final float PLANET_RADIUS = 50f;
 	
-	public static Player getPlayer(GameState state, int factionId) {
+	public static Player getPlayer(GameState state, int playerId) {
 		for (Player player : state.players) {
-			if (player.factionId == factionId) {
+			if (player.playerId == playerId) {
 				return player;
 			}
 		}
-		throw new IllegalStateException("Player with factionId " + factionId + " not found in GameState." + state.players.size());
-	}
-	
-	public static Player getPlayer(GameState state, String uuid) {
-		for (Player player : state.players) {
-			if (player.uuid.contentEquals(uuid)) {
-				return player;
-			}
-		}
-		return null;
+		throw new IllegalStateException("Player with playerId " + playerId + " not found in GameState." + state.players.size());
 	}
 	
 	public static Planet getPlanet(GameState state, int planetId) {
@@ -77,7 +68,7 @@ public class EngineUtility {
 	    // ATP INSTANT WIN
 	    for (Player player : state.players) {
 	        if (player.ancientTechnologyPoints >= state.atpToWin) {
-	            state.winner = (int) player.factionId;
+	            state.winner = (int) player.playerId;
 	            return;
 	        }
 	    }
@@ -91,7 +82,7 @@ public class EngineUtility {
 	            }
 	        }
 	        if (best != null) {
-	            state.winner = (int) best.factionId;
+	            state.winner = (int) best.playerId;
 	            return;
 	        } else {
 	        	state.winner = 1;

@@ -2,7 +2,6 @@ package de.instinct.engine.ai;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import de.instinct.engine.EngineUtility;
 import de.instinct.engine.model.AiPlayer;
@@ -19,7 +18,6 @@ public class AiEngine {
 		AiPlayer newAiPlayer = new AiPlayer();
 		newAiPlayer.difficulty = difficulty;
 		
-		newAiPlayer.uuid = UUID.randomUUID().toString();
 		newAiPlayer.name = "AI (" + difficulty.toString() + ")";
 		newAiPlayer.fleetMovementSpeed = 50f;
 		newAiPlayer.resourceGenerationSpeed = 1f;
@@ -37,16 +35,16 @@ public class AiEngine {
 		if (aiPlayer.currentCommandPoints > 0) {
 			List<Planet> ownPlanets = new ArrayList<>();
 			for (Planet planet : state.planets) {
-				if (planet.ownerId == aiPlayer.factionId) {
+				if (planet.ownerId == aiPlayer.playerId) {
 					ownPlanets.add(planet);
 				}
 			}
 			List<FleetMovementEvent> capturePlanetTargets = new ArrayList<>();
 			for (Planet planet : state.planets) {
-				if (planet.ownerId != aiPlayer.factionId && !planet.ancient) {
+				if (planet.ownerId != aiPlayer.playerId && !planet.ancient) {
 					for (Planet ownPlanet : ownPlanets) {
 						FleetMovementEvent capturePlanetTarget = new FleetMovementEvent();
-						capturePlanetTarget.playerId = aiPlayer.factionId;
+						capturePlanetTarget.playerId = aiPlayer.playerId;
 						capturePlanetTarget.fromPlanetId = ownPlanet.id;
 						capturePlanetTarget.toPlanetId = planet.id;
 						if (planet.ownerId == 0) {
@@ -67,7 +65,7 @@ public class AiEngine {
 				boolean orderToPlanetExists = false;
 				for (GameEvent event : state.activeEvents) {
 					if (event instanceof FleetMovementEvent) {
-						if (((FleetMovementEvent)event).playerId == aiPlayer.factionId) {
+						if (((FleetMovementEvent)event).playerId == aiPlayer.playerId) {
 							if (fleetMovementEvent.toPlanetId == ((FleetMovementEvent)event).toPlanetId) {
 								orderToPlanetExists = true;
 							}
@@ -87,7 +85,7 @@ public class AiEngine {
 			}
 			if (lowestUnorderedPlanetTarget != null) {
 				FleetMovementOrder newCaptureOrder = new FleetMovementOrder();
-				newCaptureOrder.factionId = aiPlayer.factionId;
+				newCaptureOrder.factionId = aiPlayer.playerId;
 				newCaptureOrder.fromPlanetId = lowestUnorderedPlanetTarget.fromPlanetId;
 				newCaptureOrder.toPlanetId = lowestUnorderedPlanetTarget.toPlanetId;
 				orders.add(newCaptureOrder);

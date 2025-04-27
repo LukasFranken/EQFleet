@@ -2,9 +2,9 @@ package de.instinct.engine.model;
 
 public class Player {
 	
-	public String uuid;
 	public String name;
-	public int factionId;
+	public int teamId;
+	public int playerId;
 	public double fleetMovementSpeed;
 	public double resourceGenerationSpeed;
 	public double currentCommandPoints;
