@@ -46,6 +46,9 @@ public class MainMenu {
 		case PROFILE:
 			ProfileTab.loadData();
 			break;
+		case PLAY:
+			PlayTab.loadData();
+			break;
 			
 		default:
 			break;

@@ -46,7 +46,7 @@ public class ProfileTab {
 
 	public static void loadData() {
 		WebManager.enqueue(
-			    () -> API.meta().profile(),
+			    () -> API.meta().profile(API.authKey),
 			    result -> {
 			        GlobalStaticData.profile = result;
 			    }

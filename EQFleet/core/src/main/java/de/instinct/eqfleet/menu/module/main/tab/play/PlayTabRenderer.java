@@ -1,24 +1,28 @@
 package de.instinct.eqfleet.menu.module.main.tab.play;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
-import de.instinct.api.core.API;
-import de.instinct.api.matchmaking.dto.MatchmakingRegistrationRequest;
 import de.instinct.api.matchmaking.model.FactionMode;
-import de.instinct.api.matchmaking.model.GameMode;
-import de.instinct.api.matchmaking.model.GameType;
+import de.instinct.api.matchmaking.model.Invite;
 import de.instinct.api.matchmaking.model.VersusMode;
 import de.instinct.eqfleet.menu.common.Renderer;
-import de.instinct.eqfleet.net.WebManager;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
+import de.instinct.eqlibgdxutils.rendering.ui.module.list.ActionList;
+import de.instinct.eqlibgdxutils.rendering.ui.module.list.ActionListElement;
+import de.instinct.eqlibgdxutils.rendering.ui.module.list.ListActionHandler;
 
 public class PlayTabRenderer extends Renderer {
+	
+	private ColorButton createLobbyButton;
+	private ActionList invites;
 	
 	private ColorButton startMatchmakingButton;
 	
@@ -34,23 +38,22 @@ public class PlayTabRenderer extends Renderer {
 	
 	@Override
 	public void init() {
+		createLobbyButton = getBaseButton("Create Lobby");
+		createLobbyButton.setAction(new Action() {
+			
+			@Override
+			public void execute() {
+				PlayTab.createLobby();
+			}
+			
+		});
+		
 		startMatchmakingButton = getBaseButton("Find Match");
 		startMatchmakingButton.setAction(new Action() {
 			
 			@Override
 			public void execute() {
-				WebManager.enqueue(
-					    () -> API.matchmaking().register(MatchmakingRegistrationRequest.builder()
-					    		.gameType(GameType.builder()
-					    				.gameMode(GameMode.KING_OF_THE_HILL)
-					    				.versusMode(selectedVersusMode)
-					    				.factionMode(selectedFactionMode)
-					    				.build())
-					    		.build()),
-					    result -> {
-					    	PlayTab.processMatchmakingResponse(result);
-					    }
-				);
+				PlayTab.startMatchmaking();
 			}
 			
 		});
@@ -117,6 +120,25 @@ public class PlayTabRenderer extends Renderer {
 			}
 			
 		});
+		
+		invites = new ActionList();
+		invites.setConfirmHandler(new ListActionHandler() {
+			
+			@Override
+			public void triggered(ActionListElement element) {
+				PlayTab.accept(element.getValue());
+			}
+			
+		});
+		
+		invites.setDenyHandler(new ListActionHandler() {
+			
+			@Override
+			public void triggered(ActionListElement element) {
+				PlayTab.decline(element.getValue());
+			}
+			
+		});
 	}
 	
 	private ColorButton getBaseButton(String label) {
@@ -136,10 +158,36 @@ public class PlayTabRenderer extends Renderer {
 	
 	@Override
 	public void render() {
-		if (PlayTab.currentMatchmakingStatus == null) {
-			renderQueueSelection();
+		if (PlayTab.lobbyUUID == null || PlayTab.lobbyUUID.contentEquals("")) {
+			renderPreLobbyView();
 		} else {
-			renderQueueStatus();
+			if (PlayTab.currentMatchmakingStatus == null) {
+				renderQueueSelection();
+			} else {
+				renderQueueStatus();
+			}
+		}
+	}
+
+	private void renderPreLobbyView() {
+		createLobbyButton.setPosition(50, Gdx.graphics.getHeight() - 400);
+		createLobbyButton.setFixedWidth(Gdx.graphics.getWidth() - 100);
+		createLobbyButton.setFixedHeight(40);
+		createLobbyButton.render();
+		
+		invites.setElements(new ArrayList<>());
+		if (PlayTab.inviteStatus != null && PlayTab.inviteStatus.getInvites().size() > 0) {
+			for (Invite invite : PlayTab.inviteStatus.getInvites()) {
+				invites.getElements().add(ActionListElement.builder()
+						.value(invite.getLobbyUUID())
+						.label(invite.getFromUsername())
+						.build());
+			}
+			invites.setBounds(new Rectangle(50, 100, Gdx.graphics.getWidth() - 100, Gdx.graphics.getHeight() - 500));
+			invites.update();
+			invites.render();
+		} else {
+			FontUtil.drawLabel("No pending invites", new Rectangle(0, Gdx.graphics.getHeight() - 500, Gdx.graphics.getWidth(), 100));
 		}
 	}
 
