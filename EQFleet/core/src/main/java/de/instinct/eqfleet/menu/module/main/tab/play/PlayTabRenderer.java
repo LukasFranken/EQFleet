@@ -6,13 +6,19 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
+import de.instinct.api.matchmaking.dto.InviteResponse;
 import de.instinct.api.matchmaking.model.FactionMode;
+import de.instinct.api.matchmaking.model.GameMode;
+import de.instinct.api.matchmaking.model.GameType;
 import de.instinct.api.matchmaking.model.Invite;
 import de.instinct.api.matchmaking.model.VersusMode;
 import de.instinct.eqfleet.menu.common.Renderer;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
+import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.LimitedInputField;
+import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.model.TextfieldActionHandler;
+import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.model.inputfilter.UsernameTexfieldInputFilter;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.module.list.ActionList;
@@ -22,9 +28,8 @@ import de.instinct.eqlibgdxutils.rendering.ui.module.list.ListActionHandler;
 public class PlayTabRenderer extends Renderer {
 	
 	private ColorButton createLobbyButton;
+	private ColorButton leaveLobbyButton;
 	private ActionList invites;
-	
-	private ColorButton startMatchmakingButton;
 	
 	private ColorButton aiButton;
 	private ColorButton pvpButton;
@@ -33,11 +38,48 @@ public class PlayTabRenderer extends Renderer {
 	private ColorButton duoButton;
 	private ColorButton trioButton;
 	
+	private ColorButton setTypeButton;
+	
+	private ColorButton inviteButton;
+	private LimitedInputField usernameTextField;
+	private ColorButton startMatchmakingButton;
+	
 	private VersusMode selectedVersusMode;
 	private FactionMode selectedFactionMode;
 	
+	private String inviteMessage;
+	private float inviteMessageElapsed;
+	private float inviteMessageDuration = 3f;
+	
 	@Override
 	public void init() {
+		usernameTextField = new LimitedInputField();
+		usernameTextField.setMaxChars(12);
+		usernameTextField.setInputFilter(new UsernameTexfieldInputFilter());
+		usernameTextField.setPopupMessage("Enter name");
+		usernameTextField.setAction(new TextfieldActionHandler() {
+			
+			@Override
+			public void confirmed() {
+				if (usernameTextField.getForbiddenCharsMobile() == null) {
+					PlayTab.invite(usernameTextField.getContent());
+					usernameTextField.setContent("");
+				}
+			}
+			
+		});
+		
+		inviteButton = getBaseButton("Invite");
+		inviteButton.setAction(new Action() {
+			
+			@Override
+			public void execute() {
+				PlayTab.invite(usernameTextField.getContent());
+				usernameTextField.setContent("");
+			}
+			
+		});
+		
 		createLobbyButton = getBaseButton("Create Lobby");
 		createLobbyButton.setAction(new Action() {
 			
@@ -48,12 +90,32 @@ public class PlayTabRenderer extends Renderer {
 			
 		});
 		
-		startMatchmakingButton = getBaseButton("Find Match");
-		startMatchmakingButton.setAction(new Action() {
+		leaveLobbyButton = getBaseButton("Leave Lobby");
+		leaveLobbyButton.setFixedWidth(120f);
+		leaveLobbyButton.setFixedHeight(30f);
+		leaveLobbyButton.setAction(new Action() {
 			
 			@Override
 			public void execute() {
-				PlayTab.startMatchmaking();
+				PlayTab.leaveLobby();
+				selectedVersusMode = null;
+				selectedFactionMode = null;
+			}
+			
+		});
+		
+		setTypeButton = getBaseButton("Set Mode");
+		setTypeButton.setAction(new Action() {
+			
+			@Override
+			public void execute() {
+				PlayTab.setType(GameType.builder()
+						.gameMode(GameMode.KING_OF_THE_HILL)
+						.versusMode(selectedVersusMode)
+						.factionMode(selectedFactionMode)
+						.build());
+				selectedVersusMode = null;
+				selectedFactionMode = null;
 			}
 			
 		});
@@ -139,6 +201,18 @@ public class PlayTabRenderer extends Renderer {
 			}
 			
 		});
+		
+		startMatchmakingButton = getBaseButton("Queue up");
+		startMatchmakingButton.setFixedWidth(120f);
+		startMatchmakingButton.setFixedHeight(30f);
+		startMatchmakingButton.setAction(new Action() {
+			
+			@Override
+			public void execute() {
+				PlayTab.startMatchmaking();
+			}
+			
+		});
 	}
 	
 	private ColorButton getBaseButton(String label) {
@@ -161,10 +235,18 @@ public class PlayTabRenderer extends Renderer {
 		if (PlayTab.lobbyUUID == null || PlayTab.lobbyUUID.contentEquals("")) {
 			renderPreLobbyView();
 		} else {
-			if (PlayTab.currentMatchmakingStatus == null) {
-				renderQueueSelection();
-			} else {
-				renderQueueStatus();
+			if (PlayTab.lobbyStatus != null) {
+				if (PlayTab.lobbyStatus.getType() == null) {
+					renderModeSelection();
+				} else {
+					if (PlayTab.currentMatchmakingStatus == null) {
+						renderLobbyOverview();
+					} else {
+						renderQueueStatus();
+					}
+				}
+				leaveLobbyButton.setPosition(20, 100);
+				leaveLobbyButton.render();
 			}
 		}
 	}
@@ -191,7 +273,7 @@ public class PlayTabRenderer extends Renderer {
 		}
 	}
 
-	private void renderQueueSelection() {
+	private void renderModeSelection() {
 		float buttonWidth = 100f;
 		float buttonHeight = 40f;
 		
@@ -222,13 +304,52 @@ public class PlayTabRenderer extends Renderer {
 			trioButton.render();
 			
 			buttonWidth = 120f;
-			startMatchmakingButton.setBounds(new Rectangle((Gdx.graphics.getWidth() / 2) - (buttonWidth / 2), Gdx.graphics.getHeight() / 2 - 100 - buttonHeight, buttonWidth, buttonHeight));
-			startMatchmakingButton.setFixedWidth(buttonWidth);
-			startMatchmakingButton.setFixedHeight(buttonHeight);
+			setTypeButton.setBounds(new Rectangle((Gdx.graphics.getWidth() / 2) - (buttonWidth / 2), Gdx.graphics.getHeight() / 2 - 100 - buttonHeight, buttonWidth, buttonHeight));
+			setTypeButton.setFixedWidth(buttonWidth);
+			setTypeButton.setFixedHeight(buttonHeight);
 			if (selectedFactionMode != null) {
-				startMatchmakingButton.render();
+				setTypeButton.render();
 			}
 		}
+	}
+	
+	private void renderLobbyOverview() {
+		GameType selectedGameType = PlayTab.lobbyStatus.getType();
+		FontUtil.drawLabel(Color.GRAY, selectedGameType.getVersusMode() + " - " + selectedGameType.getFactionMode(), new Rectangle(0, 550, Gdx.graphics.getWidth(), 30));
+		
+		int i = 0;
+		for (String userName : PlayTab.lobbyStatus.getUserNames()) {
+			FontUtil.drawLabel(userName, new Rectangle(0, 500 - i, Gdx.graphics.getWidth(), 30));
+			i += 30;
+		}
+		if (PlayTab.lobbyStatus.getUserNames().size() < selectedGameType.getFactionMode().teamPlayerCount) {
+			usernameTextField.setBounds(new Rectangle((Gdx.graphics.getWidth() / 2) - 88, 340, 176, 40));
+			usernameTextField.render();
+			
+			inviteButton.setFixedWidth(100f);
+			inviteButton.setFixedHeight(30f);
+			inviteButton.setPosition((Gdx.graphics.getWidth() / 2) - (inviteButton.getFixedWidth() / 2), 300);
+			inviteButton.render();
+			
+			if (PlayTab.inviteResponse != null) {
+				if (PlayTab.inviteResponse == InviteResponse.ALREADY_INVITED) inviteMessage = "Already invited";
+				if (PlayTab.inviteResponse == InviteResponse.ERROR) inviteMessage = "Server error";
+				if (PlayTab.inviteResponse == InviteResponse.USERNAME_DOESNT_EXIST) inviteMessage = "Username doesn't exist";
+				if (PlayTab.inviteResponse == InviteResponse.INVITED) inviteMessage = "Invitation sent";
+				PlayTab.inviteResponse = null;
+			}
+			if (inviteMessage != null) {
+				inviteMessageElapsed += Gdx.graphics.getDeltaTime();
+				FontUtil.drawLabel(Color.GRAY, inviteMessage, new Rectangle(0, 270, Gdx.graphics.getWidth(), 30));
+				if (inviteMessageElapsed >= inviteMessageDuration) {
+					inviteMessage = null;
+					inviteMessageElapsed = 0f;
+				}
+			}
+		}
+		
+		startMatchmakingButton.setPosition(Gdx.graphics.getWidth() - startMatchmakingButton.getFixedWidth() - 20, 100);
+		startMatchmakingButton.render();
 	}
 	
 	private void renderQueueStatus() {
@@ -240,7 +361,7 @@ public class PlayTabRenderer extends Renderer {
 
 	@Override
 	public void dispose() {
-		startMatchmakingButton.dispose();
+		setTypeButton.dispose();
 		aiButton.dispose();
 	}
 

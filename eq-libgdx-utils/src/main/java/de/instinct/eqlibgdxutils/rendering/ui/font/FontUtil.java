@@ -66,11 +66,19 @@ public class FontUtil {
 	}
 	
 	public static void drawLabel(String label, Rectangle bounds) {
-		drawLabel(label, bounds, 1f);
+		drawLabel(DefaultUIValues.skinColor, label, bounds);
+	}
+	
+	public static void drawLabel(Color color, String label, Rectangle bounds) {
+		drawLabel(color, label, bounds, 1f);
 	}
 	
 	public static void drawLabel(String label, Rectangle bounds, float alpha) {
-		Color labelColor = new Color(DefaultUIValues.skinColor); 
+		drawLabel(DefaultUIValues.skinColor, label, bounds, alpha);
+	}
+	
+	public static void drawLabel(Color color, String label, Rectangle bounds, float alpha) {
+		Color labelColor = new Color(color); 
 		labelColor.a = alpha;
 		draw(labelColor, label, bounds.x + ((bounds.width - getFontTextWidthPx(label)) / 2), bounds.y + ((bounds.height + getFontHeightPx()) / 2));
 	}

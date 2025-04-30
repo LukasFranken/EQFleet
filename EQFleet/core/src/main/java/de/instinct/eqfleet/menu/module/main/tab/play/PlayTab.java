@@ -3,11 +3,13 @@ package de.instinct.eqfleet.menu.module.main.tab.play;
 import com.badlogic.gdx.utils.Timer;
 
 import de.instinct.api.core.API;
+import de.instinct.api.matchmaking.dto.InviteResponse;
 import de.instinct.api.matchmaking.dto.InvitesStatusResponse;
 import de.instinct.api.matchmaking.dto.LobbyStatusCode;
 import de.instinct.api.matchmaking.dto.LobbyStatusResponse;
 import de.instinct.api.matchmaking.dto.MatchmakingStatusResponse;
 import de.instinct.api.matchmaking.dto.MatchmakingStatusResponseCode;
+import de.instinct.api.matchmaking.model.GameType;
 import de.instinct.eqfleet.menu.MenuTab;
 import de.instinct.eqfleet.menu.module.main.MainMenu;
 import de.instinct.eqfleet.net.WebManager;
@@ -21,6 +23,7 @@ public class PlayTab {
 	public static LobbyStatusResponse lobbyStatus;
 	public static MatchmakingStatusResponse currentMatchmakingStatus;
 	public static InvitesStatusResponse inviteStatus;
+	public static InviteResponse inviteResponse;
 	
 	private static float QUEUE_UPDATE_CLOCK_MS = 200;
 
@@ -63,6 +66,15 @@ public class PlayTab {
 		);
 	}
 	
+	public static void leaveLobby() {
+		WebManager.enqueue(
+			    () -> API.matchmaking().leave(),
+			    result -> {
+			    	lobbyUUID = null;
+			    }
+		);
+	}
+	
 	public static void accept(String value) {
 		WebManager.enqueue(
 			    () -> API.matchmaking().accept(value),
@@ -74,6 +86,29 @@ public class PlayTab {
 		WebManager.enqueue(
 			    () -> API.matchmaking().decline(value),
 			    result -> {}
+		);
+	}
+	
+	public static void setType(GameType type) {
+		WebManager.enqueue(
+			    () -> API.matchmaking().settype(lobbyUUID, type),
+			    result -> {}
+		);
+	}
+	
+	public static void resetType() {
+		WebManager.enqueue(
+			    () -> API.matchmaking().resettype(lobbyUUID),
+			    result -> {}
+		);
+	}
+	
+	public static void invite(String username) {
+		WebManager.enqueue(
+			    () -> API.matchmaking().invite(username),
+			    result -> {
+			    	inviteResponse = result;
+			    }
 		);
 	}
 

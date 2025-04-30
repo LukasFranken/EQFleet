@@ -229,7 +229,9 @@ public class Intro {
 										    () -> API.authentication().register(),
 										    result -> {
 										    	API.authKey = result;
-												PreferenceUtil.save("authkey", result);
+												if (result != null) {
+													PreferenceUtil.save("authkey", result);
+												}
 												loadMenu();
 												triggered = true;
 										    }
