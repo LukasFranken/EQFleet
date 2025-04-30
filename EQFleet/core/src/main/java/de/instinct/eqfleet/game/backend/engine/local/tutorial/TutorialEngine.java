@@ -1,13 +1,13 @@
 package de.instinct.eqfleet.game.backend.engine.local.tutorial;
 
+import de.instinct.engine.EngineUtility;
+import de.instinct.engine.EventEngine;
+import de.instinct.engine.net.message.NetworkMessage;
+import de.instinct.engine.net.message.types.FleetMovementMessage;
+import de.instinct.engine.order.GameOrder;
+import de.instinct.engine.order.types.FleetMovementOrder;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.backend.engine.local.LocalEngine;
-import de.instinct.eqfleetshared.gamelogic.EngineUtility;
-import de.instinct.eqfleetshared.gamelogic.EventEngine;
-import de.instinct.eqfleetshared.gamelogic.order.model.GameOrder;
-import de.instinct.eqfleetshared.gamelogic.order.model.subtypes.FleetMovementOrder;
-import de.instinct.eqfleetshared.net.message.NetworkMessage;
-import de.instinct.eqfleetshared.net.message.types.FleetMovementMessage;
 
 public class TutorialEngine extends LocalEngine {
 	
@@ -22,7 +22,7 @@ public class TutorialEngine extends LocalEngine {
 	public Runnable start(TutorialMode mode) {
 		Game.guidedEvents = tutorialLoader.load(mode);
 		Game.getRendererConfig().setVisible(false);
-		Game.factionId = 1;
+		Game.playerId = 1;
 		Game.activeGameState = tutorialLoader.generateGameState();
 		Game.lastUpdateTimestampMS = System.currentTimeMillis();
 		return new Runnable() {
@@ -45,14 +45,10 @@ public class TutorialEngine extends LocalEngine {
 	
 	private GameOrder getOrder(FleetMovementMessage message) {
 		FleetMovementOrder order = new FleetMovementOrder();
-		order.factionId = getFactionId(message.userUUID);
+		order.playerId = message.userUUID.contentEquals("2") ? 2 : 1;
 		order.fromPlanetId = message.fromPlanetId;
 		order.toPlanetId = message.toPlanetId;
 		return order;
-	}
-
-	private int getFactionId(String userUUID) {
-		return 0;
 	}
 
 	private void update() {

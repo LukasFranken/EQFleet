@@ -6,11 +6,11 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 
 import de.instinct.api.core.API;
+import de.instinct.engine.EngineUtility;
+import de.instinct.engine.model.GameState;
+import de.instinct.engine.model.Planet;
+import de.instinct.engine.net.message.types.FleetMovementMessage;
 import de.instinct.eqfleet.game.Game;
-import de.instinct.eqfleetshared.gamelogic.EngineUtility;
-import de.instinct.eqfleetshared.gamelogic.model.GameState;
-import de.instinct.eqfleetshared.gamelogic.model.Planet;
-import de.instinct.eqfleetshared.net.message.types.FleetMovementMessage;
 
 public class GameInputManager {
 	
@@ -26,7 +26,7 @@ public class GameInputManager {
 
 	    if (Gdx.input.justTouched()) {
 	        for (Planet planet : state.planets) {
-	            if (planet.ownerId == Game.factionId && isClickInsidePlanet(worldTouch, planet)) {
+	            if (planet.ownerId == Game.playerId && isClickInsidePlanet(worldTouch, planet)) {
 	                selectedPlanetId = planet.id;
 	                break;
 	            }

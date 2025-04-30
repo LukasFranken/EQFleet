@@ -16,16 +16,16 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import de.instinct.engine.EngineUtility;
+import de.instinct.engine.model.GameState;
+import de.instinct.engine.model.Planet;
+import de.instinct.engine.model.Player;
+import de.instinct.engine.model.event.GameEvent;
+import de.instinct.engine.model.event.types.FleetMovementEvent;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.GuideEvent;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.subtypes.CameraMoveGuideEvent;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.subtypes.DialogGuideEvent;
-import de.instinct.eqfleetshared.gamelogic.EngineUtility;
-import de.instinct.eqfleetshared.gamelogic.event.model.GameEvent;
-import de.instinct.eqfleetshared.gamelogic.event.model.subtypes.FleetMovementEvent;
-import de.instinct.eqfleetshared.gamelogic.model.GameState;
-import de.instinct.eqfleetshared.gamelogic.model.Planet;
-import de.instinct.eqfleetshared.gamelogic.model.Player;
 import de.instinct.eqlibgdxutils.MathUtil;
 import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.rendering.GridRenderer;
@@ -142,10 +142,10 @@ public class GameRenderer {
 	public void render() {
 		GameState state = Game.activeGameState;
 		
-		if (isFlipped && Game.factionId == 1) {
+		if (isFlipped && Game.playerId == 1) {
 			flip();
 		}
-		if (!isFlipped && Game.factionId == 2) {
+		if (!isFlipped && Game.playerId == 2) {
 			flip();
 		}
 		
@@ -196,7 +196,7 @@ public class GameRenderer {
 
 		    Vector3 projected = camera.project(new Vector3(activeAncientPlanet.xPos, activeAncientPlanet.yPos, 0));
 		    Vector2 source = new Vector2(projected.x, projected.y);
-		    Vector2 target = (activeAncientPlanet.ownerId == Game.factionId)
+		    Vector2 target = (activeAncientPlanet.ownerId == Game.playerId)
 		        ? new Vector2(50, 260)
 		        : new Vector2(50, 600);
 
@@ -334,7 +334,7 @@ public class GameRenderer {
 	    enemyElapsed += Gdx.graphics.getDeltaTime();
 	    if (activeAncientPlanet != null) {
 	    	if (activeAncientPlanet.ownerId != 0) {
-	    		if (activeAncientPlanet.ownerId == Game.factionId) {
+	    		if (activeAncientPlanet.ownerId == Game.playerId) {
 	    			ownAlphaStore += Gdx.graphics.getDeltaTime();
 	    		} else {
 	    			enemyAlphaStore += Gdx.graphics.getDeltaTime();
@@ -377,8 +377,8 @@ public class GameRenderer {
 	}
 
 	private void renderUI(GameState state) {
-		int enemyId = Game.factionId == 1 ? 2 : 1;
-		Player self = EngineUtility.getPlayer(state, Game.factionId);
+		int enemyId = Game.playerId == 1 ? 2 : 1;
+		Player self = EngineUtility.getPlayer(state, Game.playerId);
 		Player enemy = EngineUtility.getPlayer(state, enemyId);
 
 		float scaleX = Gdx.graphics.getWidth() / 400f;
@@ -490,17 +490,13 @@ public class GameRenderer {
 		if (Game.activeGameState != null) {
 			int winner = Game.activeGameState.winner;
 			if (winner != 0) {
-				if (winner == Game.factionId) {
+				if (winner == Game.playerId) {
 					message = "VICTORY";
 				} else if (winner != 0) {
 					message = "DEFEATED";
 				}
 			} else {
 				message = "";
-			}
-		} else {
-			if (Game.matchmakingStatus != null) {
-				message = "Players found: " + Game.matchmakingStatus.getFoundPlayers() + "/" + Game.matchmakingStatus.getRequiredPlayers();
 			}
 		}
 	    FontUtil.draw(Color.WHITE, message,
@@ -555,7 +551,7 @@ public class GameRenderer {
 			if (event instanceof FleetMovementEvent) {
 				FleetMovementEvent fleet = (FleetMovementEvent) event;
 				PlanetPair pair = new PlanetPair(fleet.fromPlanetId, fleet.toPlanetId);
-				int flag = (fleet.playerId == Game.factionId) ? 1 : 2;
+				int flag = (fleet.playerId == Game.playerId) ? 1 : 2;
 				movementMap.put(pair, flag);
 			}
 		}
@@ -615,7 +611,7 @@ public class GameRenderer {
 			shapeRenderer.circle(selected.xPos, selected.yPos, EngineUtility.PLANET_RADIUS + 5);
 
 		if (hovered != null) {
-			boolean isSelectingOrigin = (selected == null && hovered.ownerId == Game.factionId);
+			boolean isSelectingOrigin = (selected == null && hovered.ownerId == Game.playerId);
 			boolean isTargeting = (selected != null && hovered.id != selected.id);
 			if (isSelectingOrigin || isTargeting) {
 				shapeRenderer.circle(hovered.xPos, hovered.yPos, EngineUtility.PLANET_RADIUS + 5);
@@ -663,10 +659,10 @@ public class GameRenderer {
 	private Color getOwnerColor(int ownerId, boolean ancient) {
 		if (ownerId == 0 & ancient) return ownerColors[1];
 		if (ownerId == 0 & !ancient) return ownerColors[0];
-		if (ownerId != Game.factionId && ancient) return ownerColors[5];
-		if (ownerId == Game.factionId && ancient) return ownerColors[4];
-		if (ownerId != Game.factionId) return ownerColors[3];
-		if (ownerId == Game.factionId) return ownerColors[2];
+		if (ownerId != Game.playerId && ancient) return ownerColors[5];
+		if (ownerId == Game.playerId && ancient) return ownerColors[4];
+		if (ownerId != Game.playerId) return ownerColors[3];
+		if (ownerId == Game.playerId) return ownerColors[2];
 		return ownerColors[0];
 	}
 

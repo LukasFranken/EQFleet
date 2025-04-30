@@ -10,6 +10,8 @@ import de.instinct.api.matchmaking.dto.LobbyStatusResponse;
 import de.instinct.api.matchmaking.dto.MatchmakingStatusResponse;
 import de.instinct.api.matchmaking.dto.MatchmakingStatusResponseCode;
 import de.instinct.api.matchmaking.model.GameType;
+import de.instinct.eqfleet.game.Game;
+import de.instinct.eqfleet.menu.Menu;
 import de.instinct.eqfleet.menu.MenuTab;
 import de.instinct.eqfleet.menu.module.main.MainMenu;
 import de.instinct.eqfleet.net.WebManager;
@@ -47,7 +49,8 @@ public class PlayTab {
 	}
 	
 	private static void connectToGameserver() {
-		System.out.println("starting game for: " + currentMatchmakingStatus);
+		Game.start();
+		Menu.deactivate();
 	}
 
 	public static void startMatchmaking() {
@@ -137,13 +140,14 @@ public class PlayTab {
     					    	lobbyStatus = result;
     					    }
     				);
-        			if (lobbyStatus != null && lobbyStatus.getCode() == LobbyStatusCode.MATCHING) {
+        			if (lobbyStatus != null && (lobbyStatus.getCode() == LobbyStatusCode.MATCHING || lobbyStatus.getCode() == LobbyStatusCode.IN_GAME)) {
         				WebManager.enqueue(
         	        			() -> API.matchmaking().matchmaking(lobbyUUID),
         					    result -> {
         					    	currentMatchmakingStatus = result;
         					    	if (result.getCode() == MatchmakingStatusResponseCode.READY) {
         					    		connectToGameserver();
+        					    		this.cancel();
         					    	}
         					    }
         				);

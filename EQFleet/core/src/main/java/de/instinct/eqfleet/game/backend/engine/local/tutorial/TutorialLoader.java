@@ -9,6 +9,16 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.badlogic.gdx.math.Vector3;
 
+import de.instinct.engine.EngineUtility;
+import de.instinct.engine.ai.AiDifficulty;
+import de.instinct.engine.ai.AiEngine;
+import de.instinct.engine.model.AiPlayer;
+import de.instinct.engine.model.GameState;
+import de.instinct.engine.model.Planet;
+import de.instinct.engine.model.Player;
+import de.instinct.engine.model.event.GameEvent;
+import de.instinct.engine.model.event.types.FleetMovementEvent;
+import de.instinct.engine.net.message.types.FleetMovementMessage;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.GuideEvent;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.behavior.ActionBehavior;
@@ -17,16 +27,6 @@ import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.behavior.Mes
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.subtypes.CameraMoveGuideEvent;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.subtypes.DialogGuideEvent;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.subtypes.PauseGuideEvent;
-import de.instinct.eqfleetshared.gamelogic.EngineUtility;
-import de.instinct.eqfleetshared.gamelogic.ai.AiDifficulty;
-import de.instinct.eqfleetshared.gamelogic.ai.AiEngine;
-import de.instinct.eqfleetshared.gamelogic.event.model.GameEvent;
-import de.instinct.eqfleetshared.gamelogic.event.model.subtypes.FleetMovementEvent;
-import de.instinct.eqfleetshared.gamelogic.model.AiPlayer;
-import de.instinct.eqfleetshared.gamelogic.model.GameState;
-import de.instinct.eqfleetshared.gamelogic.model.Planet;
-import de.instinct.eqfleetshared.gamelogic.model.Player;
-import de.instinct.eqfleetshared.net.message.types.FleetMovementMessage;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.VerticalAlignment;
 
 public class TutorialLoader {
@@ -53,7 +53,7 @@ public class TutorialLoader {
 	private List<Player> loadPlayers() {
 		List<Player> players = new ArrayList<>();
 		Player player1 = new Player();
-		player1.factionId = 1;
+		player1.playerId = 1;
 		player1.name = "Player 1";
 		player1.fleetMovementSpeed = 80f;
 		player1.resourceGenerationSpeed = 0.5f;
@@ -64,7 +64,7 @@ public class TutorialLoader {
 		players.add(player1);
 
 		AiPlayer aiPlayer = aiEngine.initialize(AiDifficulty.RETARDED);
-		aiPlayer.factionId = 2;
+		aiPlayer.playerId = 2;
 		aiPlayer.resourceGenerationSpeed = 0f;
 		aiPlayer.fleetMovementSpeed = 100f;
 		aiPlayer.currentCommandPoints = aiPlayer.startCommandPoints;

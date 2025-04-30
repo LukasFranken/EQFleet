@@ -27,6 +27,7 @@ public class AiEngine {
 		newAiPlayer.commandPointsGenerationSpeed = 0.1f;
 		newAiPlayer.startCommandPoints = 3;
 		newAiPlayer.maxCommandPoints = 10;
+		newAiPlayer.currentCommandPoints = newAiPlayer.startCommandPoints;
 		return newAiPlayer;
 	}
 	
@@ -85,7 +86,7 @@ public class AiEngine {
 			}
 			if (lowestUnorderedPlanetTarget != null) {
 				FleetMovementOrder newCaptureOrder = new FleetMovementOrder();
-				newCaptureOrder.factionId = aiPlayer.playerId;
+				newCaptureOrder.playerId = aiPlayer.playerId;
 				newCaptureOrder.fromPlanetId = lowestUnorderedPlanetTarget.fromPlanetId;
 				newCaptureOrder.toPlanetId = lowestUnorderedPlanetTarget.toPlanetId;
 				orders.add(newCaptureOrder);

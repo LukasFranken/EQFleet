@@ -5,15 +5,14 @@ import java.util.UUID;
 
 import com.badlogic.gdx.Gdx;
 
-import de.instinct.api.matchmaking.dto.MatchmakingStatusResponse;
+import de.instinct.engine.model.GameState;
+import de.instinct.engine.net.message.NetworkMessage;
+import de.instinct.engine.net.message.types.PlayerAssigned;
 import de.instinct.eqfleet.game.backend.GameLogic;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.TutorialMode;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.GuideEvent;
 import de.instinct.eqfleet.game.frontend.GameRenderer;
 import de.instinct.eqfleet.game.frontend.GameRendererConfig;
-import de.instinct.eqfleetshared.gamelogic.model.GameState;
-import de.instinct.eqfleetshared.net.message.NetworkMessage;
-import de.instinct.eqfleetshared.net.message.types.PlayerAssigned;
 import de.instinct.eqlibgdxutils.net.MessageQueue;
 
 public class Game {
@@ -22,10 +21,9 @@ public class Game {
     private static GameLogic gameLogic;
 
     public static String playerUUID = UUID.randomUUID().toString();
-    public static int factionId;
+    public static int playerId;
     public static GameState activeGameState;
     public static long lastUpdateTimestampMS;
-    public static MatchmakingStatusResponse matchmakingStatus;
     
     public static MessageQueue<NetworkMessage> outputMessageQueue;
     public static Queue<GuideEvent> guidedEvents;
@@ -67,9 +65,8 @@ public class Game {
 	}
 
 	public static void assignPlayer(PlayerAssigned playerAssigned) {
-		matchmakingStatus = null;
-        factionId = playerAssigned.factionId;
-        Gdx.app.log("Client", "Assigned player ID: " + factionId);
+		playerId = playerAssigned.playerId;
+        Gdx.app.log("Client", "Assigned player ID: " + playerId);
 	}
 
 	public static void startTutorial(TutorialMode mode) {

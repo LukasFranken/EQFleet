@@ -80,7 +80,7 @@ project(":core") {
         compileOnly 'org.projectlombok:lombok:1.18.30'
         annotationProcessor 'org.projectlombok:lombok:1.18.30'
         implementation 'de.instinct:eq-libgdx-utils:0.0.1'
-        implementation 'de.instinct:eqfleetshared:0.0.1'
+        implementation 'de.instinct:engine:0.0.1'
         implementation 'de.instinct:api:0.0.1'
         implementation 'com.esotericsoftware:kryonet:2.22.0-RC1'
         api "com.github.mgsx-dev.gdx-gltf:gltf:2.2.0"

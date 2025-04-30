@@ -5,14 +5,16 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import de.instinct.api.core.API;
+import de.instinct.engine.EventEngine;
+import de.instinct.engine.model.GameState;
+import de.instinct.engine.net.message.NetworkMessage;
+import de.instinct.engine.net.message.types.JoinMessage;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.backend.audio.AudioManager;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.TutorialEngine;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.TutorialMode;
 import de.instinct.eqfleet.menu.Menu;
-import de.instinct.eqfleetshared.gamelogic.EventEngine;
-import de.instinct.eqfleetshared.gamelogic.model.GameState;
-import de.instinct.eqfleetshared.net.message.NetworkMessage;
 
 public class GameLogic {
 	
@@ -57,12 +59,11 @@ public class GameLogic {
 		AudioManager.play("neon_horizon", false);
 		gameClient.start();
 		logicUpdateTask = scheduler.scheduleAtFixedRate(() -> {
-			NetworkMessage newMessage = Game.outputMessageQueue.next();
-			if (newMessage != null) {
-				gameClient.client.sendTCP(newMessage);
-			}
 			update();
 		}, BACKEND_UPDATE_CLOCK_MS, BACKEND_UPDATE_CLOCK_MS, TimeUnit.MILLISECONDS);
+		JoinMessage joinMessage = new JoinMessage();
+		joinMessage.playerUUID = API.authKey;
+		Game.outputMessageQueue.add(joinMessage);
 	}
 
 	public void stop() {

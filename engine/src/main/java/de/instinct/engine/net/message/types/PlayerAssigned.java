@@ -4,8 +4,8 @@ import de.instinct.engine.net.message.NetworkMessage;
 import lombok.ToString;
 
 @ToString
-public class JoinMessage extends NetworkMessage {
+public class PlayerAssigned extends NetworkMessage {
 	
-	public String playerUUID;
+	public int playerId;
 
 }

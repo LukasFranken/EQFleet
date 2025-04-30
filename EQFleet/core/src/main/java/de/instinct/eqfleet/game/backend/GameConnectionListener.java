@@ -9,10 +9,10 @@ import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 
+import de.instinct.engine.model.GameState;
+import de.instinct.engine.net.message.NetworkMessage;
+import de.instinct.engine.net.message.types.PlayerAssigned;
 import de.instinct.eqfleet.game.Game;
-import de.instinct.eqfleetshared.gamelogic.model.GameState;
-import de.instinct.eqfleetshared.net.message.NetworkMessage;
-import de.instinct.eqfleetshared.net.message.types.PlayerAssigned;
 
 public class GameConnectionListener extends Listener {
 

@@ -6,14 +6,14 @@ import com.badlogic.gdx.Gdx;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
 
-import de.instinct.eqfleetshared.net.KryoRegistrator;
+import de.instinct.engine.net.KryoRegistrator;
 
 public class GameClient {
 	
 	private final int PORT_TCP = 9006;
     private final int PORT_UDP = 9011;
-    private final String ADDRESS = "eqgame.dev";
-    //private final String ADDRESS = "localhost";
+    //private final String ADDRESS = "eqgame.dev";
+    private final String ADDRESS = "localhost";
     private GameConnectionListener connectionListener;
 	
 	public Client client;
