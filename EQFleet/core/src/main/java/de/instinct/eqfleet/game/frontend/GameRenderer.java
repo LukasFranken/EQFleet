@@ -188,7 +188,8 @@ public class GameRenderer {
 				activeAncientPlanet = planet;
 			}
 		}
-		
+		Player owner = EngineUtility.getPlayer(Game.activeGameState, activeAncientPlanet.ownerId);
+		Player self = EngineUtility.getPlayer(Game.activeGameState, Game.playerId);
 		if (activeAncientPlanet != null) {
 		    if (ancientOwner != activeAncientPlanet.ownerId) {
 		        if (activeAncientPlanet.ownerId != 0) {
@@ -196,20 +197,17 @@ public class GameRenderer {
 		        } else {
 		            ParticleRenderer.stop("ancient");
 		        }
-		        Player ancientOwnerTeam = EngineUtility.getPlayer(Game.activeGameState, activeAncientPlanet.ownerId);
-		        ancientOwner = ancientOwnerTeam.teamId;
+		        ancientOwner = owner.teamId;
 		        if (ancientOwner == 1) {
 		        	ownElapsed = 0f;
 		        }
-		        if (ancientOwner == 2) {
+		        if (ancientOwner != 0 && owner.teamId != self.teamId) {
 		        	enemyElapsed = 0f;
 		        }
 		    }
 
 		    Vector3 projected = camera.project(new Vector3(activeAncientPlanet.xPos, activeAncientPlanet.yPos, 0));
 		    Vector2 source = new Vector2(projected.x, projected.y);
-		    Player owner = EngineUtility.getPlayer(Game.activeGameState, activeAncientPlanet.ownerId);
-		    Player self = EngineUtility.getPlayer(Game.activeGameState, Game.playerId);
 		    Vector2 target = (owner.teamId == self.teamId)
 		        ? new Vector2(50, 260)
 		        : new Vector2(50, 600);
@@ -348,7 +346,9 @@ public class GameRenderer {
 	    enemyElapsed += Gdx.graphics.getDeltaTime();
 	    if (activeAncientPlanet != null) {
 	    	if (activeAncientPlanet.ownerId != 0) {
-	    		if (activeAncientPlanet.ownerId == Game.playerId) {
+	    		Player owner = EngineUtility.getPlayer(Game.activeGameState, activeAncientPlanet.ownerId);
+			    Player self = EngineUtility.getPlayer(Game.activeGameState, Game.playerId);
+	    		if (owner.teamId == self.teamId) {
 	    			ownAlphaStore += Gdx.graphics.getDeltaTime();
 	    		} else {
 	    			enemyAlphaStore += Gdx.graphics.getDeltaTime();
@@ -392,7 +392,7 @@ public class GameRenderer {
 
 	private void renderUI(GameState state) {
 		Player self = EngineUtility.getPlayer(state, Game.playerId);
-		Player enemy1 = state.players.stream().filter(player -> player.teamId != self.teamId).findFirst().orElse(null);
+		Player enemy1 = state.players.stream().filter(player -> player.teamId != 0 && player.teamId != self.teamId).findFirst().orElse(null);
 
 		float scaleX = Gdx.graphics.getWidth() / 400f;
 		float scaleY = Gdx.graphics.getHeight() / 900f;
@@ -503,7 +503,7 @@ public class GameRenderer {
 		if (Game.activeGameState != null) {
 			int winner = Game.activeGameState.winner;
 			if (winner != 0) {
-				if (winner == Game.playerId) {
+				if (winner == EngineUtility.getPlayer(Game.activeGameState, Game.playerId).teamId) {
 					message = "VICTORY";
 				} else if (winner != 0) {
 					message = "DEFEATED";
