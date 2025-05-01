@@ -33,6 +33,7 @@
     <pattern>org.apache.harmony.security.provider.crypto.CryptoProvider</pattern>
 	<pattern>com.esotericsoftware.kryo.**</pattern>
 	<pattern>net.mgsx.gltf.data.data.GLTFBuffer</pattern>
+	<pattern>com.fasterxml.jackson.**</pattern>
   </forceLinkClasses>
   <libs>
       <lib>z</lib>

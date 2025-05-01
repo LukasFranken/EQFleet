@@ -1,13 +1,13 @@
 package de.instinct.eqfleet.net;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 import com.badlogic.gdx.utils.Timer;
 
 import de.instinct.api.core.API;
 import de.instinct.eqfleet.net.model.Request;
+import de.instinct.eqfleet.net.model.RequestConsumer;
+import de.instinct.eqfleet.net.model.RequestSupplier;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
 
 public class WebManager {
@@ -41,7 +41,7 @@ public class WebManager {
         }
     }
     
-    public static <T> void enqueue(Supplier<T> requestSupplier, Consumer<T> responseHandler) {
+    public static <T> void enqueue(RequestSupplier<T> requestSupplier, RequestConsumer<T> responseHandler) {
         Request<T> request = new Request<>();
         request.setRequestAction(() -> {
             T result = requestSupplier.get();

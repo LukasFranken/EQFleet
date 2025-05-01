@@ -12,8 +12,8 @@ public class GameClient {
 	
 	private final int PORT_TCP = 9006;
     private final int PORT_UDP = 9011;
-    //private final String ADDRESS = "eqgame.dev";
-    private final String ADDRESS = "localhost";
+    private final String ADDRESS = "eqgame.dev";
+    //private final String ADDRESS = "localhost";
     private GameConnectionListener connectionListener;
 	
 	public Client client;
