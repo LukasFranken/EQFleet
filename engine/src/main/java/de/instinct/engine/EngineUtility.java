@@ -1,5 +1,11 @@
 package de.instinct.engine;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
@@ -64,52 +70,73 @@ public class EngineUtility {
 	
 	public static void checkVictory(GameState state) {
 	    if (state.winner != 0) return;
-	    
-	    // ATP INSTANT WIN
-	    for (Player player : state.players) {
-	        if (player.ancientTechnologyPoints >= state.atpToWin) {
-	            state.winner = (int) player.playerId;
+
+	    // Build a lookup: playerId -> teamId
+	    Map<Integer,Integer> playerToTeam = new HashMap<>();
+	    for (Player p : state.players) {
+	        playerToTeam.put(p.playerId, p.teamId);
+	    }
+
+	    // 1) ATP INSTANT WIN and also accumulate totals for later
+	    Map<Integer, Double> teamATPs = new HashMap<>();
+	    for (Player p : state.players) {
+	        teamATPs.merge(
+	            p.teamId,
+	            p.ancientTechnologyPoints,
+	            Double::sum
+	        );
+	        if (teamATPs.get(p.teamId) >= state.atpToWin) {
+	            state.winner = p.teamId;
 	            return;
 	        }
 	    }
-	    
-	    // TIMEOUT VICTORY
+
+	    // 2) TIMEOUT VICTORY: team with max total ATP wins
 	    if (state.gameTimeMS >= state.maxGameTimeMS) {
-	        Player best = null;
-	        for (Player player : state.players) {
-	            if (best == null || player.ancientTechnologyPoints > best.ancientTechnologyPoints) {
-	                best = player;
+	        int winningTeam = teamATPs.entrySet().stream()
+	            .max(Map.Entry.comparingByValue())
+	            .map(Map.Entry::getKey)
+	            .orElse(0);
+	        if (winningTeam != 0) {
+	            state.winner = winningTeam;
+	            return;
+	        }
+	    }
+
+	    // 3) DEFAULT PLANET + FLEET ELIMINATION
+	    // Count planets by team
+	    Map<Integer, Integer> teamPlanets = new HashMap<>();
+	    for (Planet pl : state.planets) {
+	        int teamId = playerToTeam.getOrDefault(pl.ownerId, 0);
+	        if (teamId != 0) {
+	            teamPlanets.merge(teamId, 1, Integer::sum);
+	        }
+	    }
+	    // Count fleets by team
+	    Map<Integer, Integer> teamFleets = new HashMap<>();
+	    for (GameEvent evt : state.activeEvents) {
+	        if (evt instanceof FleetMovementEvent) {
+	            FleetMovementEvent fm = (FleetMovementEvent)evt;
+	            int teamId = playerToTeam.getOrDefault(fm.playerId, 0);
+	            if (teamId != 0) {
+	                teamFleets.merge(teamId, 1, Integer::sum);
 	            }
 	        }
-	        if (best != null) {
-	            state.winner = (int) best.playerId;
-	            return;
-	        } else {
-	        	state.winner = 1;
-	        }
-	    }
-	    
-	    // DEFAULT PLANET+FLEET ELIMINATION
-	    int player1Planets = 0, player2Planets = 0;
-	    int player1Fleets = 0, player2Fleets = 0;
-
-	    for (Planet planet : state.planets) {
-	        if (planet.ownerId == 1) player1Planets++;
-	        else if (planet.ownerId == 2) player2Planets++;
 	    }
 
-	    for (GameEvent event : state.activeEvents) {
-	        if (event instanceof FleetMovementEvent) {
-	            FleetMovementEvent fleet = (FleetMovementEvent) event;
-	            if (fleet.playerId == 1) player1Fleets++;
-	            else if (fleet.playerId == 2) player2Fleets++;
+	    // Determine which teams are still “alive”
+	    Set<Integer> alive = new HashSet<>(teamATPs.keySet());
+	    for (Integer teamId : new ArrayList<>(alive)) {
+	        int planets = teamPlanets.getOrDefault(teamId, 0);
+	        int fleets  = teamFleets.getOrDefault(teamId, 0);
+	        if (planets == 0 && fleets == 0) {
+	            alive.remove(teamId);
 	        }
 	    }
 
-	    if (player2Planets == 0 && player2Fleets == 0) {
-	        state.winner = 1;
-	    } else if (player1Planets == 0 && player1Fleets == 0) {
-	        state.winner = 2;
+	    // If exactly one team remains, it wins
+	    if (alive.size() == 1) {
+	        state.winner = alive.iterator().next();
 	    }
 	}
 

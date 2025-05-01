@@ -102,8 +102,9 @@ public class EventEngine {
 
 	private void applyFleetMovement(GameState state, FleetMovementEvent event) {
 	    Planet toPlanet = EngineUtility.getPlanet(state, event.toPlanetId);
-
-	    if (toPlanet.ownerId != event.playerId) {
+	    Player fromPlayer = EngineUtility.getPlayer(state, event.playerId);
+	    Player toPlayer = EngineUtility.getPlayer(state, toPlanet.ownerId);
+	    if (fromPlayer.teamId != toPlayer.teamId) {
 	        toPlanet.value -= event.value;
 	        if (toPlanet.value < 0) {
 	            toPlanet.ownerId = event.playerId;
