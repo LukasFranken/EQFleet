@@ -116,6 +116,8 @@ public class PlayTab {
 	}
 
 	public static void loadData() {
+		lobbyStatus = null;
+		currentMatchmakingStatus = null;
 		Timer.schedule(new Timer.Task() {
         	
             @Override

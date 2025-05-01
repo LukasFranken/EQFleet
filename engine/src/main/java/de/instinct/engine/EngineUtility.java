@@ -64,7 +64,7 @@ public class EngineUtility {
 	
 	public static void checkVictory(GameState state) {
 	    if (state.winner != 0) return;
-
+	    
 	    // ATP INSTANT WIN
 	    for (Player player : state.players) {
 	        if (player.ancientTechnologyPoints >= state.atpToWin) {
@@ -72,7 +72,7 @@ public class EngineUtility {
 	            return;
 	        }
 	    }
-
+	    
 	    // TIMEOUT VICTORY
 	    if (state.gameTimeMS >= state.maxGameTimeMS) {
 	        Player best = null;
@@ -88,7 +88,7 @@ public class EngineUtility {
 	        	state.winner = 1;
 	        }
 	    }
-
+	    
 	    // DEFAULT PLANET+FLEET ELIMINATION
 	    int player1Planets = 0, player2Planets = 0;
 	    int player1Fleets = 0, player2Fleets = 0;

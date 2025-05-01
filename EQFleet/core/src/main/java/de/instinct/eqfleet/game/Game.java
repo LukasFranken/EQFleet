@@ -3,8 +3,6 @@ package de.instinct.eqfleet.game;
 import java.util.Queue;
 import java.util.UUID;
 
-import com.badlogic.gdx.Gdx;
-
 import de.instinct.engine.model.GameState;
 import de.instinct.engine.net.message.NetworkMessage;
 import de.instinct.engine.net.message.types.PlayerAssigned;
@@ -13,6 +11,7 @@ import de.instinct.eqfleet.game.backend.engine.local.tutorial.TutorialMode;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.GuideEvent;
 import de.instinct.eqfleet.game.frontend.GameRenderer;
 import de.instinct.eqfleet.game.frontend.GameRendererConfig;
+import de.instinct.eqlibgdxutils.debug.logging.Logger;
 import de.instinct.eqlibgdxutils.net.MessageQueue;
 
 public class Game {
@@ -66,7 +65,7 @@ public class Game {
 
 	public static void assignPlayer(PlayerAssigned playerAssigned) {
 		playerId = playerAssigned.playerId;
-        Gdx.app.log("Client", "Assigned player ID: " + playerId);
+        Logger.log("Client", "Assigned player ID: " + playerId);
 	}
 
 	public static void startTutorial(TutorialMode mode) {

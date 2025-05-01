@@ -18,7 +18,6 @@ public class OrderValidator {
 			if (fleetMovementOrder.fromPlanetId == fleetMovementOrder.toPlanetId) return false;
 			if (fromPlanet.value < 2) return false;
 			if (player.currentCommandPoints < 1) return false;
-			
 			return true;
 		}
 		return false;

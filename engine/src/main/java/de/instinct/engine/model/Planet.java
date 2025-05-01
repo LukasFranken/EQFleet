@@ -1,5 +1,8 @@
 package de.instinct.engine.model;
 
+import lombok.ToString;
+
+@ToString
 public class Planet {
 	
 	public int id;

@@ -14,6 +14,8 @@ import de.instinct.engine.model.event.GameEvent;
 import de.instinct.engine.model.event.types.FleetMovementEvent;
 import de.instinct.engine.net.message.NetworkMessage;
 import de.instinct.engine.net.message.types.FleetMovementMessage;
+import de.instinct.engine.net.message.types.JoinMessage;
+import de.instinct.engine.net.message.types.PlayerAssigned;
 
 public class KryoRegistrator {
 	
@@ -30,6 +32,8 @@ public class KryoRegistrator {
 		kryo.register(NetworkMessage.class);
 		kryo.register(AiPlayer.class);
 		kryo.register(AiDifficulty.class);
+		kryo.register(JoinMessage.class);
+		kryo.register(PlayerAssigned.class);
 	}
 
 }
