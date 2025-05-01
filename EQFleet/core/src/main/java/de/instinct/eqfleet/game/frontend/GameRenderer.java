@@ -18,7 +18,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import de.instinct.api.matchmaking.model.FactionMode;
 import de.instinct.engine.EngineUtility;
 import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.Planet;
@@ -29,7 +28,6 @@ import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.GuideEvent;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.subtypes.CameraMoveGuideEvent;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.subtypes.DialogGuideEvent;
-import de.instinct.eqfleet.menu.module.main.tab.play.PlayTab;
 import de.instinct.eqlibgdxutils.MathUtil;
 import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.rendering.GridRenderer;
@@ -56,9 +54,9 @@ public class GameRenderer {
 	private Map<Integer, ModelInstance> planetModels;
 	private Map<FleetMovementEvent, ModelInstance> fleetModels;
 
-	private final Color selfColor = Color.BLUE;
-	private final Color teammate1Color = Color.PURPLE;
-	private final Color teammate2Color = Color.PINK;
+	private final Color teammate1Color = Color.BLUE;
+	private final Color teammate2Color = Color.PURPLE;
+	private final Color teammate3Color = Color.PINK;
 	private final Color enemyColor = Color.RED;
 	private final Color ancientColor = Color.GOLD;
 	private final Color neutralColor = Color.DARK_GRAY;
@@ -150,11 +148,11 @@ public class GameRenderer {
 
 	public void render() {
 		GameState state = Game.activeGameState;
-		
-		if (isFlipped && Game.playerId == 1) {
+		Player self = EngineUtility.getPlayer(state, Game.playerId);
+		if (isFlipped && self.teamId == 1) {
 			flip();
 		}
-		if (!isFlipped && Game.playerId == 2) {
+		if (!isFlipped && self.teamId == 2) {
 			flip();
 		}
 		
@@ -194,7 +192,8 @@ public class GameRenderer {
 		        } else {
 		            ParticleRenderer.stop("ancient");
 		        }
-		        ancientOwner = activeAncientPlanet.ownerId;
+		        Player ancientOwnerTeam = EngineUtility.getPlayer(Game.activeGameState, activeAncientPlanet.ownerId);
+		        ancientOwner = ancientOwnerTeam.teamId;
 		        if (ancientOwner == 1) {
 		        	ownElapsed = 0f;
 		        }
@@ -665,23 +664,12 @@ public class GameRenderer {
 
 	private Color getOwnerColor(int ownerId) {
 		if (ownerId == 0) return neutralColor;
-		if (ownerId == Game.playerId) return selfColor;
 		Player player = EngineUtility.getPlayer(Game.activeGameState, ownerId);
 		Player self = EngineUtility.getPlayer(Game.activeGameState, Game.playerId);
 		if (player.teamId != self.teamId) return enemyColor;
-		if (PlayTab.lobbyStatus.getType().factionMode == FactionMode.TWO_VS_TWO) return teammate1Color;
-		if (Game.playerId == 1 || Game.playerId == 4) {
-			if (ownerId == 2 || ownerId == 5) return teammate1Color;
-			if (ownerId == 3 || ownerId == 6) return teammate2Color;
-		}
-		if (Game.playerId == 2 || Game.playerId == 5) {
-			if (ownerId == 1 || ownerId == 4) return teammate1Color;
-			if (ownerId == 3 || ownerId == 6) return teammate2Color;
-		}
-		if (Game.playerId == 3 || Game.playerId == 6) {
-			if (ownerId == 1 || ownerId == 4) return teammate1Color;
-			if (ownerId == 2 || ownerId == 5) return teammate2Color;
-		}
+		if (ownerId == 1 || ownerId == 4) return teammate1Color;
+		if (ownerId == 2 || ownerId == 5) return teammate2Color;
+		if (ownerId == 3 || ownerId == 6) return teammate3Color;
 		return Color.WHITE;
 	}
 
