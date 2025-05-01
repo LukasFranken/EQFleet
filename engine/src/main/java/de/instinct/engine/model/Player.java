@@ -11,6 +11,5 @@ public class Player {
 	public double commandPointsGenerationSpeed;
 	public double startCommandPoints;
 	public double maxCommandPoints;
-	public double ancientTechnologyPoints;
 
 }

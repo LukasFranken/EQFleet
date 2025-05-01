@@ -1,6 +1,7 @@
 package de.instinct.engine.net;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.PriorityQueue;
 
 import com.esotericsoftware.kryo.Kryo;
@@ -23,6 +24,7 @@ public class KryoRegistrator {
 		kryo.register(FleetMovementMessage.class);
 		kryo.register(String.class);
 		kryo.register(ArrayList.class);
+		kryo.register(HashMap.class);
 		kryo.register(Planet.class);
 		kryo.register(Player.class);
 		kryo.register(GameState.class);

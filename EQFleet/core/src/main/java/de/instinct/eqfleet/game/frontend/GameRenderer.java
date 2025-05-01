@@ -208,7 +208,9 @@ public class GameRenderer {
 
 		    Vector3 projected = camera.project(new Vector3(activeAncientPlanet.xPos, activeAncientPlanet.yPos, 0));
 		    Vector2 source = new Vector2(projected.x, projected.y);
-		    Vector2 target = (activeAncientPlanet.ownerId == Game.playerId)
+		    Player owner = EngineUtility.getPlayer(Game.activeGameState, activeAncientPlanet.ownerId);
+		    Player self = EngineUtility.getPlayer(Game.activeGameState, Game.playerId);
+		    Vector2 target = (owner.teamId == self.teamId)
 		        ? new Vector2(50, 260)
 		        : new Vector2(50, 600);
 
@@ -389,9 +391,8 @@ public class GameRenderer {
 	}
 
 	private void renderUI(GameState state) {
-		int enemyId = Game.playerId == 1 ? 2 : 1;
 		Player self = EngineUtility.getPlayer(state, Game.playerId);
-		Player enemy = EngineUtility.getPlayer(state, enemyId);
+		Player enemy1 = state.players.stream().filter(player -> player.teamId != self.teamId).findFirst().orElse(null);
 
 		float scaleX = Gdx.graphics.getWidth() / 400f;
 		float scaleY = Gdx.graphics.getHeight() / 900f;
@@ -414,8 +415,8 @@ public class GameRenderer {
 			831 * scaleY, 
 			82 * scaleX, 
 			26 * scaleY));
-		enemyCPLoadingBar.setMaxValue(enemy.maxCommandPoints);
-		enemyCPLoadingBar.setCurrentValue(enemy.currentCommandPoints);
+		enemyCPLoadingBar.setMaxValue(enemy1.maxCommandPoints);
+		enemyCPLoadingBar.setCurrentValue(enemy1.currentCommandPoints);
 		if (config.getUiElementConfig().isEnemyCPVisible()) enemyCPLoadingBar.render();
 
 		atpLoadingBar.setBounds(new Rectangle(
@@ -425,7 +426,7 @@ public class GameRenderer {
 			207 * scaleY));
 		atpLoadingBar.setDirection(Direction.NORTH);
 		atpLoadingBar.setMaxValue(state.atpToWin);
-		atpLoadingBar.setCurrentValue(self.ancientTechnologyPoints);
+		atpLoadingBar.setCurrentValue(state.teamATPs.get(self.teamId));
 		atpLoadingBar.setCustomDescriptor("");
 		if (config.getUiElementConfig().isOwnAPVisible()) atpLoadingBar.render();
 
@@ -436,7 +437,7 @@ public class GameRenderer {
 			207 * scaleY));
 		enemyATPLoadingBar.setDirection(Direction.SOUTH);
 		enemyATPLoadingBar.setMaxValue(state.atpToWin);
-		enemyATPLoadingBar.setCurrentValue(enemy.ancientTechnologyPoints);
+		enemyATPLoadingBar.setCurrentValue(state.teamATPs.get(enemy1.teamId));
 		if (config.getUiElementConfig().isEnemyAPVisible()) enemyATPLoadingBar.render();
 	}
 

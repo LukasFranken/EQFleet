@@ -1,10 +1,13 @@
 package de.instinct.engine;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -71,40 +74,59 @@ public class EngineUtility {
 	public static void checkVictory(GameState state) {
 	    if (state.winner != 0) return;
 
-	    // Build a lookup: playerId -> teamId
+	    // build a map from playerId → teamId
 	    Map<Integer,Integer> playerToTeam = new HashMap<>();
 	    for (Player p : state.players) {
 	        playerToTeam.put(p.playerId, p.teamId);
 	    }
 
-	    // 1) ATP INSTANT WIN and also accumulate totals for later
-	    Map<Integer, Double> teamATPs = new HashMap<>();
+	    // 1) ATP INSTANT WIN (and accumulate totals)
 	    for (Player p : state.players) {
-	        teamATPs.merge(
-	            p.teamId,
-	            p.ancientTechnologyPoints,
-	            Double::sum
-	        );
-	        if (teamATPs.get(p.teamId) >= state.atpToWin) {
+	        if (state.teamATPs.get(p.teamId) >= state.atpToWin) {
 	            state.winner = p.teamId;
 	            return;
 	        }
 	    }
 
-	    // 2) TIMEOUT VICTORY: team with max total ATP wins
+	    // 2) TIMEOUT VICTORY WITH PLANET TIE‐BREAKER
 	    if (state.gameTimeMS >= state.maxGameTimeMS) {
-	        int winningTeam = teamATPs.entrySet().stream()
-	            .max(Map.Entry.comparingByValue())
+	        // find the maximum ATP value
+	        double maxATP = state.teamATPs.values().stream()
+	            .mapToDouble(Double::doubleValue)
+	            .max()
+	            .orElse(0.0);
+
+	        // collect all teams that share that max
+	        List<Integer> topTeams = state.teamATPs.entrySet().stream()
+	            .filter(e -> e.getValue() == maxATP)
 	            .map(Map.Entry::getKey)
-	            .orElse(0);
-	        if (winningTeam != 0) {
-	            state.winner = winningTeam;
+	            .collect(Collectors.toList());
+
+	        if (topTeams.size() == 1) {
+	            // clear winner by ATP
+	            state.winner = topTeams.get(0);
 	            return;
 	        }
+
+	        // tie: break by planet count
+	        Map<Integer, Integer> teamPlanets = new HashMap<>();
+	        for (Planet pl : state.planets) {
+	            int teamId = playerToTeam.getOrDefault(pl.ownerId, 0);
+	            if (teamId != 0) {
+	                teamPlanets.merge(teamId, 1, Integer::sum);
+	            }
+	        }
+	        // pick the tied team with the most planets
+	        int winningTeam = topTeams.stream()
+	            .max(Comparator.comparingInt(t -> teamPlanets.getOrDefault(t, 0)))
+	            .orElse(topTeams.get(0));
+
+	        state.winner = winningTeam;
+	        return;
 	    }
 
-	    // 3) DEFAULT PLANET + FLEET ELIMINATION
-	    // Count planets by team
+	    // 3) DEFAULT PLANET+FLEET ELIMINATION
+	    //     eliminate any team with no planets AND no fleets
 	    Map<Integer, Integer> teamPlanets = new HashMap<>();
 	    for (Planet pl : state.planets) {
 	        int teamId = playerToTeam.getOrDefault(pl.ownerId, 0);
@@ -112,11 +134,11 @@ public class EngineUtility {
 	            teamPlanets.merge(teamId, 1, Integer::sum);
 	        }
 	    }
-	    // Count fleets by team
+
 	    Map<Integer, Integer> teamFleets = new HashMap<>();
 	    for (GameEvent evt : state.activeEvents) {
 	        if (evt instanceof FleetMovementEvent) {
-	            FleetMovementEvent fm = (FleetMovementEvent)evt;
+	            FleetMovementEvent fm = (FleetMovementEvent) evt;
 	            int teamId = playerToTeam.getOrDefault(fm.playerId, 0);
 	            if (teamId != 0) {
 	                teamFleets.merge(teamId, 1, Integer::sum);
@@ -124,8 +146,8 @@ public class EngineUtility {
 	        }
 	    }
 
-	    // Determine which teams are still “alive”
-	    Set<Integer> alive = new HashSet<>(teamATPs.keySet());
+	    // build the set of “alive” teams
+	    Set<Integer> alive = new HashSet<>(state.teamATPs.keySet());
 	    for (Integer teamId : new ArrayList<>(alive)) {
 	        int planets = teamPlanets.getOrDefault(teamId, 0);
 	        int fleets  = teamFleets.getOrDefault(teamId, 0);
@@ -134,7 +156,6 @@ public class EngineUtility {
 	        }
 	    }
 
-	    // If exactly one team remains, it wins
 	    if (alive.size() == 1) {
 	        state.winner = alive.iterator().next();
 	    }

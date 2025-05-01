@@ -56,10 +56,8 @@ public class EventEngine {
 	            	double actualGain = Math.min(available, desired);
 
 	            	planet.value -= actualGain;
-	            	owner.ancientTechnologyPoints += actualGain;
-	            	if (owner.ancientTechnologyPoints > state.atpToWin) {
-	            		owner.ancientTechnologyPoints = state.atpToWin;
-	            	}
+	            	double newATPValue = state.teamATPs.get(owner.teamId) + actualGain;
+	            	state.teamATPs.put(owner.teamId, newATPValue > state.atpToWin ? state.atpToWin : newATPValue);
 
 	            	if (planet.value <= 0) {
 	            	    planet.ownerId = 0;
