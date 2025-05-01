@@ -148,17 +148,11 @@ public class GameRenderer {
 
 	public void render() {
 		GameState state = Game.activeGameState;
-		Player self = EngineUtility.getPlayer(state, Game.playerId);
-		if (isFlipped && self.teamId == 1) {
-			flip();
-		}
-		if (!isFlipped && self.teamId == 2) {
-			flip();
-		}
 		
 		camera.update();
 
 		if (state != null && state.winner == 0) {
+			checkFlip();
 			if (config.isVisible()) {
 				gridRenderer.drawGrid(camera);
 				renderParticles();
@@ -176,6 +170,16 @@ public class GameRenderer {
 		
 		renderMessageText();
 		renderGuideEvents();
+	}
+
+	private void checkFlip() {
+		Player self = EngineUtility.getPlayer(Game.activeGameState, Game.playerId);
+		if (isFlipped && self.teamId == 1) {
+			flip();
+		}
+		if (!isFlipped && self.teamId == 2) {
+			flip();
+		}
 	}
 
 	private void renderParticles() {
