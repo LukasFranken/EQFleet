@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import com.badlogic.gdx.math.Rectangle;
+
 import de.instinct.api.auth.dto.TokenVerificationResponse;
 import de.instinct.api.core.API;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.TutorialMode;
@@ -263,7 +265,9 @@ public class Intro {
 		elementQueue.add(firstTimeDialog);
 	}
 
+	private static BlurShapeRenderer blurRenderer = new BlurShapeRenderer();
 	public static void render() {
+		blurRenderer.drawBluredRectangle(new Rectangle(200, 200, 50, 50), 5, 1.2f);
 		if (active) {
 			introSlideshow.render();
 		}
