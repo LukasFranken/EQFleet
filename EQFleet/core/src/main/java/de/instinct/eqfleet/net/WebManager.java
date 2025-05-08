@@ -5,6 +5,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import com.badlogic.gdx.utils.Timer;
 
 import de.instinct.api.core.API;
+import de.instinct.eqfleet.GlobalStaticData;
 import de.instinct.eqfleet.net.model.Request;
 import de.instinct.eqfleet.net.model.RequestConsumer;
 import de.instinct.eqfleet.net.model.RequestSupplier;

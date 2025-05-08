@@ -7,13 +7,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
+import de.instinct.eqfleet.GlobalStaticData;
 import de.instinct.eqfleet.menu.MenuTab;
 import de.instinct.eqfleet.menu.common.Renderer;
 import de.instinct.eqfleet.menu.module.main.tab.loadout.LoadoutTab;
 import de.instinct.eqfleet.menu.module.main.tab.play.PlayTab;
 import de.instinct.eqfleet.menu.module.main.tab.profile.ProfileTab;
 import de.instinct.eqfleet.menu.module.main.tab.settings.SettingsTab;
-import de.instinct.eqfleet.net.GlobalStaticData;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;

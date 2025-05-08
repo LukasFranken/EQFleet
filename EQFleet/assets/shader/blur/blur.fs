@@ -1,26 +1,26 @@
 #ifdef GL_ES
-precision mediump float;
+precision highp float;
 #endif
 
-varying vec2 v_uv;
 uniform sampler2D u_texture;
-uniform vec2 u_direction;   // e.g. (1,0) for horiz, (0,1) for vert
-uniform float u_radius;     // how “wide” to blur
-const float sigma = 4.0;    // Gaussian sigma
+uniform float darkshift;
+varying vec2 v_texCoord0;
 
-float gaussian(float x) {
-    return exp(-0.5 * (x*x)/(sigma*sigma)) / (sigma * sqrt(2.0 * 3.14159));
-}
+uniform float blurRadius;
 
 void main() {
     vec4 sum = vec4(0.0);
-    float norm = 0.0;
-    // sample from -radius to +radius
-    for (float i = -u_radius; i <= u_radius; i++) {
-        float w = gaussian(i);
-        vec2 off = u_direction * i / textureSize(u_texture, 0);
-        sum += texture2D(u_texture, v_uv + off) * w;
-        norm += w;
+    float totalWeight = 0.0;
+
+    for (int x = -4; x <= 4; x++) {
+        for (int y = -4; y <= 4; y++) {
+            float weight = 1.0 - abs(float(x) + float(y)) / 8.0;
+            vec2 offset = vec2(float(x), float(y)) * blurRadius;
+            sum += texture2D(u_texture, v_texCoord0 + offset) * weight;
+            totalWeight += weight;
+        }
     }
-    gl_FragColor = (sum / norm) * 1.5;
+
+    vec4 sampledColor = sum / totalWeight;
+    gl_FragColor = sampledColor * darkshift;
 }

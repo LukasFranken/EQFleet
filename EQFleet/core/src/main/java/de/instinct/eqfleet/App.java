@@ -36,7 +36,7 @@ public class App extends ApplicationAdapter {
     	CursorUtil.createCursor();
     	PreferenceUtil.init("EQFleet");
     	WebManager.init();
-        initializeDebugger();
+    	initializeDebugger();
         TextureManager.init();
         Intro.init();
         Game.init();
@@ -47,7 +47,9 @@ public class App extends ApplicationAdapter {
 
     private void initializeDebugger() {
     	DebugUtil.init();
-    	//DebugUtil.toggle();
+    	if (GlobalStaticData.mode == ApplicationMode.DEV) {
+    		DebugUtil.toggle();
+    	}
         fpsMetric = DoubleMetric.builder()
         		.decimals(2)
         		.tag("fps")

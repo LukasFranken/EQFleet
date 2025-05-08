@@ -2,7 +2,7 @@ package de.instinct.eqfleet.menu.module.main.tab.profile;
 
 import de.instinct.api.core.API;
 import de.instinct.api.meta.dto.NameRegisterResponseCode;
-import de.instinct.eqfleet.net.GlobalStaticData;
+import de.instinct.eqfleet.GlobalStaticData;
 import de.instinct.eqfleet.net.WebManager;
 
 public class ProfileTab {

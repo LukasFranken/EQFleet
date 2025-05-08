@@ -26,7 +26,7 @@ public class Menu {
 	
 	public static void activate() {
 		ProfileTab.loadData();
-		MainMenu.changeTab(MenuTab.PLAY);
+		MainMenu.changeTab(MenuTab.PROFILE);
 		active = true;
 		AudioManager.play("neon_horizon_ambient", true);
 	}

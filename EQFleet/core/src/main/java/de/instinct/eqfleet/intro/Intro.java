@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.api.auth.dto.TokenVerificationResponse;
@@ -267,7 +268,7 @@ public class Intro {
 
 	private static BlurShapeRenderer blurRenderer = new BlurShapeRenderer();
 	public static void render() {
-		blurRenderer.drawBluredRectangle(new Rectangle(200, 200, 50, 50), 5, 1.2f);
+		blurRenderer.drawBlurredBox(new Rectangle(200, 200, 50, 50), 5, Color.WHITE);
 		if (active) {
 			introSlideshow.render();
 		}

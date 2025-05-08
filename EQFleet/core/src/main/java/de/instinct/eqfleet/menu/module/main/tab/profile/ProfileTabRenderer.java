@@ -4,8 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.api.meta.dto.NameRegisterResponseCode;
+import de.instinct.eqfleet.GlobalStaticData;
 import de.instinct.eqfleet.menu.common.Renderer;
-import de.instinct.eqfleet.net.GlobalStaticData;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.LimitedInputField;
