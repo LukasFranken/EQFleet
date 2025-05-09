@@ -56,8 +56,8 @@ public class BlurShapeRenderer {
 
         fboA.begin();
         Gdx.gl.glClearColor(0, 0, 0, 1f);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        shapes.begin(ShapeRenderer.ShapeType.Filled);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+        shapes.begin(ShapeRenderer.ShapeType.Line);
         shapes.setColor(Color.WHITE);
         shapes.rect(bounds.x, bounds.y, bounds.width, bounds.height);
         shapes.end();

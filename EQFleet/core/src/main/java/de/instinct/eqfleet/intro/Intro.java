@@ -276,7 +276,7 @@ public class Intro {
 	}
 
 	private static BlurShapeRenderer blurRenderer = new BlurShapeRenderer();
-	private static float blur = 0f;
+	private static float blur = 0.75f;
 	public static void render() {
 		blurMetric.setValue(blur);
 		DebugUtil.update(blurMetric);
@@ -285,7 +285,6 @@ public class Intro {
 			introSlideshow.render();
 		}
 		blurRenderer.drawBlurredRectangle(new Rectangle(200, 200, 50, 50), blur);
-		blur += 0.005f;
 	}
 
 }
