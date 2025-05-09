@@ -14,6 +14,8 @@ import de.instinct.eqfleet.game.backend.engine.local.tutorial.TutorialMode;
 import de.instinct.eqfleet.menu.Menu;
 import de.instinct.eqfleet.net.WebManager;
 import de.instinct.eqlibgdxutils.PreferenceUtil;
+import de.instinct.eqlibgdxutils.debug.DebugUtil;
+import de.instinct.eqlibgdxutils.debug.metrics.FloatMetric;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.Slide;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.Slideshow;
@@ -34,6 +36,8 @@ public class Intro {
 	private static Queue<Slide> elementQueue;
 	
 	private static ClipboardDialog authKeyInsertDialog;
+	
+	private static FloatMetric blurMetric;
 
 	public static void init() {
 		initializeSlideshow();
@@ -45,6 +49,11 @@ public class Intro {
 		} else {
 			loadFirstTimeSlides();
 		}
+		blurMetric = FloatMetric.builder()
+				.decimals(5)
+				.tag("blur")
+				.build();
+		DebugUtil.register(blurMetric);
 	}
 
 	private static void verifyAuthKey(String authKey, boolean loadfirst) {
@@ -267,11 +276,16 @@ public class Intro {
 	}
 
 	private static BlurShapeRenderer blurRenderer = new BlurShapeRenderer();
+	private static float blur = 0f;
 	public static void render() {
-		blurRenderer.drawBlurredBox(new Rectangle(200, 200, 50, 50), 5, Color.WHITE);
+		blurMetric.setValue(blur);
+		DebugUtil.update(blurMetric);
+		
 		if (active) {
 			introSlideshow.render();
 		}
+		blurRenderer.drawBlurredRectangle(new Rectangle(200, 200, 50, 50), blur);
+		blur += 0.005f;
 	}
 
 }

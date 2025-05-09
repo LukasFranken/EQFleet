@@ -60,7 +60,7 @@ public class ProfileTabRenderer extends Renderer {
 
 	@Override
 	public void render() {
-		if (GlobalStaticData.profile.getUsername() == null) {
+		if (GlobalStaticData.profile != null && GlobalStaticData.profile.getUsername() == null) {
 			renderRegistration();
 		} else {
 			renderProfile();

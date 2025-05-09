@@ -2,25 +2,26 @@
 precision highp float;
 #endif
 
+varying vec2 vTexCoord;
 uniform sampler2D u_texture;
-uniform float darkshift;
-varying vec2 v_texCoord0;
-
-uniform float blurRadius;
+uniform vec2        dir;        // (1,0)=horiz, (0,1)=vert
+uniform float       resolution; // FBO width or height, set per-pass
+uniform float       radius;     // blur radius in pixels
 
 void main() {
     vec4 sum = vec4(0.0);
-    float totalWeight = 0.0;
+    vec2 tc  = vTexCoord;
+    float b = radius / resolution;
 
-    for (int x = -4; x <= 4; x++) {
-        for (int y = -4; y <= 4; y++) {
-            float weight = 1.0 - abs(float(x) + float(y)) / 8.0;
-            vec2 offset = vec2(float(x), float(y)) * blurRadius;
-            sum += texture2D(u_texture, v_texCoord0 + offset) * weight;
-            totalWeight += weight;
-        }
-    }
+    sum += texture2D(u_texture, tc + dir * b * -4.0) * 0.0162162162;
+    sum += texture2D(u_texture, tc + dir * b * -3.0) * 0.0540540541;
+    sum += texture2D(u_texture, tc + dir * b * -2.0) * 0.1216216216;
+    sum += texture2D(u_texture, tc + dir * b * -1.0) * 0.1945945946;
+    sum += texture2D(u_texture, tc             ) * 0.2270270270;
+    sum += texture2D(u_texture, tc + dir * b *  1.0) * 0.1945945946;
+    sum += texture2D(u_texture, tc + dir * b *  2.0) * 0.1216216216;
+    sum += texture2D(u_texture, tc + dir * b *  3.0) * 0.0540540541;
+    sum += texture2D(u_texture, tc + dir * b *  4.0) * 0.0162162162;
 
-    vec4 sampledColor = sum / totalWeight;
-    gl_FragColor = sampledColor * darkshift;
+    gl_FragColor = sum;
 }

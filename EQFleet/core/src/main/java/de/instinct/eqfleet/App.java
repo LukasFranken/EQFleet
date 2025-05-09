@@ -36,7 +36,7 @@ public class App extends ApplicationAdapter {
     	CursorUtil.createCursor();
     	PreferenceUtil.init("EQFleet");
     	WebManager.init();
-    	initializeDebugger();
+        initializeDebugger();
         TextureManager.init();
         Intro.init();
         Game.init();
