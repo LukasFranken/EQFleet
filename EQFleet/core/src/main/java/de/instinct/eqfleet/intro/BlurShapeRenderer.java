@@ -50,62 +50,47 @@ public class BlurShapeRenderer {
         shapes.setProjectionMatrix(proj);
     }
 
-    public void drawBlurredRectangle(Rectangle bounds, float blurRadius) {
+    public void drawBlurredRectangle(Rectangle bounds, float glowRadius) {
         int w = Gdx.graphics.getWidth();
         int h = Gdx.graphics.getHeight();
 
         fboA.begin();
-        Gdx.gl.glClearColor(0, 0, 0, 1f);
+        Gdx.gl.glClearColor(0, 0, 0, 0f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
         shapes.begin(ShapeRenderer.ShapeType.Line);
         shapes.setColor(Color.WHITE);
         shapes.rect(bounds.x, bounds.y, bounds.width, bounds.height);
         shapes.end();
         fboA.end();
-
-        blurShader.bind();
-        blurShader.setUniformf("dir",        1f, 0f);
-        blurShader.setUniformf("resolution", w);
-        blurShader.setUniformf("radius",     blurRadius);
-        batch.setShader(blurShader);
+        
         fboB.begin();
+        blurShader.bind();
+        blurShader.setUniformf("dir", 1f, 1f);
+        blurShader.setUniformf("radius", glowRadius);
+        blurShader.setUniformf("resolution", h);
+        batch.setShader(blurShader);
         batch.begin();
-        Gdx.gl.glTexParameteri(GL20.GL_TEXTURE_2D, GL20.GL_TEXTURE_MAG_FILTER, GL20.GL_LINEAR);
         batch.draw(fboA.getColorBufferTexture(), 0, 0, w, h);
         batch.end();
-        fboB.end();
         batch.setShader(null);
+        fboB.end();
 
-        blurShader.bind();
-        blurShader.setUniformf("dir",        0f, 1f);
-        blurShader.setUniformf("resolution", h);
-        blurShader.setUniformf("radius",     blurRadius);
-        batch.setShader(blurShader);
         fboA.begin();
+        blurShader.bind();
+        blurShader.setUniformf("dir", 1f, 1f);
+        blurShader.setUniformf("radius", glowRadius);
+        blurShader.setUniformf("resolution", h);
+        batch.setShader(blurShader);
         batch.begin();
-        Gdx.gl.glTexParameteri(GL20.GL_TEXTURE_2D, GL20.GL_TEXTURE_MAG_FILTER, GL20.GL_LINEAR);
         batch.draw(fboB.getColorBufferTexture(), 0, 0, w, h);
         batch.end();
-        fboA.end();
         batch.setShader(null);
-
-        float bleed = blurRadius * 4f;
-        float dx = bounds.x - bleed;
-        float dy = bounds.y - bleed;
-        float dw = bounds.width  + bleed * 2f;
-        float dh = bounds.height + bleed * 2f;
-
-        float u0 = dx       / w, v0 = dy       / h;
-        float u1 = (dx+dw) / w, v1 = (dy+dh) / h;
-
+        fboA.end();
+        
         batch.begin();
-        batch.draw(
-            fboA.getColorBufferTexture(),
-            dx, dy,
-            dw, dh,
-            u0, v0, u1, v1 
-        );
+        batch.draw(fboB.getColorBufferTexture(), 0, 0, w, h);
         batch.end();
+        batch.setShader(null);
     }
 
     public void dispose() {

@@ -276,15 +276,15 @@ public class Intro {
 	}
 
 	private static BlurShapeRenderer blurRenderer = new BlurShapeRenderer();
-	private static float blur = 0.75f;
+	private static float glow = 1f;
 	public static void render() {
-		blurMetric.setValue(blur);
+		blurMetric.setValue(glow);
 		DebugUtil.update(blurMetric);
 		
 		if (active) {
 			introSlideshow.render();
 		}
-		blurRenderer.drawBlurredRectangle(new Rectangle(200, 200, 50, 50), blur);
+		blurRenderer.drawBlurredRectangle(new Rectangle(200, 200, 50, 50), glow);
 	}
 
 }
