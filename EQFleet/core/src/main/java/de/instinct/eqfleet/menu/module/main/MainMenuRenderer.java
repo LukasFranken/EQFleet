@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.eqfleet.GlobalStaticData;
+import de.instinct.eqfleet.intro.GlowShapeRenderer;
 import de.instinct.eqfleet.menu.MenuTab;
 import de.instinct.eqfleet.menu.common.Renderer;
 import de.instinct.eqfleet.menu.module.main.tab.loadout.LoadoutTab;
@@ -24,14 +25,17 @@ import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 public class MainMenuRenderer extends Renderer {
 	
 	private Map<MenuTab, ColorButton> tabButtons;
+	private GlowShapeRenderer glowShapeRenderer;
 	
 	@Override
 	public void init() {
+		glowShapeRenderer = new GlowShapeRenderer();
 		tabButtons = new HashMap<>();
 		createTabButton(MenuTab.PLAY);
 		createTabButton(MenuTab.LOADOUT);
 		createTabButton(MenuTab.SETTINGS);
 		createTabButton(MenuTab.PROFILE);
+		TextureManager.put("main_rankOutline", glowShapeRenderer.drawBlurredRectangle(new Rectangle(22, Gdx.graphics.getHeight() - 760, 25, 25), DefaultUIValues.skinColor));
 	}
 	
 	private void createTabButton(MenuTab tab) {
@@ -95,8 +99,7 @@ public class MainMenuRenderer extends Renderer {
 	}
 
 	private static void renderLayout() {
-		Rectangle overlayBounds = new Rectangle(0, -15, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		TextureManager.draw(TextureManager.getTexture("ui/image", "menu_ui_layout"), overlayBounds);
+		TextureManager.draw("main_rankOutline");
 	}
 	
 	private static void renderHeader() {

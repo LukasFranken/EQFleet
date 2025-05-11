@@ -5,11 +5,6 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Rectangle;
-
 import de.instinct.api.auth.dto.TokenVerificationResponse;
 import de.instinct.api.core.API;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.TutorialMode;
@@ -17,7 +12,6 @@ import de.instinct.eqfleet.menu.Menu;
 import de.instinct.eqfleet.net.WebManager;
 import de.instinct.eqlibgdxutils.PreferenceUtil;
 import de.instinct.eqlibgdxutils.generic.Action;
-import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.Slide;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.Slideshow;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.interactive.BinaryLabeledDialog;
@@ -28,7 +22,6 @@ import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.model.Slide
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.timed.Macro;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.timed.Message;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.timed.Pause;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 
 public class Intro {
 	
@@ -38,7 +31,6 @@ public class Intro {
 	private static Queue<Slide> elementQueue;
 	
 	private static ClipboardDialog authKeyInsertDialog;
-	private static Texture tex;
 
 	public static void init() {
 		initializeSlideshow();
@@ -50,7 +42,6 @@ public class Intro {
 		} else {
 			loadFirstTimeSlides();
 		}
-		tex = blurRenderer.drawBlurredRectangle(new Rectangle(200, 200, 50, 50), DefaultUIValues.skinColor);
 	}
 
 	private static void verifyAuthKey(String authKey, boolean loadfirst) {
@@ -272,13 +263,10 @@ public class Intro {
 		elementQueue.add(firstTimeDialog);
 	}
 
-	private static BlurShapeRenderer blurRenderer = new BlurShapeRenderer();
 	public static void render() {
 		if (active) {
 			introSlideshow.render();
 		}
-		
-		TextureManager.draw(tex, new Rectangle(0,0,Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 	}
 
 }

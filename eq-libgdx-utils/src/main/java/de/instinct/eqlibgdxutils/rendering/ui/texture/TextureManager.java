@@ -50,7 +50,7 @@ public class TextureManager {
 		String key = packageName + "/" + textureName;
 		Texture texture = textures.get(key);
 		if (texture == null) {
-			texture = textureLoader.getTexture(packageName, key);
+			texture = textureLoader.getTexture(packageName, textureName);
 			textures.put(key, texture);
 		}
 		return texture;

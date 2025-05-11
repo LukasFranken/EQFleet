@@ -14,7 +14,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 
-public class BlurShapeRenderer {
+public class GlowShapeRenderer {
     private final SpriteBatch   batch;
     private final ComplexShapeRenderer shapes;
     private final FrameBuffer   fboA, fboB;
@@ -24,7 +24,7 @@ public class BlurShapeRenderer {
     private final float radius = 50f;
     private final float dropoff = 1f;
 
-    public BlurShapeRenderer() {
+    public GlowShapeRenderer() {
         int w = Gdx.graphics.getWidth();
         int h = Gdx.graphics.getHeight();
 
@@ -63,11 +63,7 @@ public class BlurShapeRenderer {
         int w = Gdx.graphics.getWidth();
         int h = Gdx.graphics.getHeight();
 
-        fboA.begin();
-        Gdx.gl.glClearColor(0, 0, 0, 0f);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
         drawBaseRect(bounds, color);
-        fboA.end();
         
         fboB.begin();
         Gdx.gl.glClearColor(0, 0, 0, 0f);
@@ -87,10 +83,14 @@ public class BlurShapeRenderer {
     }
 
     private void drawBaseRect(Rectangle bounds, Color color) {
-    	shapes.begin(ShapeRenderer.ShapeType.Line);
+    	fboA.begin();
+        Gdx.gl.glClearColor(0, 0, 0, 0f);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+        shapes.begin(ShapeRenderer.ShapeType.Line);
         shapes.setColor(color);
         shapes.roundRectangle(bounds);
         shapes.end();
+        fboA.end();
 	}
 
 	public void dispose() {
