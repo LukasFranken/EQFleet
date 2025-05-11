@@ -19,6 +19,10 @@ public class BlurShapeRenderer {
     private final ComplexShapeRenderer shapes;
     private final FrameBuffer   fboA, fboB;
     private final ShaderProgram blurShader;
+    
+    private final float glow = 1f;
+    private final float radius = 50f;
+    private final float dropoff = 1f;
 
     public BlurShapeRenderer() {
         int w = Gdx.graphics.getWidth();
@@ -35,11 +39,11 @@ public class BlurShapeRenderer {
             throw new RuntimeException("Blur shader failed to compile:\n" + blurShader.getLog());
         }
         blurShader.bind();
-        blurShader.setUniformf("u_radius", 30f);
-        blurShader.setUniformf("u_dropoff", 1f);
-        blurShader.setUniformf("u_texelSize",
-            1f / Gdx.graphics.getWidth(),
-            1f / Gdx.graphics.getHeight());
+        blurShader.setUniformf("u_radius", radius);
+        blurShader.setUniformf("u_dropoff", dropoff);
+        float texelX = 1f / Gdx.graphics.getWidth();
+        float texelY = 1f / Gdx.graphics.getHeight();
+        blurShader.setUniformf("u_texelSize", texelX, texelY);
         fboA = new FrameBuffer(Pixmap.Format.RGBA8888, w, h, false);
         fboB = new FrameBuffer(Pixmap.Format.RGBA8888, w, h, false);
         
@@ -55,7 +59,7 @@ public class BlurShapeRenderer {
         shapes.setProjectionMatrix(proj);
     }
 
-    public void drawBlurredRectangle(Rectangle bounds, Color color, float glow) {
+    public Texture drawBlurredRectangle(Rectangle bounds, Color color) {
         int w = Gdx.graphics.getWidth();
         int h = Gdx.graphics.getHeight();
 
@@ -66,6 +70,8 @@ public class BlurShapeRenderer {
         fboA.end();
         
         fboB.begin();
+        Gdx.gl.glClearColor(0, 0, 0, 0f);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
         batch.setShader(blurShader);
         batch.begin();
         blurShader.setUniformf("u_strength", glow);
@@ -74,10 +80,10 @@ public class BlurShapeRenderer {
         batch.setShader(null);
         fboB.end();
         
-        batch.begin();
-        batch.draw(fboB.getColorBufferTexture(), 0, 0, w, h);
-        batch.end();
-        batch.setShader(null);
+        Texture glowTex = fboB.getColorBufferTexture();
+        glowTex.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+        glowTex.setWrap(TextureWrap.ClampToEdge, TextureWrap.ClampToEdge);
+        return glowTex;
     }
 
     private void drawBaseRect(Rectangle bounds, Color color) {

@@ -1,31 +1,15 @@
 package de.instinct.eqlibgdxutils.rendering.ui.texture.load;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
-
-import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 
 public class TextureLoader {
 	
-	private Map<String, Texture> textures = new HashMap<>();
-	
 	public Texture getTexture(String packageName, String key) {
-		Texture texture = textures.get(key);
-    	if (texture != null) {
-    		return texture;
-    	} else {
-    		texture = new Texture(packageName + "/" + key.toLowerCase().replaceAll(" ", "_") + ".png");
-    		textures.put(key, texture);
-    		return texture;
-    	}
+		return new Texture(packageName + "/" + key.toLowerCase().replaceAll(" ", "_") + ".png");
     }
 	
-	@Deprecated
-	public Texture getTexture(String key) {
+	
+	/*public Texture getTexture(String key) {
 		Texture texture = textures.get(key);
     	if (texture != null) {
     		return texture;
@@ -58,6 +42,6 @@ public class TextureLoader {
         }
 
         return null;
-    }
+    }*/
 
 }
