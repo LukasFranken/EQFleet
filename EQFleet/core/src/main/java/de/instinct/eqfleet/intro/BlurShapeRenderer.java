@@ -16,7 +16,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class BlurShapeRenderer {
     private final SpriteBatch   batch;
-    private final ShapeRenderer shapes;
+    private final ComplexShapeRenderer shapes;
     private final FrameBuffer   fboA, fboB;
     private final ShaderProgram blurShader;
 
@@ -25,7 +25,7 @@ public class BlurShapeRenderer {
         int h = Gdx.graphics.getHeight();
 
         batch  = new SpriteBatch();
-        shapes = new ShapeRenderer();
+        shapes = new ComplexShapeRenderer();
 
         ShaderProgram.pedantic = false;
         String vs = Gdx.files.internal("shader/blur/blur.vs").readString();
@@ -34,7 +34,12 @@ public class BlurShapeRenderer {
         if (!blurShader.isCompiled()) {
             throw new RuntimeException("Blur shader failed to compile:\n" + blurShader.getLog());
         }
-
+        blurShader.bind();
+        blurShader.setUniformf("u_radius", 30f);
+        blurShader.setUniformf("u_dropoff", 1f);
+        blurShader.setUniformf("u_texelSize",
+            1f / Gdx.graphics.getWidth(),
+            1f / Gdx.graphics.getHeight());
         fboA = new FrameBuffer(Pixmap.Format.RGBA8888, w, h, false);
         fboB = new FrameBuffer(Pixmap.Format.RGBA8888, w, h, false);
         
@@ -50,42 +55,24 @@ public class BlurShapeRenderer {
         shapes.setProjectionMatrix(proj);
     }
 
-    public void drawBlurredRectangle(Rectangle bounds, float glowRadius) {
+    public void drawBlurredRectangle(Rectangle bounds, Color color, float glow) {
         int w = Gdx.graphics.getWidth();
         int h = Gdx.graphics.getHeight();
 
         fboA.begin();
         Gdx.gl.glClearColor(0, 0, 0, 0f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-        shapes.begin(ShapeRenderer.ShapeType.Line);
-        shapes.setColor(Color.WHITE);
-        shapes.rect(bounds.x, bounds.y, bounds.width, bounds.height);
-        shapes.end();
+        drawBaseRect(bounds, color);
         fboA.end();
         
         fboB.begin();
-        blurShader.bind();
-        blurShader.setUniformf("dir", 1f, 1f);
-        blurShader.setUniformf("radius", glowRadius);
-        blurShader.setUniformf("resolution", h);
         batch.setShader(blurShader);
         batch.begin();
+        blurShader.setUniformf("u_strength", glow);
         batch.draw(fboA.getColorBufferTexture(), 0, 0, w, h);
         batch.end();
         batch.setShader(null);
         fboB.end();
-
-        fboA.begin();
-        blurShader.bind();
-        blurShader.setUniformf("dir", 1f, 1f);
-        blurShader.setUniformf("radius", glowRadius);
-        blurShader.setUniformf("resolution", h);
-        batch.setShader(blurShader);
-        batch.begin();
-        batch.draw(fboB.getColorBufferTexture(), 0, 0, w, h);
-        batch.end();
-        batch.setShader(null);
-        fboA.end();
         
         batch.begin();
         batch.draw(fboB.getColorBufferTexture(), 0, 0, w, h);
@@ -93,7 +80,14 @@ public class BlurShapeRenderer {
         batch.setShader(null);
     }
 
-    public void dispose() {
+    private void drawBaseRect(Rectangle bounds, Color color) {
+    	shapes.begin(ShapeRenderer.ShapeType.Line);
+        shapes.setColor(color);
+        shapes.roundRectangle(bounds);
+        shapes.end();
+	}
+
+	public void dispose() {
         batch.dispose();
         shapes.dispose();
         fboA.dispose();

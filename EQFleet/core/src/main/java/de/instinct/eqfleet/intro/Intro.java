@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.api.auth.dto.TokenVerificationResponse;
 import de.instinct.api.core.API;
+import de.instinct.eqfleet.GlobalStaticData;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.TutorialMode;
 import de.instinct.eqfleet.menu.Menu;
 import de.instinct.eqfleet.net.WebManager;
@@ -17,6 +18,7 @@ import de.instinct.eqlibgdxutils.PreferenceUtil;
 import de.instinct.eqlibgdxutils.debug.DebugUtil;
 import de.instinct.eqlibgdxutils.debug.metrics.FloatMetric;
 import de.instinct.eqlibgdxutils.generic.Action;
+import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.Slide;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.Slideshow;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.interactive.BinaryLabeledDialog;
@@ -37,7 +39,7 @@ public class Intro {
 	
 	private static ClipboardDialog authKeyInsertDialog;
 	
-	private static FloatMetric blurMetric;
+	private static FloatMetric glowMetric;
 
 	public static void init() {
 		initializeSlideshow();
@@ -49,11 +51,11 @@ public class Intro {
 		} else {
 			loadFirstTimeSlides();
 		}
-		blurMetric = FloatMetric.builder()
+		glowMetric = FloatMetric.builder()
 				.decimals(5)
-				.tag("blur")
+				.tag("glow")
 				.build();
-		DebugUtil.register(blurMetric);
+		DebugUtil.register(glowMetric);
 	}
 
 	private static void verifyAuthKey(String authKey, boolean loadfirst) {
@@ -276,15 +278,16 @@ public class Intro {
 	}
 
 	private static BlurShapeRenderer blurRenderer = new BlurShapeRenderer();
-	private static float glow = 1f;
+	private static float glow = 0f;
 	public static void render() {
-		blurMetric.setValue(glow);
-		DebugUtil.update(blurMetric);
+		glowMetric.setValue(glow);
+		DebugUtil.update(glowMetric);
 		
 		if (active) {
 			introSlideshow.render();
 		}
-		blurRenderer.drawBlurredRectangle(new Rectangle(200, 200, 50, 50), glow);
+		blurRenderer.drawBlurredRectangle(new Rectangle(200, 200, 50, 50), Color.WHITE, 0.3f);
+		glow += 0.001f;
 	}
 
 }
