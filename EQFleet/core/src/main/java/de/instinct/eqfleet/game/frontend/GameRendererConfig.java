@@ -1,5 +1,6 @@
 package de.instinct.eqfleet.game.frontend;
 
+import de.instinct.eqfleet.game.frontend.ui.UIElementConfig;
 import lombok.Builder;
 import lombok.Data;
 

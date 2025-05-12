@@ -34,7 +34,7 @@ public class MainMenuRenderer extends Renderer {
 		createTabButton(MenuTab.SETTINGS);
 		createTabButton(MenuTab.PROFILE);
 		TextureManager.createShapeTexture("main_rankOutline", ComplexShapeType.ROUNDED_RECTANGLE, new Rectangle(15, Gdx.graphics.getHeight() - 65, 36, 35), DefaultUIValues.skinColor);
-		TextureManager.createShapeTexture("main_nameOutline", ComplexShapeType.ROUNDED_RECTANGLE, new Rectangle(50, Gdx.graphics.getHeight() - 60, 120, 25), DefaultUIValues.skinColor);
+		TextureManager.createShapeTexture("main_nameOutline", ComplexShapeType.ROUNDED_RECTANGLE, new Rectangle(60, Gdx.graphics.getHeight() - 60, 120, 25), DefaultUIValues.skinColor);
 	}
 	
 	private void createTabButton(MenuTab tab) {

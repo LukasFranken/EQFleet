@@ -28,6 +28,9 @@ import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.GuideEvent;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.subtypes.CameraMoveGuideEvent;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.subtypes.DialogGuideEvent;
+import de.instinct.eqfleet.game.frontend.ui.UIBounds;
+import de.instinct.eqfleet.game.frontend.ui.UIElementConfig;
+import de.instinct.eqfleet.game.frontend.ui.UIRenderer;
 import de.instinct.eqlibgdxutils.MathUtil;
 import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.rendering.GridRenderer;
@@ -89,8 +92,11 @@ public class GameRenderer {
 	private float enemyAlphaStore;
 	private float ownElapsed;
 	private float enemyElapsed;
+	
+	private UIRenderer uiRenderer;
 
 	public void init() {
+		uiRenderer = new UIRenderer();
 		config = GameRendererConfig.builder()
 				.visible(true)
 				.uiElementConfig(UIElementConfig.builder()
@@ -142,21 +148,7 @@ public class GameRenderer {
 		ownElapsed = 0f;
 		enemyElapsed = 0f;
 		
-		createTextures();
-	}
-	
-	private void createTextures() {
-		float scaleX = Gdx.graphics.getWidth() / 400f;
-		float scaleY = Gdx.graphics.getHeight() / 900f;
 		
-		TextureManager.createShapeTexture("game_ownCP", 
-				ComplexShapeType.ROUNDED_RECTANGLE,
-				new Rectangle(
-						51 * scaleX, 
-						18 * scaleY, 
-						330 * scaleX, 
-						25 * scaleY),
-				teammate1Color);
 	}
 
 	public GameRendererConfig getConfig()  {
@@ -178,8 +170,7 @@ public class GameRenderer {
 				renderFleet(state);
 				inputManager.handleInput(camera, state);
 				renderSelection(state);
-				renderUI(state);
-				renderUIOverlay();
+				uiRenderer.render(state);
 			}
 		} else {
 			activeAncientPlanet = null;
@@ -355,107 +346,6 @@ public class GameRenderer {
 			}
 			currentGuideEvent = null;
 		}
-	}
-	
-	private void renderUIOverlay() {
-	    Rectangle overlayBounds = new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-	    ownElapsed += Gdx.graphics.getDeltaTime();
-	    enemyElapsed += Gdx.graphics.getDeltaTime();
-	    if (activeAncientPlanet != null) {
-	    	if (activeAncientPlanet.ownerId != 0) {
-	    		Player owner = EngineUtility.getPlayer(Game.activeGameState, activeAncientPlanet.ownerId);
-			    Player self = EngineUtility.getPlayer(Game.activeGameState, Game.playerId);
-	    		if (owner.teamId == self.teamId) {
-	    			ownAlphaStore += Gdx.graphics.getDeltaTime();
-	    		} else {
-	    			enemyAlphaStore += Gdx.graphics.getDeltaTime();
-	    		}
-	    	}
-    	}
-	    float conversion = Gdx.graphics.getDeltaTime();
-	    if (ownElapsed > AP_GLOWUP_DELAY) {
-	    	if (ownAlphaStore > 0) {
-	    		ownGlowAlpha = MathUtil.clamp(0f, 1f, ownGlowAlpha + conversion);
-	    		ownAlphaStore -= conversion;
-	    	} else {
-	    		ownGlowAlpha = MathUtil.clamp(0f, 1f, ownGlowAlpha - conversion);
-	    	}
-	    }
-	    if (enemyElapsed > AP_GLOWUP_DELAY) {
-	    	if (enemyAlphaStore > 0) {
-	    		enemyGlowAlpha = MathUtil.clamp(0f, 1f, enemyGlowAlpha + conversion);
-	    		enemyAlphaStore -= conversion;
-	    	} else {
-	    		enemyGlowAlpha = MathUtil.clamp(0f, 1f, enemyGlowAlpha - conversion);
-	    	}
-	    }
-		
-
-	    if (config.getUiElementConfig().isOwnCPVisible())
-	        TextureManager.draw("game_ownCP");
-	    if (config.getUiElementConfig().isEnemyCPVisible())
-	        TextureManager.draw(TextureManager.getTexture("ui/image", "game_ui_layout_enemy_cp"), overlayBounds);
-	    if (config.getUiElementConfig().isOwnAPVisible())
-	        TextureManager.draw(TextureManager.getTexture("ui/image", "game_ui_layout_own_ap"), overlayBounds);
-	    if (config.getUiElementConfig().isEnemyAPVisible()) {
-	    	TextureManager.draw(TextureManager.getTexture("ui/image", "game_ui_layout_enemy_ap"), overlayBounds);
-	    	TextureManager.draw(TextureManager.getTexture("ui/image", "game_ui_layout_own_ap_glow"), overlayBounds, ownGlowAlpha);
-	    }
-	    if (config.getUiElementConfig().isTimeVisible()) {
-	    	TextureManager.draw(TextureManager.getTexture("ui/image", "game_ui_layout_time"), overlayBounds);
-	    	TextureManager.draw(TextureManager.getTexture("ui/image", "game_ui_layout_enemy_ap_glow"), overlayBounds, enemyGlowAlpha);
-	    }
-	}
-
-	private void renderUI(GameState state) {
-		Player self = EngineUtility.getPlayer(state, Game.playerId);
-		Player enemy1 = state.players.stream().filter(player -> player.teamId != 0 && player.teamId != self.teamId).findFirst().orElse(null);
-
-		float scaleX = Gdx.graphics.getWidth() / 400f;
-		float scaleY = Gdx.graphics.getHeight() / 900f;
-
-		long remainingMS = state.maxGameTimeMS - state.gameTimeMS;
-		String remainingTimeLabel = StringUtils.generateCountdownLabel(remainingMS, false);
-		if (config.getUiElementConfig().isTimeVisible()) FontUtil.draw(remainingMS < 60_000 ? Color.RED : Color.WHITE, remainingTimeLabel, 291 * scaleX, 850 * scaleY);
-
-		cpLoadingBar.setBounds(new Rectangle(
-			51 * scaleX, 
-			18 * scaleY, 
-			330 * scaleX, 
-			25 * scaleY));
-		cpLoadingBar.setMaxValue(self.maxCommandPoints);
-		cpLoadingBar.setCurrentValue(self.currentCommandPoints);
-		if (config.getUiElementConfig().isOwnCPVisible()) cpLoadingBar.render();
-
-		enemyCPLoadingBar.setBounds(new Rectangle(
-			51 * scaleX, 
-			831 * scaleY, 
-			82 * scaleX, 
-			26 * scaleY));
-		enemyCPLoadingBar.setMaxValue(enemy1.maxCommandPoints);
-		enemyCPLoadingBar.setCurrentValue(enemy1.currentCommandPoints);
-		if (config.getUiElementConfig().isEnemyCPVisible()) enemyCPLoadingBar.render();
-
-		atpLoadingBar.setBounds(new Rectangle(
-			20 * scaleX, 
-			75 * scaleY, 
-			27 * scaleX, 
-			207 * scaleY));
-		atpLoadingBar.setDirection(Direction.NORTH);
-		atpLoadingBar.setMaxValue(state.atpToWin);
-		atpLoadingBar.setCurrentValue(state.teamATPs.get(self.teamId));
-		atpLoadingBar.setCustomDescriptor("");
-		if (config.getUiElementConfig().isOwnAPVisible()) atpLoadingBar.render();
-
-		enemyATPLoadingBar.setBounds(new Rectangle(
-			20 * scaleX,
-			593 * scaleY, 
-			27 * scaleX, 
-			207 * scaleY));
-		enemyATPLoadingBar.setDirection(Direction.SOUTH);
-		enemyATPLoadingBar.setMaxValue(state.atpToWin);
-		enemyATPLoadingBar.setCurrentValue(state.teamATPs.get(enemy1.teamId));
-		if (config.getUiElementConfig().isEnemyAPVisible()) enemyATPLoadingBar.render();
 	}
 
 	private void renderPlanets(GameState state) {

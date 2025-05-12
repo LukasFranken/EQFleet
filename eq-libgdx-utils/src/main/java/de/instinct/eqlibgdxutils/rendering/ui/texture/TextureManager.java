@@ -43,11 +43,15 @@ public class TextureManager {
 	}
 	
 	public static void draw(String key) {
-		draw(key, new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		draw(key, new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), 1f);
 	}
 	
-	public static void draw(String key, Rectangle bounds) {
-		textureRenderer.draw(textures.get(key), bounds, TextureDrawMode.NORMAL);
+	public static void draw(String key, float alpha) {
+		draw(key, new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), alpha);
+	}
+	
+	public static void draw(String key, Rectangle bounds, float alpha) {
+		textureRenderer.draw(textures.get(key), bounds, alpha);
 	}
 	
 	public static Texture getTexture(String packageName, String textureName) {
