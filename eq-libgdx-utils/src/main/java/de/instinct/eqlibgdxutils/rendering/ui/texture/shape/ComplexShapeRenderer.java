@@ -1,4 +1,4 @@
-package de.instinct.eqfleet.intro;
+package de.instinct.eqlibgdxutils.rendering.ui.texture.shape;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
@@ -6,30 +6,34 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class ComplexShapeRenderer extends ShapeRenderer {
 
-	public void roundRectangle(Rectangle rect) {
+	public void roundRectangle(Rectangle rect, float thickness) {
+		begin(ShapeRenderer.ShapeType.Filled);
+        
 		float x = rect.x;
 		float y = rect.y;
 		float w = rect.width;
 		float h = rect.height;
-		float r = 5;
+		float r = thickness;
 
 		float cx0 = x + r, 	   cy0 = y + r;
 		float cx1 = x + w - r, cy1 = y + r;
 		float cx2 = x + w - r, cy2 = y + h - r;
 		float cx3 = x + r, 	   cy3 = y + h - r;
 
-		cleanArc(cx0, cy0, r, 180f, 90f);
-		cleanArc(cx1, cy1, r, 270f, 90f);
-		cleanArc(cx2, cy2, r, 0f, 90f);
-		cleanArc(cx3, cy3, r, 90f, 90f);
+		arc(cx0, cy0, r, 180f, 90f);
+		arc(cx1, cy1, r, 270f, 90f);
+		arc(cx2, cy2, r, 0f, 90f);
+		arc(cx3, cy3, r, 90f, 90f);
 
-		super.line(x + r, y, x + w - r, y);
-		super.line(x + w, y + r, x + w, y + h - r);
-		super.line(x + w - r, y + h, x + r, y + h);
-		super.line(x, y + h - r, x, y + r);
+		super.rect(x + r, y, w - (r * 2), r);
+		super.rect(x, y + r, r, h - (r * 2));
+		super.rect(x + w - r, y + r, r, h - (r * 2));
+		super.rect(x + r, y + h - r, w - (r * 2), r);
+		
+		end();
 	}
 	
-	private void cleanArc(float x, float y, float radius, float start, float degrees) {
+	public void cleanArc(float x, float y, float radius, float start, float degrees) {
 		int segments = (int) (6 * (float) Math.cbrt(radius) * (degrees / 360.0f));
 		if (segments <= 0)
 			throw new IllegalArgumentException("segments must be > 0.");

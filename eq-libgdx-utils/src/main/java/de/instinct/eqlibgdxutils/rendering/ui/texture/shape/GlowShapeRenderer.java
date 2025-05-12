@@ -1,4 +1,4 @@
-package de.instinct.eqfleet.intro;
+package de.instinct.eqlibgdxutils.rendering.ui.texture.shape;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -10,19 +10,21 @@ import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 
 public class GlowShapeRenderer {
+	
     private final SpriteBatch   batch;
     private final ComplexShapeRenderer shapes;
     private final FrameBuffer   fboA, fboB;
     private final ShaderProgram blurShader;
     
-    private final float glow = 1f;
-    private final float radius = 50f;
-    private final float dropoff = 1f;
+    public float defaultGlow = 0.8f;
+    public float radius = 50f;
+    public float dropoff = 0.5f;
+    public int shapeUpscale = 4;
+    public float thickness = 1;
 
     public GlowShapeRenderer() {
         int w = Gdx.graphics.getWidth();
@@ -44,7 +46,7 @@ public class GlowShapeRenderer {
         float texelX = 1f / Gdx.graphics.getWidth();
         float texelY = 1f / Gdx.graphics.getHeight();
         blurShader.setUniformf("u_texelSize", texelX, texelY);
-        fboA = new FrameBuffer(Pixmap.Format.RGBA8888, w, h, false);
+        fboA = new FrameBuffer(Pixmap.Format.RGBA8888, w * shapeUpscale, h * shapeUpscale, false);
         fboB = new FrameBuffer(Pixmap.Format.RGBA8888, w, h, false);
         
         for (FrameBuffer f : new FrameBuffer[]{fboA, fboB}) {
@@ -59,38 +61,54 @@ public class GlowShapeRenderer {
         shapes.setProjectionMatrix(proj);
     }
 
-    public Texture drawBlurredRectangle(Rectangle bounds, Color color) {
-        int w = Gdx.graphics.getWidth();
+    public Texture getGlowTexture(Rectangle bounds, Color color, float glow) {
+    	int w = Gdx.graphics.getWidth();
         int h = Gdx.graphics.getHeight();
 
         drawBaseRect(bounds, color);
-        
+
         fboB.begin();
-        Gdx.gl.glClearColor(0, 0, 0, 0f);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+        Gdx.gl.glClearColor(0,0,0,0f);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.setShader(blurShader);
         batch.begin();
         blurShader.setUniformf("u_strength", glow);
         batch.draw(fboA.getColorBufferTexture(), 0, 0, w, h);
         batch.end();
         batch.setShader(null);
+
+        Pixmap pix = Pixmap.createFromFrameBuffer(0, 0, w, h);
         fboB.end();
-        
-        Texture glowTex = fboB.getColorBufferTexture();
+
+        Texture glowTex = new Texture(pix);
+        pix.dispose();
+
         glowTex.setFilter(TextureFilter.Linear, TextureFilter.Linear);
         glowTex.setWrap(TextureWrap.ClampToEdge, TextureWrap.ClampToEdge);
+
         return glowTex;
+    }
+    
+    public Texture getGlowTexture(Rectangle bounds, Color color) {
+        return getGlowTexture(bounds, color, defaultGlow);
     }
 
     private void drawBaseRect(Rectangle bounds, Color color) {
+    	Matrix4 oldProj = shapes.getProjectionMatrix().cpy();
+        shapes.setProjectionMatrix(
+          new Matrix4().setToOrtho2D(0, 0,
+                                     fboA.getWidth(),
+                                     fboA.getHeight())
+        );
+        Rectangle upscaledBounds = new Rectangle(bounds.x * shapeUpscale, bounds.y * shapeUpscale, bounds.width * shapeUpscale, bounds.height * shapeUpscale);
     	fboA.begin();
         Gdx.gl.glClearColor(0, 0, 0, 0f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-        shapes.begin(ShapeRenderer.ShapeType.Line);
         shapes.setColor(color);
-        shapes.roundRectangle(bounds);
-        shapes.end();
+        shapes.roundRectangle(upscaledBounds, shapeUpscale * thickness);
         fboA.end();
+        
+        shapes.setProjectionMatrix(oldProj);
 	}
 
 	public void dispose() {

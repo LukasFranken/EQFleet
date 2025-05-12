@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.eqfleet.GlobalStaticData;
-import de.instinct.eqfleet.intro.GlowShapeRenderer;
 import de.instinct.eqfleet.menu.MenuTab;
 import de.instinct.eqfleet.menu.common.Renderer;
 import de.instinct.eqfleet.menu.module.main.tab.loadout.LoadoutTab;
@@ -21,21 +20,21 @@ import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButto
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.ComplexShapeType;
 
 public class MainMenuRenderer extends Renderer {
 	
 	private Map<MenuTab, ColorButton> tabButtons;
-	private GlowShapeRenderer glowShapeRenderer;
 	
 	@Override
 	public void init() {
-		glowShapeRenderer = new GlowShapeRenderer();
 		tabButtons = new HashMap<>();
 		createTabButton(MenuTab.PLAY);
 		createTabButton(MenuTab.LOADOUT);
 		createTabButton(MenuTab.SETTINGS);
 		createTabButton(MenuTab.PROFILE);
-		TextureManager.put("main_rankOutline", glowShapeRenderer.drawBlurredRectangle(new Rectangle(22, Gdx.graphics.getHeight() - 760, 25, 25), DefaultUIValues.skinColor));
+		TextureManager.createShapeTexture("main_rankOutline", ComplexShapeType.ROUNDED_RECTANGLE, new Rectangle(15, Gdx.graphics.getHeight() - 65, 36, 35), DefaultUIValues.skinColor);
+		TextureManager.createShapeTexture("main_nameOutline", ComplexShapeType.ROUNDED_RECTANGLE, new Rectangle(50, Gdx.graphics.getHeight() - 60, 120, 25), DefaultUIValues.skinColor);
 	}
 	
 	private void createTabButton(MenuTab tab) {
@@ -100,10 +99,11 @@ public class MainMenuRenderer extends Renderer {
 
 	private static void renderLayout() {
 		TextureManager.draw("main_rankOutline");
+		TextureManager.draw("main_nameOutline");
 	}
 	
 	private static void renderHeader() {
-		if (GlobalStaticData.profile != null) TextureManager.draw(TextureManager.getTexture("ui/image/rank", GlobalStaticData.profile.getRank().getFileName()), new Rectangle(21, Gdx.graphics.getHeight() - 61, 25, 25));
+		if (GlobalStaticData.profile != null) TextureManager.draw(TextureManager.getTexture("ui/image/rank", GlobalStaticData.profile.getRank().getFileName()), new Rectangle(20, Gdx.graphics.getHeight() - 60, 25, 25));
 		if (GlobalStaticData.profile != null) FontUtil.draw(Color.LIGHT_GRAY, GlobalStaticData.profile.getUsername() == null ? "???" : GlobalStaticData.profile.getUsername(), 70, Gdx.graphics.getHeight() - 43);
 	}
 	

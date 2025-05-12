@@ -12,18 +12,22 @@ import de.instinct.eqlibgdxutils.rendering.ui.texture.draw.TextureDrawMode;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.draw.TextureRenderer;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.load.ColorTextureLoader;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.load.TextureLoader;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.ComplexShapeType;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.GlowShapeRenderer;
 
 public class TextureManager {
 	
 	private static TextureRenderer textureRenderer;
 	private static TextureLoader textureLoader;
 	private static ColorTextureLoader colorTextureLoader;
+	private static GlowShapeRenderer glowShapeRenderer;
 	private static Map<String, Texture> textures = new HashMap<>();
 	
 	public static void init() {
 		textureRenderer = new TextureRenderer();
 		textureLoader = new TextureLoader();
 		colorTextureLoader = new ColorTextureLoader();
+		glowShapeRenderer = new GlowShapeRenderer();
 	}
 	
 	public static void draw(Texture texture, Rectangle bounds) {
@@ -64,8 +68,45 @@ public class TextureManager {
 		return colorTextureLoader.createTexture(color);
 	}
 	
+	public static void createShapeTexture(String tag, ComplexShapeType type, Rectangle bounds, Color color) {
+		switch (type) {
+		case RECTANGLE:
+			
+			break;
+		case ROUNDED_RECTANGLE:
+			put(tag, glowShapeRenderer.getGlowTexture(bounds, color));
+			break;
+		case CIRCTANGLE:
+			
+			break;
+		case CIRCLE:
+			
+			break;
+		}
+	}
+	
+	public static void createShapeTexture(String tag, ComplexShapeType type, Rectangle bounds, Color color, float glow) {
+		switch (type) {
+		case RECTANGLE:
+			
+			break;
+		case ROUNDED_RECTANGLE:
+			put(tag, glowShapeRenderer.getGlowTexture(bounds, color, glow));
+			break;
+		case CIRCTANGLE:
+			
+			break;
+		case CIRCLE:
+			
+			break;
+		}
+	}
+	
 	public static void dispose() {
 		textureRenderer.dispose();
+		for (Texture texture : textures.values()) {
+			texture.dispose();
+		}
 	}
 
 }

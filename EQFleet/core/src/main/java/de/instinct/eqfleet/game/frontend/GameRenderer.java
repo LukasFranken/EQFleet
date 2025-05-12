@@ -42,6 +42,7 @@ import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.ComplexShapeType;
 
 public class GameRenderer {
 
@@ -140,8 +141,24 @@ public class GameRenderer {
 		enemyAlphaStore = 0f;
 		ownElapsed = 0f;
 		enemyElapsed = 0f;
+		
+		createTextures();
 	}
 	
+	private void createTextures() {
+		float scaleX = Gdx.graphics.getWidth() / 400f;
+		float scaleY = Gdx.graphics.getHeight() / 900f;
+		
+		TextureManager.createShapeTexture("game_ownCP", 
+				ComplexShapeType.ROUNDED_RECTANGLE,
+				new Rectangle(
+						51 * scaleX, 
+						18 * scaleY, 
+						330 * scaleX, 
+						25 * scaleY),
+				teammate1Color);
+	}
+
 	public GameRendererConfig getConfig()  {
 		return config;
 	}
@@ -375,7 +392,7 @@ public class GameRenderer {
 		
 
 	    if (config.getUiElementConfig().isOwnCPVisible())
-	        TextureManager.draw(TextureManager.getTexture("ui/image", "game_ui_layout_own_cp"), overlayBounds);
+	        TextureManager.draw("game_ownCP");
 	    if (config.getUiElementConfig().isEnemyCPVisible())
 	        TextureManager.draw(TextureManager.getTexture("ui/image", "game_ui_layout_enemy_cp"), overlayBounds);
 	    if (config.getUiElementConfig().isOwnAPVisible())
