@@ -28,6 +28,7 @@
 
 - audio manager update on seperate thread?
 - audio queued smooth only first time bug
+- audio sporadically crashes
 
 - inventory service
  -> items, resources

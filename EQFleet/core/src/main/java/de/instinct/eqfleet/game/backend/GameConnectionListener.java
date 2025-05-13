@@ -30,6 +30,7 @@ public class GameConnectionListener extends Listener {
 		messageSenderTask = scheduler.scheduleAtFixedRate(() -> {
 			NetworkMessage newMessage = Game.outputMessageQueue.next();
 			if (newMessage != null) {
+				System.out.println("message sent: " + newMessage);
 				client.sendTCP(newMessage);
 			}
 		}, 50, 50, TimeUnit.MILLISECONDS);
