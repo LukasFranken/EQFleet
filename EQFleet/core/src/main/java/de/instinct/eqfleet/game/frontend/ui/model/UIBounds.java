@@ -1,4 +1,4 @@
-package de.instinct.eqfleet.game.frontend.ui;
+package de.instinct.eqfleet.game.frontend.ui.model;
 
 import com.badlogic.gdx.math.Rectangle;
 

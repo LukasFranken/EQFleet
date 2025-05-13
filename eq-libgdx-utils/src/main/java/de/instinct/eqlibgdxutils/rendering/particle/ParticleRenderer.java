@@ -1,5 +1,6 @@
 package de.instinct.eqlibgdxutils.rendering.particle;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,8 +18,11 @@ public class ParticleRenderer {
 	private static SpriteBatch particleBatch;
 	private static Map<String, ParticleAnimation> particleAnimations;
 	private static int currentPixels;
+	
+	private static List<String> activeEffects;
 
 	public static void init() {
+		activeEffects = new ArrayList<>();
 		particleLoader = new ParticleLoader();
 		particleBatch = new SpriteBatch();
 		particleAnimations = new HashMap<>();
@@ -82,6 +86,7 @@ public class ParticleRenderer {
 	public static void start(String effectName) {
 		ParticleAnimation animation = particleAnimations.get(effectName);
 		if (animation != null) {
+			activeEffects.add(effectName);
 			for (ParticleEffect effect : animation.getParticleEffects()) {
 				for (ParticleEmitter emitter : effect.getEmitters()) {
 					emitter.start();
@@ -90,9 +95,14 @@ public class ParticleRenderer {
 		}
 	}
 	
+	public static boolean isStarted(String effectName) {
+		return activeEffects.contains(effectName);
+	}
+	
 	public static void stop(String effectName) {
 		ParticleAnimation animation = particleAnimations.get(effectName);
 		if (animation != null) {
+			activeEffects.remove(effectName);
 			for (ParticleEffect effect : animation.getParticleEffects()) {
 				for (ParticleEmitter emitter : effect.getEmitters()) {
 					emitter.allowCompletion();

@@ -10,7 +10,6 @@ import de.instinct.eqfleet.game.backend.GameLogic;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.TutorialMode;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.GuideEvent;
 import de.instinct.eqfleet.game.frontend.GameRenderer;
-import de.instinct.eqfleet.game.frontend.ui.UIElementConfig;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
 import de.instinct.eqlibgdxutils.net.MessageQueue;
 
@@ -90,9 +89,9 @@ public class Game {
 	public static void setVisible(boolean visible) {
 		renderer.visible = visible;
 	}
-	
-	public static UIElementConfig getUIElementConfig() {
-		return renderer.getUIElementConfig();
+
+	public static void setUIElementVisible(String tag, boolean visible) {
+		renderer.setUIElementVisible(tag, visible);
 	}
 
 }

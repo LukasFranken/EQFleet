@@ -230,11 +230,11 @@ public class TutorialLoader {
 			
 			@Override
 			public void executeAtEnd() {
-				Game.getUIElementConfig().setOwnCPVisible(false);
-				Game.getUIElementConfig().setEnemyCPVisible(false);
-				Game.getUIElementConfig().setOwnAPVisible(false);
-				Game.getUIElementConfig().setEnemyAPVisible(false);
-				Game.getUIElementConfig().setTimeVisible(false);
+				Game.setUIElementVisible("ownCP", false);
+				Game.setUIElementVisible("enemyCP", false);
+				Game.setUIElementVisible("teamAP", false);
+				Game.setUIElementVisible("enemyAP", false);
+				Game.setUIElementVisible("time", false);
 				Game.setVisible(true);
 			}
 		});
@@ -270,7 +270,7 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "In the top right corner you can\nsee the remaining time\nand settings button.";
+				return "In the top right corner you can\nsee the remaining time.";
 			}
 			
 		});
@@ -278,7 +278,7 @@ public class TutorialLoader {
 			
 			@Override
 			public void executeAtStart() {
-				Game.getUIElementConfig().setTimeVisible(true);
+				Game.setUIElementVisible("time", true);
 			}
 			
 			@Override
@@ -413,7 +413,7 @@ public class TutorialLoader {
 			
 			@Override
 			public void executeAtStart() {
-				Game.getUIElementConfig().setOwnCPVisible(true);
+				Game.setUIElementVisible("ownCP", true);
 				Game.inputEnabled = true;
 			}
 			
@@ -786,7 +786,7 @@ public class TutorialLoader {
 			
 			@Override
 			public void executeAtStart() {
-				Game.getUIElementConfig().setEnemyCPVisible(true);
+				Game.setUIElementVisible("enemyCP", true);
 			}
 			
 			@Override
@@ -1021,8 +1021,8 @@ public class TutorialLoader {
 			
 			@Override
 			public void executeAtStart() {
-				Game.getUIElementConfig().setOwnAPVisible(true);
-				Game.getUIElementConfig().setEnemyAPVisible(true);
+				Game.setUIElementVisible("teamAP", true);
+				Game.setUIElementVisible("enemyAP", true);
 			}
 			
 			@Override

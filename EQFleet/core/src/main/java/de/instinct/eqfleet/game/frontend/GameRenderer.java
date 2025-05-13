@@ -28,8 +28,7 @@ import de.instinct.eqfleet.game.GameConfig;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.GuideEvent;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.subtypes.CameraMoveGuideEvent;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.subtypes.DialogGuideEvent;
-import de.instinct.eqfleet.game.frontend.ui.UIElementConfig;
-import de.instinct.eqfleet.game.frontend.ui.UIRenderer;
+import de.instinct.eqfleet.game.frontend.ui.GameUIRenderer;
 import de.instinct.eqlibgdxutils.MathUtil;
 import de.instinct.eqlibgdxutils.rendering.GridRenderer;
 import de.instinct.eqlibgdxutils.rendering.model.ModelLoader;
@@ -58,12 +57,12 @@ public class GameRenderer {
 	
 	private GuideEvent currentGuideEvent;
 	
-	private UIRenderer uiRenderer;
+	private GameUIRenderer uiRenderer;
 	
 	public boolean visible;
 
 	public void init() {
-		uiRenderer = new UIRenderer();
+		uiRenderer = new GameUIRenderer();
 		
 		planetModels = new HashMap<>();
 		fleetModels = new HashMap<>();
@@ -463,8 +462,8 @@ public class GameRenderer {
 		isFlipped = !isFlipped;
 	}
 
-	public UIElementConfig getUIElementConfig() {
-		return uiRenderer.getElementConfig();
+	public void setUIElementVisible(String tag, boolean visible) {
+		uiRenderer.setElementVisible(tag, visible);
 	}
 	
 }
