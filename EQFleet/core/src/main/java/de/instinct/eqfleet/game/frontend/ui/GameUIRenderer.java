@@ -152,7 +152,7 @@ public class GameUIRenderer {
 			Player self = EngineUtility.getPlayer(Game.activeGameState, Game.playerId);
 			if (activeAncientPlanet != null) {
 				if (activeAncientPlanet.ownerId != 0) {
-					if (ParticleRenderer.isStarted("ancient")) ParticleRenderer.start("ancient");
+					if (!ParticleRenderer.isStarted("ancient")) ParticleRenderer.start("ancient");
 		        } else {
 		            ParticleRenderer.stop("ancient");
 		        }

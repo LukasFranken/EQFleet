@@ -270,7 +270,6 @@ public class GameUILoader {
 			
 			@Override
 			public void execute() {
-				FontUtil.drawLabel(GameConfig.getPlayerColor(playerData.getEnemy2().playerId), "CP", bounds.getEnemy2CPBarLabel());
 				TextureManager.draw(tagPrefix + enemy2CPElement.getTag());
 			}
 			
@@ -306,7 +305,6 @@ public class GameUILoader {
 			
 			@Override
 			public void execute() {
-				FontUtil.drawLabel(GameConfig.getPlayerColor(playerData.getEnemy3().playerId), "CP", bounds.getEnemy3CPBarLabel());
 				TextureManager.draw(tagPrefix + enemy3CPElement.getTag());
 			}
 			
