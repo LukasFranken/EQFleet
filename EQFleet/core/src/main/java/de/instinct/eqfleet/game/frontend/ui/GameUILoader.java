@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.engine.EngineUtility;
-import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.Planet;
 import de.instinct.engine.model.Player;
 import de.instinct.eqfleet.game.Game;
@@ -35,27 +34,27 @@ public class GameUILoader {
 	
 	private final float AP_GLOWUP_DELAY = 2.8f;
 	
-	public List<GameUIElement<?>> loadElements(UIBounds bounds, PlayerData playerData, GameState state) {
+	public List<GameUIElement<?>> loadElements(UIBounds bounds) {
 		elements = new ArrayList<>();
 		
-		loadTimeLabel(bounds, state);
-		loadOwnCPBar(bounds, playerData);
-		loadEnemy1CPBar(bounds, playerData);
+		loadTimeLabel(bounds);
+		loadOwnCPBar(bounds);
+		loadEnemy1CPBar(bounds);
 		if (PlayTab.lobbyStatus.getType().factionMode.teamPlayerCount >= 2) {
-			loadTeammate1CPBar(bounds, playerData);
-			loadEnemy2CPBar(bounds, playerData);
+			loadTeammate1CPBar(bounds);
+			loadEnemy2CPBar(bounds);
 		}
 		if (PlayTab.lobbyStatus.getType().factionMode.teamPlayerCount >= 3) {
-			loadTeammate2CPBar(bounds, playerData);
-			loadEnemy3CPBar(bounds, playerData);
+			loadTeammate2CPBar(bounds);
+			loadEnemy3CPBar(bounds);
 		}
-		loadTeamAPBar(bounds, playerData, state);
-		loadEnemyAPBar(bounds, playerData, state);
+		loadTeamAPBar(bounds);
+		loadEnemyAPBar(bounds);
 		
 		return elements;
 	}
 
-	private void loadTimeLabel(UIBounds bounds, GameState state) {
+	private void loadTimeLabel(UIBounds bounds) {
 		GameUIElement<BoxedRectangularLoadingBar> timeElement = GameUIElement.<BoxedRectangularLoadingBar>builder()
 				.tag("time")
 				.visible(true)
@@ -80,7 +79,7 @@ public class GameUILoader {
 			
 			@Override
 			public void execute() {
-				long remainingMS = state.maxGameTimeMS - state.gameTimeMS;
+				long remainingMS = timeElement.getCurrentGameState().maxGameTimeMS - timeElement.getCurrentGameState().gameTimeMS;
 				String remainingTimeLabel = StringUtils.generateCountdownLabel(remainingMS, false);
 				FontUtil.drawLabel(remainingMS < 60_000 ? Color.RED : Color.WHITE, remainingTimeLabel, bounds.getTime());
 				TextureManager.draw(tagPrefix + timeElement.getTag());
@@ -90,7 +89,7 @@ public class GameUILoader {
 		elements.add(timeElement);
 	}
 
-	private void loadOwnCPBar(UIBounds bounds, PlayerData playerData) {
+	private void loadOwnCPBar(UIBounds bounds) {
 		GameUIElement<BoxedRectangularLoadingBar> ownCPElement = GameUIElement.<BoxedRectangularLoadingBar>builder()
 				.tag("ownCP")
 				.visible(true)
@@ -100,6 +99,7 @@ public class GameUILoader {
 			
 			@Override
 			public void execute() {
+				PlayerData playerData = UIDataUtility.getPlayerData(ownCPElement.getCurrentGameState());
 				createShape(ownCPElement.getTag(), bounds.getOwnCPBar(), GameConfig.getPlayerColor(playerData.getSelf().playerId));
 				createShape(ownCPElement.getTag() + "Label", bounds.getOwnCPBarLabel(), GameConfig.getPlayerColor(playerData.getSelf().playerId));
 			}
@@ -109,6 +109,7 @@ public class GameUILoader {
 			
 			@Override
 			public void execute() {
+				PlayerData playerData = UIDataUtility.getPlayerData(ownCPElement.getCurrentGameState());
 				ownCPElement.setBounds(bounds.getOwnCPBar());
 				ownCPElement.getElement().setMaxValue(playerData.getSelf().maxCommandPoints);
 				ownCPElement.getElement().setCurrentValue(playerData.getSelf().currentCommandPoints);
@@ -119,6 +120,7 @@ public class GameUILoader {
 			
 			@Override
 			public void execute() {
+				PlayerData playerData = UIDataUtility.getPlayerData(ownCPElement.getCurrentGameState());
 				FontUtil.drawLabel(GameConfig.getPlayerColor(playerData.getSelf().playerId), "CP", bounds.getOwnCPBarLabel());
 				TextureManager.draw(tagPrefix + ownCPElement.getTag() + "Label");
 				TextureManager.draw(tagPrefix + ownCPElement.getTag());
@@ -128,7 +130,7 @@ public class GameUILoader {
 		elements.add(ownCPElement);
 	}
 	
-	private void loadTeammate1CPBar(UIBounds bounds, PlayerData playerData) {
+	private void loadTeammate1CPBar(UIBounds bounds) {
 		GameUIElement<BoxedRectangularLoadingBar> teammate1CPElement = GameUIElement.<BoxedRectangularLoadingBar>builder()
 				.tag("teammate1CP")
 				.visible(true)
@@ -138,6 +140,7 @@ public class GameUILoader {
 			
 			@Override
 			public void execute() {
+				PlayerData playerData = UIDataUtility.getPlayerData(teammate1CPElement.getCurrentGameState());
 				createShape(teammate1CPElement.getTag(), bounds.getTeammate1CPBar(), GameConfig.getPlayerColor(playerData.getTeammate1().playerId));
 				createShape(teammate1CPElement.getTag() + "Label", bounds.getTeammate1CPBarLabel(), GameConfig.getPlayerColor(playerData.getTeammate1().playerId));
 			}
@@ -147,6 +150,7 @@ public class GameUILoader {
 			
 			@Override
 			public void execute() {
+				PlayerData playerData = UIDataUtility.getPlayerData(teammate1CPElement.getCurrentGameState());
 				teammate1CPElement.setBounds(bounds.getTeammate1CPBar());
 				teammate1CPElement.getElement().setMaxValue(playerData.getTeammate1().maxCommandPoints);
 				teammate1CPElement.getElement().setCurrentValue(playerData.getTeammate1().currentCommandPoints);
@@ -157,6 +161,7 @@ public class GameUILoader {
 			
 			@Override
 			public void execute() {
+				PlayerData playerData = UIDataUtility.getPlayerData(teammate1CPElement.getCurrentGameState());
 				FontUtil.drawLabel(GameConfig.getPlayerColor(playerData.getTeammate1().playerId), "CP", bounds.getTeammate1CPBarLabel());
 				TextureManager.draw(tagPrefix + teammate1CPElement.getTag() + "Label");
 				TextureManager.draw(tagPrefix + teammate1CPElement.getTag());
@@ -166,7 +171,7 @@ public class GameUILoader {
 		elements.add(teammate1CPElement);
 	}
 	
-	private void loadTeammate2CPBar(UIBounds bounds, PlayerData playerData) {
+	private void loadTeammate2CPBar(UIBounds bounds) {
 		GameUIElement<BoxedRectangularLoadingBar> teammate2CPElement = GameUIElement.<BoxedRectangularLoadingBar>builder()
 				.tag("teammate2CP")
 				.visible(true)
@@ -176,6 +181,7 @@ public class GameUILoader {
 			
 			@Override
 			public void execute() {
+				PlayerData playerData = UIDataUtility.getPlayerData(teammate2CPElement.getCurrentGameState());
 				createShape(teammate2CPElement.getTag(), bounds.getTeammate2CPBar(), GameConfig.getPlayerColor(playerData.getTeammate2().playerId));
 				createShape(teammate2CPElement.getTag() + "Label", bounds.getTeammate2CPBarLabel(), GameConfig.getPlayerColor(playerData.getTeammate2().playerId));
 			}
@@ -185,6 +191,7 @@ public class GameUILoader {
 			
 			@Override
 			public void execute() {
+				PlayerData playerData = UIDataUtility.getPlayerData(teammate2CPElement.getCurrentGameState());
 				teammate2CPElement.setBounds(bounds.getTeammate2CPBar());
 				teammate2CPElement.getElement().setMaxValue(playerData.getTeammate2().maxCommandPoints);
 				teammate2CPElement.getElement().setCurrentValue(playerData.getTeammate2().currentCommandPoints);
@@ -195,6 +202,7 @@ public class GameUILoader {
 			
 			@Override
 			public void execute() {
+				PlayerData playerData = UIDataUtility.getPlayerData(teammate2CPElement.getCurrentGameState());
 				FontUtil.drawLabel(GameConfig.getPlayerColor(playerData.getTeammate2().playerId), "CP", bounds.getTeammate2CPBarLabel());
 				TextureManager.draw(tagPrefix + teammate2CPElement.getTag() + "Label");
 				TextureManager.draw(tagPrefix + teammate2CPElement.getTag());
@@ -204,7 +212,7 @@ public class GameUILoader {
 		elements.add(teammate2CPElement);
 	}
 	
-	private void loadEnemy1CPBar(UIBounds bounds, PlayerData playerData) {
+	private void loadEnemy1CPBar(UIBounds bounds) {
 		GameUIElement<BoxedRectangularLoadingBar> enemy1CPElement = GameUIElement.<BoxedRectangularLoadingBar>builder()
 				.tag("enemy1CP")
 				.visible(true)
@@ -214,6 +222,7 @@ public class GameUILoader {
 			
 			@Override
 			public void execute() {
+				PlayerData playerData = UIDataUtility.getPlayerData(enemy1CPElement.getCurrentGameState());
 				createShape(enemy1CPElement.getTag(), bounds.getEnemy1CPBar(), GameConfig.getPlayerColor(playerData.getEnemy1().playerId));
 				createShape(enemy1CPElement.getTag() + "Label", bounds.getEnemy1CPBarLabel(), GameConfig.getPlayerColor(playerData.getEnemy1().playerId));
 			}
@@ -223,6 +232,7 @@ public class GameUILoader {
 			
 			@Override
 			public void execute() {
+				PlayerData playerData = UIDataUtility.getPlayerData(enemy1CPElement.getCurrentGameState());
 				enemy1CPElement.setBounds(bounds.getEnemy1CPBar());
 				enemy1CPElement.getElement().setMaxValue(playerData.getEnemy1().maxCommandPoints);
 				enemy1CPElement.getElement().setCurrentValue(playerData.getEnemy1().currentCommandPoints);
@@ -233,6 +243,7 @@ public class GameUILoader {
 			
 			@Override
 			public void execute() {
+				PlayerData playerData = UIDataUtility.getPlayerData(enemy1CPElement.getCurrentGameState());
 				FontUtil.drawLabel(GameConfig.getPlayerColor(playerData.getEnemy1().playerId), "CP", bounds.getEnemy1CPBarLabel());
 				TextureManager.draw(tagPrefix + enemy1CPElement.getTag() + "Label");
 				TextureManager.draw(tagPrefix + enemy1CPElement.getTag());
@@ -242,7 +253,7 @@ public class GameUILoader {
 		elements.add(enemy1CPElement);
 	}
 	
-	private void loadEnemy2CPBar(UIBounds bounds, PlayerData playerData) {
+	private void loadEnemy2CPBar(UIBounds bounds) {
 		GameUIElement<BoxedRectangularLoadingBar> enemy2CPElement = GameUIElement.<BoxedRectangularLoadingBar>builder()
 				.tag("enemy2CP")
 				.visible(true)
@@ -252,6 +263,7 @@ public class GameUILoader {
 			
 			@Override
 			public void execute() {
+				PlayerData playerData = UIDataUtility.getPlayerData(enemy2CPElement.getCurrentGameState());
 				createShape(enemy2CPElement.getTag(), bounds.getEnemy2CPBar(), GameConfig.getPlayerColor(playerData.getEnemy2().playerId));
 			}
 			
@@ -260,6 +272,7 @@ public class GameUILoader {
 			
 			@Override
 			public void execute() {
+				PlayerData playerData = UIDataUtility.getPlayerData(enemy2CPElement.getCurrentGameState());
 				enemy2CPElement.setBounds(bounds.getEnemy2CPBar());
 				enemy2CPElement.getElement().setMaxValue(playerData.getEnemy2().maxCommandPoints);
 				enemy2CPElement.getElement().setCurrentValue(playerData.getEnemy2().currentCommandPoints);
@@ -277,7 +290,7 @@ public class GameUILoader {
 		elements.add(enemy2CPElement);
 	}
 	
-	private void loadEnemy3CPBar(UIBounds bounds, PlayerData playerData) {
+	private void loadEnemy3CPBar(UIBounds bounds) {
 		GameUIElement<BoxedRectangularLoadingBar> enemy3CPElement = GameUIElement.<BoxedRectangularLoadingBar>builder()
 				.tag("enemy3CP")
 				.visible(true)
@@ -287,6 +300,7 @@ public class GameUILoader {
 			
 			@Override
 			public void execute() {
+				PlayerData playerData = UIDataUtility.getPlayerData(enemy3CPElement.getCurrentGameState());
 				createShape(enemy3CPElement.getTag(), bounds.getEnemy3CPBar(), GameConfig.getPlayerColor(playerData.getEnemy3().playerId));
 			}
 			
@@ -295,6 +309,7 @@ public class GameUILoader {
 			
 			@Override
 			public void execute() {
+				PlayerData playerData = UIDataUtility.getPlayerData(enemy3CPElement.getCurrentGameState());
 				enemy3CPElement.setBounds(bounds.getEnemy3CPBar());
 				enemy3CPElement.getElement().setMaxValue(playerData.getEnemy3().maxCommandPoints);
 				enemy3CPElement.getElement().setCurrentValue(playerData.getEnemy3().currentCommandPoints);
@@ -312,7 +327,7 @@ public class GameUILoader {
 		elements.add(enemy3CPElement);
 	}
 
-	private void loadTeamAPBar(UIBounds bounds, PlayerData playerData, GameState state) {
+	private void loadTeamAPBar(UIBounds bounds) {
 		GameUIElement<PlainRectangularLoadingBar> teamAPElement = GameUIElement.<PlainRectangularLoadingBar>builder()
 				.tag("teamAP")
 				.visible(true)
@@ -334,9 +349,10 @@ public class GameUILoader {
 			
 			@Override
 			public void execute() {
+				PlayerData playerData = UIDataUtility.getPlayerData(teamAPElement.getCurrentGameState());
 				teamAPElement.setBounds(bounds.getTeamAPBar());
-				teamAPElement.getElement().setMaxValue(state.atpToWin);
-				teamAPElement.getElement().setCurrentValue(state.teamATPs.get(playerData.getSelf().teamId));
+				teamAPElement.getElement().setMaxValue(Game.activeGameState.atpToWin);
+				teamAPElement.getElement().setCurrentValue(Game.activeGameState.teamATPs.get(playerData.getSelf().teamId));
 			}
 			
 		});
@@ -348,6 +364,7 @@ public class GameUILoader {
 			
 			@Override
 			public void execute() {
+				PlayerData playerData = UIDataUtility.getPlayerData(teamAPElement.getCurrentGameState());
 				elapsed += Gdx.graphics.getDeltaTime();
 				Planet activeAncientPlanet = null; 
 				for (Planet planet : Game.activeGameState.planets) {
@@ -389,7 +406,7 @@ public class GameUILoader {
 		elements.add(teamAPElement);
 	}
 	
-	private void loadEnemyAPBar(UIBounds bounds, PlayerData playerData, GameState state) {
+	private void loadEnemyAPBar(UIBounds bounds) {
 		GameUIElement<PlainRectangularLoadingBar> enemyAPElement = GameUIElement.<PlainRectangularLoadingBar>builder()
 				.tag("enemyAP")
 				.visible(true)
@@ -411,9 +428,10 @@ public class GameUILoader {
 			
 			@Override
 			public void execute() {
+				PlayerData playerData = UIDataUtility.getPlayerData(enemyAPElement.getCurrentGameState());
 				enemyAPElement.setBounds(bounds.getEnemyAPBar());
-				enemyAPElement.getElement().setMaxValue(state.atpToWin);
-				enemyAPElement.getElement().setCurrentValue(state.teamATPs.get(playerData.getEnemy1().teamId));
+				enemyAPElement.getElement().setMaxValue(Game.activeGameState.atpToWin);
+				enemyAPElement.getElement().setCurrentValue(Game.activeGameState.teamATPs.get(playerData.getEnemy1().teamId));
 			}
 			
 		});

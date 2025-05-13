@@ -14,13 +14,10 @@ import de.instinct.engine.model.Planet;
 import de.instinct.engine.model.Player;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.frontend.ui.model.GameUIElement;
-import de.instinct.eqfleet.game.frontend.ui.model.PlayerData;
 import de.instinct.eqfleet.game.frontend.ui.model.UIBounds;
 import de.instinct.eqlibgdxutils.rendering.particle.ParticleRenderer;
 
 public class GameUIRenderer {
-
-	private PlayerData playerData;
 	
 	private boolean initialized;
 	
@@ -37,8 +34,7 @@ public class GameUIRenderer {
 	
 	public void init() {
 		loadConfig();
-		loadPlayers();
-		elements = uiLoader.loadElements(bounds, playerData, Game.activeGameState);
+		elements = uiLoader.loadElements(bounds);
 		initializeElements();
 		
 		initialized = true;
@@ -46,7 +42,10 @@ public class GameUIRenderer {
 
 	private void initializeElements() {
 		for (GameUIElement<?> gameUIelement : elements) {
-			if (gameUIelement.getInitAction() != null) gameUIelement.getInitAction().execute();
+			if (gameUIelement.getInitAction() != null) {
+				gameUIelement.setCurrentGameState(Game.activeGameState);
+				gameUIelement.getInitAction().execute();
+			}
 		}
 	}
 
@@ -73,42 +72,6 @@ public class GameUIRenderer {
 		.build();
 	}
 	
-	private void loadPlayers() {
-		playerData = PlayerData.builder().build();
-		playerData.setSelf(EngineUtility.getPlayer(Game.activeGameState, Game.playerId));
-		for (Player player : Game.activeGameState.players) {
-			if (player.playerId == 0) {
-				continue;
-			}
-			if (player.playerId == playerData.getSelf().playerId) {
-				continue;
-			}
-			if (player.teamId == playerData.getSelf().teamId) {
-				if (playerData.getTeammate1() == null) {
-					playerData.setTeammate1(player);
-					continue;
-				}
-				if (playerData.getTeammate2() == null) {
-					playerData.setTeammate2(player);
-					continue;
-				}
-			} else {
-				if (playerData.getEnemy1() == null) {
-					playerData.setEnemy1(player);
-					continue;
-				}
-				if (playerData.getEnemy2() == null) {
-					playerData.setEnemy2(player);
-					continue;
-				}
-				if (playerData.getEnemy3() == null) {
-					playerData.setEnemy3(player);
-					continue;
-				}
-			}
-		}
-	}
-	
 	public void render(GameState state) {
 		if (Game.activeGameState != null) {
 			if (!initialized) {
@@ -123,6 +86,7 @@ public class GameUIRenderer {
 	private void updateUI(GameState state) {
 		for (GameUIElement<?> gameUIelement : elements) {
 			if (gameUIelement.isVisible()) {
+				gameUIelement.setCurrentGameState(Game.activeGameState);
 				if (gameUIelement.getUpdateAction() != null) gameUIelement.getUpdateAction().execute();
 			}
 		}
