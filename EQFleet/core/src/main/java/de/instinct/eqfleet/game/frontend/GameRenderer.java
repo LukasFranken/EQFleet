@@ -100,6 +100,7 @@ public class GameRenderer {
 					renderSelection(state);
 					uiRenderer.render(state);
 				} else {
+					uiRenderer.init();
 					renderLoadingScreen(state);
 				}
 			}

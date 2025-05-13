@@ -35,14 +35,16 @@ public class GameUIRenderer {
 	}
 	
 	public void init() {
-		loadConfig();
-		elements = uiLoader.loadElements(bounds);
-		initializeElements();
-		
-		initialized = true;
-		LoadedMessage loadedMessage = new LoadedMessage();
-		loadedMessage.playerUUID = API.authKey;
-		Game.outputMessageQueue.add(loadedMessage);
+		if (!initialized) {
+			loadConfig();
+			elements = uiLoader.loadElements(bounds);
+			initializeElements();
+			
+			initialized = true;
+			LoadedMessage loadedMessage = new LoadedMessage();
+			loadedMessage.playerUUID = API.authKey;
+			Game.outputMessageQueue.add(loadedMessage);
+		}
 	}
 
 	private void initializeElements() {
@@ -79,9 +81,7 @@ public class GameUIRenderer {
 	
 	public void render(GameState state) {
 		if (Game.activeGameState != null) {
-			if (!initialized) {
-				init();
-			} else {
+			if (initialized) {
 				updateUI(state);
 				renderUI(state);
 			}
