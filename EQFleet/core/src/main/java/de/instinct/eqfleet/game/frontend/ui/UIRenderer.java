@@ -166,8 +166,8 @@ public class UIRenderer {
 				.teammate2CPBarLabel(new Rectangle((50 + 155 + 10) * scaleX, (18 + 27 + 3) * scaleY, 25 * scaleX, 20 * scaleY))
 				.enemy1CPBarLabel(new Rectangle((51 + 10) * scaleX, 831 * scaleY, 27 * scaleX, 27 * scaleY))
 				.enemy1CPBar(new Rectangle((51 + 27 + 10) * scaleX, 831 * scaleY, 82 * scaleX, 27 * scaleY))
-				.enemy2CPBar(new Rectangle(51 * scaleX, 831 * scaleY, 82 * scaleX, 27 * scaleY))
-				.enemy3CPBar(new Rectangle(51 * scaleX, 831 * scaleY, 82 * scaleX, 27 * scaleY))
+				.enemy2CPBar(new Rectangle((51 + 27 + 10 + 82 + 5) * scaleX, 831 * scaleY, 82 * scaleX, 27 * scaleY))
+				.enemy3CPBar(new Rectangle((51 + 27 + 10 + 82 + 5 + 82 + 5) * scaleX, 831 * scaleY, 82 * scaleX, 27 * scaleY))
 				.teamAPBar(new Rectangle(20 * scaleX, 174 * scaleY, 27 * scaleX, 207 * scaleY))
 				.teamAPBarLabel(new Rectangle(20 * scaleX, 147 * scaleY, 27 * scaleX, 27 * scaleY))
 				.enemyAPBar(new Rectangle(20 * scaleX, 492 * scaleY, 27 * scaleX, 207 * scaleY))
@@ -330,7 +330,7 @@ public class UIRenderer {
 			cpLoadingBar.setMaxValue(self.maxCommandPoints);
 			cpLoadingBar.setCurrentValue(self.currentCommandPoints);
 			cpLoadingBar.render();
-			FontUtil.drawLabel(GameConfig.teammate1Color, "CP", uiBounds.getOwnCPBarLabel());
+			FontUtil.drawLabel(GameConfig.getPlayerColor(self.playerId), "CP", uiBounds.getOwnCPBarLabel());
 			TextureManager.draw("game_ownCPLabel");
 			TextureManager.draw("game_ownCP");
 		}
@@ -340,7 +340,7 @@ public class UIRenderer {
 			teammate1cpLoadingBar.setMaxValue(teammate1.maxCommandPoints);
 			teammate1cpLoadingBar.setCurrentValue(teammate1.currentCommandPoints);
 			teammate1cpLoadingBar.render();
-			FontUtil.drawLabel(GameConfig.teammate2Color, "CP", uiBounds.getTeammate1CPBarLabel());
+			FontUtil.drawLabel(GameConfig.getPlayerColor(teammate1.playerId), "CP", uiBounds.getTeammate1CPBarLabel());
 			TextureManager.draw("game_teammate1CPLabel");
 			TextureManager.draw("game_teammate1CP");
 		}
@@ -350,7 +350,7 @@ public class UIRenderer {
 			teammate2cpLoadingBar.setMaxValue(teammate2.maxCommandPoints);
 			teammate2cpLoadingBar.setCurrentValue(teammate2.currentCommandPoints);
 			teammate2cpLoadingBar.render();
-			FontUtil.drawLabel(GameConfig.teammate3Color, "CP", uiBounds.getTeammate2CPBarLabel());
+			FontUtil.drawLabel(GameConfig.getPlayerColor(teammate2.playerId), "CP", uiBounds.getTeammate2CPBarLabel());
 			TextureManager.draw("game_teammate2CPLabel");
 			TextureManager.draw("game_teammate2CP");
 		}
