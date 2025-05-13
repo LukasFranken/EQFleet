@@ -7,7 +7,6 @@ import java.util.concurrent.TimeUnit;
 
 import de.instinct.api.core.API;
 import de.instinct.engine.EventEngine;
-import de.instinct.engine.model.GameState;
 import de.instinct.engine.net.message.types.JoinMessage;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.backend.audio.AudioManager;
@@ -42,14 +41,6 @@ public class GameLogic {
         		AudioManager.playVoice("one_minute_remaining");
         		oneMinutePlayed = true;
         	}
-    	}
-	}
-	
-	public void update(GameState newGameState) {
-		Game.activeGameState = newGameState;
-		Game.lastUpdateTimestampMS = System.currentTimeMillis();
-    	if (Game.activeGameState.winner != 0) {
-    		Game.stop();
     	}
 	}
 

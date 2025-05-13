@@ -10,7 +10,7 @@ import de.instinct.eqfleet.game.backend.GameLogic;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.TutorialMode;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.GuideEvent;
 import de.instinct.eqfleet.game.frontend.GameRenderer;
-import de.instinct.eqfleet.game.frontend.GameRendererConfig;
+import de.instinct.eqfleet.game.frontend.ui.UIElementConfig;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
 import de.instinct.eqlibgdxutils.net.MessageQueue;
 
@@ -56,7 +56,11 @@ public class Game {
     }
 	
 	public static void update(GameState newGameState) {
-		gameLogic.update(newGameState);
+		Game.activeGameState = newGameState;
+		Game.lastUpdateTimestampMS = System.currentTimeMillis();
+    	if (Game.activeGameState.winner != 0) {
+    		Game.stop();
+    	}
 	}
 
 	public static void dispose() {
@@ -73,10 +77,6 @@ public class Game {
 		active = true;
 		gameLogic.startTutorial(mode);
 	}
-	
-	public static GameRendererConfig getRendererConfig() {
-		return renderer.getConfig();
-	}
 
 	public static void pause() {
 		paused = true;
@@ -85,6 +85,14 @@ public class Game {
 	public static void unpause() {
 		paused = false;
 		Game.lastUpdateTimestampMS = System.currentTimeMillis();
+	}
+
+	public static void setVisible(boolean visible) {
+		renderer.visible = visible;
+	}
+	
+	public static UIElementConfig getUIElementConfig() {
+		return renderer.getUIElementConfig();
 	}
 
 }

@@ -15,7 +15,6 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import de.instinct.engine.EngineUtility;
@@ -25,27 +24,20 @@ import de.instinct.engine.model.Player;
 import de.instinct.engine.model.event.GameEvent;
 import de.instinct.engine.model.event.types.FleetMovementEvent;
 import de.instinct.eqfleet.game.Game;
+import de.instinct.eqfleet.game.GameConfig;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.GuideEvent;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.subtypes.CameraMoveGuideEvent;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.subtypes.DialogGuideEvent;
-import de.instinct.eqfleet.game.frontend.ui.UIBounds;
 import de.instinct.eqfleet.game.frontend.ui.UIElementConfig;
 import de.instinct.eqfleet.game.frontend.ui.UIRenderer;
 import de.instinct.eqlibgdxutils.MathUtil;
-import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.rendering.GridRenderer;
 import de.instinct.eqlibgdxutils.rendering.model.ModelLoader;
 import de.instinct.eqlibgdxutils.rendering.model.ModelRenderer;
-import de.instinct.eqlibgdxutils.rendering.particle.ParticleRenderer;
 import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
-import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.Direction;
-import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.subtypes.BoxedRectangularLoadingBar;
-import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.subtypes.PlainRectangularLoadingBar;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.ComplexShapeType;
 
 public class GameRenderer {
 
@@ -57,20 +49,8 @@ public class GameRenderer {
 	
 	private Map<Integer, ModelInstance> planetModels;
 	private Map<FleetMovementEvent, ModelInstance> fleetModels;
-
-	private final Color teammate1Color = Color.BLUE;
-	private final Color teammate2Color = Color.PURPLE;
-	private final Color teammate3Color = Color.PINK;
-	private final Color enemyColor = Color.RED;
-	private final Color ancientColor = Color.GOLD;
-	private final Color neutralColor = Color.DARK_GRAY;
 	
 	private float planetRotationAngle = 0f;
-	
-	private BoxedRectangularLoadingBar cpLoadingBar;
-	private BoxedRectangularLoadingBar enemyCPLoadingBar;
-	private PlainRectangularLoadingBar atpLoadingBar;
-	private PlainRectangularLoadingBar enemyATPLoadingBar;
 	
 	private boolean isFlipped = false;
 	
@@ -78,35 +58,13 @@ public class GameRenderer {
 	
 	private GuideEvent currentGuideEvent;
 	
-	private GameRendererConfig config;
-	
-	private int ancientOwner = 0;
-	private Planet activeAncientPlanet;
-	
-	private float AP_GLOWUP_DELAY = 2.8f;
-	
-	private float ownGlowAlpha;
-	private float enemyGlowAlpha;
-	
-	private float ownAlphaStore;
-	private float enemyAlphaStore;
-	private float ownElapsed;
-	private float enemyElapsed;
-	
 	private UIRenderer uiRenderer;
+	
+	public boolean visible;
 
 	public void init() {
 		uiRenderer = new UIRenderer();
-		config = GameRendererConfig.builder()
-				.visible(true)
-				.uiElementConfig(UIElementConfig.builder()
-						.isOwnCPVisible(true)
-						.isEnemyCPVisible(true)
-						.isOwnAPVisible(true)
-						.isEnemyAPVisible(true)
-						.isTimeVisible(true)
-						.build())
-				.build();
+		
 		planetModels = new HashMap<>();
 		fleetModels = new HashMap<>();
 		
@@ -123,48 +81,18 @@ public class GameRenderer {
 		inputManager = new GameInputManager();
 		batch = new SpriteBatch();
 		
-		cpLoadingBar = new BoxedRectangularLoadingBar();
-		cpLoadingBar.setBackground(TextureManager.createTexture(new Color(0f, 0f, 0f, 0f)));
-		enemyCPLoadingBar = new BoxedRectangularLoadingBar();
-		enemyCPLoadingBar.setBackground(TextureManager.createTexture(new Color(0f, 0f, 0f, 0f)));
-		
-		atpLoadingBar = new PlainRectangularLoadingBar();
-		atpLoadingBar.setBar(TextureManager.createTexture(Color.GOLD));
-		atpLoadingBar.setCustomDescriptor("");
-		atpLoadingBar.setBackground(TextureManager.createTexture(new Color(0f, 0f, 0f, 0f)));
-		
-		enemyATPLoadingBar = new PlainRectangularLoadingBar();
-		enemyATPLoadingBar.setBar(TextureManager.createTexture(Color.GOLD));
-		enemyATPLoadingBar.setCustomDescriptor("");
-		enemyATPLoadingBar.setBackground(TextureManager.createTexture(new Color(0f, 0f, 0f, 0f)));
-		
-		ParticleRenderer.loadParticles("ancient", "ancient");
-		ParticleRenderer.stop("ancient");
-		
-		ownGlowAlpha = 0f;
-		enemyGlowAlpha = 0f;
-		ownAlphaStore = 0f;
-		enemyAlphaStore = 0f;
-		ownElapsed = 0f;
-		enemyElapsed = 0f;
-		
-		
-	}
-
-	public GameRendererConfig getConfig()  {
-		return config;
+		visible = true;
 	}
 
 	public void render() {
-		GameState state = Game.activeGameState;
-		
-		camera.update();
+		if (visible) {
+			GameState state = Game.activeGameState;
+			camera.update();
 
-		if (state != null && state.winner == 0) {
-			checkFlip();
-			if (config.isVisible()) {
+			if (state != null && state.winner == 0) {
+				checkFlip();
 				gridRenderer.drawGrid(camera);
-				renderParticles();
+				uiRenderer.renderParticles(camera);
 				renderFleetConnections(state);
 				renderPlanets(state);
 				renderFleet(state);
@@ -172,8 +100,6 @@ public class GameRenderer {
 				renderSelection(state);
 				uiRenderer.render(state);
 			}
-		} else {
-			activeAncientPlanet = null;
 		}
 		
 		renderMessageText();
@@ -187,48 +113,6 @@ public class GameRenderer {
 		}
 		if (!isFlipped && self.teamId == 2) {
 			flip();
-		}
-	}
-
-	private void renderParticles() {
-		for (Planet planet : Game.activeGameState.planets) {
-			if (planet.ancient) {
-				activeAncientPlanet = planet;
-			}
-		}
-		Player owner = EngineUtility.getPlayer(Game.activeGameState, activeAncientPlanet.ownerId);
-		Player self = EngineUtility.getPlayer(Game.activeGameState, Game.playerId);
-		if (activeAncientPlanet != null) {
-		    if (ancientOwner != activeAncientPlanet.ownerId) {
-		        if (activeAncientPlanet.ownerId != 0) {
-		            ParticleRenderer.start("ancient");
-		        } else {
-		            ParticleRenderer.stop("ancient");
-		        }
-		        ancientOwner = owner.teamId;
-		        if (ancientOwner == 1) {
-		        	ownElapsed = 0f;
-		        }
-		        if (ancientOwner != 0 && owner.teamId != self.teamId) {
-		        	enemyElapsed = 0f;
-		        }
-		    }
-
-		    Vector3 projected = camera.project(new Vector3(activeAncientPlanet.xPos, activeAncientPlanet.yPos, 0));
-		    Vector2 source = new Vector2(projected.x, projected.y);
-		    Vector2 target = (owner.teamId == self.teamId)
-		        ? new Vector2(50, 260)
-		        : new Vector2(50, 600);
-
-		    Vector2 dir = new Vector2(target).sub(source);
-		    float angle = dir.angleDeg();
-		    ParticleRenderer.setEmitterAngle("ancient", angle);
-
-		    float distance = dir.len();
-		    float baseVelocity = 200f;
-		    float targetVelocity = baseVelocity * (distance / 600f);
-		    ParticleRenderer.setEmitterVelocity("ancient", targetVelocity);
-		    ParticleRenderer.renderParticles("ancient", source);
 		}
 	}
 
@@ -370,7 +254,7 @@ public class GameRenderer {
 		    ModelInstance instance = planetModels.get(planet.id);
 		    if (instance != null) {
 		    	instance.materials.get(1).set(ColorAttribute.createDiffuse(Color.BLACK));
-		    	instance.materials.get(0).set(ColorAttribute.createDiffuse(planet.ancient && planet.ownerId == 0 ? ancientColor : getOwnerColor(planet.ownerId)));
+		    	instance.materials.get(0).set(ColorAttribute.createDiffuse(planet.ancient && planet.ownerId == 0 ? GameConfig.ancientColor : GameConfig.getPlayerColor(planet.ownerId)));
 		    	
 		    	instance.transform.idt();
 			    instance.transform.translate(planet.xPos, planet.yPos, 0f);
@@ -451,7 +335,7 @@ public class GameRenderer {
 	            ship.transform.rotate(Vector3.Z, angleDeg - 90f);
 	            ship.transform.scale(15f, 15f, 15f);
 
-	            Color color = getOwnerColor(fleet.playerId);
+	            Color color = GameConfig.getPlayerColor(fleet.playerId);
 	            for (Material material : ship.materials) {
 	                material.set(ColorAttribute.createDiffuse(color));
 	            }
@@ -486,7 +370,7 @@ public class GameRenderer {
 				if (pair.fromId > pair.toId) continue;
 				connectionLines.put(pair, Color.WHITE);
 			} else {
-				connectionLines.put(pair, getOwnerColor(EngineUtility.getPlanet(state, pair.fromId).ownerId));
+				connectionLines.put(pair, GameConfig.getPlayerColor(EngineUtility.getPlanet(state, pair.fromId).ownerId));
 			}
 		}
 
@@ -574,20 +458,13 @@ public class GameRenderer {
 		shapeRenderer.triangle(to.x, to.y, leftX, leftY, rightX, rightY);
 	}
 
-	private Color getOwnerColor(int ownerId) {
-		if (ownerId == 0) return neutralColor;
-		Player player = EngineUtility.getPlayer(Game.activeGameState, ownerId);
-		Player self = EngineUtility.getPlayer(Game.activeGameState, Game.playerId);
-		if (player.teamId != self.teamId) return enemyColor;
-		if (ownerId == 1 || ownerId == 4) return teammate1Color;
-		if (ownerId == 2 || ownerId == 5) return teammate2Color;
-		if (ownerId == 3 || ownerId == 6) return teammate3Color;
-		return Color.WHITE;
-	}
-
 	public void flip() {
 		camera.rotate(180f, 0f, 0f, 1f);
 		isFlipped = !isFlipped;
+	}
+
+	public UIElementConfig getUIElementConfig() {
+		return uiRenderer.getElementConfig();
 	}
 	
 }

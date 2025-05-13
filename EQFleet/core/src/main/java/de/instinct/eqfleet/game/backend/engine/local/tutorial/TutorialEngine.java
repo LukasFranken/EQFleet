@@ -21,7 +21,7 @@ public class TutorialEngine extends LocalEngine {
 
 	public Runnable start(TutorialMode mode) {
 		Game.guidedEvents = tutorialLoader.load(mode);
-		Game.getRendererConfig().setVisible(false);
+		Game.setVisible(false);
 		Game.playerId = 1;
 		Game.activeGameState = tutorialLoader.generateGameState();
 		Game.lastUpdateTimestampMS = System.currentTimeMillis();

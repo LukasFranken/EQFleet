@@ -230,12 +230,12 @@ public class TutorialLoader {
 			
 			@Override
 			public void executeAtEnd() {
-				Game.getRendererConfig().getUiElementConfig().setOwnCPVisible(false);
-				Game.getRendererConfig().getUiElementConfig().setEnemyCPVisible(false);
-				Game.getRendererConfig().getUiElementConfig().setOwnAPVisible(false);
-				Game.getRendererConfig().getUiElementConfig().setEnemyAPVisible(false);
-				Game.getRendererConfig().getUiElementConfig().setTimeVisible(false);
-				Game.getRendererConfig().setVisible(true);
+				Game.getUIElementConfig().setOwnCPVisible(false);
+				Game.getUIElementConfig().setEnemyCPVisible(false);
+				Game.getUIElementConfig().setOwnAPVisible(false);
+				Game.getUIElementConfig().setEnemyAPVisible(false);
+				Game.getUIElementConfig().setTimeVisible(false);
+				Game.setVisible(true);
 			}
 		});
 		guideQueue.add(fifthMessageGuideEvent);
@@ -278,7 +278,7 @@ public class TutorialLoader {
 			
 			@Override
 			public void executeAtStart() {
-				Game.getRendererConfig().getUiElementConfig().setTimeVisible(true);
+				Game.getUIElementConfig().setTimeVisible(true);
 			}
 			
 			@Override
@@ -413,7 +413,7 @@ public class TutorialLoader {
 			
 			@Override
 			public void executeAtStart() {
-				Game.getRendererConfig().getUiElementConfig().setOwnCPVisible(true);
+				Game.getUIElementConfig().setOwnCPVisible(true);
 				Game.inputEnabled = true;
 			}
 			
@@ -786,7 +786,7 @@ public class TutorialLoader {
 			
 			@Override
 			public void executeAtStart() {
-				Game.getRendererConfig().getUiElementConfig().setEnemyCPVisible(true);
+				Game.getUIElementConfig().setEnemyCPVisible(true);
 			}
 			
 			@Override
@@ -1021,8 +1021,8 @@ public class TutorialLoader {
 			
 			@Override
 			public void executeAtStart() {
-				Game.getRendererConfig().getUiElementConfig().setOwnAPVisible(true);
-				Game.getRendererConfig().getUiElementConfig().setEnemyAPVisible(true);
+				Game.getUIElementConfig().setOwnAPVisible(true);
+				Game.getUIElementConfig().setEnemyAPVisible(true);
 			}
 			
 			@Override
