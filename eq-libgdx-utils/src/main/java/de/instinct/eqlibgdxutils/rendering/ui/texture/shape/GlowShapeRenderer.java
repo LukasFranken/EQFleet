@@ -21,7 +21,7 @@ public class GlowShapeRenderer {
     private final ShaderProgram blurShader;
     
     public float defaultGlow = 0.8f;
-    public float radius = 50f;
+    public float radius = 40f;
     public float dropoff = 0.5f;
     public int shapeUpscale = 4;
     public float thickness = 1;

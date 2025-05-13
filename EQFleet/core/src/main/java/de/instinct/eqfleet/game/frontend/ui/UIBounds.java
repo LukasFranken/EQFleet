@@ -9,6 +9,7 @@ import lombok.Data;
 @Builder
 public class UIBounds {
 
+	private Rectangle time;
 	private Rectangle ownCPBar;
 	private Rectangle ownCPBarLabel;
 	private Rectangle teammate1CPBar;

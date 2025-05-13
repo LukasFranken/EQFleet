@@ -157,6 +157,7 @@ public class UIRenderer {
 		float scaleY = Gdx.graphics.getHeight() / 900f;
 		
 		uiBounds = UIBounds.builder()
+				.time(new Rectangle(330 * scaleX, 870 * scaleY, 65 * scaleX, 25 * scaleY))
 				.ownCPBar(new Rectangle(47 * scaleX, 18 * scaleY, 330 * scaleX, 27 * scaleY))
 				.ownCPBarLabel(new Rectangle(20 * scaleX, 18 * scaleY, 27 * scaleX, 27 * scaleY))
 				.teammate1CPBar(new Rectangle(75 * scaleX, (18 + 27 + 3) * scaleY, 135 * scaleX, 20 * scaleY))
@@ -167,14 +168,19 @@ public class UIRenderer {
 				.enemy1CPBar(new Rectangle((51 + 27 + 10) * scaleX, 831 * scaleY, 82 * scaleX, 27 * scaleY))
 				.enemy2CPBar(new Rectangle(51 * scaleX, 831 * scaleY, 82 * scaleX, 27 * scaleY))
 				.enemy3CPBar(new Rectangle(51 * scaleX, 831 * scaleY, 82 * scaleX, 27 * scaleY))
-				.teamAPBar(new Rectangle(20 * scaleX, 74 * scaleY, 27 * scaleX, 207 * scaleY))
-				.teamAPBarLabel(new Rectangle(20 * scaleX, 47 * scaleY, 27 * scaleX, 27 * scaleY))
-				.enemyAPBar(new Rectangle(20 * scaleX, 592 * scaleY, 27 * scaleX, 207 * scaleY))
-				.enemyAPBarLabel(new Rectangle(20 * scaleX, (592 + 207) * scaleY, 27 * scaleX, 27 * scaleY))
+				.teamAPBar(new Rectangle(20 * scaleX, 174 * scaleY, 27 * scaleX, 207 * scaleY))
+				.teamAPBarLabel(new Rectangle(20 * scaleX, 147 * scaleY, 27 * scaleX, 27 * scaleY))
+				.enemyAPBar(new Rectangle(20 * scaleX, 492 * scaleY, 27 * scaleX, 207 * scaleY))
+				.enemyAPBarLabel(new Rectangle(20 * scaleX, (492 + 207) * scaleY, 27 * scaleX, 27 * scaleY))
 				.build();
 	}
 
 	private void createTextures() {
+		TextureManager.createShapeTexture("game_time", 
+				ComplexShapeType.ROUNDED_RECTANGLE,
+				uiBounds.getTime(),
+				Color.GRAY);
+		
 		TextureManager.createShapeTexture("game_ownCP", 
 				ComplexShapeType.ROUNDED_RECTANGLE,
 				uiBounds.getOwnCPBar(),
@@ -278,7 +284,6 @@ public class UIRenderer {
 	}
 	
 	private void updateUI(GameState state) {
-	    Rectangle overlayBounds = new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	    ownElapsed += Gdx.graphics.getDeltaTime();
 	    enemyElapsed += Gdx.graphics.getDeltaTime();
 	    if (activeAncientPlanet != null) {
@@ -310,18 +315,15 @@ public class UIRenderer {
 	    	}
 	    }
 		
-	    if (uiElementConfig.isTimeVisible()) {
-	    	TextureManager.draw(TextureManager.getTexture("ui/image", "game_ui_layout_time"), overlayBounds);
-	    }
 	}
 	
 	private void renderUI(GameState state) {
-		float scaleX = Gdx.graphics.getWidth() / 400f;
-		float scaleY = Gdx.graphics.getHeight() / 900f;
-
 		long remainingMS = state.maxGameTimeMS - state.gameTimeMS;
 		String remainingTimeLabel = StringUtils.generateCountdownLabel(remainingMS, false);
-		if (uiElementConfig.isTimeVisible()) FontUtil.draw(remainingMS < 60_000 ? Color.RED : Color.WHITE, remainingTimeLabel, 291 * scaleX, 850 * scaleY);
+		if (uiElementConfig.isTimeVisible()) {
+			FontUtil.drawLabel(remainingMS < 60_000 ? Color.RED : Color.WHITE, remainingTimeLabel, uiBounds.getTime());
+			TextureManager.draw("game_time");
+		}
 
 		if (uiElementConfig.isOwnCPVisible()) {
 			cpLoadingBar.setBounds(uiBounds.getOwnCPBar());
@@ -343,7 +345,7 @@ public class UIRenderer {
 			TextureManager.draw("game_teammate1CP");
 		}
 		
-		if (uiElementConfig.isTeammate1CPVisible()) {
+		if (uiElementConfig.isTeammate2CPVisible()) {
 			teammate2cpLoadingBar.setBounds(uiBounds.getTeammate2CPBar());
 			teammate2cpLoadingBar.setMaxValue(teammate2.maxCommandPoints);
 			teammate2cpLoadingBar.setCurrentValue(teammate2.currentCommandPoints);
@@ -358,6 +360,8 @@ public class UIRenderer {
 			enemyCPLoadingBar.setMaxValue(enemy.maxCommandPoints);
 			enemyCPLoadingBar.setCurrentValue(enemy.currentCommandPoints);
 			enemyCPLoadingBar.render();
+			FontUtil.drawLabel(GameConfig.enemyColor, "CP", uiBounds.getEnemy1CPBarLabel());
+			TextureManager.draw("game_enemy1CPLabel");
 			TextureManager.draw("game_enemy1CP");
 		}
 		
