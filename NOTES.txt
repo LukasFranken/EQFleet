@@ -7,27 +7,15 @@
 - custom window
 - custom desktop window start animation
 
-- springutils to server
- -> gameserver to server
- -> gameengine is own module
- -> delete shared
-
 - externalize client prefs
 - preference manager
 
 - map with enemy strengths and types and resources
 
-- fully fix playerid/factionid confusion
-- 2v2
-
 - casino with slight win for generating stuff
 
 - maximum planet capacity
  -> replace numbers with bars
-
-- refactor matchmaking out of gameserver
-- load player data through game creation
-- manage playerdata in extra eqserver game service
 
 - refactor intro logic
 - proper logging especially in webcontroller
@@ -54,6 +42,7 @@ AI
 - ancient planet capture logic
 
 IDEAS
+- flux ability (transfer CP to ally)
 - beautiful bar animation, because so many bars
 - request responsiblity logic on client
  -> limit self requests based on server tolerance and individual usage

@@ -3,6 +3,8 @@ package de.instinct.engine.model;
 public class Player {
 	
 	public String name;
+	public boolean loaded;
+	public boolean connected;
 	public int teamId;
 	public int playerId;
 	public double fleetMovementSpeed;

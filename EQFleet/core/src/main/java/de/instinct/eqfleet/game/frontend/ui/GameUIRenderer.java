@@ -8,10 +8,12 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import de.instinct.api.core.API;
 import de.instinct.engine.EngineUtility;
 import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.Planet;
 import de.instinct.engine.model.Player;
+import de.instinct.engine.net.message.types.LoadedMessage;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.frontend.ui.model.GameUIElement;
 import de.instinct.eqfleet.game.frontend.ui.model.UIBounds;
@@ -38,6 +40,9 @@ public class GameUIRenderer {
 		initializeElements();
 		
 		initialized = true;
+		LoadedMessage loadedMessage = new LoadedMessage();
+		loadedMessage.playerUUID = API.authKey;
+		Game.outputMessageQueue.add(loadedMessage);
 	}
 
 	private void initializeElements() {

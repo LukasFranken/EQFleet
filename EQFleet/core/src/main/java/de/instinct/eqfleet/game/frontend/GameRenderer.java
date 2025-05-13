@@ -89,20 +89,35 @@ public class GameRenderer {
 			camera.update();
 
 			if (state != null && state.winner == 0) {
-				checkFlip();
-				gridRenderer.drawGrid(camera);
-				uiRenderer.renderParticles(camera);
-				renderFleetConnections(state);
-				renderPlanets(state);
-				renderFleet(state);
-				inputManager.handleInput(camera, state);
-				renderSelection(state);
-				uiRenderer.render(state);
+				if (state.started) {
+					checkFlip();
+					gridRenderer.drawGrid(camera);
+					uiRenderer.renderParticles(camera);
+					renderFleetConnections(state);
+					renderPlanets(state);
+					renderFleet(state);
+					inputManager.handleInput(camera, state);
+					renderSelection(state);
+					uiRenderer.render(state);
+				} else {
+					renderLoadingScreen(state);
+				}
 			}
 		}
 		
 		renderMessageText();
 		renderGuideEvents();
+	}
+
+	private void renderLoadingScreen(GameState state) {
+		int i = 1;
+		float labelHeight = 30;
+		FontUtil.drawLabel("NAME - CONNECTED - LOADED", new Rectangle(0, 500, Gdx.graphics.getWidth(), labelHeight));
+		for (Player player : state.players) {
+			if (player.teamId == 0) continue;
+			FontUtil.drawLabel(player.name + " - " + player.connected + " - " + player.loaded, new Rectangle(0, 500 - (i * labelHeight), Gdx.graphics.getWidth(), labelHeight));
+			i++;
+		}
 	}
 
 	private void checkFlip() {

@@ -17,5 +17,6 @@ public class GameState {
 	public int winner;
 	public double atpToWin;
 	public Map<Integer, Double> teamATPs;
+	public boolean started;
 
 }

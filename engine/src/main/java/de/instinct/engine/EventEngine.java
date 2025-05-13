@@ -19,31 +19,36 @@ public class EventEngine {
 	private Queue<GameOrder> unprocessedOrders = new ConcurrentLinkedQueue<>();
 	
 	public boolean update(GameState state, long progressionMS) {
-	    long targetTime = state.gameTimeMS + progressionMS;
+		if (state.started) {
+			long targetTime = state.gameTimeMS + progressionMS;
 
-	    while (!state.activeEvents.isEmpty()) {
-	        GameEvent nextEvent = state.activeEvents.peek();
-	        if (nextEvent.eventFinalizationTimestamp() <= targetTime) {
-	            state.activeEvents.poll();
+		    while (!state.activeEvents.isEmpty()) {
+		        GameEvent nextEvent = state.activeEvents.peek();
+		        if (nextEvent.eventFinalizationTimestamp() <= targetTime) {
+		            state.activeEvents.poll();
 
-	            long deltaToEvent = nextEvent.eventFinalizationTimestamp() - state.gameTimeMS;
-	            if (deltaToEvent > 0) {
-	                advanceTime(state, deltaToEvent);
-	            }
-	            
-	            applyEvent(state, nextEvent);
-	        } else {
-	            break;
-	        }
-	    }
+		            long deltaToEvent = nextEvent.eventFinalizationTimestamp() - state.gameTimeMS;
+		            if (deltaToEvent > 0) {
+		                advanceTime(state, deltaToEvent);
+		            }
+		            
+		            applyEvent(state, nextEvent);
+		        } else {
+		            break;
+		        }
+		    }
 
-	    long remainingDelta = targetTime - state.gameTimeMS;
-	    if (remainingDelta > 0) {
-	        advanceTime(state, remainingDelta);
-	    }
+		    long remainingDelta = targetTime - state.gameTimeMS;
+		    if (remainingDelta > 0) {
+		        advanceTime(state, remainingDelta);
+		    }
 
-	    state.gameTimeMS = targetTime;
-	    return workOnOrderQueue(state);
+		    state.gameTimeMS = targetTime;
+		    
+		    boolean newOrder = workOnOrderQueue(state);
+		    return newOrder;
+		}
+		return false;
 	}
 	
 	private void advanceTime(GameState state, long deltaMS) {

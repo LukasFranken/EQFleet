@@ -7,9 +7,8 @@ import de.instinct.engine.net.message.types.FleetMovementMessage;
 import de.instinct.engine.order.GameOrder;
 import de.instinct.engine.order.types.FleetMovementOrder;
 import de.instinct.eqfleet.game.Game;
-import de.instinct.eqfleet.game.backend.engine.local.LocalEngine;
 
-public class TutorialEngine extends LocalEngine {
+public class TutorialEngine {
 	
 	private TutorialLoader tutorialLoader;
     private EventEngine engine;
