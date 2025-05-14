@@ -1,6 +1,7 @@
 package de.instinct.eqfleet.menu.module.main;
 
 import de.instinct.eqfleet.menu.MenuTab;
+import de.instinct.eqfleet.menu.module.main.tab.inventory.InventoryTab;
 import de.instinct.eqfleet.menu.module.main.tab.loadout.LoadoutTab;
 import de.instinct.eqfleet.menu.module.main.tab.play.PlayTab;
 import de.instinct.eqfleet.menu.module.main.tab.profile.ProfileTab;
@@ -23,6 +24,7 @@ public class MainMenu {
 		LoadoutTab.init();
 		ProfileTab.init();
 		SettingsTab.init();
+		InventoryTab.init();
 	}
 	
 	public static void update() {
@@ -31,6 +33,7 @@ public class MainMenu {
 		LoadoutTab.update();
 		ProfileTab.update();
 		SettingsTab.update();
+		InventoryTab.update();
 	}
 	
 	public static void render() {
@@ -48,6 +51,9 @@ public class MainMenu {
 			break;
 		case PLAY:
 			PlayTab.loadData();
+			break;
+		case INVENTORY:
+			InventoryTab.loadData();
 			break;
 			
 		default:

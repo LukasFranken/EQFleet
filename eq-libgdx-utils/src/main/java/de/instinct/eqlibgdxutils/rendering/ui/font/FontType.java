@@ -4,6 +4,7 @@ public enum FontType {
 	
 	NORMAL,
 	BOLD,
-	SMALL
+	SMALL,
+	TINY
 
 }

@@ -5,6 +5,7 @@ public enum MenuTab {
 	PLAY,
 	LOADOUT,
 	SETTINGS,
-	PROFILE
+	PROFILE,
+	INVENTORY
 
 }

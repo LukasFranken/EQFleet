@@ -43,6 +43,12 @@ AI
 - ancient planet capture logic
 
 IDEAS
+- equilibrium as resource
+ -> resonates with spirit
+ -> changes subatomic structure based on closest spirit
+ -> when accumulated, can be spent on global goals
+ -> global goals give unique rewards
+ -> full coop?
 - flux ability (transfer CP to ally)
 - beautiful bar animation, because so many bars
 - request responsiblity logic on client

@@ -7,7 +7,7 @@ public class MainMenuLogic extends Logic {
 
 	@Override
 	public void init() {
-		MainMenu.currentTab = MenuTab.PLAY;
+		MainMenu.currentTab = MenuTab.PROFILE;
 	}
 
 	@Override

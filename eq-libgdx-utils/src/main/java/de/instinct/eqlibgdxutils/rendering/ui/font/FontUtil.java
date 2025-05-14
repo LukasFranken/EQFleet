@@ -27,6 +27,8 @@ public class FontUtil {
 		fonts.get(FontType.BOLD).getData().setScale(FONT_SCALE);
 		fonts.put(FontType.SMALL, new BitmapFont(Gdx.files.internal("ui/font/source_small.fnt")));
 		fonts.get(FontType.SMALL).getData().setScale(FONT_SCALE);
+		fonts.put(FontType.TINY, new BitmapFont(Gdx.files.internal("ui/font/source_t.fnt")));
+		fonts.get(FontType.TINY).getData().setScale(FONT_SCALE);
 		batch = new SpriteBatch();
 	}
 
@@ -44,6 +46,10 @@ public class FontUtil {
 	public static float getFontHeightPx() {
 		return getFontHeightPx(FontType.NORMAL);
 	}
+	
+	public static float getFontHeightPx(FontType type) {
+		return fonts.get(type).getCapHeight();
+	}
 
 	public static float getFontTextWidthPx(int length) {
 		return getFontTextWidthPx(length, FontType.NORMAL);
@@ -51,10 +57,6 @@ public class FontUtil {
 	
 	public static float getFontTextWidthPx(String text) {
 		return getFontTextWidthPx(text, FontType.NORMAL);
-	}
-
-	public static float getFontHeightPx(FontType type) {
-		return fonts.get(type).getCapHeight();
 	}
 
 	public static float getFontTextWidthPx(int length, FontType type) {

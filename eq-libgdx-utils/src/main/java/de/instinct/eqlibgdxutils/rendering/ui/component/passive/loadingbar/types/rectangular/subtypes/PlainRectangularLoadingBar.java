@@ -53,6 +53,7 @@ public class PlainRectangularLoadingBar extends RectangularLoadingBar {
 					getBounds().y + getBorder().getSize(),
 					horizontalBarLength,
 					getBounds().height - (getBorder().getSize()) * 2));
+			break;
 		case SOUTH:
 			TextureManager.draw(bar, new Rectangle(getBounds().x + getBorder().getSize(),
 					getBounds().y + + getBounds().height - getBorder().getSize() - verticalBarLength,
