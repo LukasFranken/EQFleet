@@ -6,8 +6,8 @@ import com.badlogic.gdx.math.Rectangle;
 import de.instinct.eqlibgdxutils.MathUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
+import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
-import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.Slide;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.model.SlideAction;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.model.SlideCondition;
@@ -24,7 +24,8 @@ public class BinaryLabeledDialog extends Slide {
 	private final float LABEL_MAX_OFFSET = 20f;
 	private final float DIALOG_FADE_IN_DELAY = 2f;
 
-	private String message;
+	private Label messageLabel;
+	
 	private boolean triggered;
 	private String acceptLabel;
 	private String denyLabel;
@@ -36,8 +37,9 @@ public class BinaryLabeledDialog extends Slide {
 	@Getter
 	private ColorButton denyButton;
 
-	public BinaryLabeledDialog() {
+	public BinaryLabeledDialog(String message) {
 		super();
+		messageLabel = new Label(message);
 		getConditions().add(new SlideCondition() {
 
 			@Override
@@ -104,7 +106,9 @@ public class BinaryLabeledDialog extends Slide {
 		acceptButton.render();
 		denyButton.update();
 		denyButton.render();
-		FontUtil.drawLabel(message, new Rectangle(0, labelYOffset, getBounds().width, getBounds().height), slideAlpha);
+		messageLabel.setBounds(new Rectangle(0, labelYOffset, getBounds().width, getBounds().height));
+		messageLabel.setAlpha(slideAlpha);
+		messageLabel.render();
 	}
 
 }

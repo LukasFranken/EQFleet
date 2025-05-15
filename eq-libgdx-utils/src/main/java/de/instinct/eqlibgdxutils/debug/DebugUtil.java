@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
+import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 
 @SuppressWarnings("rawtypes")
@@ -53,13 +54,13 @@ public class DebugUtil {
 		updateMetrics();
 		if (active) {
 			batch.begin();
-			int i = 0;
 			float panelWidth = calculatePanelWidth();
 			float panelHeight = elementMargin + (metrics.size() * (FontUtil.getFontHeightPx() + elementMargin));
 			Rectangle panelBounds = new Rectangle(0, Gdx.graphics.getHeight() - topsidePanelOffset - panelHeight, panelWidth, panelHeight);
 			batch.setColor(1f, 1f, 1f, 0.2f);
 			batch.draw(backgroundColorTexture, panelBounds.x, panelBounds.y, panelBounds.width, panelBounds.height);
 			batch.end();
+			int i = 1;
 			for (Metric metric : metrics) {
 				render(metric, i);
 				i++;
@@ -88,8 +89,11 @@ public class DebugUtil {
 	}
 
 	private static void render(Metric metric, int i) {
-		FontUtil.draw(Color.WHITE, metric.getTag() + ": " + metric.getValueString(), elementMargin,
-				Gdx.graphics.getHeight() - topsidePanelOffset - (i * (FontUtil.getFontHeightPx() + elementMargin)) - elementMargin);
+		float labelHeight = FontUtil.getFontHeightPx() + elementMargin;
+		Label label = new Label(metric.getTag() + ": " + metric.getValueString());
+		label.setColor(Color.WHITE);
+		label.setBounds(new Rectangle(elementMargin, Gdx.graphics.getHeight() - topsidePanelOffset - (i * labelHeight) - elementMargin, calculatePanelWidth(), labelHeight));
+		label.render();
 	}
 
 	@SuppressWarnings("unchecked")

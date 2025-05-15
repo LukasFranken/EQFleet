@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
-import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
+import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.module.BaseModule;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.draw.TextureDrawMode;
@@ -128,8 +128,10 @@ public class ActionList extends BaseModule {
 	        		renderBorder(confirmRectangle);
 	        	}
 	        }
-			
-	        FontUtil.draw(Color.LIGHT_GRAY, element.getLabel(), getBounds().x + 10, getBounds().y + getBounds().height - (position * getElementHeight()) + (getElementHeight() / 2) + (FontUtil.getFontHeightPx() / 2));
+			Label label = new Label(element.getLabel());
+			label.setColor(Color.LIGHT_GRAY);
+			label.setBounds(new Rectangle(getBounds().x + 10, getBounds().y + getBounds().height - (position * getElementHeight()) + (getElementHeight() / 2), getBounds().width / 2, getElementHeight()));
+			label.render();
 		}
 	}
 

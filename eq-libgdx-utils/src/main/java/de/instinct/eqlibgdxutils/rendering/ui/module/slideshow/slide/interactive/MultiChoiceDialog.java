@@ -10,8 +10,8 @@ import com.badlogic.gdx.math.Rectangle;
 import de.instinct.eqlibgdxutils.MathUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
+import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
-import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.Slide;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.model.SlideButton;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.model.SlideCondition;
@@ -30,14 +30,14 @@ public class MultiChoiceDialog extends Slide {
 	private final float BUTTON_SPACING = 20f;
 	private final float BUTTON_MARGIN = 40f;
 	
-	private String message;
+	private Label label;
 	private List<SlideButton> choices;
 	
 	@Getter
 	private List<ColorButton> buttons;
 	
 	public MultiChoiceDialog(String message) {
-		this.message = message;
+		label = new Label(message);
 		choices = new ArrayList<>();
 		
 		getConditions().add(new SlideCondition() {
@@ -96,8 +96,9 @@ public class MultiChoiceDialog extends Slide {
 				buttonAlpha = MathUtil.linear(0, 1, (getStageElapsed() - DIALOG_FADE_IN_DELAY) / getFADE_IN_DURATION());
 			}
 		}
-		
-		FontUtil.drawLabel(message, new Rectangle(0, labelYOffset, getBounds().width, getBounds().height), slideAlpha);
+		label.setBounds(new Rectangle(0, labelYOffset, getBounds().width, getBounds().height));
+		label.setAlpha(slideAlpha);
+		label.render();
 		
 		int i = 0;
 		for (ColorButton button : buttons) {

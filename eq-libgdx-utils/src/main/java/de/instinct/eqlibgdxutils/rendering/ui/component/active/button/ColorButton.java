@@ -3,6 +3,8 @@ package de.instinct.eqlibgdxutils.rendering.ui.component.active.button;
 import com.badlogic.gdx.graphics.Color;
 
 import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
+import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
+import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 import lombok.Data;
@@ -12,7 +14,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class ColorButton extends Button {
 
-	private String label;
+	private Label label;
 	private Color labelColor;
 	private Color color;
 	private Color downColor;
@@ -24,9 +26,9 @@ public class ColorButton extends Button {
 	private float fixedHeight;
 	private float fixedWidth;
 
-	public ColorButton(String label) {
+	public ColorButton(String text) {
 		super();
-		this.label = label;
+		label = new Label(text);
 		labelColor = DefaultUIValues.buttonColor;
 		color = DefaultUIValues.buttonDownColor;
 		downColor = DefaultUIValues.buttonDownActiveColor;
@@ -39,7 +41,7 @@ public class ColorButton extends Button {
 
 	@Override
 	protected float calculateWidth() {
-		return fixedWidth == 0 ? FontUtil.getFontTextWidthPx(label) + (contentMargin * 2) : fixedWidth;
+		return fixedWidth == 0 ? FontUtil.getFontTextWidthPx(label.getText(), FontType.NORMAL) + (contentMargin * 2) : fixedWidth;
 	}
 
 	@Override
@@ -51,8 +53,9 @@ public class ColorButton extends Button {
 	public void renderElement() {
 		super.update();
 		TextureManager.draw(TextureManager.createTexture(getButtonColor()), getBounds(), getAlpha());
-		labelColor.a = getAlpha();
-		FontUtil.draw(labelColor, label, getBounds().x + getBounds().width / 2 - (FontUtil.getFontTextWidthPx(label) / 2), getBounds().y + getBounds().height / 2 + FontUtil.getFontHeightPx() / 2);
+		label.setAlpha(getAlpha());
+		label.setBounds(getBounds());
+		label.render();
 	}
 
 	private Color getButtonColor() {

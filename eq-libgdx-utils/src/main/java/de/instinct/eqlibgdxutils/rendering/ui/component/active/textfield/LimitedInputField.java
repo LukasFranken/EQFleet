@@ -1,16 +1,15 @@
 package de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import com.badlogic.gdx.Application;
 
 import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
@@ -19,6 +18,8 @@ import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.model.I
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.model.TextfieldActionHandler;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.model.TextfieldInputFilter;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.model.inputfilter.DefaultTextfieldInputFilter;
+import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.HorizontalAlignment;
+import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
@@ -50,6 +51,9 @@ public class LimitedInputField extends Component {
 	private TextInputListener mobileTextInputListener;
 	private String popupMessage;
 	private String popupHint;
+	
+	private Label contentLabel;
+	private Label limitLabel;
 
 	public LimitedInputField() {
 		super();
@@ -68,6 +72,10 @@ public class LimitedInputField extends Component {
 		backspaceDownDeletePerSec = 10f;
 		popupMessage = "";
 		popupHint = "";
+		
+		contentLabel = new Label(content);
+		contentLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
+		limitLabel = new Label("" + maxChars);
 		
 		createMobileInputListener();
 	}
@@ -122,7 +130,10 @@ public class LimitedInputField extends Component {
 	    		focused = false;
 	    	}
 	    }
-	    FontUtil.draw(getFontColor(), getRenderText(), getBounds().getX() + 10, getBounds().getY() + ((getBounds().getHeight() + FontUtil.getFontHeightPx()) / 2));
+	    contentLabel.setBounds(new Rectangle(getBounds().x + 10, getBounds().y, getBounds().width - 20 - maxCharsLabelWidth, getBounds().height));
+	    contentLabel.setColor(getFontColor());
+	    contentLabel.setText(getRenderText());
+	    contentLabel.render();
 
 	    updateBorderColor();
 	    if (renderMaxCharsLabel) {
@@ -183,9 +194,10 @@ public class LimitedInputField extends Component {
 	private void drawLimit() {
 		String remainingChars = (maxChars - content.length()) + "";
 		TextureManager.draw(TextureManager.createTexture(getBorder().getColor()), new Rectangle(getBounds().x + getBounds().width - maxCharsLabelWidth, getBounds().y, 2,getBounds().height), getAlpha());
-		Color fontColor = getBorder().getColor();
-		fontColor.a = getAlpha();
-	    FontUtil.draw(fontColor, remainingChars, getBounds().x + getBounds().width - (maxCharsLabelWidth - 20) - (FontUtil.getFontTextWidthPx(remainingChars) / 2), getBounds().y + ((getBounds().height + FontUtil.getFontHeightPx()) / 2));
+		limitLabel.setBounds(new Rectangle(getBounds().x + getBounds().width - maxCharsLabelWidth, getBounds().y, maxCharsLabelWidth, getBounds().height));
+		limitLabel.setColor(getBorder().getColor());
+	    limitLabel.setText(remainingChars);
+	    limitLabel.render();
 	}
 
 	private void handleInputFocus() {

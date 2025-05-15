@@ -34,6 +34,7 @@ import de.instinct.eqlibgdxutils.rendering.GridRenderer;
 import de.instinct.eqlibgdxutils.rendering.model.ModelLoader;
 import de.instinct.eqlibgdxutils.rendering.model.ModelRenderer;
 import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
+import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.HorizontalAlignment;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
@@ -113,10 +114,14 @@ public class GameRenderer {
 	private void renderLoadingScreen(GameState state) {
 		int i = 1;
 		float labelHeight = 30;
-		FontUtil.drawLabel("NAME - CONNECTED - LOADED", new Rectangle(0, 500, Gdx.graphics.getWidth(), labelHeight));
+		Label header = new Label("NAME - CONNECTED - LOADED");
+		header.setBounds(new Rectangle(0, 500, Gdx.graphics.getWidth(), labelHeight));
+		header.render();
 		for (Player player : state.players) {
 			if (player.teamId == 0) continue;
-			FontUtil.drawLabel(player.name + " - " + player.connected + " - " + player.loaded, new Rectangle(0, 500 - (i * labelHeight), Gdx.graphics.getWidth(), labelHeight));
+			Label row = new Label(player.name + " - " + player.connected + " - " + player.loaded);
+			row.setBounds(new Rectangle(0, 500 - (i * labelHeight), Gdx.graphics.getWidth(), labelHeight));
+			row.render();
 			i++;
 		}
 	}
@@ -286,8 +291,8 @@ public class GameRenderer {
 		    }
 
 		    Vector3 screenPos = camera.project(new Vector3(planet.xPos, planet.yPos, 0f));
-		    String valueLabel = String.valueOf((int) planet.value);
-		    float labelWidth = FontUtil.getFontTextWidthPx(valueLabel);
+		    String value = String.valueOf((int) planet.value);
+		    float labelWidth = FontUtil.getFontTextWidthPx(value);
 		    float labelHeight = FontUtil.getFontHeightPx();
 		    float labelX = screenPos.x - labelWidth / 2f;
 		    float labelY = screenPos.y - labelHeight / 2f;
@@ -300,7 +305,10 @@ public class GameRenderer {
 		    shapeRenderer.end();
 		    Gdx.gl.glDisable(GL20.GL_BLEND);
 
-		    FontUtil.draw(Color.WHITE, valueLabel, labelX, labelY + labelHeight / 2f + (FontUtil.getFontHeightPx() / 2));
+		    Label valueLabel = new Label(value);
+		    valueLabel.setColor(Color.WHITE);
+		    valueLabel.setBounds(new Rectangle(labelX, labelY, labelWidth, labelHeight));
+		    valueLabel.render();
 		}
 	}
 
@@ -318,9 +326,10 @@ public class GameRenderer {
 				message = "";
 			}
 		}
-	    FontUtil.draw(Color.WHITE, message,
-	        (Gdx.graphics.getWidth() / 2) - (FontUtil.getFontTextWidthPx(message) / 2),
-	        Gdx.graphics.getHeight() / 2);
+		Label messageLabel = new Label(message);
+		messageLabel.setColor(Color.WHITE);
+		messageLabel.setBounds(new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		messageLabel.render();
 	}
 	
 	private void renderFleet(GameState state) {
@@ -358,7 +367,12 @@ public class GameRenderer {
 	            ModelRenderer.render(camera, ship);
 	            
 	            Vector3 screenPos = camera.project(new Vector3(pos));
-	            FontUtil.draw(Color.WHITE, String.valueOf(fleet.value), screenPos.x + 10, screenPos.y + (FontUtil.getFontHeightPx() / 2));
+	            
+	            Label valueLabel = new Label(String.valueOf(fleet.value));
+			    valueLabel.setColor(Color.WHITE);
+			    valueLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
+			    valueLabel.setBounds(new Rectangle(screenPos.x + 10, screenPos.y, 30, 20));
+			    valueLabel.render();
 	        }
 	    }
 	}

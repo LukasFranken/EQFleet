@@ -91,15 +91,13 @@ public class Intro {
 		startDelay.setDuration(1f);
 		elementQueue.add(startDelay);
 		
-		Message welcomeMessage = new Message();
+		Message welcomeMessage = new Message("Welcome!");
 		welcomeMessage.setDuration(2.5f);
-		welcomeMessage.setMessage("Welcome!");
 		elementQueue.add(welcomeMessage);
 	}
 	
 	private static void loadFirstTimeSlides() {
-		BinaryLabeledDialog firstTimeDialog = new BinaryLabeledDialog();
-		firstTimeDialog.setMessage("Do you have an account?");
+		BinaryLabeledDialog firstTimeDialog = new BinaryLabeledDialog("Do you have an account?");
 		firstTimeDialog.setAcceptLabel("Yes");
 		firstTimeDialog.setAcceptAction(new SlideAction() {
 					boolean triggered = false;
@@ -107,8 +105,7 @@ public class Intro {
 					@Override
 					public void execute() {
 						if (!triggered) {
-							authKeyInsertDialog = new ClipboardDialog();
-							authKeyInsertDialog.setMessage("Copy your auth key to the clipboard");
+							authKeyInsertDialog = new ClipboardDialog("Copy your auth key to the clipboard");
 							authKeyInsertDialog.getUseButton().setAction(new Action() {
 								
 								@Override

@@ -19,10 +19,10 @@ import de.instinct.eqfleet.menu.module.main.tab.play.PlayTab;
 import de.instinct.eqlibgdxutils.MathUtil;
 import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.generic.Action;
+import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.Direction;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.subtypes.BoxedRectangularLoadingBar;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.subtypes.PlainRectangularLoadingBar;
-import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.ComplexShapeType;
 
@@ -81,7 +81,10 @@ public class GameUILoader {
 			public void execute() {
 				long remainingMS = timeElement.getCurrentGameState().maxGameTimeMS - timeElement.getCurrentGameState().gameTimeMS;
 				String remainingTimeLabel = StringUtils.generateCountdownLabel(remainingMS, false);
-				FontUtil.drawLabel(remainingMS < 60_000 ? Color.RED : Color.WHITE, remainingTimeLabel, bounds.getTime());
+				Label timeLabel = new Label(remainingTimeLabel);
+				timeLabel.setColor(remainingMS < 60_000 ? Color.RED : Color.WHITE);
+				timeLabel.setBounds(bounds.getTime());
+				timeLabel.render();
 				TextureManager.draw(tagPrefix + timeElement.getTag());
 			}
 			
@@ -121,7 +124,10 @@ public class GameUILoader {
 			@Override
 			public void execute() {
 				PlayerData playerData = UIDataUtility.getPlayerData(ownCPElement.getCurrentGameState());
-				FontUtil.drawLabel(GameConfig.getPlayerColor(playerData.getSelf().playerId), "CP", bounds.getOwnCPBarLabel());
+				Label cpLabel = new Label("CP");
+				cpLabel.setColor(GameConfig.getPlayerColor(playerData.getSelf().playerId));
+				cpLabel.setBounds(bounds.getOwnCPBarLabel());
+				cpLabel.render();
 				TextureManager.draw(tagPrefix + ownCPElement.getTag() + "Label");
 				TextureManager.draw(tagPrefix + ownCPElement.getTag());
 			}
@@ -162,7 +168,10 @@ public class GameUILoader {
 			@Override
 			public void execute() {
 				PlayerData playerData = UIDataUtility.getPlayerData(teammate1CPElement.getCurrentGameState());
-				FontUtil.drawLabel(GameConfig.getPlayerColor(playerData.getTeammate1().playerId), "CP", bounds.getTeammate1CPBarLabel());
+				Label cpLabel = new Label("CP");
+				cpLabel.setColor(GameConfig.getPlayerColor(playerData.getTeammate1().playerId));
+				cpLabel.setBounds(bounds.getTeammate1CPBarLabel());
+				cpLabel.render();
 				TextureManager.draw(tagPrefix + teammate1CPElement.getTag() + "Label");
 				TextureManager.draw(tagPrefix + teammate1CPElement.getTag());
 			}
@@ -203,7 +212,10 @@ public class GameUILoader {
 			@Override
 			public void execute() {
 				PlayerData playerData = UIDataUtility.getPlayerData(teammate2CPElement.getCurrentGameState());
-				FontUtil.drawLabel(GameConfig.getPlayerColor(playerData.getTeammate2().playerId), "CP", bounds.getTeammate2CPBarLabel());
+				Label cpLabel = new Label("CP");
+				cpLabel.setColor(GameConfig.getPlayerColor(playerData.getTeammate2().playerId));
+				cpLabel.setBounds(bounds.getTeammate2CPBarLabel());
+				cpLabel.render();
 				TextureManager.draw(tagPrefix + teammate2CPElement.getTag() + "Label");
 				TextureManager.draw(tagPrefix + teammate2CPElement.getTag());
 			}
@@ -244,7 +256,10 @@ public class GameUILoader {
 			@Override
 			public void execute() {
 				PlayerData playerData = UIDataUtility.getPlayerData(enemy1CPElement.getCurrentGameState());
-				FontUtil.drawLabel(GameConfig.getPlayerColor(playerData.getEnemy1().playerId), "CP", bounds.getEnemy1CPBarLabel());
+				Label cpLabel = new Label("CP");
+				cpLabel.setColor(GameConfig.getPlayerColor(playerData.getEnemy1().playerId));
+				cpLabel.setBounds(bounds.getEnemy1CPBarLabel());
+				cpLabel.render();
 				TextureManager.draw(tagPrefix + enemy1CPElement.getTag() + "Label");
 				TextureManager.draw(tagPrefix + enemy1CPElement.getTag());
 			}
@@ -396,7 +411,10 @@ public class GameUILoader {
 			    	}
 			    }
 				
-				FontUtil.drawLabel(GameConfig.ancientColor, "AP", bounds.getTeamAPBarLabel());
+			    Label apLabel = new Label("AP");
+				apLabel.setColor(GameConfig.ancientColor);
+				apLabel.setBounds(bounds.getTeamAPBarLabel());
+				apLabel.render();
 				TextureManager.draw(tagPrefix + teamAPElement.getTag() + "Label");
 				TextureManager.draw(tagPrefix + teamAPElement.getTag());
 				TextureManager.draw(tagPrefix + teamAPElement.getTag() + "Glow", glowAlpha);
@@ -439,7 +457,10 @@ public class GameUILoader {
 			
 			@Override
 			public void execute() {
-				FontUtil.drawLabel(GameConfig.ancientColor, "AP", bounds.getEnemyAPBarLabel());
+				Label apLabel = new Label("AP");
+				apLabel.setColor(GameConfig.ancientColor);
+				apLabel.setBounds(bounds.getEnemyAPBarLabel());
+				apLabel.render();
 				TextureManager.draw(tagPrefix + "game_enemyAPLabel");
 				TextureManager.draw(tagPrefix + "game_enemyAP");
 				TextureManager.draw(tagPrefix + "game_enemyAPGlow", 0f);

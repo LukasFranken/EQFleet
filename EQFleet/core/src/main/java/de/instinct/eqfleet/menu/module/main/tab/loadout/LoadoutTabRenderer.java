@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.eqfleet.menu.common.Renderer;
-import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
+import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 
 public class LoadoutTabRenderer extends Renderer {
 
@@ -15,7 +15,7 @@ public class LoadoutTabRenderer extends Renderer {
 
 	@Override
 	public void render() {
-		FontUtil.drawLabel("(under construction)", new Rectangle(0, Gdx.graphics.getHeight() / 2 - 50, Gdx.graphics.getWidth(), 30));
+		Label.drawUnderConstruction(new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 	}
 
 	@Override

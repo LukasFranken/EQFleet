@@ -18,9 +18,10 @@ import de.instinct.eqfleet.menu.module.main.tab.settings.SettingsTab;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
+import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.HorizontalAlignment;
+import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.subtypes.PlainRectangularLoadingBar;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
-import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.ComplexShapeType;
 
@@ -28,6 +29,7 @@ public class MainMenuRenderer extends Renderer {
 	
 	private Map<MenuTab, ColorButton> tabButtons;
 	private PlainRectangularLoadingBar expBar;
+	private Label usernameLabel;
 	
 	@Override
 	public void init() {
@@ -44,6 +46,9 @@ public class MainMenuRenderer extends Renderer {
 		expBar.setBar(TextureManager.createTexture(Color.BLUE));
 		expBar.setCustomDescriptor("");
 		expBar.setBackground(TextureManager.createTexture(new Color(0f, 0f, 0f, 0f)));
+		
+		usernameLabel = new Label("???");
+		usernameLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
 	}
 	
 	private void createTabButton(MenuTab tab) {
@@ -118,8 +123,13 @@ public class MainMenuRenderer extends Renderer {
 	private void renderHeader() {
 		if (GlobalStaticData.profile != null) {
 			TextureManager.draw(TextureManager.getTexture("ui/image/rank", GlobalStaticData.profile.getRank().getFileName()), new Rectangle(20, Gdx.graphics.getHeight() - 60, 25, 25));
-			FontUtil.draw(Color.LIGHT_GRAY, GlobalStaticData.profile.getUsername() == null ? "???" : GlobalStaticData.profile.getUsername(), 70, Gdx.graphics.getHeight() - 38);
+			
+			if (GlobalStaticData.profile.getUsername() == null) usernameLabel.setText(GlobalStaticData.profile.getUsername());
+			usernameLabel.setBounds(new Rectangle(70, Gdx.graphics.getHeight() - 55, 100, 25));
+			usernameLabel.setColor(Color.LIGHT_GRAY);
+			usernameLabel.render();
 			expBar.setBounds(new Rectangle(60, Gdx.graphics.getHeight() - 65, 120, 7));
+			// tiny exp label
 			//expBar.setMaxValue(GlobalStaticData.profile.getRank().getNextRequiredExp() - GlobalStaticData.profile.getRank().getRequiredExp());
 			//expBar.setCurrentValue(GlobalStaticData.profile.getCurrentExp() - - GlobalStaticData.profile.getRank().getRequiredExp());
 			expBar.setCurrentValue(877);
@@ -134,6 +144,7 @@ public class MainMenuRenderer extends Renderer {
 		LoadoutTab.dispose();
 		SettingsTab.dispose();
 		ProfileTab.dispose();
+		InventoryTab.dispose();
 	}
 	
 }

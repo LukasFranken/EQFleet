@@ -12,7 +12,6 @@ import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.Limited
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.model.TextfieldActionHandler;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.model.inputfilter.UsernameTexfieldInputFilter;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
-import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 
 public class ProfileTabRenderer extends Renderer {
 	
@@ -84,7 +83,7 @@ public class ProfileTabRenderer extends Renderer {
 	}
 	
 	private void renderProfile() {
-		FontUtil.drawLabel("(under construction)", new Rectangle(0, Gdx.graphics.getHeight() / 2 - 50, Gdx.graphics.getWidth(), 30));
+		Label.drawUnderConstruction(new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 	}
 
 	@Override

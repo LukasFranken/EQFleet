@@ -1,9 +1,11 @@
 package de.instinct.eqlibgdxutils.rendering.ui.component.passive.label;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
+import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 import lombok.Data;
@@ -19,6 +21,7 @@ public class Label extends Component {
 	private HorizontalAlignment horizontalAlignment;
 	private Color backgroundColor;
 	private float lineSpacing;
+	private FontType type;
 
 	public Label(String text) {
 		super();
@@ -27,6 +30,7 @@ public class Label extends Component {
 		verticalAlignment = VerticalAlignment.CENTER;
 		horizontalAlignment = HorizontalAlignment.CENTER;
 		lineSpacing = 5;
+		type = FontType.NORMAL;
 	}
 
 	@Override
@@ -45,7 +49,7 @@ public class Label extends Component {
 	@Override
 	protected float calculateHeight() {
 		String[] lines = text.split("\n");
-		return lines.length * FontUtil.getFontHeightPx() + (lines.length - 1) * lineSpacing;
+		return lines.length * FontUtil.getFontHeightPx(type) + (lines.length - 1) * lineSpacing;
 	}
 
 	@Override
@@ -55,7 +59,7 @@ public class Label extends Component {
 		}
 
 		String[] lines = text.split("\n");
-		float lineHeight = FontUtil.getFontHeightPx();
+		float lineHeight = FontUtil.getFontHeightPx(type);
 		float totalTextHeight = lines.length * lineHeight + (lines.length - 1) * lineSpacing;
 		float startY = 0f;
 
@@ -73,7 +77,7 @@ public class Label extends Component {
 
 		for (int i = 0; i < lines.length; i++) {
 			String line = lines[i];
-			float lineWidth = FontUtil.getFontTextWidthPx(line);
+			float lineWidth = FontUtil.getFontTextWidthPx(line, type);
 			float lineX = 0f;
 			switch (horizontalAlignment) {
 			case LEFT:
@@ -87,8 +91,19 @@ public class Label extends Component {
 				break;
 			}
 			float lineY = startY - i * (lineHeight + lineSpacing);
-			FontUtil.draw(color, line, lineX, lineY);
+			Color finalColor = new Color(color);
+			finalColor.a = finalColor.a * getAlpha();
+			FontUtil.draw(finalColor, line, lineX, lineY, type);
 		}
+	}
+	
+	public static void drawUnderConstruction(Rectangle bounds) {
+		String text = "(under construction)";
+		FontUtil.draw(Color.WHITE,
+				text,
+				(bounds.x + (bounds.width / 2)) - (FontUtil.getFontTextWidthPx(text.length()) / 2),
+				(bounds.y + (bounds.height / 2)) - (FontUtil.getFontHeightPx() / 2),
+				FontType.NORMAL);
 	}
 
 	@Override

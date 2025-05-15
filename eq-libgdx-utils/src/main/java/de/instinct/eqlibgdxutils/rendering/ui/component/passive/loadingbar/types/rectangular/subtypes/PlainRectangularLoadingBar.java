@@ -5,9 +5,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.eqlibgdxutils.StringUtils;
+import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.Direction;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.RectangularLoadingBar;
-import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -19,9 +19,11 @@ public class PlainRectangularLoadingBar extends RectangularLoadingBar {
 	private Texture bar;
 	private String customDescriptor;
 	private Direction direction;
+	private Label descriptorLabel;
 
 	public PlainRectangularLoadingBar() {
 		super();
+		descriptorLabel = new Label(customDescriptor);
 		bar = TextureManager.createTexture(Color.BLACK);
 		direction = Direction.EAST;
 	}
@@ -75,9 +77,9 @@ public class PlainRectangularLoadingBar extends RectangularLoadingBar {
 		if (customDescriptor != null) {
 			descriptor = customDescriptor;
 		}
-		FontUtil.draw(Color.WHITE, descriptor,
-				getBounds().x + getBounds().width / 2 - (FontUtil.getFontTextWidthPx(descriptor) / 2f),
-				getBounds().y + getBounds().height / 2 + FontUtil.getFontHeightPx() / 2);
+		descriptorLabel.setText(descriptor);
+		descriptorLabel.setBounds(getBounds());
+		descriptorLabel.render();
 	}
 
 	@Override

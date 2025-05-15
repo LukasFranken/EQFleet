@@ -7,9 +7,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
-
-import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
 
 public class FontUtil {
 
@@ -27,13 +24,9 @@ public class FontUtil {
 		fonts.get(FontType.BOLD).getData().setScale(FONT_SCALE);
 		fonts.put(FontType.SMALL, new BitmapFont(Gdx.files.internal("ui/font/source_small.fnt")));
 		fonts.get(FontType.SMALL).getData().setScale(FONT_SCALE);
-		fonts.put(FontType.TINY, new BitmapFont(Gdx.files.internal("ui/font/source_t.fnt")));
+		fonts.put(FontType.TINY, new BitmapFont(Gdx.files.internal("ui/font/source_tiny.fnt")));
 		fonts.get(FontType.TINY).getData().setScale(FONT_SCALE);
 		batch = new SpriteBatch();
-	}
-
-	public static void draw(Color color, String text, float x, float y) {
-		draw(color, text, x, y, FontType.NORMAL);
 	}
 	
 	public static void draw(Color color, String text, float x, float y, FontType type) {
@@ -67,21 +60,4 @@ public class FontUtil {
 		return fonts.get(type).getSpaceXadvance() * text.length();
 	}
 	
-	public static void drawLabel(String label, Rectangle bounds) {
-		drawLabel(DefaultUIValues.skinColor, label, bounds);
-	}
-	
-	public static void drawLabel(Color color, String label, Rectangle bounds) {
-		drawLabel(color, label, bounds, 1f);
-	}
-	
-	public static void drawLabel(String label, Rectangle bounds, float alpha) {
-		drawLabel(DefaultUIValues.skinColor, label, bounds, alpha);
-	}
-	
-	public static void drawLabel(Color color, String label, Rectangle bounds, float alpha) {
-		Color labelColor = new Color(color); 
-		labelColor.a = alpha;
-		draw(labelColor, label, bounds.x + ((bounds.width - getFontTextWidthPx(label)) / 2), bounds.y + ((bounds.height + getFontHeightPx()) / 2));
-	}
 }

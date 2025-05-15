@@ -19,8 +19,8 @@ import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButto
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.LimitedInputField;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.model.TextfieldActionHandler;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.model.inputfilter.UsernameTexfieldInputFilter;
+import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
-import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.module.list.ActionList;
 import de.instinct.eqlibgdxutils.rendering.ui.module.list.ActionListElement;
 import de.instinct.eqlibgdxutils.rendering.ui.module.list.ListActionHandler;
@@ -269,7 +269,9 @@ public class PlayTabRenderer extends Renderer {
 			invites.update();
 			invites.render();
 		} else {
-			FontUtil.drawLabel("No pending invites", new Rectangle(0, Gdx.graphics.getHeight() - 500, Gdx.graphics.getWidth(), 100));
+			Label noPendingInvitesLabel = new Label("No pending invites");
+			noPendingInvitesLabel.setBounds(new Rectangle(0, Gdx.graphics.getHeight() - 500, Gdx.graphics.getWidth(), 100));
+			noPendingInvitesLabel.render();
 		}
 	}
 
@@ -315,11 +317,15 @@ public class PlayTabRenderer extends Renderer {
 	
 	private void renderLobbyOverview() {
 		GameType selectedGameType = PlayTab.lobbyStatus.getType();
-		FontUtil.drawLabel(Color.GRAY, selectedGameType.getVersusMode() + " - " + selectedGameType.getFactionMode(), new Rectangle(0, 550, Gdx.graphics.getWidth(), 30));
+		Label gameTypeLabel = new Label(selectedGameType.getVersusMode() + " - " + selectedGameType.getFactionMode());
+		gameTypeLabel.setBounds(new Rectangle(0, 550, Gdx.graphics.getWidth(), 30));
+		gameTypeLabel.render();
 		
 		int i = 0;
 		for (String userName : PlayTab.lobbyStatus.getUserNames()) {
-			FontUtil.drawLabel(userName, new Rectangle(0, 500 - i, Gdx.graphics.getWidth(), 30));
+			Label userNameLabel = new Label(userName);
+			userNameLabel.setBounds(new Rectangle(0, 500 - i, Gdx.graphics.getWidth(), 30));
+			userNameLabel.render();
 			i += 30;
 		}
 		if (PlayTab.lobbyStatus.getUserNames().size() < selectedGameType.getFactionMode().teamPlayerCount) {
@@ -340,7 +346,9 @@ public class PlayTabRenderer extends Renderer {
 			}
 			if (inviteMessage != null) {
 				inviteMessageElapsed += Gdx.graphics.getDeltaTime();
-				FontUtil.drawLabel(Color.GRAY, inviteMessage, new Rectangle(0, 270, Gdx.graphics.getWidth(), 30));
+				Label inviteMessageLabel = new Label(inviteMessage);
+				inviteMessageLabel.setBounds(new Rectangle(0, 270, Gdx.graphics.getWidth(), 30));
+				inviteMessageLabel.render();
 				if (inviteMessageElapsed >= inviteMessageDuration) {
 					inviteMessage = null;
 					inviteMessageElapsed = 0f;
@@ -353,10 +361,13 @@ public class PlayTabRenderer extends Renderer {
 	}
 	
 	private void renderQueueStatus() {
-		FontUtil.drawLabel(PlayTab.currentMatchmakingStatus.getCode().toString(),
-				new Rectangle(0, 50, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-		FontUtil.drawLabel(PlayTab.currentMatchmakingStatus.getFoundPlayers() + " / " + PlayTab.currentMatchmakingStatus.getRequiredPlayers() + " players found",
-				new Rectangle(0, -50, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		Label statusLabel = new Label(PlayTab.currentMatchmakingStatus.getCode().toString());
+		statusLabel.setBounds(new Rectangle(0, 50, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		statusLabel.render();
+		
+		Label playerLabel = new Label(PlayTab.currentMatchmakingStatus.getFoundPlayers() + " / " + PlayTab.currentMatchmakingStatus.getRequiredPlayers() + " players found");
+		playerLabel.setBounds(new Rectangle(0, -50, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		playerLabel.render();
 	}
 
 	@Override
