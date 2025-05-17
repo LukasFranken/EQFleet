@@ -1,0 +1,26 @@
+package de.instinct.eqfleet.menu.module.main.tab.shop;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Rectangle;
+
+import de.instinct.eqfleet.menu.common.Renderer;
+import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
+
+public class ShopTabRenderer extends Renderer {
+	
+	@Override
+	public void init() {
+		
+	}
+
+	@Override
+	public void render() {
+		Label.drawUnderConstruction(new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+	}
+
+	@Override
+	public void dispose() {
+		
+	}
+
+}

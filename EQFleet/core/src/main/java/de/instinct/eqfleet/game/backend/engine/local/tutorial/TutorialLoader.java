@@ -1,6 +1,7 @@
 package de.instinct.eqfleet.game.backend.engine.local.tutorial;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -47,13 +48,25 @@ public class TutorialLoader {
 		initialGameState.activeEvents = new PriorityQueue<>();
 		initialGameState.winner = 0;
 		initialGameState.atpToWin = 30;
+		initialGameState.teamATPs = new HashMap<>();
+		initialGameState.teamATPs.put(0, 0D);
+		initialGameState.teamATPs.put(1, 0D);
+		initialGameState.teamATPs.put(2, 0D);
 		return initialGameState;
 	}
 
 	private List<Player> loadPlayers() {
 		List<Player> players = new ArrayList<>();
+		
+		Player neutralPlayer = new Player();
+		neutralPlayer.playerId = 0;
+		neutralPlayer.teamId = 0;
+		players.add(neutralPlayer);
+		
 		Player player1 = new Player();
 		player1.playerId = 1;
+		player1.teamId = 1;
+		player1.connected = true;
 		player1.name = "Player 1";
 		player1.fleetMovementSpeed = 80f;
 		player1.resourceGenerationSpeed = 0.5f;
@@ -65,6 +78,9 @@ public class TutorialLoader {
 
 		AiPlayer aiPlayer = aiEngine.initialize(AiDifficulty.RETARDED);
 		aiPlayer.playerId = 2;
+		aiPlayer.teamId = 2;
+		aiPlayer.connected = true;
+		aiPlayer.loaded = true;
 		aiPlayer.resourceGenerationSpeed = 0f;
 		aiPlayer.fleetMovementSpeed = 100f;
 		aiPlayer.currentCommandPoints = aiPlayer.startCommandPoints;
@@ -123,6 +139,26 @@ public class TutorialLoader {
 	public Queue<GuideEvent> load(TutorialMode mode) {
 		Queue<GuideEvent> guideQueue = new ConcurrentLinkedQueue<>();
 
+		DialogGuideEvent setupGuideEvent = new DialogGuideEvent();
+		setupGuideEvent.setDuration(0f);
+		setupGuideEvent.setAction(new ActionBehavior() {
+			
+			@Override
+			public void executeAtStart() {
+				Game.inputEnabled = false;
+				Game.setUIElementVisible("ownCP", false);
+				Game.setUIElementVisible("enemy1CP", false);
+				Game.setUIElementVisible("teamAP", false);
+				Game.setUIElementVisible("enemyAP", false);
+				Game.setUIElementVisible("time", false);
+			}
+			
+			@Override
+			public void executeAtEnd() {}
+			
+		});
+		guideQueue.add(setupGuideEvent);
+		
 		PauseGuideEvent initialDelayGuideEvent = new PauseGuideEvent();
 		initialDelayGuideEvent.setDuration(1f);
 		guideQueue.add(initialDelayGuideEvent);
@@ -142,17 +178,6 @@ public class TutorialLoader {
 			}
 			
 		});
-		firstMessageGuideEvent.setAction(new ActionBehavior() {
-			
-			@Override
-			public void executeAtStart() {
-				Game.inputEnabled = false;
-			}
-			
-			@Override
-			public void executeAtEnd() {}
-			
-		});
 		guideQueue.add(firstMessageGuideEvent);
 
 		if (mode == TutorialMode.STORY_FULL) {
@@ -167,7 +192,7 @@ public class TutorialLoader {
 				
 				@Override
 				public String getText() {
-					return "The talent algorithm has\nevaluated your brain's data.";
+					return "The talent algorithm has\nevaluated your data.";
 				}
 				
 			});
@@ -184,7 +209,7 @@ public class TutorialLoader {
 				
 				@Override
 				public String getText() {
-					return "You scored high on\n'Strategic Computation'.";
+					return "You score highest on\n'Strategic Computation'.";
 				}
 				
 			});
@@ -226,16 +251,13 @@ public class TutorialLoader {
 		fifthMessageGuideEvent.setAction(new ActionBehavior() {
 			
 			@Override
-			public void executeAtStart() {}
+			public void executeAtStart() {
+				
+			}
 			
 			@Override
 			public void executeAtEnd() {
-				Game.setUIElementVisible("ownCP", false);
-				Game.setUIElementVisible("enemyCP", false);
-				Game.setUIElementVisible("teamAP", false);
-				Game.setUIElementVisible("enemyAP", false);
-				Game.setUIElementVisible("time", false);
-				Game.setVisible(true);
+				
 			}
 		});
 		guideQueue.add(fifthMessageGuideEvent);
@@ -996,7 +1018,7 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "When captured,\nthe planet's resources decrease,\nnot increase over time.";
+				return "When captured,\nyour resources decrease,\nnot increase over time.";
 			}
 			
 		});
@@ -1077,7 +1099,7 @@ public class TutorialLoader {
 				
 				@Override
 				public String getText() {
-					return "If the time runs out,\nthe player with the most AP wins.";
+					return "If the time runs out,\nthe team with the most AP wins.";
 				}
 				
 			});

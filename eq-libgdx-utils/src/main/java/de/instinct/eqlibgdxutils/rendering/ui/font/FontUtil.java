@@ -18,6 +18,8 @@ public class FontUtil {
 	public static void init() {
 		FONT_SCALE = (Gdx.graphics.getHeight() / 1000f) * 1.1f;
 		fonts = new HashMap<>();
+		fonts.put(FontType.LARGE, new BitmapFont(Gdx.files.internal("ui/font/source_large.fnt")));
+		fonts.get(FontType.LARGE).getData().setScale(FONT_SCALE);
 		fonts.put(FontType.NORMAL, new BitmapFont(Gdx.files.internal("ui/font/source.fnt")));
 		fonts.get(FontType.NORMAL).getData().setScale(FONT_SCALE);
 		fonts.put(FontType.BOLD, new BitmapFont(Gdx.files.internal("ui/font/source_bold.fnt")));

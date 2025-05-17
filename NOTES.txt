@@ -10,6 +10,11 @@
 - externalize client prefs
 - preference manager
 
+- copy key in settings
+
+- missing lobby update bug
+ -> change to event system
+
 - map with enemy strengths and types and resources
 
 - casino with slight win for generating stuff

@@ -50,7 +50,7 @@ public class Game {
 
 	public static void render() {
     	if (active) {
-        	renderer.render();
+        	renderer.render(Game.activeGameState);
     	}
     }
 	

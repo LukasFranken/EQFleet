@@ -6,6 +6,7 @@ public enum MenuTab {
 	LOADOUT,
 	SETTINGS,
 	PROFILE,
-	INVENTORY
+	INVENTORY,
+	SHOP
 
 }

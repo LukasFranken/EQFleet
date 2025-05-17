@@ -84,9 +84,11 @@ public class GameRenderer {
 		visible = true;
 	}
 
-	public void render() {
+	public void render(GameState state) {
+		if (state != null && !uiRenderer.initialized) {
+			uiRenderer.init();
+		}
 		if (visible) {
-			GameState state = Game.activeGameState;
 			camera.update();
 
 			if (state != null && state.winner == 0) {
@@ -101,7 +103,6 @@ public class GameRenderer {
 					renderSelection(state);
 					uiRenderer.render(state);
 				} else {
-					uiRenderer.init();
 					renderLoadingScreen(state);
 				}
 			}

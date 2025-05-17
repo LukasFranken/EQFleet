@@ -4,6 +4,7 @@ import de.instinct.engine.EngineUtility;
 import de.instinct.engine.EventEngine;
 import de.instinct.engine.net.message.NetworkMessage;
 import de.instinct.engine.net.message.types.FleetMovementMessage;
+import de.instinct.engine.net.message.types.LoadedMessage;
 import de.instinct.engine.order.GameOrder;
 import de.instinct.engine.order.types.FleetMovementOrder;
 import de.instinct.eqfleet.game.Game;
@@ -20,7 +21,6 @@ public class TutorialEngine {
 
 	public Runnable start(TutorialMode mode) {
 		Game.guidedEvents = tutorialLoader.load(mode);
-		Game.setVisible(false);
 		Game.playerId = 1;
 		Game.activeGameState = tutorialLoader.generateGameState();
 		Game.lastUpdateTimestampMS = System.currentTimeMillis();
@@ -33,6 +33,9 @@ public class TutorialEngine {
 					if (newMessage != null) {
 						if (newMessage instanceof FleetMovementMessage) {
 							engine.queue(Game.activeGameState, getOrder((FleetMovementMessage)newMessage));
+						}
+						if (newMessage instanceof LoadedMessage) {
+							Game.activeGameState.started = true;
 						}
 					}
 					update();
@@ -51,7 +54,7 @@ public class TutorialEngine {
 	}
 
 	private void update() {
-		if (Game.activeGameState != null) {
+		if (Game.activeGameState != null && Game.activeGameState.started) {
     		long currentTime = System.currentTimeMillis();
         	engine.update(Game.activeGameState, currentTime - Game.lastUpdateTimestampMS);
         	EngineUtility.checkVictory(Game.activeGameState);

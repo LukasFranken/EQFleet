@@ -9,8 +9,6 @@ public class ProfileTab {
 	
 	private static ProfileTabRenderer renderer;
 	private static ProfileTabLogic logic;
-	
-	public static NameRegisterResponseCode nameRegisterReponseCode;
 
 	public static void init() {
 		renderer = new ProfileTabRenderer();
@@ -38,7 +36,7 @@ public class ProfileTab {
 			    	if (result == NameRegisterResponseCode.SUCCESS) {
 			    		loadData();
 					} else {
-						renderer.processNameRegisterResponseCode(nameRegisterReponseCode);
+						renderer.processNameRegisterResponseCode(result);
 					}
 			    }
 		);

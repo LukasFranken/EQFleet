@@ -21,7 +21,7 @@ import de.instinct.eqlibgdxutils.rendering.particle.ParticleRenderer;
 
 public class GameUIRenderer {
 	
-	private boolean initialized;
+	public boolean initialized;
 	
 	private GameUILoader uiLoader;
 	private List<GameUIElement<?>> elements;
@@ -35,16 +35,14 @@ public class GameUIRenderer {
 	}
 	
 	public void init() {
-		if (!initialized) {
-			loadConfig();
-			elements = uiLoader.loadElements(bounds);
-			initializeElements();
-			
-			initialized = true;
-			LoadedMessage loadedMessage = new LoadedMessage();
-			loadedMessage.playerUUID = API.authKey;
-			Game.outputMessageQueue.add(loadedMessage);
-		}
+		loadConfig();
+		elements = uiLoader.loadElements(bounds);
+		initializeElements();
+		
+		LoadedMessage loadedMessage = new LoadedMessage();
+		loadedMessage.playerUUID = API.authKey;
+		Game.outputMessageQueue.add(loadedMessage);
+		initialized = true;
 	}
 
 	private void initializeElements() {
@@ -146,7 +144,9 @@ public class GameUIRenderer {
 	
 	public void setElementVisible(String tag, boolean visible) {
 		for (GameUIElement<?> element : elements) {
-			element.setVisible(visible);
+			if (element.getTag().contentEquals(tag)) {
+				element.setVisible(visible);
+			}
 		}
 	}
 
