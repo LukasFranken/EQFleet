@@ -17,12 +17,7 @@ public class InventoryTab {
 	}
 	
 	public static void loadData() {
-		WebManager.enqueue(
-			    () -> API.meta().profile(API.authKey),
-			    result -> {
-			        //GlobalStaticData.profile = result;
-			    }
-		);
+		
 	}
 	
 	public static void render() {

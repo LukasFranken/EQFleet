@@ -11,7 +11,9 @@ import com.badlogic.gdx.math.Vector3;
 import de.instinct.api.core.modules.MenuModule;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
+import de.instinct.eqfleet.menu.module.inventory.InventoryModel;
 import de.instinct.eqfleet.menu.module.profile.ProfileModel;
+import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
@@ -44,10 +46,6 @@ public class MenuRenderer extends BaseModuleRenderer {
 
 	public MenuRenderer() {
 		tabButtons = new LinkedHashMap<>();
-		TextureManager.createShapeTexture("main_rankOutline", ComplexShapeType.ROUNDED_RECTANGLE, new Rectangle(20, Gdx.graphics.getHeight() - 85, 36, 35), DefaultUIValues.skinColor);
-		TextureManager.createShapeTexture("main_nameOutline", ComplexShapeType.ROUNDED_RECTANGLE, new Rectangle(65, Gdx.graphics.getHeight() - 75, 120, 25), DefaultUIValues.skinColor);
-		TextureManager.createShapeTexture("main_expOutline", ComplexShapeType.ROUNDED_RECTANGLE, new Rectangle(85, Gdx.graphics.getHeight() - 85, 100, 7), Color.BLUE);
-		TextureManager.createShapeTexture("main_creditsOutline", ComplexShapeType.ROUNDED_RECTANGLE, new Rectangle(Gdx.graphics.getWidth() - 110, Gdx.graphics.getHeight() - 75, 80, 20), Color.GREEN);
 		
 		expBar = new PlainRectangularLoadingBar();
 		expBar.setBar(TextureManager.createTexture(Color.BLUE));
@@ -96,6 +94,10 @@ public class MenuRenderer extends BaseModuleRenderer {
 		calculateMenuBounds();
 		TextureManager.createShapeTexture("main_menuOutline", ComplexShapeType.ROUNDED_RECTANGLE, menuBounds, DefaultUIValues.skinColor);
 		TextureManager.createShapeTexture("main_titleOutline", ComplexShapeType.ROUNDED_RECTANGLE, new Rectangle(menuBounds.x, menuBounds.y + menuBounds.height - titleHeight, menuBounds.width, 2), DefaultUIValues.skinColor);
+		TextureManager.createShapeTexture("main_rankOutline", ComplexShapeType.ROUNDED_RECTANGLE, new Rectangle(menuBounds.x, menuBounds.y + menuBounds.height + 10, 35, 35), DefaultUIValues.skinColor);
+		TextureManager.createShapeTexture("main_nameOutline", ComplexShapeType.ROUNDED_RECTANGLE, new Rectangle(menuBounds.x + 45, menuBounds.y + menuBounds.height + 20, 120, 25), DefaultUIValues.skinColor);
+		TextureManager.createShapeTexture("main_expOutline", ComplexShapeType.ROUNDED_RECTANGLE, new Rectangle(menuBounds.x + 65, menuBounds.y + menuBounds.height + 10, 100, 7), Color.BLUE);
+		TextureManager.createShapeTexture("main_creditsOutline", ComplexShapeType.ROUNDED_RECTANGLE, new Rectangle(menuBounds.x + menuBounds.width - 103, menuBounds.y + menuBounds.height + 10, 85, 20), Color.GREEN);
 		elapsed = 0f;
 		tabButtons = new LinkedHashMap<>();
 		for (MenuModule module : MenuModel.modules.getEnabledModules()) {
@@ -105,8 +107,8 @@ public class MenuRenderer extends BaseModuleRenderer {
 	
 	private void calculateMenuBounds() {
 		float margin = 20f;
-		menuBounds = new Rectangle(margin, margin, Gdx.graphics.getWidth() - (margin * 2), Gdx.graphics.getHeight() - 120);
-		MenuModel.moduleBounds = new Rectangle(margin, margin, Gdx.graphics.getWidth() - (margin * 2), Gdx.graphics.getHeight() - 120 - titleHeight);
+		menuBounds = new Rectangle(margin, margin, Gdx.graphics.getWidth() - (margin * 2), Gdx.graphics.getHeight() - 130);
+		MenuModel.moduleBounds = new Rectangle(margin, margin, Gdx.graphics.getWidth() - (margin * 2), Gdx.graphics.getHeight() - 130 - titleHeight);
 	}
 
 	private void createModuleButton(MenuModule module) {
@@ -166,17 +168,17 @@ public class MenuRenderer extends BaseModuleRenderer {
 	private void renderHeader() {
 		if (ProfileModel.profile != null) {
 			if (MenuModel.activeModule != MenuModule.PROFILE) {
-				TextureManager.draw(TextureManager.getTexture("ui/image/rank", ProfileModel.profile.getRank().getFileName()), new Rectangle(25, Gdx.graphics.getHeight() - 80, 25, 25), alpha);
+				TextureManager.draw(TextureManager.getTexture("ui/image/rank", ProfileModel.profile.getRank().getFileName()), new Rectangle(menuBounds.x + 5, menuBounds.y + menuBounds.height + 15, 25, 25), alpha);
 				
 				if (ProfileModel.profile.getUsername() != null) usernameLabel.setText(ProfileModel.profile.getUsername());
-				usernameLabel.setBounds(new Rectangle(75, Gdx.graphics.getHeight() - 75, 100, 25));
+				usernameLabel.setBounds(new Rectangle(menuBounds.x + 50, menuBounds.y + menuBounds.height + 20, 100, 25));
 				usernameLabel.setAlpha(alpha);
 				usernameLabel.render();
-				expBar.setBounds(new Rectangle(85, Gdx.graphics.getHeight() - 85, 100, 7));
+				expBar.setBounds(new Rectangle(menuBounds.x + 65, menuBounds.y + menuBounds.height + 10, 100, 7));
 				Label expLabel = new Label("EXP");
 				expLabel.setColor(Color.CYAN);
 				expLabel.setType(FontType.TINY);
-				expLabel.setBounds(new Rectangle(65, Gdx.graphics.getHeight() - 85, 20, 7));
+				expLabel.setBounds(new Rectangle(menuBounds.x + 45, menuBounds.y + menuBounds.height + 10, 20, 7));
 				expLabel.setAlpha(alpha);
 				expLabel.render();
 				expBar.setMaxValue(ProfileModel.profile.getRank().getNextRequiredExp() - ProfileModel.profile.getRank().getRequiredExp());
@@ -184,7 +186,7 @@ public class MenuRenderer extends BaseModuleRenderer {
 				expBar.setAlpha(alpha);
 				expBar.render();
 				
-				Rectangle profileBounds = new Rectangle(0, Gdx.graphics.getHeight() - 90, 185, 70);
+				Rectangle profileBounds = new Rectangle(0, menuBounds.y + menuBounds.height + 10, 185, 200);
 				Vector3 touchPoint = new Vector3(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY(), 0);
 		        if (profileBounds.contains(touchPoint.x, touchPoint.y)) {
 		        	if (Gdx.input.justTouched()) {
@@ -195,12 +197,11 @@ public class MenuRenderer extends BaseModuleRenderer {
 		        TextureManager.draw("main_rankOutline", alpha);
 				TextureManager.draw("main_nameOutline", alpha);
 				TextureManager.draw("main_expOutline", alpha);
-				
 			}
 		}
-		/*if (InventoryModel.resources != null) {
-			if (MenuData.activeModule != MenuModule.INVENTORY) {
-				Rectangle inventoryBounds = new Rectangle(Gdx.graphics.getWidth() - 110, Gdx.graphics.getHeight() - 80, 110, 60);
+		if (InventoryModel.resources != null /*&& MenuModel.modules.getEnabledModules().contains(MenuModule.INVENTORY)*/) {
+			if (MenuModel.activeModule != MenuModule.INVENTORY) {
+				Rectangle inventoryBounds = new Rectangle(menuBounds.x + menuBounds.width - 80, menuBounds.y + menuBounds.height + 10, 120, 120);
 				Vector3 touchPoint = new Vector3(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY(), 0);
 		        if (inventoryBounds.contains(touchPoint.x, touchPoint.y)) {
 		        	if (Gdx.input.justTouched()) {
@@ -208,13 +209,13 @@ public class MenuRenderer extends BaseModuleRenderer {
 		        	}
 		        }
 		        
-				creditsLabel.setBounds(new Rectangle(Gdx.graphics.getWidth() - 110, Gdx.graphics.getHeight() - 75, 75, 20));
+				creditsLabel.setBounds(new Rectangle(menuBounds.x + menuBounds.width - 95, menuBounds.y + menuBounds.height + 10, 75, 20));
 				creditsLabel.setText(StringUtils.formatBigNumber(InventoryModel.resources.getCredits()));
 		        creditsLabel.render();
-		        TextureManager.draw(TextureManager.getTexture("ui/image", "credits"), new Rectangle(Gdx.graphics.getWidth() - 30, Gdx.graphics.getHeight() - 73, 16, 16));
+		        TextureManager.draw(TextureManager.getTexture("ui/image", "credits"), new Rectangle(menuBounds.x + menuBounds.width - 16, menuBounds.y + menuBounds.height + 12, 16, 16));
 				TextureManager.draw("main_creditsOutline");
 			}
-		}*/
+		}
 	}
 	
 	private void renderModuleButtons() {

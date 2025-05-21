@@ -12,9 +12,16 @@ import de.instinct.api.core.API;
 import de.instinct.api.core.modules.MenuModule;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
+import de.instinct.eqfleet.menu.module.inventory.Inventory;
+import de.instinct.eqfleet.menu.module.inventory.InventoryRenderer;
+import de.instinct.eqfleet.menu.module.inventory.message.LoadResourcesMessage;
+import de.instinct.eqfleet.menu.module.play.Play;
+import de.instinct.eqfleet.menu.module.play.PlayRenderer;
 import de.instinct.eqfleet.menu.module.profile.Profile;
 import de.instinct.eqfleet.menu.module.profile.ProfileRenderer;
 import de.instinct.eqfleet.menu.module.profile.message.LoadProfileMessage;
+import de.instinct.eqfleet.menu.module.settings.Settings;
+import de.instinct.eqfleet.menu.module.settings.SettingsRenderer;
 import de.instinct.eqfleet.net.WebManager;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
 
@@ -42,8 +49,14 @@ public class Menu {
 		
 		active = false;
 		
+		modules.put(MenuModule.PLAY, new Play());
+		renderers.put(MenuModule.PLAY, new PlayRenderer());
 		modules.put(MenuModule.PROFILE, new Profile());
 		renderers.put(MenuModule.PROFILE, new ProfileRenderer());
+		modules.put(MenuModule.INVENTORY, new Inventory());
+		renderers.put(MenuModule.INVENTORY, new InventoryRenderer());
+		modules.put(MenuModule.SETTINGS, new Settings());
+		renderers.put(MenuModule.SETTINGS, new SettingsRenderer());
 		
 		moduleMessageQueue = new ConcurrentLinkedQueue<>();
 	}
@@ -112,7 +125,7 @@ public class Menu {
 			    		MenuModel.modules = result;
 			    		reload();
 			    		queue(LoadProfileMessage.builder().build());
-			    		//loadResources
+			    		queue(LoadResourcesMessage.builder().build());
 					} else {
 						Logger.log("Menu", "ModuleData couldn't be loaded!");
 					}
