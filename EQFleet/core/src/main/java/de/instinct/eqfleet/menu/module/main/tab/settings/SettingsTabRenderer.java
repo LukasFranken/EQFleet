@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.api.core.API;
-import de.instinct.eqfleet.menu.common.Renderer;
+import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqlibgdxutils.PreferenceUtil;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
@@ -13,13 +13,12 @@ import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButto
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
 
-public class SettingsTabRenderer extends Renderer {
+public class SettingsTabRenderer extends BaseModuleRenderer {
 	
 	private ColorButton resetTokenButton;
 	private Label authKeyLabel;
 
-	@Override
-	public void init() {
+	public SettingsTabRenderer() {
 		Border buttonBorder = new Border();
 		buttonBorder.setSize(2);
 		buttonBorder.setColor(Color.GRAY);
@@ -62,6 +61,12 @@ public class SettingsTabRenderer extends Renderer {
 
 	@Override
 	public void dispose() {
+		
+	}
+
+	@Override
+	public void reload() {
+		// TODO Auto-generated method stub
 		
 	}
 

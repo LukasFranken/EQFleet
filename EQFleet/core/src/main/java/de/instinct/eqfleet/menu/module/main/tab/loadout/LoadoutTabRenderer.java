@@ -3,13 +3,12 @@ package de.instinct.eqfleet.menu.module.main.tab.loadout;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 
-import de.instinct.eqfleet.menu.common.Renderer;
+import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 
-public class LoadoutTabRenderer extends Renderer {
+public class LoadoutTabRenderer extends BaseModuleRenderer {
 
-	@Override
-	public void init() {
+	public LoadoutTabRenderer() {
 		
 	}
 
@@ -20,6 +19,12 @@ public class LoadoutTabRenderer extends Renderer {
 
 	@Override
 	public void dispose() {
+		
+	}
+
+	@Override
+	public void reload() {
+		// TODO Auto-generated method stub
 		
 	}
 

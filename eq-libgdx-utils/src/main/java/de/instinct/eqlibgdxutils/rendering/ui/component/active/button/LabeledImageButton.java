@@ -49,6 +49,7 @@ public class LabeledImageButton extends Button {
 
 	@Override
 	protected void renderElement() {
+		super.update();
 		Rectangle imageBounds = calculateImageBounds();
 		TextureManager.draw(imageTexture, imageBounds);
 		messageLabel.setPosition(getBounds().x + imageBounds.width + contentMargin + spacing, getBounds().y);

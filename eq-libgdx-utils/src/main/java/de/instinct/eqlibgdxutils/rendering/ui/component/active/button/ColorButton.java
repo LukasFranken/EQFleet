@@ -59,25 +59,25 @@ public class ColorButton extends Button {
 	}
 
 	private Color getButtonColor() {
-		Color buttonColor = color;
+		Color buttonColor = new Color(color);
 		if (isActive()) {
-			buttonColor = activeColor;
+			buttonColor = new Color(activeColor);
 		}
 		if (isDown()) {
 			if (isActive()) {
-				buttonColor = downActiveColor;
+				buttonColor = new Color(downActiveColor);
 			} else {
-				buttonColor = downColor;
+				buttonColor = new Color(downColor);
 			}
 		}
 		if (isHovered()) {
 			if (isActive()) {
-				buttonColor = hoverActiveColor;
+				buttonColor = new Color(hoverActiveColor);
 			} else {
-				buttonColor = hoverColor;
+				buttonColor = new Color(hoverColor);
 			}
 		}
-		buttonColor.a = getAlpha();
+		buttonColor.a = buttonColor.a * getAlpha();
 		return buttonColor;
 	}
 

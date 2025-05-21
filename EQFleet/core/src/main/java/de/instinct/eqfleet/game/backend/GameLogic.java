@@ -12,7 +12,7 @@ import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.backend.audio.AudioManager;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.TutorialEngine;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.TutorialMode;
-import de.instinct.eqfleet.menu.Menu;
+import de.instinct.eqfleet.menu.OldMenu;
 
 public class GameLogic {
 	
@@ -31,6 +31,18 @@ public class GameLogic {
     	scheduler = Executors.newSingleThreadScheduledExecutor();
     	tutorialEngine = new TutorialEngine();
     }
+    
+    public void start() {
+		oneMinutePlayed = false;
+		AudioManager.play("neon_horizon", false);
+		gameClient.start();
+		logicUpdateTask = scheduler.scheduleAtFixedRate(() -> {
+			update();
+		}, BACKEND_UPDATE_CLOCK_MS, BACKEND_UPDATE_CLOCK_MS, TimeUnit.MILLISECONDS);
+		JoinMessage joinMessage = new JoinMessage();
+		joinMessage.playerUUID = API.authKey;
+		Game.outputMessageQueue.add(joinMessage);
+	}
 	
 	private void update() {
 		if (Game.activeGameState != null) {
@@ -44,18 +56,6 @@ public class GameLogic {
     	}
 	}
 
-	public void start() {
-		oneMinutePlayed = false;
-		AudioManager.play("neon_horizon", false);
-		gameClient.start();
-		logicUpdateTask = scheduler.scheduleAtFixedRate(() -> {
-			update();
-		}, BACKEND_UPDATE_CLOCK_MS, BACKEND_UPDATE_CLOCK_MS, TimeUnit.MILLISECONDS);
-		JoinMessage joinMessage = new JoinMessage();
-		joinMessage.playerUUID = API.authKey;
-		Game.outputMessageQueue.add(joinMessage);
-	}
-
 	public void stop() {
 		if (logicUpdateTask != null && !logicUpdateTask.isCancelled()) {
 			logicUpdateTask.cancel(true);
@@ -65,7 +65,7 @@ public class GameLogic {
 		scheduler.schedule(() -> {
 			
 			Game.activeGameState = null;
-			Menu.activate();
+			OldMenu.activate();
 			Game.active = false;
 			
 		}, 9000, TimeUnit.MILLISECONDS);
