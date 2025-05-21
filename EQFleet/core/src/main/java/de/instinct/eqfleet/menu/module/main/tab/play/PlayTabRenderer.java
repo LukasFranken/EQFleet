@@ -12,7 +12,7 @@ import de.instinct.api.matchmaking.model.GameMode;
 import de.instinct.api.matchmaking.model.GameType;
 import de.instinct.api.matchmaking.model.Invite;
 import de.instinct.api.matchmaking.model.VersusMode;
-import de.instinct.eqfleet.menu.common.Renderer;
+import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
@@ -25,7 +25,7 @@ import de.instinct.eqlibgdxutils.rendering.ui.module.list.ActionList;
 import de.instinct.eqlibgdxutils.rendering.ui.module.list.ActionListElement;
 import de.instinct.eqlibgdxutils.rendering.ui.module.list.ListActionHandler;
 
-public class PlayTabRenderer extends Renderer {
+public class PlayTabRenderer extends BaseModuleRenderer {
 	
 	private ColorButton createLobbyButton;
 	private ColorButton leaveLobbyButton;
@@ -51,8 +51,7 @@ public class PlayTabRenderer extends Renderer {
 	private float inviteMessageElapsed;
 	private float inviteMessageDuration = 3f;
 	
-	@Override
-	public void init() {
+	public PlayTabRenderer() {
 		usernameTextField = new LimitedInputField();
 		usernameTextField.setMaxChars(12);
 		usernameTextField.setInputFilter(new UsernameTexfieldInputFilter());
@@ -374,6 +373,12 @@ public class PlayTabRenderer extends Renderer {
 	public void dispose() {
 		setTypeButton.dispose();
 		aiButton.dispose();
+	}
+
+	@Override
+	public void reload() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

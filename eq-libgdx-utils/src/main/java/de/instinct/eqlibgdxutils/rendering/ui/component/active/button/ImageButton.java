@@ -27,6 +27,7 @@ public class ImageButton extends Button {
 
 	@Override
 	public void renderElement() {
+		super.update();
 		TextureManager.draw(getButtonTexture(), getBounds(), getAlpha());
 	}
 

@@ -6,7 +6,6 @@ import de.instinct.api.meta.dto.ProfileData;
 public class GlobalStaticData {
 	
 	public static ApplicationMode mode = ApplicationMode.DEV;
-	public static ProfileData profile;
 	public static APIConfiguration configuration = APIConfiguration.CLIENT;
 
 }

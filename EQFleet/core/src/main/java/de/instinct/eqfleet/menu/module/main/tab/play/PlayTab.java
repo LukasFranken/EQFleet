@@ -11,15 +11,14 @@ import de.instinct.api.matchmaking.dto.MatchmakingStatusResponse;
 import de.instinct.api.matchmaking.dto.MatchmakingStatusResponseCode;
 import de.instinct.api.matchmaking.model.GameType;
 import de.instinct.eqfleet.game.Game;
-import de.instinct.eqfleet.menu.Menu;
+import de.instinct.eqfleet.menu.OldMenu;
 import de.instinct.eqfleet.menu.MenuTab;
-import de.instinct.eqfleet.menu.module.main.MainMenu;
+import de.instinct.eqfleet.menu.module.MainMenu;
 import de.instinct.eqfleet.net.WebManager;
 
 public class PlayTab {
 	
 	private static PlayTabRenderer renderer;
-	private static PlayTabLogic logic;
 	
 	public static String lobbyUUID;
 	public static LobbyStatusResponse lobbyStatus;
@@ -31,13 +30,10 @@ public class PlayTab {
 
 	public static void init() {
 		renderer = new PlayTabRenderer();
-		renderer.init();
-		logic = new PlayTabLogic();
-		logic.init();
 	}
 	
 	public static void update() {
-		logic.update();
+		
 	}
 	
 	public static void render() {
@@ -50,7 +46,7 @@ public class PlayTab {
 	
 	private static void connectToGameserver() {
 		Game.start();
-		Menu.deactivate();
+		OldMenu.deactivate();
 	}
 
 	public static void startMatchmaking() {

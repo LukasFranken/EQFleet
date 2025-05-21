@@ -8,7 +8,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import de.instinct.api.auth.dto.TokenVerificationResponse;
 import de.instinct.api.core.API;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.TutorialMode;
-import de.instinct.eqfleet.menu.Menu;
+import de.instinct.eqfleet.menu.OldMenu;
+import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.net.WebManager;
 import de.instinct.eqlibgdxutils.PreferenceUtil;
 import de.instinct.eqlibgdxutils.generic.Action;
@@ -70,7 +71,7 @@ public class Intro {
 			@Override
 			public void execute() {
 				active = false;
-				Menu.activate();
+				Menu.open();
 			}
 			
 		});
@@ -149,7 +150,7 @@ public class Intro {
 										    result -> {
 										    	API.authKey = result;
 												PreferenceUtil.save("authkey", result);
-										    	Menu.loadTutorial(TutorialMode.STORY_FULL);
+										    	OldMenu.loadTutorial(TutorialMode.STORY_FULL);
 												triggered = true;
 										    }
 									);
@@ -175,7 +176,7 @@ public class Intro {
 										    result -> {
 										    	API.authKey = result;
 												PreferenceUtil.save("authkey", result);
-										    	Menu.loadTutorial(TutorialMode.FULL);
+										    	OldMenu.loadTutorial(TutorialMode.FULL);
 												triggered = true;
 										    }
 									);
@@ -201,7 +202,7 @@ public class Intro {
 										    result -> {
 										    	API.authKey = result;
 												PreferenceUtil.save("authkey", result);
-										    	Menu.loadTutorial(TutorialMode.SHORT);
+										    	OldMenu.loadTutorial(TutorialMode.SHORT);
 												triggered = true;
 										    }
 									);

@@ -1,4 +1,4 @@
-package de.instinct.eqfleet.menu.module.main.tab.shop;
+package de.instinct.eqfleet.menu.module.main.tab.station;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
@@ -6,16 +6,17 @@ import com.badlogic.gdx.math.Rectangle;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ImageButton;
+import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 
-public class ShopTabRenderer extends BaseModuleRenderer {
+public class StationTabRenderer extends BaseModuleRenderer {
 	
-	private ImageButton backButton;
+private ImageButton backButton;
 	
-	public ShopTabRenderer() {
+	public StationTabRenderer() {
 		backButton = new ImageButton();
 		backButton.setImageTexture(TextureManager.getTexture("ui/image", "arrowicon"));
-		backButton.setBounds(new Rectangle(20, Gdx.graphics.getHeight() - 100, 20, 16));
+		backButton.setBounds(new Rectangle(20, Gdx.graphics.getHeight() - 100, 24, 24));
 		backButton.setAction(new Action() {
 			
 			@Override
@@ -28,12 +29,13 @@ public class ShopTabRenderer extends BaseModuleRenderer {
 
 	@Override
 	public void render() {
+		Label.drawUnderConstruction(new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		backButton.render();
 	}
 
 	@Override
 	public void dispose() {
-		backButton.dispose();
+		
 	}
 
 	@Override

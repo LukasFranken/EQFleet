@@ -25,7 +25,7 @@ public class LayeredImageButton extends Button {
 
 	@Override
 	public void renderElement() {
-
+		super.update();
 	}
 
 	@Override

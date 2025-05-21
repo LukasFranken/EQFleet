@@ -21,9 +21,7 @@ public class WebManager {
 
     public static void init() {
         requestQueue = new ConcurrentLinkedQueue<>();
-        
         API.initialize(GlobalStaticData.configuration);
-
         Timer.schedule(new Timer.Task() {
         	
             @Override
@@ -47,7 +45,7 @@ public class WebManager {
         request.setRequestAction(() -> {
             T result = requestSupplier.get();
             responseHandler.accept(result);
-            if (result != null) Logger.log(LOGTAG, "received response of type: " + result.getClass().getName());
+            if (result != null) Logger.log(LOGTAG, "received response: " + result);
         });
         requestQueue.add(request);
     }

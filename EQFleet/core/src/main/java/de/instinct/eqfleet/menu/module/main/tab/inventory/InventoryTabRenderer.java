@@ -5,19 +5,18 @@ import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.api.meta.dto.ResourceData;
 import de.instinct.eqfleet.GlobalStaticData;
-import de.instinct.eqfleet.menu.common.Renderer;
+import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 
-public class InventoryTabRenderer extends Renderer {
+public class InventoryTabRenderer extends BaseModuleRenderer {
 	
-	@Override
-	public void init() {
+	public InventoryTabRenderer() {
 		
 	}
 
 	@Override
 	public void render() {
-		if (GlobalStaticData.profile != null && GlobalStaticData.profile.getResources() != null) {
+		/*if (GlobalStaticData.profile != null && GlobalStaticData.profile.getResources() != null) {
 			ResourceData resources = GlobalStaticData.profile.getResources();
 			Label creditsLabel = new Label("Credits: " + resources.getCredits());
 			creditsLabel.setBounds(new Rectangle(0, 500, Gdx.graphics.getWidth(), 20));
@@ -42,11 +41,17 @@ public class InventoryTabRenderer extends Renderer {
 			Label equilibriumLabel = new Label("Equilibrium: " + resources.getEquilibrium());
 			equilibriumLabel.setBounds(new Rectangle(0, 400, Gdx.graphics.getWidth(), 20));
 			equilibriumLabel.render();
-		}
+		}*/
 	}
 
 	@Override
 	public void dispose() {
+		
+	}
+
+	@Override
+	public void reload() {
+		// TODO Auto-generated method stub
 		
 	}
 

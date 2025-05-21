@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.backend.audio.AudioManager;
 import de.instinct.eqfleet.intro.Intro;
-import de.instinct.eqfleet.menu.Menu;
+import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.net.WebManager;
 import de.instinct.eqlibgdxutils.CursorUtil;
 import de.instinct.eqlibgdxutils.PreferenceUtil;
@@ -24,7 +24,7 @@ public class App extends ApplicationAdapter {
     
     private DoubleMetric fpsMetric;
     
-    private static final String VERSION = "0.0.17";
+    private static final String VERSION = "0.0.18";
     private static final String LOGTAG = "APP";
 
     @Override
@@ -39,8 +39,8 @@ public class App extends ApplicationAdapter {
         initializeDebugger();
         TextureManager.init();
         Intro.init();
-        Game.init();
         Menu.init();
+        Game.init();
         ParticleRenderer.init();
         ModelRenderer.init();
     }
@@ -80,8 +80,8 @@ public class App extends ApplicationAdapter {
 	@Override
     public void dispose() {
         DebugUtil.dispose();
-        Menu.dispose();
         Game.dispose();
+        Menu.dispose();
         TextureManager.dispose();
         AudioManager.dispose();
         Logger.log(LOGTAG, "EQFLEET TERMINATED");

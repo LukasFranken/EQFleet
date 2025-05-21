@@ -10,7 +10,6 @@ public class InventoryTab {
 	
 	public static void init() {
 		renderer = new InventoryTabRenderer();
-		renderer.init();
 	}
 
 	public static void update() {
@@ -21,7 +20,7 @@ public class InventoryTab {
 		WebManager.enqueue(
 			    () -> API.meta().profile(API.authKey),
 			    result -> {
-			        GlobalStaticData.profile = result;
+			        //GlobalStaticData.profile = result;
 			    }
 		);
 	}
