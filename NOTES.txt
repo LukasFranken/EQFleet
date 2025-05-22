@@ -15,8 +15,31 @@
 - settings change skin color
 
 !!!!
+- ships
+ -> blueprint in shop for money
+ -> need resources to build and upgrade
+ -> higher classes unlocked with rank
+  -> cruiser, destroyer, titan
+
+- market to trade resources specific to gametype
+
+- abilities need to be ressearched over time with techtree
+ -> techtree advances with ability usage exp gain
+ 
+- buildings
+
+- factions
+ -> swapable any time
+ -> grants bonus based on loyalty
+ -> mostly affects economy and CP and ship/build/ability slots
+
 - planet value is circle around planet
  -> actions are indicated with how much of that circle is needed
+
+- variable ship slots radial menu above planet
+- variable building slots below
+
+- vastly variable game lengths 1/3/10/20 mins
 !!!!
 
 - missing lobby update bug

@@ -87,8 +87,10 @@ public class ProfileRenderer extends BaseModuleRenderer {
 		
 		currentRankNameLabel = new Label("");
 		currentRankNameLabel.setColor(Color.LIGHT_GRAY);
+		currentRankNameLabel.setType(FontType.SMALL);
 		currentRankNameLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
 		nextRankNameLabel = new Label("");
+		nextRankNameLabel.setType(FontType.SMALL);
 		nextRankNameLabel.setColor(Color.LIGHT_GRAY);
 		nextRankNameLabel.setHorizontalAlignment(HorizontalAlignment.RIGHT);
 		
@@ -129,7 +131,7 @@ public class ProfileRenderer extends BaseModuleRenderer {
 		registrationResponseLabelBounds = new Rectangle(MenuModel.moduleBounds.x, ((MenuModel.moduleBounds.y + MenuModel.moduleBounds.height) / 2) - 50, MenuModel.moduleBounds.width, 30);
 		
 		usernameLabelBounds = new Rectangle(MenuModel.moduleBounds.x + margin, MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - margin - 30, MenuModel.moduleBounds.width - (margin * 2), 30);
-		nameLabelBounds = new Rectangle(usernameLabelBounds.x + 50, usernameLabelBounds.y - 40 - margin, MenuModel.moduleBounds.width - (margin * 2) - 100, 40);
+		nameLabelBounds = new Rectangle(usernameLabelBounds.x + 45, usernameLabelBounds.y - 40 - margin, MenuModel.moduleBounds.width - (margin * 2) - 90, 40);
 		expBarBounds = new Rectangle(usernameLabelBounds.x, nameLabelBounds.y - 10 - margin, usernameLabelBounds.width, 20);
 		expLabelBounds = new Rectangle(expBarBounds.x, expBarBounds.y - 10 - margin, expBarBounds.width, 20);
 		TextureManager.createShapeTexture("profile_expOutline", ComplexShapeType.ROUNDED_RECTANGLE, expBarBounds, Color.BLUE);
@@ -161,10 +163,10 @@ public class ProfileRenderer extends BaseModuleRenderer {
 		usernameLabel.render();
 		
 		currentRankNameLabel.setBounds(nameLabelBounds);
-		currentRankNameLabel.setText(ProfileModel.profile.getRank().getLabel());
+		currentRankNameLabel.setText(formatRankLabel(ProfileModel.profile.getRank().getLabel()));
 		currentRankNameLabel.render();
 		nextRankNameLabel.setBounds(nameLabelBounds);
-		nextRankNameLabel.setText(ProfileModel.profile.getRank().getNextRank().getLabel());
+		nextRankNameLabel.setText(formatRankLabel(ProfileModel.profile.getRank().getNextRank().getLabel()));
 		nextRankNameLabel.render();
 		
 		TextureManager.draw(TextureManager.getTexture("ui/image/rank", ProfileModel.profile.getRank().getFileName()), new Rectangle(MenuModel.moduleBounds.x + margin, nameLabelBounds.y, 40, 40));
@@ -183,6 +185,14 @@ public class ProfileRenderer extends BaseModuleRenderer {
 		nextRankEXPLabel.setBounds(expLabelBounds);
 		nextRankEXPLabel.setText(ProfileModel.profile.getRank().getNextRequiredExp() + "");
 		nextRankEXPLabel.render();
+	}
+
+	private String formatRankLabel(String label) {
+		int maxChars = 12;
+		if (label.length() > maxChars) {
+			return label.replaceFirst(" ", "\n");
+		}
+		return label;
 	}
 
 	@Override

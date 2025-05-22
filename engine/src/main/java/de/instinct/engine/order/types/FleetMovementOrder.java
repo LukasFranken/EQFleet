@@ -7,6 +7,7 @@ import lombok.ToString;
 public class FleetMovementOrder extends GameOrder {
 	
 	public int playerId;
+	public int playerShipId;
 	public int fromPlanetId;
 	public int toPlanetId;
 

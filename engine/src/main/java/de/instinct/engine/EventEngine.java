@@ -71,6 +71,9 @@ public class EventEngine {
 	            } else {
 	                double resourceIncrease = calculateResourceGeneration(owner, deltaMS);
 	                planet.value += resourceIncrease;
+	                if (planet.value > owner.maxPlanetCapacity) {
+	                	planet.value = owner.maxPlanetCapacity;
+	                }
 	            }
 	        }
 	    }
@@ -108,13 +111,13 @@ public class EventEngine {
 	    Player fromPlayer = EngineUtility.getPlayer(state, event.playerId);
 	    Player toPlayer = EngineUtility.getPlayer(state, toPlanet.ownerId);
 	    if (fromPlayer.teamId != toPlayer.teamId) {
-	        toPlanet.value -= event.value;
+	        toPlanet.value -= event.shipData.power;
 	        if (toPlanet.value < 0) {
 	            toPlanet.ownerId = event.playerId;
 	            toPlanet.value *= -1;
 	        }
 	    } else {
-	        toPlanet.value += event.value;
+	        toPlanet.value += event.shipData.cost;
 	    }
 	}
 	

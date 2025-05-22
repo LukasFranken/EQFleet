@@ -23,6 +23,8 @@ import de.instinct.engine.model.Planet;
 import de.instinct.engine.model.Player;
 import de.instinct.engine.model.event.GameEvent;
 import de.instinct.engine.model.event.types.FleetMovementEvent;
+import de.instinct.eqfleet.ApplicationMode;
+import de.instinct.eqfleet.GlobalStaticData;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.GameConfig;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.GuideEvent;
@@ -38,6 +40,7 @@ import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Horizontal
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.ComplexShapeRenderer;
 
 public class GameRenderer {
 
@@ -46,6 +49,7 @@ public class GameRenderer {
 	private SpriteBatch batch;
 	private GameInputManager inputManager;
 	private GridRenderer gridRenderer;
+	private ComplexShapeRenderer complexShapeRenderer;
 	
 	private Map<Integer, ModelInstance> planetModels;
 	private Map<FleetMovementEvent, ModelInstance> fleetModels;
@@ -64,6 +68,7 @@ public class GameRenderer {
 
 	public void init() {
 		uiRenderer = new GameUIRenderer();
+		complexShapeRenderer = new ComplexShapeRenderer();
 		
 		planetModels = new HashMap<>();
 		fleetModels = new HashMap<>();
@@ -297,20 +302,34 @@ public class GameRenderer {
 		    float labelHeight = FontUtil.getFontHeightPx();
 		    float labelX = screenPos.x - labelWidth / 2f;
 		    float labelY = screenPos.y - labelHeight / 2f;
+		    
+		    Player owner = EngineUtility.getPlayer(state, planet.ownerId);
+		    renderResourceCircle(planet.xPos, planet.yPos, GameConfig.getPlayerColor(owner.playerId), (float)(planet.value / owner.maxPlanetCapacity));
 
-		    shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
-		    Gdx.gl.glEnable(GL20.GL_BLEND);
-		    shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-		    shapeRenderer.setColor(0f, 0f, 0f, 0.7f);
-		    shapeRenderer.rect(labelX - 4, labelY - 2, labelWidth + 8, labelHeight + 4);
-		    shapeRenderer.end();
-		    Gdx.gl.glDisable(GL20.GL_BLEND);
-
-		    Label valueLabel = new Label(value);
-		    valueLabel.setColor(Color.WHITE);
-		    valueLabel.setBounds(new Rectangle(labelX, labelY, labelWidth, labelHeight));
-		    valueLabel.render();
+		    if (GlobalStaticData.mode == ApplicationMode.DEV) {
+		    	shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
+			    Gdx.gl.glEnable(GL20.GL_BLEND);
+			    shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+			    shapeRenderer.setColor(0f, 0f, 0f, 0.7f);
+			    shapeRenderer.rect(labelX - 4, labelY - 2, labelWidth + 8, labelHeight + 4);
+			    shapeRenderer.end();
+			    Gdx.gl.glDisable(GL20.GL_BLEND);
+			    
+			    Label valueLabel = new Label(value);
+			    valueLabel.setColor(Color.WHITE);
+			    valueLabel.setBounds(new Rectangle(labelX, labelY, labelWidth, labelHeight));
+			    valueLabel.render();
+		    }
 		}
+	}
+
+	private void renderResourceCircle(float x, float y, Color color, float value) {
+		complexShapeRenderer.setProjectionMatrix(camera.combined);
+		complexShapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+		complexShapeRenderer.setColor(color);
+		complexShapeRenderer.cleanArc(x, y, EngineUtility.PLANET_RADIUS + 12, EngineUtility.PLANET_RADIUS + 20, 90, value * 360f);
+		complexShapeRenderer.end();
+		
 	}
 
 	private void renderMessageText() {
@@ -369,11 +388,13 @@ public class GameRenderer {
 	            
 	            Vector3 screenPos = camera.project(new Vector3(pos));
 	            
-	            Label valueLabel = new Label(String.valueOf(fleet.value));
-			    valueLabel.setColor(Color.WHITE);
-			    valueLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
-			    valueLabel.setBounds(new Rectangle(screenPos.x + 10, screenPos.y, 30, 20));
-			    valueLabel.render();
+	            if (GlobalStaticData.mode == ApplicationMode.DEV) {
+	            	Label valueLabel = new Label(String.valueOf(fleet.shipData.power));
+				    valueLabel.setColor(Color.WHITE);
+				    valueLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
+				    valueLabel.setBounds(new Rectangle(screenPos.x + 10, screenPos.y, 30, 20));
+				    valueLabel.render();
+	            }
 	        }
 	    }
 	}
@@ -439,14 +460,29 @@ public class GameRenderer {
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 		shapeRenderer.setColor(Color.LIGHT_GRAY);
 
-		if (selected != null)
+		if (selected != null) {
 			shapeRenderer.circle(selected.xPos, selected.yPos, EngineUtility.PLANET_RADIUS + 5);
+			Player owner = EngineUtility.getPlayer(state, selected.ownerId);
+			int fleetCost = owner.ships.get(0).cost;
+			renderResourceCircle(selected.xPos, selected.yPos, fleetCost < selected.value ? Color.GREEN : Color.RED, (float)(fleetCost / owner.maxPlanetCapacity));
+		}
 
 		if (hovered != null) {
 			boolean isSelectingOrigin = (selected == null && hovered.ownerId == Game.playerId);
 			boolean isTargeting = (selected != null && hovered.id != selected.id);
 			if (isSelectingOrigin || isTargeting) {
 				shapeRenderer.circle(hovered.xPos, hovered.yPos, EngineUtility.PLANET_RADIUS + 5);
+			}
+			if (isTargeting) {
+				Player owner = EngineUtility.getPlayer(state, selected.ownerId);
+				Player target = EngineUtility.getPlayer(state, hovered.ownerId);
+				int fleetPower = owner.ships.get(0).power;
+				int fleetCost = owner.ships.get(0).cost;
+				if (owner.teamId == target.teamId) {
+					renderResourceCircle(hovered.xPos, hovered.yPos, Color.GREEN, (float)(fleetCost / target.maxPlanetCapacity));
+				} else {
+					renderResourceCircle(hovered.xPos, hovered.yPos, GameConfig.getPlayerColor(owner.playerId), (float)(fleetPower / target.maxPlanetCapacity));
+				}
 			}
 		}
 		shapeRenderer.end();

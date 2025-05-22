@@ -24,7 +24,7 @@ public class GlowShapeRenderer {
     public float radius = 40f;
     public float dropoff = 0.5f;
     public int shapeUpscale = 4;
-    public float thickness = 1;
+    public float thickness = 2;
 
     public GlowShapeRenderer() {
         int w = Gdx.graphics.getWidth();

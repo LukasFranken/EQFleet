@@ -9,6 +9,7 @@ import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.Planet;
 import de.instinct.engine.model.event.GameEvent;
 import de.instinct.engine.model.event.types.FleetMovementEvent;
+import de.instinct.engine.model.ship.Ship;
 import de.instinct.engine.order.GameOrder;
 import de.instinct.engine.order.types.FleetMovementOrder;
 
@@ -19,7 +20,13 @@ public class AiEngine {
 		newAiPlayer.difficulty = difficulty;
 		
 		newAiPlayer.name = "AI (" + difficulty.toString() + ")";
-		newAiPlayer.fleetMovementSpeed = 50f;
+		newAiPlayer.ships = new ArrayList<>();
+		Ship aiShip = new Ship();
+		aiShip.cost = 5;
+		aiShip.model = "hawk";
+		aiShip.movementSpeed = 50f;
+		aiShip.power = 3;
+		newAiPlayer.ships.add(aiShip);
 		newAiPlayer.resourceGenerationSpeed = 1f;
 		if (difficulty == AiDifficulty.RETARDED) {
 			newAiPlayer.resourceGenerationSpeed = 0.8f;
@@ -27,6 +34,7 @@ public class AiEngine {
 		newAiPlayer.commandPointsGenerationSpeed = 0.1f;
 		newAiPlayer.startCommandPoints = 3;
 		newAiPlayer.maxCommandPoints = 10;
+		newAiPlayer.maxPlanetCapacity = 10;
 		newAiPlayer.currentCommandPoints = newAiPlayer.startCommandPoints;
 		return newAiPlayer;
 	}

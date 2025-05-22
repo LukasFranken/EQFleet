@@ -5,7 +5,9 @@ import java.util.Map;
 import java.util.PriorityQueue;
 
 import de.instinct.engine.model.event.GameEvent;
+import lombok.ToString;
 
+@ToString
 public class GameState {
 	
 	public String gameUUID;

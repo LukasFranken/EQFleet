@@ -89,11 +89,11 @@ public class Intro {
 
 	private static void loadWelcomeSlides() {
 		Pause startDelay = new Pause();
-		startDelay.setDuration(1f);
+		startDelay.setDuration(0.5f);
 		elementQueue.add(startDelay);
 		
 		Message welcomeMessage = new Message("Welcome!");
-		welcomeMessage.setDuration(2.5f);
+		welcomeMessage.setDuration(2f);
 		elementQueue.add(welcomeMessage);
 	}
 	

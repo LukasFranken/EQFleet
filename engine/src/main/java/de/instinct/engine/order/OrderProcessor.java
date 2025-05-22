@@ -20,10 +20,10 @@ public class OrderProcessor {
 			newFleetMovementEvent.playerId = fleetMovementOrder.playerId;
 			newFleetMovementEvent.fromPlanetId = fleetMovementOrder.fromPlanetId;
 			newFleetMovementEvent.toPlanetId = fleetMovementOrder.toPlanetId;
-			newFleetMovementEvent.value = (int)(fromPlanet.value / 2);
+			newFleetMovementEvent.shipData = player.ships.get(fleetMovementOrder.playerShipId);
 			newFleetMovementEvent.durationMS = EngineUtility.calculateTotalTravelTimeMS(state, newFleetMovementEvent);
 			setGeneralEventValues(state, newFleetMovementEvent);
-			fromPlanet.value -= newFleetMovementEvent.value;
+			fromPlanet.value -= newFleetMovementEvent.shipData.cost;
 			return newFleetMovementEvent;
 		}
 		return null;

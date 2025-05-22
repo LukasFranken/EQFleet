@@ -13,6 +13,8 @@ import de.instinct.engine.model.Planet;
 import de.instinct.engine.model.Player;
 import de.instinct.engine.model.event.GameEvent;
 import de.instinct.engine.model.event.types.FleetMovementEvent;
+import de.instinct.engine.model.ship.Ship;
+import de.instinct.engine.model.ship.ShipType;
 import de.instinct.engine.net.message.NetworkMessage;
 import de.instinct.engine.net.message.types.FleetMovementMessage;
 import de.instinct.engine.net.message.types.JoinMessage;
@@ -38,6 +40,8 @@ public class KryoRegistrator {
 		kryo.register(JoinMessage.class);
 		kryo.register(LoadedMessage.class);
 		kryo.register(PlayerAssigned.class);
+		kryo.register(Ship.class);
+		kryo.register(ShipType.class);
 	}
 
 }

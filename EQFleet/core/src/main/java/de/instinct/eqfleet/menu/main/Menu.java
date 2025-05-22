@@ -10,9 +10,6 @@ import java.util.concurrent.TimeUnit;
 
 import de.instinct.api.core.API;
 import de.instinct.api.core.modules.MenuModule;
-import de.instinct.eqfleet.game.Game;
-import de.instinct.eqfleet.game.backend.audio.AudioManager;
-import de.instinct.eqfleet.game.backend.engine.local.tutorial.TutorialMode;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.module.inventory.Inventory;
@@ -72,7 +69,7 @@ public class Menu {
 		active = true;
 		PlayTab.init();
 		PlayTab.loadData();
-		AudioManager.play("neon_horizon_ambient", true);
+		//AudioManager.play("neon_horizon_ambient", true);
 	}
 	
 	public static void close() {
@@ -80,7 +77,7 @@ public class Menu {
 			scheduler.shutdownNow();
 		}
 		active = false;
-		AudioManager.stop();
+		//AudioManager.stop();
 		menuRenderer.close();
 	}
 	

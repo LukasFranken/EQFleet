@@ -44,7 +44,7 @@ public class EngineUtility {
 	public static long calculateTotalTravelTimeMS(GameState state, FleetMovementEvent fleetMovement) {
 		Planet fromPlanet = getPlanet(state, fleetMovement.fromPlanetId);
 		Planet toPlanet = getPlanet(state, fleetMovement.toPlanetId);
-		return (long)(Vector3.dst(fromPlanet.xPos, fromPlanet.yPos, 0, toPlanet.xPos, toPlanet.yPos, 0) / getPlayer(state, fleetMovement.playerId).fleetMovementSpeed) * 1000;
+		return (long)(Vector3.dst(fromPlanet.xPos, fromPlanet.yPos, 0, toPlanet.xPos, toPlanet.yPos, 0) / fleetMovement.shipData.movementSpeed) * 1000;
 	}
 	
 	public static Vector3 getFleetWorldPosition(GameState state, FleetMovementEvent movement) {

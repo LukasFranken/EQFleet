@@ -24,7 +24,7 @@ public class App extends ApplicationAdapter {
     
     private DoubleMetric fpsMetric;
     
-    private static final String VERSION = "0.0.18";
+    private static final String VERSION = "0.0.19";
     private static final String LOGTAG = "APP";
 
     @Override

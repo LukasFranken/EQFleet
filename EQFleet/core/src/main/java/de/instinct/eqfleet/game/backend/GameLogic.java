@@ -34,7 +34,7 @@ public class GameLogic {
     
     public void start() {
 		oneMinutePlayed = false;
-		AudioManager.play("neon_horizon", false);
+		//AudioManager.play("neon_horizon", false);
 		gameClient.start();
 		logicUpdateTask = scheduler.scheduleAtFixedRate(() -> {
 			update();

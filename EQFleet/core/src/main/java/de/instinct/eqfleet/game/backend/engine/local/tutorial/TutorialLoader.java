@@ -19,6 +19,8 @@ import de.instinct.engine.model.Planet;
 import de.instinct.engine.model.Player;
 import de.instinct.engine.model.event.GameEvent;
 import de.instinct.engine.model.event.types.FleetMovementEvent;
+import de.instinct.engine.model.ship.Ship;
+import de.instinct.engine.model.ship.ShipType;
 import de.instinct.engine.net.message.types.FleetMovementMessage;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.GuideEvent;
@@ -68,12 +70,20 @@ public class TutorialLoader {
 		player1.teamId = 1;
 		player1.connected = true;
 		player1.name = "Player 1";
-		player1.fleetMovementSpeed = 80f;
+		player1.ships = new ArrayList<>();
+		Ship tutorialShip = new Ship();
+		tutorialShip.type = ShipType.FIGHTER;
+		tutorialShip.model = "hawk";
+		tutorialShip.movementSpeed = 100f;
+		tutorialShip.power = 5;
+		tutorialShip.cost = 3;
+		player1.ships.add(tutorialShip);
 		player1.resourceGenerationSpeed = 0.5f;
 		player1.maxCommandPoints = 10;
 		player1.startCommandPoints = 1;
 		player1.commandPointsGenerationSpeed = 0.2;
 		player1.currentCommandPoints = player1.startCommandPoints;
+		player1.maxPlanetCapacity = 20;
 		players.add(player1);
 
 		AiPlayer aiPlayer = aiEngine.initialize(AiDifficulty.RETARDED);
@@ -82,8 +92,16 @@ public class TutorialLoader {
 		aiPlayer.connected = true;
 		aiPlayer.loaded = true;
 		aiPlayer.resourceGenerationSpeed = 0f;
-		aiPlayer.fleetMovementSpeed = 100f;
+		aiPlayer.ships = new ArrayList<>();
+		Ship aiTutorialShip = new Ship();
+		aiTutorialShip.type = ShipType.FIGHTER;
+		aiTutorialShip.model = "hawk";
+		aiTutorialShip.movementSpeed = 100f;
+		aiTutorialShip.power = 5;
+		aiTutorialShip.cost = 3;
+		aiPlayer.ships.add(aiTutorialShip);
 		aiPlayer.currentCommandPoints = aiPlayer.startCommandPoints;
+		aiPlayer.maxPlanetCapacity = 20;
 		players.add(aiPlayer);
 
 		return players;

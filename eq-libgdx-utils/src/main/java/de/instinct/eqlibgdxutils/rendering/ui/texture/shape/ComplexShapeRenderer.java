@@ -33,26 +33,34 @@ public class ComplexShapeRenderer extends ShapeRenderer {
 		end();
 	}
 	
-	public void cleanArc(float x, float y, float radius, float start, float degrees) {
-		int segments = (int) (6 * (float) Math.cbrt(radius) * (degrees / 360.0f));
-		if (segments <= 0)
-			throw new IllegalArgumentException("segments must be > 0.");
-		float colorBits = super.getColor().toFloatBits();
-		float theta = (2 * MathUtils.PI * (degrees / 360.0f)) / segments;
-		float cos = MathUtils.cos(theta);
-		float sin = MathUtils.sin(theta);
-		float cx = radius * MathUtils.cos(start * MathUtils.degreesToRadians);
-		float cy = radius * MathUtils.sin(start * MathUtils.degreesToRadians);
+	public void cleanArc(float x, float y, float innerRadius, float outerRadius, float startAngle, float degrees) {
+	    int segments = calculateSegments(outerRadius, degrees);
 
-		for (int i = 0; i < segments; i++) {
-			super.getRenderer().color(colorBits);
-			super.getRenderer().vertex(x + cx, y + cy, 0);
-			float temp = cx;
-			cx = cos * cx - sin * cy;
-			cy = sin * temp + cos * cy;
-			super.getRenderer().color(colorBits);
-			super.getRenderer().vertex(x + cx, y + cy, 0);
-		}
+	    for (int i = 0; i < segments; i++) {
+	    	float angle = startAngle + (i * degrees) / segments;
+	    	float nextAngle = startAngle + ((i + 1) * degrees) / segments;
+	    	float angleRad = (float)Math.toRadians(angle);
+	    	float nextAngleRad = (float)Math.toRadians(nextAngle);
+
+	        // Outer points
+	    	float x1 = x + MathUtils.cos(angleRad) * outerRadius;
+	    	float y1 = y + MathUtils.sin(angleRad) * outerRadius;
+	    	float x2 = x + MathUtils.cos(nextAngleRad) * outerRadius;
+	    	float y2 = y + MathUtils.sin(nextAngleRad) * outerRadius;
+
+	        // Inner points
+	    	float x3 = x + MathUtils.cos(nextAngleRad) * innerRadius;
+	    	float y3 = y + MathUtils.sin(nextAngleRad) * innerRadius;
+	    	float x4 = x + MathUtils.cos(angleRad) * innerRadius;
+	        float y4 = y + MathUtils.sin(angleRad) * innerRadius;
+
+	        super.triangle(x1, y1, x2, y2, x3, y3);
+	        super.triangle(x1, y1, x3, y3, x4, y4);
+	    }
+	}
+
+	private static int calculateSegments(double radius, double degrees) {
+	    return Math.max(1, (int)(6 * (double)Math.cbrt(radius) * (degrees / 360.0f)));
 	}
 
 }
