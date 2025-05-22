@@ -105,6 +105,11 @@ public class MenuRenderer extends BaseModuleRenderer {
 		}
 	}
 	
+	public void close() {
+		alpha = 0f;
+		menuBounds = null;
+	}
+	
 	private void calculateMenuBounds() {
 		float margin = 20f;
 		menuBounds = new Rectangle(margin, margin, Gdx.graphics.getWidth() - (margin * 2), Gdx.graphics.getHeight() - 130);
@@ -199,7 +204,7 @@ public class MenuRenderer extends BaseModuleRenderer {
 				TextureManager.draw("main_expOutline", alpha);
 			}
 		}
-		if (InventoryModel.resources != null /*&& MenuModel.modules.getEnabledModules().contains(MenuModule.INVENTORY)*/) {
+		if (InventoryModel.resources != null && MenuModel.modules.getEnabledModules().contains(MenuModule.INVENTORY)) {
 			if (MenuModel.activeModule != MenuModule.INVENTORY) {
 				Rectangle inventoryBounds = new Rectangle(menuBounds.x + menuBounds.width - 80, menuBounds.y + menuBounds.height + 10, 120, 120);
 				Vector3 touchPoint = new Vector3(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY(), 0);
@@ -211,9 +216,10 @@ public class MenuRenderer extends BaseModuleRenderer {
 		        
 				creditsLabel.setBounds(new Rectangle(menuBounds.x + menuBounds.width - 95, menuBounds.y + menuBounds.height + 10, 75, 20));
 				creditsLabel.setText(StringUtils.formatBigNumber(InventoryModel.resources.getCredits()));
+				creditsLabel.setAlpha(alpha);
 		        creditsLabel.render();
-		        TextureManager.draw(TextureManager.getTexture("ui/image", "credits"), new Rectangle(menuBounds.x + menuBounds.width - 16, menuBounds.y + menuBounds.height + 12, 16, 16));
-				TextureManager.draw("main_creditsOutline");
+		        TextureManager.draw(TextureManager.getTexture("ui/image", "credits"), new Rectangle(menuBounds.x + menuBounds.width - 16, menuBounds.y + menuBounds.height + 12, 16, 16), alpha);
+				TextureManager.draw("main_creditsOutline", alpha);
 			}
 		}
 	}

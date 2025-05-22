@@ -12,7 +12,7 @@ import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.backend.audio.AudioManager;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.TutorialEngine;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.TutorialMode;
-import de.instinct.eqfleet.menu.OldMenu;
+import de.instinct.eqfleet.menu.main.Menu;
 
 public class GameLogic {
 	
@@ -65,7 +65,7 @@ public class GameLogic {
 		scheduler.schedule(() -> {
 			
 			Game.activeGameState = null;
-			OldMenu.activate();
+			Menu.open();
 			Game.active = false;
 			
 		}, 9000, TimeUnit.MILLISECONDS);

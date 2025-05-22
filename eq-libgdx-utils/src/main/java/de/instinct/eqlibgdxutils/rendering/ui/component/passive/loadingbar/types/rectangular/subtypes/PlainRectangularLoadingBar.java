@@ -48,25 +48,25 @@ public class PlainRectangularLoadingBar extends RectangularLoadingBar {
 			TextureManager.draw(bar, new Rectangle(getBounds().x + getBorder().getSize(),
 					getBounds().y + getBorder().getSize(),
 					getBounds().width - (getBorder().getSize()) * 2,
-					verticalBarLength));
+					verticalBarLength), getAlpha());
 			break;
 		case EAST:
 			TextureManager.draw(bar, new Rectangle(getBounds().x + getBorder().getSize(),
 					getBounds().y + getBorder().getSize(),
 					horizontalBarLength,
-					getBounds().height - (getBorder().getSize()) * 2));
+					getBounds().height - (getBorder().getSize()) * 2), getAlpha());
 			break;
 		case SOUTH:
 			TextureManager.draw(bar, new Rectangle(getBounds().x + getBorder().getSize(),
 					getBounds().y + + getBounds().height - getBorder().getSize() - verticalBarLength,
 					getBounds().width - (getBorder().getSize()) * 2,
-					verticalBarLength));
+					verticalBarLength), getAlpha());
 			break;
 		case WEST:
 			TextureManager.draw(bar, new Rectangle(getBounds().x + getBounds().width - getBorder().getSize() - horizontalBarLength,
 					getBounds().y + getBorder().getSize(),
 					horizontalBarLength,
-					getBounds().height - (getBorder().getSize()) * 2));
+					getBounds().height - (getBorder().getSize()) * 2), getAlpha());
 			break;
 		}
 	}

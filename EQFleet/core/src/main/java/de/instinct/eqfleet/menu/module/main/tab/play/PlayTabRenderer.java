@@ -377,7 +377,6 @@ public class PlayTabRenderer extends BaseModuleRenderer {
 
 	@Override
 	public void reload() {
-		// TODO Auto-generated method stub
 		
 	}
 
