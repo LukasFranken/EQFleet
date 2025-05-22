@@ -14,8 +14,10 @@
 
 - settings change skin color
 
+!!!!
 - planet value is circle around planet
  -> actions are indicated with how much of that circle is needed
+!!!!
 
 - missing lobby update bug
  -> change to event system

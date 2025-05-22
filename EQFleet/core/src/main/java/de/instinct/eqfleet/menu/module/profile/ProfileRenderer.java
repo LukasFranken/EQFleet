@@ -1,6 +1,5 @@
 package de.instinct.eqfleet.menu.module.profile;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
@@ -37,6 +36,11 @@ public class ProfileRenderer extends BaseModuleRenderer {
 	private PlainRectangularLoadingBar expBar;
 	
 	private float margin = 20f;
+	
+	private Rectangle registrationLabelBounds;
+	private Rectangle usernameTextFieldBounds;
+	private Rectangle registrationConfirmButtonBounds;
+	private Rectangle registrationResponseLabelBounds;
 	
 	private Rectangle usernameLabelBounds;
 	private Rectangle nameLabelBounds;
@@ -119,10 +123,15 @@ public class ProfileRenderer extends BaseModuleRenderer {
 
 	@Override
 	public void reload() {
-		usernameLabelBounds = new Rectangle(MenuModel.moduleBounds.x + margin, MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - margin - 30f, MenuModel.moduleBounds.width - (margin * 2), 30f);
-		nameLabelBounds = new Rectangle(usernameLabelBounds.x + 50f, usernameLabelBounds.y - 40f - margin, MenuModel.moduleBounds.width - (margin * 2) - 100f, 40f);
-		expBarBounds = new Rectangle(usernameLabelBounds.x, nameLabelBounds.y - 10f - margin, usernameLabelBounds.width, 20f);
-		expLabelBounds = new Rectangle(expBarBounds.x, expBarBounds.y - 10f - margin, expBarBounds.width, 20f);
+		registrationLabelBounds = new Rectangle(MenuModel.moduleBounds.x, ((MenuModel.moduleBounds.y + MenuModel.moduleBounds.height) / 2) + 50, MenuModel.moduleBounds.width, 30);
+		usernameTextFieldBounds = new Rectangle(MenuModel.moduleBounds.x + (MenuModel.moduleBounds.width / 2) - 88 - 15, (MenuModel.moduleBounds.y + MenuModel.moduleBounds.height) / 2, 176, 30);
+		registrationConfirmButtonBounds = new Rectangle(MenuModel.moduleBounds.x + (MenuModel.moduleBounds.width / 2) + 88 - 15, (MenuModel.moduleBounds.y + MenuModel.moduleBounds.height) / 2, 30, 30);
+		registrationResponseLabelBounds = new Rectangle(MenuModel.moduleBounds.x, ((MenuModel.moduleBounds.y + MenuModel.moduleBounds.height) / 2) - 50, MenuModel.moduleBounds.width, 30);
+		
+		usernameLabelBounds = new Rectangle(MenuModel.moduleBounds.x + margin, MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - margin - 30, MenuModel.moduleBounds.width - (margin * 2), 30);
+		nameLabelBounds = new Rectangle(usernameLabelBounds.x + 50, usernameLabelBounds.y - 40 - margin, MenuModel.moduleBounds.width - (margin * 2) - 100, 40);
+		expBarBounds = new Rectangle(usernameLabelBounds.x, nameLabelBounds.y - 10 - margin, usernameLabelBounds.width, 20);
+		expLabelBounds = new Rectangle(expBarBounds.x, expBarBounds.y - 10 - margin, expBarBounds.width, 20);
 		TextureManager.createShapeTexture("profile_expOutline", ComplexShapeType.ROUNDED_RECTANGLE, expBarBounds, Color.BLUE);
 	}
 
@@ -131,18 +140,18 @@ public class ProfileRenderer extends BaseModuleRenderer {
 			processNameRegisterResponseCode(ProfileModel.nameRegisterResponseCode);
 		}
 		
-		registrationLabel.setBounds(new Rectangle(0, Gdx.graphics.getHeight() / 2 + 50, Gdx.graphics.getWidth(), 30));
+		registrationLabel.setBounds(registrationLabelBounds);
 		registrationLabel.render();
 		
-		usernameTextField.setBounds(new Rectangle(Gdx.graphics.getWidth() - 176 - 130, Gdx.graphics.getHeight() / 2, 176, 30));
+		usernameTextField.setBounds(usernameTextFieldBounds);
 		usernameTextField.render();
 		
-		registrationConfirmButton.setFixedWidth(30);
-		registrationConfirmButton.setFixedHeight(30);
-		registrationConfirmButton.setPosition(Gdx.graphics.getWidth() - 130, Gdx.graphics.getHeight() / 2);
+		registrationConfirmButton.setFixedWidth(registrationConfirmButtonBounds.width);
+		registrationConfirmButton.setFixedHeight(registrationConfirmButtonBounds.height);
+		registrationConfirmButton.setPosition(registrationConfirmButtonBounds.x, registrationConfirmButtonBounds.y);
 		registrationConfirmButton.render();
 		
-		registrationResponseLabel.setBounds(new Rectangle(0, Gdx.graphics.getHeight() / 2 - 50, Gdx.graphics.getWidth(), 30));
+		registrationResponseLabel.setBounds(registrationResponseLabelBounds);
 		registrationResponseLabel.render();
 	}
 	

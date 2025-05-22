@@ -50,7 +50,7 @@ public class AudioManager {
 	}
 	
 	public static void update() {
-		if (queuedInMusic != null) {
+		if (queuedInMusic != null && currentMusic != null) {
 			float currentVolume = MathUtil.linear(0f, targetMusicVolume, currentSwapElapsed / swapDuration);
 			queuedInMusic.setVolume(currentVolume);
 			currentMusic.setVolume(targetMusicVolume - currentVolume);

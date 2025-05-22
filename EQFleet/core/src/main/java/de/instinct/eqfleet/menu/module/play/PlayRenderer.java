@@ -1,4 +1,4 @@
-package de.instinct.eqfleet.menu.module.main.tab.play;
+package de.instinct.eqfleet.menu.module.play;
 
 import java.util.ArrayList;
 
@@ -13,6 +13,7 @@ import de.instinct.api.matchmaking.model.GameType;
 import de.instinct.api.matchmaking.model.Invite;
 import de.instinct.api.matchmaking.model.VersusMode;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
+import de.instinct.eqfleet.menu.module.main.tab.play.PlayTab;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
@@ -25,8 +26,8 @@ import de.instinct.eqlibgdxutils.rendering.ui.module.list.ActionList;
 import de.instinct.eqlibgdxutils.rendering.ui.module.list.ActionListElement;
 import de.instinct.eqlibgdxutils.rendering.ui.module.list.ListActionHandler;
 
-public class PlayTabRenderer extends BaseModuleRenderer {
-	
+public class PlayRenderer extends BaseModuleRenderer {
+
 	private ColorButton createLobbyButton;
 	private ColorButton leaveLobbyButton;
 	private ActionList invites;
@@ -51,7 +52,7 @@ public class PlayTabRenderer extends BaseModuleRenderer {
 	private float inviteMessageElapsed;
 	private float inviteMessageDuration = 3f;
 	
-	public PlayTabRenderer() {
+	public PlayRenderer() {
 		usernameTextField = new LimitedInputField();
 		usernameTextField.setMaxChars(12);
 		usernameTextField.setInputFilter(new UsernameTexfieldInputFilter());
@@ -360,13 +361,15 @@ public class PlayTabRenderer extends BaseModuleRenderer {
 	}
 	
 	private void renderQueueStatus() {
-		Label statusLabel = new Label(PlayTab.currentMatchmakingStatus.getCode().toString());
-		statusLabel.setBounds(new Rectangle(0, 50, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-		statusLabel.render();
-		
-		Label playerLabel = new Label(PlayTab.currentMatchmakingStatus.getFoundPlayers() + " / " + PlayTab.currentMatchmakingStatus.getRequiredPlayers() + " players found");
-		playerLabel.setBounds(new Rectangle(0, -50, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-		playerLabel.render();
+		if (PlayTab.currentMatchmakingStatus.getCode() != null) {
+			Label statusLabel = new Label(PlayTab.currentMatchmakingStatus.getCode().toString());
+			statusLabel.setBounds(new Rectangle(0, 50, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+			statusLabel.render();
+			
+			Label playerLabel = new Label(PlayTab.currentMatchmakingStatus.getFoundPlayers() + " / " + PlayTab.currentMatchmakingStatus.getRequiredPlayers() + " players found");
+			playerLabel.setBounds(new Rectangle(0, -50, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+			playerLabel.render();
+		}
 	}
 
 	@Override
