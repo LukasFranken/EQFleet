@@ -114,7 +114,7 @@ public class EventEngine {
 	        toPlanet.value -= event.shipData.power;
 	        if (toPlanet.value < 0) {
 	            toPlanet.ownerId = event.playerId;
-	            toPlanet.value *= -1;
+	            toPlanet.value = 0;
 	        }
 	    } else {
 	        toPlanet.value += event.shipData.cost;

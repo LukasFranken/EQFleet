@@ -56,6 +56,7 @@ public class AiEngine {
 						capturePlanetTarget.playerId = aiPlayer.playerId;
 						capturePlanetTarget.fromPlanetId = ownPlanet.id;
 						capturePlanetTarget.toPlanetId = planet.id;
+						capturePlanetTarget.shipData = aiPlayer.ships.get(0);
 						if (planet.ownerId == 0) {
 							if (planet.value < (int)(ownPlanet.value / 2)) {
 								capturePlanetTargets.add(capturePlanetTarget);

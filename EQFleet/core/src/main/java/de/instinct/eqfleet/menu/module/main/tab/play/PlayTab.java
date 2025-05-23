@@ -16,8 +16,6 @@ import de.instinct.eqfleet.net.WebManager;
 
 public class PlayTab {
 	
-	private static PlayTabRenderer renderer;
-	
 	public static String lobbyUUID;
 	public static LobbyStatusResponse lobbyStatus;
 	public static MatchmakingStatusResponse currentMatchmakingStatus;
@@ -27,7 +25,7 @@ public class PlayTab {
 	private static float QUEUE_UPDATE_CLOCK_MS = 200;
 
 	public static void init() {
-		renderer = new PlayTabRenderer();
+		
 	}
 	
 	public static void update() {
@@ -35,11 +33,11 @@ public class PlayTab {
 	}
 	
 	public static void render() {
-		renderer.render();
+		
 	}
 	
 	public static void dispose() {
-		renderer.dispose();
+		
 	}
 	
 	private static void connectToGameserver() {

@@ -5,14 +5,19 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import com.badlogic.gdx.math.Rectangle;
+
 import de.instinct.api.auth.dto.TokenVerificationResponse;
 import de.instinct.api.core.API;
+import de.instinct.eqfleet.App;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.TutorialMode;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.net.WebManager;
 import de.instinct.eqlibgdxutils.PreferenceUtil;
 import de.instinct.eqlibgdxutils.generic.Action;
+import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
+import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.Slide;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.Slideshow;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.interactive.BinaryLabeledDialog;
@@ -32,6 +37,7 @@ public class Intro {
 	private static Queue<Slide> elementQueue;
 	
 	private static ClipboardDialog authKeyInsertDialog;
+	private static Label versionLabel;
 
 	public static void init() {
 		initializeSlideshow();
@@ -43,6 +49,9 @@ public class Intro {
 		} else {
 			loadFirstTimeSlides();
 		}
+		versionLabel = new Label("v" + App.VERSION);
+		versionLabel.setBounds(new Rectangle(20, 20, 60, 20));
+		versionLabel.setColor(DefaultUIValues.skinColor);
 	}
 
 	private static void verifyAuthKey(String authKey, boolean loadfirst) {
@@ -264,6 +273,7 @@ public class Intro {
 	public static void render() {
 		if (active) {
 			introSlideshow.render();
+			versionLabel.render();
 		}
 	}
 

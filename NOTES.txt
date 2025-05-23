@@ -15,9 +15,10 @@
 - settings change skin color
 
 !!!!
+- ai acting
+
 - ships
- -> blueprint in shop for money
- -> need resources to build and upgrade
+ -> blueprints in packs in shop
  -> higher classes unlocked with rank
   -> cruiser, destroyer, titan
 
@@ -32,9 +33,6 @@
  -> swapable any time
  -> grants bonus based on loyalty
  -> mostly affects economy and CP and ship/build/ability slots
-
-- planet value is circle around planet
- -> actions are indicated with how much of that circle is needed
 
 - variable ship slots radial menu above planet
 - variable building slots below
