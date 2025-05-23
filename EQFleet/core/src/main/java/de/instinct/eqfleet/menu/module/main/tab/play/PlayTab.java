@@ -22,7 +22,7 @@ public class PlayTab {
 	public static InvitesStatusResponse inviteStatus;
 	public static InviteResponse inviteResponse;
 	
-	private static float QUEUE_UPDATE_CLOCK_MS = 200;
+	private static float QUEUE_UPDATE_CLOCK_MS = 500;
 
 	public static void init() {
 		
