@@ -74,7 +74,7 @@ public class EngineUtility {
 	public static void checkVictory(GameState state) {
 	    if (state.winner != 0) return;
 
-	    // build a map from playerId → teamId
+	    // build a map from playerId â†’ teamId
 	    Map<Integer,Integer> playerToTeam = new HashMap<>();
 	    for (Player p : state.players) {
 	        playerToTeam.put(p.playerId, p.teamId);
@@ -88,7 +88,7 @@ public class EngineUtility {
 	        }
 	    }
 
-	    // 2) TIMEOUT VICTORY WITH PLANET TIE‐BREAKER
+	    // 2) TIMEOUT VICTORY WITH PLANET tiebreaker
 	    if (state.gameTimeMS >= state.maxGameTimeMS) {
 	        // find the maximum ATP value
 	        double maxATP = state.teamATPs.values().stream()
@@ -146,7 +146,7 @@ public class EngineUtility {
 	        }
 	    }
 
-	    // build the set of “alive” teams
+	    // build the set of teams
 	    Set<Integer> alive = new HashSet<>(state.teamATPs.keySet());
 	    for (Integer teamId : new ArrayList<>(alive)) {
 	        int planets = teamPlanets.getOrDefault(teamId, 0);

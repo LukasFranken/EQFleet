@@ -9,6 +9,7 @@ import de.instinct.eqfleet.GlobalStaticData;
 import de.instinct.eqfleet.net.model.Request;
 import de.instinct.eqfleet.net.model.RequestConsumer;
 import de.instinct.eqfleet.net.model.RequestSupplier;
+import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
 
 public class WebManager {
@@ -45,7 +46,7 @@ public class WebManager {
         request.setRequestAction(() -> {
             T result = requestSupplier.get();
             responseHandler.accept(result);
-            if (result != null) Logger.log(LOGTAG, "received response: " + result);
+            if (result != null) Logger.log(LOGTAG, "received response: " + result, ConsoleColor.BLUE);
         });
         requestQueue.add(request);
     }

@@ -13,6 +13,7 @@ import de.instinct.eqfleet.net.WebManager;
 import de.instinct.eqlibgdxutils.CursorUtil;
 import de.instinct.eqlibgdxutils.PreferenceUtil;
 import de.instinct.eqlibgdxutils.debug.DebugUtil;
+import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
 import de.instinct.eqlibgdxutils.debug.metrics.DoubleMetric;
 import de.instinct.eqlibgdxutils.rendering.model.ModelRenderer;
@@ -29,7 +30,7 @@ public class App extends ApplicationAdapter {
 
     @Override
     public void create() {
-    	Logger.log(LOGTAG, "Welcome to EQFLEET v" + VERSION);
+    	Logger.log(LOGTAG, "Welcome to EQFLEET v" + VERSION, ConsoleColor.YELLOW);
     	AudioManager.init();
     	FontUtil.init();
     	Gdx.input.setInputProcessor(new InputMultiplexer());
@@ -84,7 +85,7 @@ public class App extends ApplicationAdapter {
         Menu.dispose();
         TextureManager.dispose();
         AudioManager.dispose();
-        Logger.log(LOGTAG, "EQFLEET TERMINATED");
+        Logger.log(LOGTAG, "EQFLEET TERMINATED", ConsoleColor.YELLOW);
     }
     
 }

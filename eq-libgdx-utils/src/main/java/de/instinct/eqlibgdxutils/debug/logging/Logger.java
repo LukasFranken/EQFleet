@@ -14,7 +14,14 @@ public class Logger {
 	}
 
 	public static void log(String tag, String message) {
-		String formattedTime = formatter.format(new Date(System.currentTimeMillis()));
-		Gdx.app.log(formattedTime, tag + " - " + message);
+		log(tag, message, ConsoleColor.DEFAULT);
 	}
+	
+	public static void log(String tag, String message, ConsoleColor color) {
+		String formattedTime = formatter.format(new Date(System.currentTimeMillis()));
+		System.out.print(color.getCode());
+		Gdx.app.log(formattedTime, tag + " - " + message);
+		System.out.print(ConsoleColor.DEFAULT.getCode());
+	}
+	
 }

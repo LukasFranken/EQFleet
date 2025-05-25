@@ -23,6 +23,8 @@ import de.instinct.eqfleet.menu.module.profile.ProfileRenderer;
 import de.instinct.eqfleet.menu.module.profile.message.LoadProfileMessage;
 import de.instinct.eqfleet.menu.module.settings.Settings;
 import de.instinct.eqfleet.menu.module.settings.SettingsRenderer;
+import de.instinct.eqfleet.menu.module.ship.Shipyard;
+import de.instinct.eqfleet.menu.module.ship.ShipyardRenderer;
 import de.instinct.eqfleet.net.WebManager;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
 
@@ -56,6 +58,8 @@ public class Menu {
 		renderers.put(MenuModule.INVENTORY, new InventoryRenderer());
 		modules.put(MenuModule.SETTINGS, new Settings());
 		renderers.put(MenuModule.SETTINGS, new SettingsRenderer());
+		modules.put(MenuModule.SHIPYARD, new Shipyard());
+		renderers.put(MenuModule.SHIPYARD, new ShipyardRenderer());
 		
 		moduleMessageQueue = new ConcurrentLinkedQueue<>();
 	}

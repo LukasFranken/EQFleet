@@ -323,7 +323,7 @@ public class PlayRenderer extends BaseModuleRenderer {
 		
 		int i = 0;
 		for (String userName : PlayTab.lobbyStatus.getUserNames()) {
-			Label userNameLabel = new Label(userName);
+			Label userNameLabel = new Label(userName == null ? "???" : userName);
 			userNameLabel.setBounds(new Rectangle(0, 500 - i, Gdx.graphics.getWidth(), 30));
 			userNameLabel.render();
 			i += 30;
