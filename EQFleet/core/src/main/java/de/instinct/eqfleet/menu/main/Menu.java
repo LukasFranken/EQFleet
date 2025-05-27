@@ -41,9 +41,11 @@ public class Menu {
 	private static boolean active;
 	
 	private static Queue<ModuleMessage> moduleMessageQueue;
+	private static Queue<MenuModule> reloadRequired;
 	
 	public static void init() {
 		menuRenderer = new MenuRenderer();
+		reloadRequired = new ConcurrentLinkedQueue<>();
 		
 		modules = new HashMap<>();
 		renderers = new HashMap<>();
@@ -100,6 +102,9 @@ public class Menu {
 	}
 	
 	public static void render() {
+		while (reloadRequired.peek() != null) {
+			renderers.get(reloadRequired.poll()).reload();
+		}
 		if (active) {
 			if (MenuModel.activeModule != null) {
 				renderers.get(MenuModel.activeModule).render();
@@ -147,6 +152,10 @@ public class Menu {
 		for (BaseModuleRenderer renderer : renderers.values()) {
 			renderer.reload();
 		}
+	}
+	
+	public static void requireReload(MenuModule module) {
+		reloadRequired.add(module);
 	}
 
 	public static void dispose() {

@@ -19,6 +19,7 @@ import de.instinct.eqlibgdxutils.debug.metrics.DoubleMetric;
 import de.instinct.eqlibgdxutils.rendering.model.ModelRenderer;
 import de.instinct.eqlibgdxutils.rendering.particle.ParticleRenderer;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
+import de.instinct.eqlibgdxutils.rendering.ui.popup.PopupRenderer;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 
 public class App extends ApplicationAdapter {
@@ -67,6 +68,7 @@ public class App extends ApplicationAdapter {
         Intro.render();
         Menu.render();
         Game.render();
+        PopupRenderer.render();
         updateMetrics();
     }
 

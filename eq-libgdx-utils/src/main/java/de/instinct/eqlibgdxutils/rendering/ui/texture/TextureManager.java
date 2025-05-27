@@ -72,6 +72,10 @@ public class TextureManager {
 		return colorTextureLoader.createTexture(color);
 	}
 	
+	public static void createTexture(String tag, Color color) {
+		textures.put(tag, colorTextureLoader.createTexture(color));
+	}
+	
 	public static void createShapeTexture(String tag, ComplexShapeType type, Rectangle bounds, Color color) {
 		switch (type) {
 		case RECTANGLE:
@@ -110,6 +114,14 @@ public class TextureManager {
 		textureRenderer.dispose();
 		for (Texture texture : textures.values()) {
 			texture.dispose();
+		}
+	}
+	
+	public static void dispose(String key) {
+		Texture texture = textures.get(key);
+		if (texture != null) {
+			texture.dispose();
+			textures.remove(key);
 		}
 	}
 

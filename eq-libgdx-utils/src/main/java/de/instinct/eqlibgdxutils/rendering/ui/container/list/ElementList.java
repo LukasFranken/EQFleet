@@ -37,7 +37,7 @@ public class ElementList extends ElementContainer {
 	protected float calculateHeight() {
 		float height = 0;
 		for (int i = 0; i < getElements().size(); i++) {
-			height += getElements().get(0).getBounds().height;
+			height += getElements().get(i).getBounds().height;
 			if (i > 0) {
 				height += margin;
 	        }

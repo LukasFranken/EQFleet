@@ -61,6 +61,7 @@ public class Profile extends BaseModule {
 			    () -> API.meta().profile(API.authKey),
 			    result -> {
 			    	ProfileModel.profile = result;
+			    	super.requireUIReload();
 			    }
 		);
 	}
