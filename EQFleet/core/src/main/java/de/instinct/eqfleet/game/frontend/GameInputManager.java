@@ -10,7 +10,7 @@ import de.instinct.engine.EngineUtility;
 import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.Planet;
 import de.instinct.engine.net.message.types.FleetMovementMessage;
-import de.instinct.eqfleet.game.Game;
+import de.instinct.eqfleet.game.GameModel;
 
 public class GameInputManager {
 	
@@ -19,14 +19,14 @@ public class GameInputManager {
 	private Integer selectedPlanetId = null;
 
 	public void handleInput(PerspectiveCamera camera, GameState state) {
-		if (!Game.inputEnabled) {
+		if (!GameModel.inputEnabled) {
 			return;
 		}
 	    Vector3 worldTouch = getTouchWorldPosition(camera);
 
 	    if (Gdx.input.justTouched()) {
 	        for (Planet planet : state.planets) {
-	            if (planet.ownerId == Game.playerId && isClickInsidePlanet(worldTouch, planet)) {
+	            if (planet.ownerId == GameModel.playerId && isClickInsidePlanet(worldTouch, planet)) {
 	                selectedPlanetId = planet.id;
 	                break;
 	            }
@@ -41,7 +41,7 @@ public class GameInputManager {
 	                order.userUUID = API.authKey;
 	                order.fromPlanetId = selectedPlanetId;
 	                order.toPlanetId = planet.id;
-	                Game.outputMessageQueue.add(order);
+	                GameModel.outputMessageQueue.add(order);
 	                break;
 	            }
 	        }

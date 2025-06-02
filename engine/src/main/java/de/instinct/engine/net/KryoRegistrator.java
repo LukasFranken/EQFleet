@@ -9,12 +9,13 @@ import com.esotericsoftware.kryo.Kryo;
 import de.instinct.engine.ai.AiDifficulty;
 import de.instinct.engine.model.AiPlayer;
 import de.instinct.engine.model.GameState;
-import de.instinct.engine.model.Planet;
 import de.instinct.engine.model.Player;
-import de.instinct.engine.model.event.GameEvent;
-import de.instinct.engine.model.event.types.FleetMovementEvent;
-import de.instinct.engine.model.ship.Ship;
+import de.instinct.engine.model.planet.Planet;
+import de.instinct.engine.model.ship.Defense;
+import de.instinct.engine.model.ship.ShipData;
 import de.instinct.engine.model.ship.ShipType;
+import de.instinct.engine.model.ship.Weapon;
+import de.instinct.engine.model.ship.WeaponType;
 import de.instinct.engine.net.message.NetworkMessage;
 import de.instinct.engine.net.message.types.FleetMovementMessage;
 import de.instinct.engine.net.message.types.JoinMessage;
@@ -32,16 +33,17 @@ public class KryoRegistrator {
 		kryo.register(Player.class);
 		kryo.register(GameState.class);
 		kryo.register(PriorityQueue.class);
-		kryo.register(GameEvent.class);
-		kryo.register(FleetMovementEvent.class);
 		kryo.register(NetworkMessage.class);
 		kryo.register(AiPlayer.class);
 		kryo.register(AiDifficulty.class);
 		kryo.register(JoinMessage.class);
 		kryo.register(LoadedMessage.class);
 		kryo.register(PlayerAssigned.class);
-		kryo.register(Ship.class);
+		kryo.register(ShipData.class);
 		kryo.register(ShipType.class);
+		kryo.register(Weapon.class);
+		kryo.register(WeaponType.class);
+		kryo.register(Defense.class);
 	}
 
 }

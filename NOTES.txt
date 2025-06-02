@@ -15,7 +15,14 @@
 - settings change skin color
 
 !!!!
+- routes dragging through friendly planets
+
 - ai acting
+
+- conquest map
+ -> conquering one star system after another
+ -> split in sectors
+ -> like gemcraft
 
 - ships
  -> blueprints in packs in shop
@@ -36,8 +43,6 @@
 
 - variable ship slots radial menu above planet
 - variable building slots below
-
-- vastly variable game lengths 1/3/10/20 mins
 !!!!
 
 - missing lobby update bug

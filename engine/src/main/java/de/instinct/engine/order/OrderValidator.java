@@ -1,23 +1,25 @@
 package de.instinct.engine.order;
 
-import de.instinct.engine.EngineUtility;
 import de.instinct.engine.model.GameState;
-import de.instinct.engine.model.Planet;
 import de.instinct.engine.model.Player;
-import de.instinct.engine.order.types.FleetMovementOrder;
+import de.instinct.engine.model.planet.Planet;
+import de.instinct.engine.model.ship.ShipData;
+import de.instinct.engine.order.types.ShipMovementOrder;
+import de.instinct.engine.util.EngineUtility;
 
 public class OrderValidator {
 	
 	public boolean isValid(GameState state, GameOrder order) {
-		if (order instanceof FleetMovementOrder) {
-			FleetMovementOrder fleetMovementOrder = (FleetMovementOrder)order;
-			Planet fromPlanet = EngineUtility.getPlanet(state, fleetMovementOrder.fromPlanetId);
-			Player player = EngineUtility.getPlayer(state, fleetMovementOrder.playerId);
+		if (order instanceof ShipMovementOrder) {
+			ShipMovementOrder shipMovementOrder = (ShipMovementOrder)order;
+			Planet fromPlanet = EngineUtility.getPlanet(state.planets, shipMovementOrder.fromPlanetId);
+			Player player = EngineUtility.getPlayer(state.players, shipMovementOrder.playerId);
+			ShipData playerShip = player.ships.get(shipMovementOrder.playerShipId);
 			
-			if (fromPlanet.ownerId != fleetMovementOrder.playerId) return false;
-			if (fleetMovementOrder.fromPlanetId == fleetMovementOrder.toPlanetId) return false;
-			if (fromPlanet.value < 2) return false;
-			if (player.currentCommandPoints < 1) return false;
+			if (fromPlanet.ownerId != shipMovementOrder.playerId) return false;
+			if (shipMovementOrder.fromPlanetId == shipMovementOrder.toPlanetId) return false;
+			if (fromPlanet.currentResources < playerShip.cost) return false;
+			if (player.currentCommandPoints < playerShip.commandPointsCost) return false;
 			return true;
 		}
 		return false;

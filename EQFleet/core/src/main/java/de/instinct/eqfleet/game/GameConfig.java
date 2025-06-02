@@ -16,8 +16,8 @@ public class GameConfig {
 	
 	public static Color getPlayerColor(int playerId) {
 		if (playerId == 0) return GameConfig.neutralColor;
-		Player player = EngineUtility.getPlayer(Game.activeGameState, playerId);
-		Player self = EngineUtility.getPlayer(Game.activeGameState, Game.playerId);
+		Player player = EngineUtility.getPlayer(GameModel.activeGameState, playerId);
+		Player self = EngineUtility.getPlayer(GameModel.activeGameState, GameModel.playerId);
 		if (player.teamId != self.teamId) return GameConfig.enemyColor;
 		if (playerId == 1 || playerId == 4) return GameConfig.teammate1Color;
 		if (playerId == 2 || playerId == 5) return GameConfig.teammate2Color;

@@ -12,7 +12,9 @@ import de.instinct.api.matchmaking.model.GameMode;
 import de.instinct.api.matchmaking.model.GameType;
 import de.instinct.api.matchmaking.model.Invite;
 import de.instinct.api.matchmaking.model.VersusMode;
+import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
+import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.module.main.tab.play.PlayTab;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
@@ -28,6 +30,7 @@ import de.instinct.eqlibgdxutils.rendering.ui.module.list.ListActionHandler;
 
 public class PlayRenderer extends BaseModuleRenderer {
 
+	private ColorButton startCustomButton;
 	private ColorButton createLobbyButton;
 	private ColorButton leaveLobbyButton;
 	private ActionList invites;
@@ -86,6 +89,17 @@ public class PlayRenderer extends BaseModuleRenderer {
 			@Override
 			public void execute() {
 				PlayTab.createLobby();
+			}
+			
+		});
+		
+		startCustomButton = getBaseButton("Start Custom");
+		startCustomButton.setAction(new Action() {
+			
+			@Override
+			public void execute() {
+				Game.startCustom();
+				Menu.close();
 			}
 			
 		});
@@ -245,7 +259,7 @@ public class PlayRenderer extends BaseModuleRenderer {
 						renderQueueStatus();
 					}
 				}
-				leaveLobbyButton.setPosition(20, 100);
+				leaveLobbyButton.setPosition(40, 100);
 				leaveLobbyButton.render();
 			}
 		}
@@ -256,6 +270,11 @@ public class PlayRenderer extends BaseModuleRenderer {
 		createLobbyButton.setFixedWidth(Gdx.graphics.getWidth() - 100);
 		createLobbyButton.setFixedHeight(40);
 		createLobbyButton.render();
+		
+		startCustomButton.setPosition(50, Gdx.graphics.getHeight() - 300);
+		startCustomButton.setFixedWidth(Gdx.graphics.getWidth() - 100);
+		startCustomButton.setFixedHeight(40);
+		startCustomButton.render();
 		
 		invites.setElements(new ArrayList<>());
 		if (PlayTab.inviteStatus != null && PlayTab.inviteStatus.getInvites().size() > 0) {
@@ -356,7 +375,7 @@ public class PlayRenderer extends BaseModuleRenderer {
 			}
 		}
 		
-		startMatchmakingButton.setPosition(Gdx.graphics.getWidth() - startMatchmakingButton.getFixedWidth() - 20, 100);
+		startMatchmakingButton.setPosition(Gdx.graphics.getWidth() - startMatchmakingButton.getFixedWidth() - 40, 100);
 		startMatchmakingButton.render();
 	}
 	

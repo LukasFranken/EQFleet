@@ -7,6 +7,7 @@ import de.instinct.api.meta.dto.ModuleData;
 
 public class MenuModel {
 	
+	public static volatile boolean active;
 	public static volatile Rectangle moduleBounds;
 	public static volatile MenuModule activeModule;
 	public static volatile ModuleData modules;

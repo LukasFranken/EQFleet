@@ -10,8 +10,8 @@ import com.badlogic.gdx.math.Rectangle;
 import de.instinct.engine.EngineUtility;
 import de.instinct.engine.model.Planet;
 import de.instinct.engine.model.Player;
-import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.GameConfig;
+import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.frontend.ui.model.GameUIElement;
 import de.instinct.eqfleet.game.frontend.ui.model.PlayerData;
 import de.instinct.eqfleet.game.frontend.ui.model.UIBounds;
@@ -366,8 +366,8 @@ public class GameUILoader {
 			public void execute() {
 				PlayerData playerData = UIDataUtility.getPlayerData(teamAPElement.getCurrentGameState());
 				teamAPElement.setBounds(bounds.getTeamAPBar());
-				teamAPElement.getElement().setMaxValue(Game.activeGameState.atpToWin);
-				teamAPElement.getElement().setCurrentValue(Game.activeGameState.teamATPs.get(playerData.getSelf().teamId));
+				teamAPElement.getElement().setMaxValue(GameModel.activeGameState.atpToWin);
+				teamAPElement.getElement().setCurrentValue(GameModel.activeGameState.teamATPs.get(playerData.getSelf().teamId));
 			}
 			
 		});
@@ -382,19 +382,19 @@ public class GameUILoader {
 				PlayerData playerData = UIDataUtility.getPlayerData(teamAPElement.getCurrentGameState());
 				elapsed += Gdx.graphics.getDeltaTime();
 				Planet activeAncientPlanet = null; 
-				for (Planet planet : Game.activeGameState.planets) {
+				for (Planet planet : GameModel.activeGameState.planets) {
 					if (planet.ancient) {
 						activeAncientPlanet = planet;
 					}
 				}
-				Player owner = EngineUtility.getPlayer(Game.activeGameState, activeAncientPlanet.ownerId);
+				Player owner = EngineUtility.getPlayer(GameModel.activeGameState, activeAncientPlanet.ownerId);
 				if (owner.teamId != playerData.getSelf().teamId && glowAlpha == 0f) {
 		        	elapsed = 0f;
 		        }
 				if (activeAncientPlanet != null) {
 			    	if (activeAncientPlanet.ownerId != 0) {
 			    		
-					    Player self = EngineUtility.getPlayer(Game.activeGameState, Game.playerId);
+					    Player self = EngineUtility.getPlayer(GameModel.activeGameState, GameModel.playerId);
 			    		if (owner.teamId == self.teamId) {
 			    			alphaStore += Gdx.graphics.getDeltaTime();
 			    		}
@@ -448,8 +448,8 @@ public class GameUILoader {
 			public void execute() {
 				PlayerData playerData = UIDataUtility.getPlayerData(enemyAPElement.getCurrentGameState());
 				enemyAPElement.setBounds(bounds.getEnemyAPBar());
-				enemyAPElement.getElement().setMaxValue(Game.activeGameState.atpToWin);
-				enemyAPElement.getElement().setCurrentValue(Game.activeGameState.teamATPs.get(playerData.getEnemy1().teamId));
+				enemyAPElement.getElement().setMaxValue(GameModel.activeGameState.atpToWin);
+				enemyAPElement.getElement().setCurrentValue(GameModel.activeGameState.teamATPs.get(playerData.getEnemy1().teamId));
 			}
 			
 		});

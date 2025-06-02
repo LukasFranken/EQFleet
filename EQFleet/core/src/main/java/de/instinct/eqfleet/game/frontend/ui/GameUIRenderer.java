@@ -14,7 +14,7 @@ import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.Planet;
 import de.instinct.engine.model.Player;
 import de.instinct.engine.net.message.types.LoadedMessage;
-import de.instinct.eqfleet.game.Game;
+import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.frontend.ui.model.GameUIElement;
 import de.instinct.eqfleet.game.frontend.ui.model.UIBounds;
 import de.instinct.eqlibgdxutils.rendering.particle.ParticleRenderer;
@@ -41,14 +41,14 @@ public class GameUIRenderer {
 		
 		LoadedMessage loadedMessage = new LoadedMessage();
 		loadedMessage.playerUUID = API.authKey;
-		Game.outputMessageQueue.add(loadedMessage);
+		GameModel.outputMessageQueue.add(loadedMessage);
 		initialized = true;
 	}
 
 	private void initializeElements() {
 		for (GameUIElement<?> gameUIelement : elements) {
 			if (gameUIelement.getInitAction() != null) {
-				gameUIelement.setCurrentGameState(Game.activeGameState);
+				gameUIelement.setCurrentGameState(GameModel.activeGameState);
 				gameUIelement.getInitAction().execute();
 			}
 		}
@@ -78,7 +78,7 @@ public class GameUIRenderer {
 	}
 	
 	public void render(GameState state) {
-		if (Game.activeGameState != null) {
+		if (GameModel.activeGameState != null) {
 			if (initialized) {
 				updateUI(state);
 				renderUI(state);
@@ -89,7 +89,7 @@ public class GameUIRenderer {
 	private void updateUI(GameState state) {
 		for (GameUIElement<?> gameUIelement : elements) {
 			if (gameUIelement.isVisible()) {
-				gameUIelement.setCurrentGameState(Game.activeGameState);
+				gameUIelement.setCurrentGameState(GameModel.activeGameState);
 				if (gameUIelement.getUpdateAction() != null) gameUIelement.getUpdateAction().execute();
 			}
 		}
@@ -110,13 +110,13 @@ public class GameUIRenderer {
 	public void renderParticles(PerspectiveCamera camera) {
 		if (initialized) {
 			Planet activeAncientPlanet = null;
-			for (Planet planet : Game.activeGameState.planets) {
+			for (Planet planet : GameModel.activeGameState.planets) {
 				if (planet.ancient) {
 					activeAncientPlanet = planet;
 				}
 			}
-			Player owner = EngineUtility.getPlayer(Game.activeGameState, activeAncientPlanet.ownerId);
-			Player self = EngineUtility.getPlayer(Game.activeGameState, Game.playerId);
+			Player owner = EngineUtility.getPlayer(GameModel.activeGameState, activeAncientPlanet.ownerId);
+			Player self = EngineUtility.getPlayer(GameModel.activeGameState, GameModel.playerId);
 			if (activeAncientPlanet != null) {
 				if (activeAncientPlanet.ownerId != 0) {
 					if (!ParticleRenderer.isStarted("ancient")) ParticleRenderer.start("ancient");

@@ -38,8 +38,6 @@ public class Menu {
 	private static ScheduledExecutorService scheduler;
 	private static long UPDATE_CLOCK_MS = 20;
 	
-	private static boolean active;
-	
 	private static Queue<ModuleMessage> moduleMessageQueue;
 	private static Queue<MenuModule> reloadRequired;
 	
@@ -50,7 +48,7 @@ public class Menu {
 		modules = new HashMap<>();
 		renderers = new HashMap<>();
 		
-		active = false;
+		MenuModel.active = false;
 		
 		modules.put(MenuModule.PLAY, new Play());
 		renderers.put(MenuModule.PLAY, new PlayRenderer());
@@ -72,18 +70,15 @@ public class Menu {
 		scheduler.scheduleAtFixedRate(() -> {
 			update();
 		}, 0, UPDATE_CLOCK_MS, TimeUnit.MILLISECONDS);
-		active = true;
-		PlayTab.init();
+		MenuModel.active = true;
 		PlayTab.loadData();
-		//AudioManager.play("neon_horizon_ambient", true);
 	}
 	
 	public static void close() {
 		if (scheduler != null) {
 			scheduler.shutdownNow();
 		}
-		active = false;
-		//AudioManager.stop();
+		MenuModel.active = false;
 		menuRenderer.close();
 	}
 	
@@ -105,7 +100,7 @@ public class Menu {
 		while (reloadRequired.peek() != null) {
 			renderers.get(reloadRequired.poll()).reload();
 		}
-		if (active) {
+		if (MenuModel.active) {
 			if (MenuModel.activeModule != null) {
 				renderers.get(MenuModel.activeModule).render();
 			}

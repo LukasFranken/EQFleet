@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.eqlibgdxutils.ClipboardUtil;
 import de.instinct.eqlibgdxutils.MathUtil;
+import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
@@ -98,7 +99,7 @@ public class ClipboardDialog extends Slide {
 			useButton.render();
 			Color fontColor = new Color(DefaultUIValues.lighterSkinColor);
 			fontColor.a = clipboardLabelAlpha;
-			String authKeyLabel = authKey.substring(0, 6) + " ... " + authKey.substring(authKey.length() - 6, authKey.length());
+			String authKeyLabel = StringUtils.elide(authKey, 6);
 			keyLabel.setText(authKeyLabel);
 			keyLabel.setBounds(new Rectangle(0, (getBounds().height / 2) - 20, getBounds().width, 30));
 			keyLabel.setAlpha(slideAlpha);

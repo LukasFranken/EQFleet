@@ -45,9 +45,4 @@ public class ElementList extends ElementContainer {
 		return height;
 	}
 
-	public void setPosition(float x, float y) {
-		getBounds().x = x;
-		getBounds().y = y;
-	}
-
 }

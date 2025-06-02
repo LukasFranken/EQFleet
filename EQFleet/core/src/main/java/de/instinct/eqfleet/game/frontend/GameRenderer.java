@@ -25,8 +25,8 @@ import de.instinct.engine.model.event.GameEvent;
 import de.instinct.engine.model.event.types.FleetMovementEvent;
 import de.instinct.eqfleet.ApplicationMode;
 import de.instinct.eqfleet.GlobalStaticData;
-import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.GameConfig;
+import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.GuideEvent;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.subtypes.CameraMoveGuideEvent;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.subtypes.DialogGuideEvent;
@@ -133,7 +133,7 @@ public class GameRenderer {
 	}
 
 	private void checkFlip() {
-		Player self = EngineUtility.getPlayer(Game.activeGameState, Game.playerId);
+		Player self = EngineUtility.getPlayer(GameModel.activeGameState, GameModel.playerId);
 		if (isFlipped && self.teamId == 1) {
 			flip();
 		}
@@ -151,20 +151,20 @@ public class GameRenderer {
 	}
 
 	private void processEventPolling() {
-		if (currentGuideEvent == null && Game.guidedEvents != null) {
-			GuideEvent peekedGuideEvent = Game.guidedEvents.peek();
+		if (currentGuideEvent == null && GameModel.guidedEvents != null) {
+			GuideEvent peekedGuideEvent = GameModel.guidedEvents.peek();
 			if (peekedGuideEvent != null) {
 				if (peekedGuideEvent instanceof DialogGuideEvent) {
 					DialogGuideEvent currentPeekedDialogGuideEvent = (DialogGuideEvent)peekedGuideEvent;
 					if (currentPeekedDialogGuideEvent.getCondition() != null) {
 						if (currentPeekedDialogGuideEvent.getCondition().isStartConditionMet()) {
-							currentGuideEvent = Game.guidedEvents.poll();
+							currentGuideEvent = GameModel.guidedEvents.poll();
 						}
 					} else {
-						currentGuideEvent = Game.guidedEvents.poll();
+						currentGuideEvent = GameModel.guidedEvents.poll();
 					}
 				} else {
-					currentGuideEvent = Game.guidedEvents.poll();
+					currentGuideEvent = GameModel.guidedEvents.poll();
 				}
 			}
 			
@@ -175,7 +175,7 @@ public class GameRenderer {
 				}
 			}
 		} else {
-			if (Game.guidedEvents == null) {
+			if (GameModel.guidedEvents == null) {
 				currentGuideEvent = null;
 			}
 		}
@@ -334,10 +334,10 @@ public class GameRenderer {
 
 	private void renderMessageText() {
 		String message = "Connecting...";
-		if (Game.activeGameState != null) {
-			int winner = Game.activeGameState.winner;
+		if (GameModel.activeGameState != null) {
+			int winner = GameModel.activeGameState.winner;
 			if (winner != 0) {
-				if (winner == EngineUtility.getPlayer(Game.activeGameState, Game.playerId).teamId) {
+				if (winner == EngineUtility.getPlayer(GameModel.activeGameState, GameModel.playerId).teamId) {
 					message = "VICTORY";
 				} else if (winner != 0) {
 					message = "DEFEATED";
@@ -468,7 +468,7 @@ public class GameRenderer {
 		}
 
 		if (hovered != null) {
-			boolean isSelectingOrigin = (selected == null && hovered.ownerId == Game.playerId);
+			boolean isSelectingOrigin = (selected == null && hovered.ownerId == GameModel.playerId);
 			boolean isTargeting = (selected != null && hovered.id != selected.id);
 			if (isSelectingOrigin || isTargeting) {
 				shapeRenderer.circle(hovered.xPos, hovered.yPos, EngineUtility.PLANET_RADIUS + 5);
@@ -531,6 +531,10 @@ public class GameRenderer {
 
 	public void setUIElementVisible(String tag, boolean visible) {
 		uiRenderer.setElementVisible(tag, visible);
+	}
+
+	public void dispose() {
+		
 	}
 	
 }

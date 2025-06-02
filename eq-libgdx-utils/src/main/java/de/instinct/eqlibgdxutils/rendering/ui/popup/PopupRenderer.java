@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
+import de.instinct.eqlibgdxutils.InputUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
@@ -23,6 +24,8 @@ public class PopupRenderer {
 	private static String currentWindowTitlebarTextureTag;
 	private static final String BG_DARKENING_TAG = "popup_screenDarkening";
 	private static final String POPUP_BG_TAG = "popup_bg";
+	
+	private static boolean flagForDestroy;
 	
 	public static void create(Popup newPopup) {
 		createWindowTextures(newPopup);
@@ -58,6 +61,7 @@ public class PopupRenderer {
 	}
 
 	public static void render() {
+		destroy();
 		if (popup != null) {
 			TextureManager.draw(BG_DARKENING_TAG, new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), BG_DARKENING);
 			TextureManager.draw(POPUP_BG_TAG, popupBounds, 1f);
@@ -72,21 +76,28 @@ public class PopupRenderer {
 			popup.getContentContainer().setPosition(popupBounds.x + MARGIN, popupBounds.y + MARGIN);
 			popup.getContentContainer().update();
 			popup.getContentContainer().render();
-			if (Gdx.input.justTouched()) {
+			if (Gdx.input.justTouched() && !popupBounds.contains(InputUtil.getMousePosition())) {
 				close();
 			}
 		}
 	}
 	
-	private static void close() {
-		TextureManager.dispose(currentWindowTextureTag);
-		currentWindowTextureTag = null;
-		currentWindowTitlebarTextureTag = null;
-		popup.getContentContainer().dispose();
-		popup = null;
-		title.dispose();
-		title = null;
-		popupBounds = null;
+	public static void close() {
+		flagForDestroy = true;
+	}
+	
+	private static void destroy() {
+		if (flagForDestroy) {
+			TextureManager.dispose(currentWindowTextureTag);
+			currentWindowTextureTag = null;
+			currentWindowTitlebarTextureTag = null;
+			popup.getContentContainer().dispose();
+			popup = null;
+			title.dispose();
+			title = null;
+			popupBounds = null;
+			flagForDestroy = false;
+		}
 	}
 
 }

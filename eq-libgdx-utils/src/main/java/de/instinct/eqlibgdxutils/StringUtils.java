@@ -146,4 +146,8 @@ public class StringUtils {
 		return minutesLabel + ":" + secondsLabel + (showMilliseconds ? (remainingMS % 1000) : "");
 	}
 
+	public static String elide(String text, int digits) {
+		return text.substring(0, digits) + "..." + text.substring(text.length() - digits, text.length());
+	}
+
 }

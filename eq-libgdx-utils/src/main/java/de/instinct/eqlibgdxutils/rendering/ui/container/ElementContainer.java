@@ -42,5 +42,10 @@ public abstract class ElementContainer extends UIElement {
 			element.dispose();
 		}
 	}
+	
+	public void setPosition(float x, float y) {
+		getBounds().x = x;
+		getBounds().y = y;
+	}
 
 }
