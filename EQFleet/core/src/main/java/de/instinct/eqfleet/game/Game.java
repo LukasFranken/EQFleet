@@ -72,6 +72,9 @@ public class Game {
 
 	public static void dispose() {
 		renderer.dispose();
+		onlineDriver.dispose();
+    	customDriver.dispose();
+    	tutorialDriver.dispose();
 	}
 
 	public static void assignPlayer(PlayerAssigned playerAssigned) {

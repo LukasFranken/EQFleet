@@ -13,7 +13,7 @@ public class GameState {
 	
 	public String gameUUID;
 	public List<Player> players;
-	public List<PlayerConnectionStatus> connectionStatuses;
+	public List<PlayerConnectionStatus> connectionStati;
 	public List<Planet> planets;
 	public List<Combat> activeCombats;
 	public List<Combat> finishedCombats;

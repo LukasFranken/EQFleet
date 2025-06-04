@@ -26,6 +26,7 @@ public class FleetEngine {
 	
 	private OrderValidator orderValidator;
 	private Queue<GameOrder> unprocessedOrders;
+	
 	private ResourceProcessor resourceProcessor;
 	private CombatProcessor combatProcessor;
 	
@@ -44,12 +45,12 @@ public class FleetEngine {
 		state.orders = new ArrayList<>();
 		state.gameUUID = UUID.randomUUID().toString();
 		state.players = initializePlayers(initialization.players);
-		state.connectionStatuses = generateConnectionStati(initialization.players);
+		state.connectionStati = generateConnectionStati(initialization.players);
 		state.planets = generateInitialPlanets(initialization);
 		state.gameTimeMS = 0;
-		state.maxGameTimeMS = 180_000;
+		state.maxGameTimeMS = initialization.gameTimeLimitMS;
 		state.winner = 0;
-		state.atpToWin = 50;
+		state.atpToWin = initialization.atpToWin;
 		state.teamATPs = new HashMap<>();
 		state.teamATPs.put(0, 0D);
 		state.teamATPs.put(1, 0D);
@@ -69,18 +70,18 @@ public class FleetEngine {
 	}
 
 	private List<PlayerConnectionStatus> generateConnectionStati(List<Player> players) {
-		List<PlayerConnectionStatus> connectionStatuses = new ArrayList<>();
+		List<PlayerConnectionStatus> connectionStati = new ArrayList<>();
 		for (Player player : players) {
 			PlayerConnectionStatus status = new PlayerConnectionStatus();
 			status.playerId = player.id;
-			connectionStatuses.add(status);
+			connectionStati.add(status);
 		}
-		return null;
+		return connectionStati;
 	}
 
 	private List<Planet> generateInitialPlanets(GameStateInitialization initialization) {
 		List<Planet> initialPlanets = new ArrayList<>();
-		for (PlanetInitialization init : initialization.planets) {
+		for (PlanetInitialization init : initialization.map.planets) {
 			Player planetOwner = EngineUtility.getPlayer(initialization.players, init.ownerId);
 			Planet initialPlanet = EntityManager.createPlanet(planetOwner.planetData);
 			initialPlanet.ownerId = init.ownerId;

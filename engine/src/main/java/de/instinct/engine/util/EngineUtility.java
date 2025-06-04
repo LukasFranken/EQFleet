@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.Player;
+import de.instinct.engine.model.PlayerConnectionStatus;
 import de.instinct.engine.model.planet.Planet;
 
 public class EngineUtility {
@@ -33,6 +34,15 @@ public class EngineUtility {
 		for (Planet planet : planets) {
 			if (planet.id == planetId) {
 				return planet;
+			}
+		}
+		return null;
+	}
+	
+	public static PlayerConnectionStatus getPlayerConnectionStatus(List<PlayerConnectionStatus> playerConnectionStatus, int playerId) {
+		for (PlayerConnectionStatus connectionStatus : playerConnectionStatus) {
+			if (connectionStatus.playerId == playerId) {
+				return connectionStatus;
 			}
 		}
 		return null;

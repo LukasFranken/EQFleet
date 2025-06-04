@@ -4,9 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 
+import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryo.Kryo;
 
 import de.instinct.engine.ai.AiDifficulty;
+import de.instinct.engine.combat.Combat;
+import de.instinct.engine.combat.Projectile;
+import de.instinct.engine.combat.Ship;
 import de.instinct.engine.model.AiPlayer;
 import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.Player;
@@ -44,6 +48,10 @@ public class KryoRegistrator {
 		kryo.register(Weapon.class);
 		kryo.register(WeaponType.class);
 		kryo.register(Defense.class);
+		kryo.register(Ship.class);
+		kryo.register(Projectile.class);
+		kryo.register(Vector2.class);
+		kryo.register(Combat.class);
 	}
 
 }

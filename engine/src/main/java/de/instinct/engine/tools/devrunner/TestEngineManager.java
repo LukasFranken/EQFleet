@@ -1,4 +1,4 @@
-package de.instinct.engine.test;
+package de.instinct.engine.tools.devrunner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +11,7 @@ import de.instinct.engine.ai.AiDifficulty;
 import de.instinct.engine.ai.AiEngine;
 import de.instinct.engine.initialization.GameStateInitialization;
 import de.instinct.engine.initialization.PlanetInitialization;
+import de.instinct.engine.map.GameMap;
 import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.PlanetData;
 import de.instinct.engine.model.Player;
@@ -45,8 +46,10 @@ public class TestEngineManager {
 		GameStateInitialization init = new GameStateInitialization();
 		init.gameUUID = UUID.randomUUID().toString();
 		init.players = initializePlayers(3);
-		init.planets = initializePlanets(3);
+		init.map = initializeMap(3);
 		init.ancientPlanetResourceDegradationFactor = 0.5f;
+		init.gameTimeLimitMS = 180_000;
+		init.atpToWin = 50;
 		return init;
 	}
 
@@ -164,7 +167,8 @@ public class TestEngineManager {
 		return player;
 	}
 
-	private static List<PlanetInitialization> initializePlanets(int playerCount) {
+	private static GameMap initializeMap(int playerCount) {
+		GameMap map = new GameMap();
 		List<PlanetInitialization> planets = new ArrayList<>();
 		PlanetInitialization neutralPlanet1 = new PlanetInitialization();
 		neutralPlanet1.ownerId = 0;
@@ -224,7 +228,8 @@ public class TestEngineManager {
 			startPlanetAI3.startArmorPercent = 1f;
 			planets.add(startPlanetAI3);
 		}
-		return planets;
+		map.planets = planets;
+		return map;
 	}
 
 }

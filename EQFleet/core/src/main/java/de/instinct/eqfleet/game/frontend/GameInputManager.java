@@ -6,10 +6,10 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 
 import de.instinct.api.core.API;
-import de.instinct.engine.EngineUtility;
 import de.instinct.engine.model.GameState;
-import de.instinct.engine.model.Planet;
+import de.instinct.engine.model.planet.Planet;
 import de.instinct.engine.net.message.types.FleetMovementMessage;
+import de.instinct.engine.util.EngineUtility;
 import de.instinct.eqfleet.game.GameModel;
 
 public class GameInputManager {
@@ -60,7 +60,7 @@ public class GameInputManager {
     }
 
     private boolean isClickInsidePlanet(Vector3 worldClick, Planet planet) {
-        return Vector3.dst(planet.xPos, planet.yPos, 0f, worldClick.x, worldClick.y, 0f) < EngineUtility.PLANET_RADIUS + HITBOX_INCREASE;
+        return Vector3.dst(planet.position.x, planet.position.y, 0f, worldClick.x, worldClick.y, 0f) < EngineUtility.PLANET_RADIUS + HITBOX_INCREASE;
     }
     
     public Integer getSelectedPlanetId() {
@@ -70,7 +70,7 @@ public class GameInputManager {
     public Planet getHoveredPlanet(PerspectiveCamera camera, GameState state) {
         Vector3 touchWorld = getTouchWorldPosition(camera);
         for (Planet planet : state.planets) {
-            if (Vector3.dst(touchWorld.x, touchWorld.y, 0, planet.xPos, planet.yPos, 0) < EngineUtility.PLANET_RADIUS + HITBOX_INCREASE) {
+            if (Vector3.dst(touchWorld.x, touchWorld.y, 0, planet.position.x, planet.position.y, 0) < EngineUtility.PLANET_RADIUS + HITBOX_INCREASE) {
                 return planet;
             }
         }

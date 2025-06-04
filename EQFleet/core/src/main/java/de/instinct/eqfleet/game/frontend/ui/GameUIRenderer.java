@@ -9,11 +9,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import de.instinct.api.core.API;
-import de.instinct.engine.EngineUtility;
 import de.instinct.engine.model.GameState;
-import de.instinct.engine.model.Planet;
 import de.instinct.engine.model.Player;
+import de.instinct.engine.model.planet.Planet;
 import de.instinct.engine.net.message.types.LoadedMessage;
+import de.instinct.engine.util.EngineUtility;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.frontend.ui.model.GameUIElement;
 import de.instinct.eqfleet.game.frontend.ui.model.UIBounds;
@@ -115,15 +115,15 @@ public class GameUIRenderer {
 					activeAncientPlanet = planet;
 				}
 			}
-			Player owner = EngineUtility.getPlayer(GameModel.activeGameState, activeAncientPlanet.ownerId);
-			Player self = EngineUtility.getPlayer(GameModel.activeGameState, GameModel.playerId);
+			Player owner = EngineUtility.getPlayer(GameModel.activeGameState.players, activeAncientPlanet.ownerId);
+			Player self = EngineUtility.getPlayer(GameModel.activeGameState.players, GameModel.playerId);
 			if (activeAncientPlanet != null) {
 				if (activeAncientPlanet.ownerId != 0) {
 					if (!ParticleRenderer.isStarted("ancient")) ParticleRenderer.start("ancient");
 		        } else {
 		            ParticleRenderer.stop("ancient");
 		        }
-			    Vector3 projected = camera.project(new Vector3(activeAncientPlanet.xPos, activeAncientPlanet.yPos, 0));
+			    Vector3 projected = camera.project(new Vector3(activeAncientPlanet.position.x, activeAncientPlanet.position.y, 0));
 			    Vector2 source = new Vector2(projected.x, projected.y);
 			    Vector2 target = (owner.teamId == self.teamId)
 			        ? new Vector2(50, 260)

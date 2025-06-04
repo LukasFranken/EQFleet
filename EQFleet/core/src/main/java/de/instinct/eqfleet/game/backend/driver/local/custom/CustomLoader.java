@@ -1,27 +1,36 @@
 package de.instinct.eqfleet.game.backend.driver.local.custom;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.PriorityQueue;
 import java.util.UUID;
 
+import com.badlogic.gdx.math.Vector2;
+
+import de.instinct.api.construction.dto.Infrastructure;
+import de.instinct.api.construction.dto.PlanetDefense;
+import de.instinct.api.construction.dto.PlanetWeapon;
 import de.instinct.api.matchmaking.model.FactionMode;
 import de.instinct.api.matchmaking.model.GameMode;
 import de.instinct.api.matchmaking.model.GameType;
 import de.instinct.api.matchmaking.model.VersusMode;
 import de.instinct.api.meta.dto.LoadoutData;
-import de.instinct.api.meta.dto.ShipData;
-import de.instinct.engine.EngineUtility;
+import de.instinct.api.shipyard.dto.ShipBlueprint;
+import de.instinct.api.shipyard.dto.ShipDefense;
+import de.instinct.api.shipyard.dto.ShipWeapon;
 import de.instinct.engine.ai.AiDifficulty;
 import de.instinct.engine.ai.AiEngine;
+import de.instinct.engine.initialization.GameStateInitialization;
+import de.instinct.engine.initialization.PlanetInitialization;
+import de.instinct.engine.map.GameMap;
 import de.instinct.engine.model.AiPlayer;
-import de.instinct.engine.model.GameState;
-import de.instinct.engine.model.Planet;
+import de.instinct.engine.model.PlanetData;
 import de.instinct.engine.model.Player;
-import de.instinct.engine.model.ship.Ship;
+import de.instinct.engine.model.ship.Defense;
+import de.instinct.engine.model.ship.ShipData;
 import de.instinct.engine.model.ship.ShipType;
-import de.instinct.eqfleet.menu.module.profile.ProfileModel;
+import de.instinct.engine.model.ship.Weapon;
+import de.instinct.engine.model.ship.WeaponType;
+import de.instinct.engine.util.EngineUtility;
 
 public class CustomLoader {
 
@@ -31,192 +40,227 @@ public class CustomLoader {
 		aiEngine = new AiEngine();
 	}
 	
-	public GameState generateGameState(LoadoutData loadout) {
-		GameState initialGameState = new GameState();
-		initialGameState.gameUUID = UUID.randomUUID().toString();
-		initialGameState.planets = generateMap(GameType.builder()
-				.versusMode(VersusMode.AI)
+	public GameStateInitialization generateInitialGameState(LoadoutData loadout) {
+		GameStateInitialization initialization = new GameStateInitialization();
+		initialization.gameUUID = UUID.randomUUID().toString();
+		initialization.players = loadPlayers(loadout);
+		initialization.map = generateMap(GameType.builder()
 				.factionMode(FactionMode.ONE_VS_ONE)
 				.gameMode(GameMode.CONQUEST)
+				.versusMode(VersusMode.AI)
 				.build());
-		initialGameState.players = loadPlayers(loadout);
-		initialGameState.gameTimeMS = 0;
-		initialGameState.maxGameTimeMS = 180_000;
-		initialGameState.activeEvents = new PriorityQueue<>();
-		initialGameState.winner = 0;
-		initialGameState.atpToWin = 50;
-		initialGameState.teamATPs = new HashMap<>();
-		initialGameState.teamATPs.put(0, 0D);
-		initialGameState.teamATPs.put(1, 0D);
-		initialGameState.teamATPs.put(2, 0D);
-		return initialGameState;
+		initialization.ancientPlanetResourceDegradationFactor = 0.5f;
+		initialization.gameTimeLimitMS = 180_000;
+		initialization.atpToWin = 50;
+		return initialization;
 	}
 
 	public List<Player> loadPlayers(LoadoutData loadout) {
 		List<Player> players = new ArrayList<>();
 		
 		Player neutralPlayer = new Player();
-		neutralPlayer.playerId = 0;
+		neutralPlayer.id = 0;
 		neutralPlayer.teamId = 0;
-		neutralPlayer.maxPlanetCapacity = 50;
+		neutralPlayer.name = "Neutral Player";
+		PlanetData neutralPlanetData = new PlanetData();
+		Weapon neutralPlanetWeapon = new Weapon();
+		neutralPlanetWeapon.type = WeaponType.PROJECTILE;
+		neutralPlanetWeapon.damage = 5;
+		neutralPlanetWeapon.range = 100f;
+		neutralPlanetWeapon.cooldown = 1000;
+		neutralPlanetWeapon.speed = 50f;
+		neutralPlanetData.weapon = neutralPlanetWeapon;
+		Defense neutralPlanetDefense = new Defense();
+		neutralPlanetDefense.armor = 100;
+		neutralPlanetData.defense = neutralPlanetDefense;
+		neutralPlayer.planetData = neutralPlanetData;
+		neutralPlayer.ships = new ArrayList<>();
 		players.add(neutralPlayer);
 		
-		Player userPlayer = new Player();
-		userPlayer.playerId = 1;
-		userPlayer.name = ProfileModel.profile.getUsername() == null ? "???" : ProfileModel.profile.getUsername();
+		Player userPlayer = getPlayer(loadout);
+		userPlayer.id = 1;
 		userPlayer.teamId = 1;
-		userPlayer.resourceGenerationSpeed = loadout.getResourceGenerationSpeed();
-		userPlayer.commandPointsGenerationSpeed = loadout.getCommandPointsGenerationSpeed();
-		userPlayer.startCommandPoints = loadout.getStartCommandPoints();
-		userPlayer.currentCommandPoints = userPlayer.startCommandPoints;
-		userPlayer.maxCommandPoints = loadout.getMaxCommandPoints();
-		userPlayer.maxPlanetCapacity = loadout.getMaxPlanetCapacity();
-		userPlayer.ships = getShips(loadout);
 		players.add(userPlayer);
 		
 		AiPlayer aiPlayer = aiEngine.initialize(AiDifficulty.RETARDED);
-		aiPlayer.playerId = 2;
+		aiPlayer.id = 4;
 		aiPlayer.teamId = 2;
-		aiPlayer.connected = true;
-		aiPlayer.loaded = true;
 		players.add(aiPlayer);
 		
 		return players;
 	}
+	
+	private Player getPlayer(LoadoutData loadout) {
+		Player newPlayer = new Player();
+		newPlayer.commandPointsGenerationSpeed = loadout.getCommandPointsGenerationSpeed();
+		newPlayer.startCommandPoints = loadout.getStartCommandPoints();
+		newPlayer.maxCommandPoints = loadout.getMaxCommandPoints();
+		newPlayer.planetData = getPlanetData(loadout);
+		newPlayer.ships = getShips(loadout);
+		return newPlayer;
+	}
 
-	private List<Ship> getShips(LoadoutData loadout) {
-		List<Ship> ships = new ArrayList<>();
-		for (ShipData userShip : loadout.getShips()) {
-			Ship ship = new Ship();
-			ship.type = ShipType.valueOf(userShip.getType().toString());
-			ship.cost = userShip.getCost();
-			ship.model = userShip.getModel();
-			ship.movementSpeed = userShip.getMovementSpeed();
-			ship.power = userShip.getPower();
-			ships.add(ship);
+	private PlanetData getPlanetData(LoadoutData loadout) {
+		Infrastructure infrastructure = loadout.getInfrastructure();
+		if (loadout.getInfrastructure() != null) {
+			PlanetData planetData = new PlanetData();
+			planetData.maxResourceCapacity = infrastructure.getMaxResourceCapacity();
+			planetData.resourceGenerationSpeed = infrastructure.getResourceGenerationSpeed();
+			planetData.percentOfArmorAfterCapture = infrastructure.getPercentOfArmorAfterCapture();
+			planetData.defense = getDefense(infrastructure.getPlanetDefense());
+			planetData.weapon = getWeapon(infrastructure.getPlanetWeapon());
+			return planetData;
+		}
+		return null;
+	}
+
+	private List<ShipData> getShips(LoadoutData loadout) {
+		List<ShipData> ships = new ArrayList<>();
+		for (ShipBlueprint userShip : loadout.getShips()) {
+			ShipData shipData = new ShipData();
+			shipData.type = ShipType.valueOf(userShip.getType().toString());
+			shipData.cost = userShip.getCost();
+			shipData.model = userShip.getModel();
+			shipData.movementSpeed = userShip.getMovementSpeed();
+			shipData.commandPointsCost = userShip.getCommandPointsCost();
+			shipData.weapon = getWeapon(userShip.getWeapon());
+			shipData.defense = getDefense(userShip.getDefense());
+			ships.add(shipData);
 		}
 		return ships;
 	}
+	
+	private Defense getDefense(ShipDefense shipDefense) {
+		Defense defense = new Defense();
+		defense.armor = shipDefense.getArmor();
+		defense.shield = shipDefense.getShield();
+		defense.shieldRegenerationSpeed = shipDefense.getShieldRegenerationSpeed();
+		return defense;
+	}
 
-	private List<Planet> generateMap(GameType gameType) {
-		List<Planet> planets = new ArrayList<>();
+	private Weapon getWeapon(ShipWeapon shipWeapon) {
+		Weapon weapon = new Weapon();
+		weapon.type = WeaponType.valueOf(shipWeapon.getType().toString());
+		weapon.damage = shipWeapon.getDamage();
+		weapon.range = shipWeapon.getRange();
+		weapon.cooldown = shipWeapon.getCooldown();
+		weapon.speed = shipWeapon.getSpeed();
+		return weapon;
+	}
+
+	private Weapon getWeapon(PlanetWeapon planetWeapon) {
+		Weapon weapon = new Weapon();
+		weapon.type = WeaponType.valueOf(planetWeapon.getType().toString());
+		weapon.damage = planetWeapon.getDamage();
+		weapon.range = planetWeapon.getRange();
+		weapon.cooldown = planetWeapon.getCooldown();
+		weapon.speed = planetWeapon.getSpeed();
+		return weapon;
+	}
+
+	private Defense getDefense(PlanetDefense planetDefense) {
+		Defense defense = new Defense();
+		defense.armor = planetDefense.getArmor();
+		defense.shield = planetDefense.getShield();
+		defense.shieldRegenerationSpeed = planetDefense.getShieldRegenerationSpeed();
+		return defense;
+	}
+
+	private GameMap generateMap(GameType gameType) {
+		GameMap map = new GameMap();
+		List<PlanetInitialization> planets = new ArrayList<>();
 		generateAncientPlanet(planets);
 		generateNeutralPlanets(planets);
 		generatePlayerPlanets(planets, gameType);
-		return planets;
+		map.planets = planets;
+		return map;
 	}
 
-	private void generatePlayerPlanets(List<Planet> planets, GameType gameType) {
-		Planet startPlanetPlayerOne = new Planet();
-    	startPlanetPlayerOne.id = 0;
+	private void generatePlayerPlanets(List<PlanetInitialization> planets, GameType gameType) {
+		PlanetInitialization startPlanetPlayerOne = new PlanetInitialization();
     	startPlanetPlayerOne.ownerId = 1;
-    	startPlanetPlayerOne.value = 10;
-    	startPlanetPlayerOne.xPos = 0;
-    	startPlanetPlayerOne.yPos = -(EngineUtility.MAP_BOUNDS.y / 2) + 300;
+    	startPlanetPlayerOne.position = new Vector2(0, -(EngineUtility.MAP_BOUNDS.y / 2) + 300);
+    	startPlanetPlayerOne.startArmorPercent = 0.5f;
     	planets.add(startPlanetPlayerOne);
     	
-    	Planet startPlanetPlayerTwo = new Planet();
-    	startPlanetPlayerTwo.id = 1;
-    	startPlanetPlayerTwo.ownerId = gameType.factionMode.teamPlayerCount + 1;
-    	startPlanetPlayerTwo.value = 10;
-    	startPlanetPlayerTwo.xPos = 0;
-    	startPlanetPlayerTwo.yPos = (EngineUtility.MAP_BOUNDS.y / 2) - 300;
+    	PlanetInitialization startPlanetPlayerTwo = new PlanetInitialization();
+    	startPlanetPlayerTwo.ownerId = 4;
+    	startPlanetPlayerTwo.position = new Vector2(0, (EngineUtility.MAP_BOUNDS.y / 2) - 300);
+    	startPlanetPlayerTwo.startArmorPercent = 0.5f;
     	planets.add(startPlanetPlayerTwo);
     	
     	if (gameType.factionMode.teamPlayerCount >= 2) {
-    		Planet startPlanetPlayerThree = new Planet();
-    		startPlanetPlayerThree.id = 2;
+    		PlanetInitialization startPlanetPlayerThree = new PlanetInitialization();
     		startPlanetPlayerThree.ownerId = 2;
-    		startPlanetPlayerThree.value = 10;
-    		startPlanetPlayerThree.xPos = -200;
-    		startPlanetPlayerThree.yPos = -(EngineUtility.MAP_BOUNDS.y / 2) + 300;
+    		startPlanetPlayerThree.position = new Vector2(-200, (EngineUtility.MAP_BOUNDS.y / 2) + 300);
+    		startPlanetPlayerThree.startArmorPercent = 0.5f;
         	planets.add(startPlanetPlayerThree);
         	
-        	Planet startPlanetPlayerFour = new Planet();
-        	startPlanetPlayerFour.id = 3;
-        	startPlanetPlayerFour.ownerId = gameType.factionMode.teamPlayerCount + 2;
-        	startPlanetPlayerFour.value = 10;
-        	startPlanetPlayerFour.xPos = 200;
-        	startPlanetPlayerFour.yPos = (EngineUtility.MAP_BOUNDS.y / 2) - 300;
+        	PlanetInitialization startPlanetPlayerFour = new PlanetInitialization();
+        	startPlanetPlayerFour.ownerId = 5;
+        	startPlanetPlayerFour.position = new Vector2(200, (EngineUtility.MAP_BOUNDS.y / 2) - 300);
+        	startPlanetPlayerFour.startArmorPercent = 0.5f;
         	planets.add(startPlanetPlayerFour);
 		}
     	
     	if (gameType.factionMode.teamPlayerCount >= 3) {
-    		Planet startPlanetPlayerFive = new Planet();
-    		startPlanetPlayerFive.id = 4;
+    		PlanetInitialization startPlanetPlayerFive = new PlanetInitialization();
     		startPlanetPlayerFive.ownerId = 3;
-    		startPlanetPlayerFive.value = 10;
-    		startPlanetPlayerFive.xPos = 200;
-    		startPlanetPlayerFive.yPos = -(EngineUtility.MAP_BOUNDS.y / 2) + 300;
+    		startPlanetPlayerFive.position = new Vector2(200, -(EngineUtility.MAP_BOUNDS.y / 2) + 300);
+    		startPlanetPlayerFive.startArmorPercent = 0.5f;
         	planets.add(startPlanetPlayerFive);
         	
-        	Planet startPlanetPlayerSix = new Planet();
-        	startPlanetPlayerSix.id = 5;
-        	startPlanetPlayerSix.ownerId = gameType.factionMode.teamPlayerCount + 3;
-        	startPlanetPlayerSix.value = 10;
-        	startPlanetPlayerSix.xPos = -200;
-        	startPlanetPlayerSix.yPos = (EngineUtility.MAP_BOUNDS.y / 2) - 300;
+        	PlanetInitialization startPlanetPlayerSix = new PlanetInitialization();
+        	startPlanetPlayerSix.ownerId = 6;
+        	startPlanetPlayerSix.position = new Vector2(-200, (EngineUtility.MAP_BOUNDS.y / 2) - 300);
+        	startPlanetPlayerSix.startArmorPercent = 0.5f;
         	planets.add(startPlanetPlayerSix);
 		}
 	}
 
-	private void generateNeutralPlanets(List<Planet> planets) {
-		Planet neutralPlanet2 = new Planet();
-    	neutralPlanet2.id = 6;
+	private void generateNeutralPlanets(List<PlanetInitialization> planets) {
+		PlanetInitialization neutralPlanet2 = new PlanetInitialization();
     	neutralPlanet2.ownerId = 0;
-    	neutralPlanet2.value = 30;
-    	neutralPlanet2.xPos = -250;
-    	neutralPlanet2.yPos = 0;
+    	neutralPlanet2.position = new Vector2(0, -250);
+    	neutralPlanet2.startArmorPercent = 0.3f;
     	planets.add(neutralPlanet2);
     	
-    	Planet neutralPlanet3 = new Planet();
-    	neutralPlanet3.id = 7;
+    	PlanetInitialization neutralPlanet3 = new PlanetInitialization();
     	neutralPlanet3.ownerId = 0;
-    	neutralPlanet3.value = 30;
-    	neutralPlanet3.xPos = 250;
-    	neutralPlanet3.yPos = 0;
+    	neutralPlanet3.position = new Vector2(0, 250);
+    	neutralPlanet3.startArmorPercent = 0.3f;
     	planets.add(neutralPlanet3);
     	
-    	Planet neutralPlanet4 = new Planet();
-    	neutralPlanet4.id = 8;
+    	PlanetInitialization neutralPlanet4 = new PlanetInitialization();
     	neutralPlanet4.ownerId = 0;
-    	neutralPlanet4.value = 20;
-    	neutralPlanet4.xPos = 150;
-    	neutralPlanet4.yPos = -250;
+    	neutralPlanet4.position = new Vector2(150, -250);
+    	neutralPlanet4.startArmorPercent = 0.2f;
     	planets.add(neutralPlanet4);
     	
-    	Planet neutralPlanet5 = new Planet();
-    	neutralPlanet5.id = 9;
+    	PlanetInitialization neutralPlanet5 = new PlanetInitialization();
     	neutralPlanet5.ownerId = 0;
-    	neutralPlanet5.value = 20;
-    	neutralPlanet5.xPos = -150;
-    	neutralPlanet5.yPos = 250;
+    	neutralPlanet5.position = new Vector2(-150, 250);
+    	neutralPlanet5.startArmorPercent = 0.2f;
     	planets.add(neutralPlanet5);
     	
-    	Planet neutralPlanet6 = new Planet();
-    	neutralPlanet6.id = 10;
+    	PlanetInitialization neutralPlanet6 = new PlanetInitialization();
     	neutralPlanet6.ownerId = 0;
-    	neutralPlanet6.value = 10;
-    	neutralPlanet6.xPos = 150;
-    	neutralPlanet6.yPos = 400;
+    	neutralPlanet6.position = new Vector2(150, 400);
+    	neutralPlanet6.startArmorPercent = 0.1f;
     	planets.add(neutralPlanet6);
     	
-    	Planet neutralPlanet7 = new Planet();
-    	neutralPlanet7.id = 11;
+    	PlanetInitialization neutralPlanet7 = new PlanetInitialization();
     	neutralPlanet7.ownerId = 0;
-    	neutralPlanet7.value = 10;
-    	neutralPlanet7.xPos = -150;
-    	neutralPlanet7.yPos = -400;
+    	neutralPlanet7.position = new Vector2(-150, -400);
+    	neutralPlanet7.startArmorPercent = 0.1f;
     	planets.add(neutralPlanet7);
 	}
 
-	private void generateAncientPlanet(List<Planet> planets) {
-		Planet ancientPlanet = new Planet();
-    	ancientPlanet.id = 12;
+	private void generateAncientPlanet(List<PlanetInitialization> planets) {
+		PlanetInitialization ancientPlanet = new PlanetInitialization();
     	ancientPlanet.ownerId = 0;
-    	ancientPlanet.value = 0;
-    	ancientPlanet.xPos = 0;
-    	ancientPlanet.yPos = 0;
+    	ancientPlanet.position = new Vector2(0, 0);
+    	ancientPlanet.startArmorPercent = 0f;
     	ancientPlanet.ancient = true;
     	planets.add(ancientPlanet);
 	}

@@ -3,26 +3,38 @@ package de.instinct.eqfleet.game.backend.driver;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
-import de.instinct.engine.EventEngine;
+import de.instinct.engine.FleetEngine;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.menu.main.Menu;
 
 public abstract class Driver {
 	
-	protected EventEngine engine;
+	protected FleetEngine engine;
 	
 	private ScheduledExecutorService scheduler;
     private ScheduledFuture<?> logicUpdateTask;
     private long BACKEND_UPDATE_CLOCK_MS = 20;
 	
 	public Driver() {
-		engine = new EventEngine();
-		scheduler = Executors.newSingleThreadScheduledExecutor();
+		engine = new FleetEngine();
+		scheduler = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
+		    @Override
+		    public Thread newThread(Runnable r) {
+		        Thread thread = new Thread(r);
+		        thread.setUncaughtExceptionHandler((t, e) -> {
+		            System.err.println("Unhandled exception in thread " + t.getName() + ": " + e);
+		            e.printStackTrace();
+		        });
+		        return thread;
+		    }
+		});
 	}
 
 	public void start() {
+		engine.initialize();
 		setup();
 		logicUpdateTask = scheduler.scheduleAtFixedRate(() -> {
 			preEngineUpdate();

@@ -1,4 +1,4 @@
-package de.instinct.engine.test;
+package de.instinct.engine.tools.devrunner.panel;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -16,6 +16,8 @@ import de.instinct.engine.combat.Projectile;
 import de.instinct.engine.combat.Ship;
 import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.planet.Planet;
+import de.instinct.engine.tools.core.EngineUtils;
+import de.instinct.engine.tools.devrunner.TestEngineManager;
 import de.instinct.engine.util.EngineUtility;
 
 public class GameVisualisationPanel extends JPanel {
@@ -25,12 +27,6 @@ public class GameVisualisationPanel extends JPanel {
 	private final float WORLD_TO_PIXEL_SCALE = 0.4f;
 	private final int PANEL_WIDTH = 400;
 	private final int PANEL_HEIGHT = 800;
-	private final Color NEUTRAL_COLOR = Color.GRAY;
-	private final Color ANCIENT_COLOR = Color.ORANGE;
-	private final Color PLAYER_COLOR = Color.BLUE;
-	private final Color PLAYER2_COLOR = Color.PINK;
-	private final Color PLAYER3_COLOR = Color.MAGENTA;
-	private final Color ENEMY_COLOR = Color.RED;
 	
 	public GameVisualisationPanel() {
 		setLayout(null);
@@ -75,7 +71,7 @@ public class GameVisualisationPanel extends JPanel {
 	}
 
 	private void renderPlanetCircle(Graphics g, Planet planet) {
-		Color planetColor = planet.ancient ? ANCIENT_COLOR : getOwnerColor(planet.ownerId);
+		Color planetColor = EngineUtils.getPlanetColor(planet.ownerId, planet.ancient);
 		g.setColor(planetColor);
 		Vector2 screenPosition = convertToScreenPosition(planet.position);
 		int radius = (int) (EngineUtility.PLANET_RADIUS * WORLD_TO_PIXEL_SCALE);
@@ -85,14 +81,6 @@ public class GameVisualisationPanel extends JPanel {
 		           (int) screenPosition.y, 
 		           radius * 2, 
 		           radius * 2);
-	}
-	
-	private Color getOwnerColor(int ownerId) {
-		if (ownerId == 0) return NEUTRAL_COLOR;
-		if (ownerId == 1) return PLAYER_COLOR;
-		if (ownerId == 2) return PLAYER2_COLOR;
-		if (ownerId == 3) return PLAYER3_COLOR;
-		return ENEMY_COLOR;
 	}
 
 	private void renderPlanetUI(Graphics g, Planet planet) {
@@ -124,7 +112,7 @@ public class GameVisualisationPanel extends JPanel {
 	}
 	
 	private void renderShip(Graphics g, Ship ship) {
-		g.setColor(getOwnerColor(ship.ownerId));
+		g.setColor(EngineUtils.getOwnerColor(ship.ownerId));
 		Vector2 screenPosition = convertToScreenPosition(ship.position);
 		g.drawRect((int)screenPosition.x - 1, (int)screenPosition.y - 1, 3, 3);
 	}

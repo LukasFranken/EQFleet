@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.Color;
 
-import de.instinct.api.meta.dto.ShipData;
+import de.instinct.api.shipyard.dto.ShipBlueprint;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
 import de.instinct.eqfleet.menu.main.Menu;
@@ -55,13 +55,13 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 	public void reload() {
 		shipButtons = new ArrayList<>();
 		if (ShipyardModel.shipyard != null && ShipyardModel.shipyard.getOwnedShips() != null) {
-			for (ShipData ship : ShipyardModel.shipyard.getOwnedShips()) {
+			for (ShipBlueprint ship : ShipyardModel.shipyard.getOwnedShips()) {
 				shipButtons.add(createShipButton(ship));
 			}
 		}
 	}
 	
-	private ColorButton createShipButton(ShipData ship) {
+	private ColorButton createShipButton(ShipBlueprint ship) {
 		ColorButton shipButton = DefaultButtonFactory.colorButton(ship.getModel().substring(0, 4), new Action() {
 			
 			@Override
@@ -74,14 +74,24 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 		return shipButton;
 	}
 	
-	private void createShipPopup(ShipData ship) {
+	private void createShipPopup(ShipBlueprint ship) {
 		ElementList popupContent = new ElementList();
 		popupContent.setMargin(10f);
-		popupContent.getElements().add(createLabelStack("UUID", StringUtils.elide(ship.getUuid(), 4)));
-		popupContent.getElements().add(createLabelStack("POWER", ship.getPower() + ""));
-		popupContent.getElements().add(createLabelStack("HEALTH", ship.getHealth() + ""));
+		popupContent.getElements().add(createLabelStack("TYPE", ship.getType().toString()));
 		popupContent.getElements().add(createLabelStack("COST", ship.getCost() + ""));
+		popupContent.getElements().add(createLabelStack("CP COST", ship.getCommandPointsCost() + ""));
 		popupContent.getElements().add(createLabelStack("SPEED", StringUtils.format(ship.getMovementSpeed(), 0) + ""));
+		popupContent.getElements().add(createLabelStack("--------", "--------"));
+		popupContent.getElements().add(createLabelStack("WEAPON", ship.getWeapon().getType().toString()));
+		popupContent.getElements().add(createLabelStack("DAMAGE", StringUtils.format(ship.getWeapon().getDamage(), 0)));
+		popupContent.getElements().add(createLabelStack("RANGE", StringUtils.format(ship.getWeapon().getRange(), 0)));
+		popupContent.getElements().add(createLabelStack("RATE/SEC", StringUtils.format(1000/ship.getWeapon().getCooldown(), 1)));
+		popupContent.getElements().add(createLabelStack("SPEED", StringUtils.format(ship.getWeapon().getSpeed(), 0)));
+		popupContent.getElements().add(createLabelStack("--------", "--------"));
+		popupContent.getElements().add(createLabelStack("DEFENSE", ""));
+		popupContent.getElements().add(createLabelStack("ARMOR", StringUtils.format(ship.getDefense().getArmor(), 0)));
+		popupContent.getElements().add(createLabelStack("SHIELD", StringUtils.format(ship.getDefense().getShield(), 0)));
+		popupContent.getElements().add(createLabelStack("SHIELD/SEC", StringUtils.format(ship.getDefense().getShieldRegenerationSpeed(), 1)));
 		
 		ColorButton useButton = DefaultButtonFactory.colorButton("Use", new Action() {
 			

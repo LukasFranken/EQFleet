@@ -3,25 +3,18 @@ package de.instinct.eqfleet.game.backend.driver.local.tutorial;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.badlogic.gdx.math.Vector3;
 
-import de.instinct.engine.EngineUtility;
-import de.instinct.engine.ai.AiDifficulty;
 import de.instinct.engine.ai.AiEngine;
-import de.instinct.engine.model.AiPlayer;
 import de.instinct.engine.model.GameState;
-import de.instinct.engine.model.Planet;
 import de.instinct.engine.model.Player;
-import de.instinct.engine.model.event.GameEvent;
-import de.instinct.engine.model.event.types.FleetMovementEvent;
-import de.instinct.engine.model.ship.Ship;
-import de.instinct.engine.model.ship.ShipType;
+import de.instinct.engine.model.planet.Planet;
 import de.instinct.engine.net.message.types.FleetMovementMessage;
+import de.instinct.engine.util.EngineUtility;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.GuideEvent;
@@ -48,7 +41,6 @@ public class TutorialLoader {
 		initialGameState.players = loadPlayers();
 		initialGameState.gameTimeMS = 0;
 		initialGameState.maxGameTimeMS = 600_000;
-		initialGameState.activeEvents = new PriorityQueue<>();
 		initialGameState.winner = 0;
 		initialGameState.atpToWin = 30;
 		initialGameState.teamATPs = new HashMap<>();
@@ -62,11 +54,11 @@ public class TutorialLoader {
 		List<Player> players = new ArrayList<>();
 		
 		Player neutralPlayer = new Player();
-		neutralPlayer.playerId = 0;
+		neutralPlayer.id = 0;
 		neutralPlayer.teamId = 0;
 		players.add(neutralPlayer);
 		
-		Player player1 = new Player();
+		/*Player player1 = new Player();
 		player1.playerId = 1;
 		player1.teamId = 1;
 		player1.connected = true;
@@ -103,7 +95,7 @@ public class TutorialLoader {
 		aiPlayer.ships.add(aiTutorialShip);
 		aiPlayer.currentCommandPoints = aiPlayer.startCommandPoints;
 		aiPlayer.maxPlanetCapacity = 20;
-		players.add(aiPlayer);
+		players.add(aiPlayer);*/
 
 		return players;
 	}
@@ -111,7 +103,7 @@ public class TutorialLoader {
 	private List<Planet> generateMap() {
 		List<Planet> planets = new ArrayList<>();
 
-		Planet startPlanetPlayerOne = new Planet();
+		/*Planet startPlanetPlayerOne = new Planet();
 		startPlanetPlayerOne.id = 0;
 		startPlanetPlayerOne.ownerId = 1;
 		startPlanetPlayerOne.value = 15;
@@ -150,7 +142,7 @@ public class TutorialLoader {
 		neutralPlanet7.value = 10;
 		neutralPlanet7.xPos = -150;
 		neutralPlanet7.yPos = -500;
-		planets.add(neutralPlanet7);
+		planets.add(neutralPlanet7);*/
 
 		return planets;
 	}
@@ -425,7 +417,7 @@ public class TutorialLoader {
 			}
 			
 		});
-		firstFleetMoveGuideEvent.setCondition(new ConditionalBehavior() {
+		/*firstFleetMoveGuideEvent.setCondition(new ConditionalBehavior() {
 			
 			private FleetMovementEvent initiatedEvent;
 
@@ -449,7 +441,7 @@ public class TutorialLoader {
 				return false;
 			}
 			
-		});
+		});*/
 		firstFleetMoveGuideEvent.setAction(new ActionBehavior() {
 			
 			@Override
@@ -549,7 +541,7 @@ public class TutorialLoader {
 		guideQueue.add(fifteenthMessageGuideEvent);
 
 		DialogGuideEvent firstFleetMoveGuideFinishEvent = new DialogGuideEvent();
-		firstFleetMoveGuideFinishEvent.setCondition(new ConditionalBehavior() {
+		/*firstFleetMoveGuideFinishEvent.setCondition(new ConditionalBehavior() {
 			
 			private FleetMovementEvent initiatedEvent;
 			
@@ -577,7 +569,7 @@ public class TutorialLoader {
 				return false;
 			}
 			
-		});
+		});*/
 		guideQueue.add(firstFleetMoveGuideFinishEvent);
 
 		if (mode == TutorialMode.STORY_FULL || mode == TutorialMode.FULL) {
@@ -648,7 +640,7 @@ public class TutorialLoader {
 				}
 				
 			});
-			secondFleetMoveGuideStartEvent.setCondition(new ConditionalBehavior() {
+			/*secondFleetMoveGuideStartEvent.setCondition(new ConditionalBehavior() {
 				
 				private FleetMovementEvent initiatedEvent;
 				
@@ -672,7 +664,7 @@ public class TutorialLoader {
 					return false;
 				}
 				
-			});
+			});*/
 			secondFleetMoveGuideStartEvent.setAction(new ActionBehavior() {
 				
 				@Override
@@ -724,7 +716,7 @@ public class TutorialLoader {
 			guideQueue.add(twentyfirstMessageGuideEvent);
 			
 			DialogGuideEvent secondFleetMoveGuideFinishEvent = new DialogGuideEvent();
-			secondFleetMoveGuideFinishEvent.setCondition(new ConditionalBehavior() {
+			/*secondFleetMoveGuideFinishEvent.setCondition(new ConditionalBehavior() {
 				
 				private FleetMovementEvent initiatedEvent;
 				
@@ -752,7 +744,7 @@ public class TutorialLoader {
 					return false;
 				}
 				
-			});
+			});*/
 			secondFleetMoveGuideFinishEvent.setAction(new ActionBehavior() {
 				
 				@Override
@@ -857,7 +849,7 @@ public class TutorialLoader {
 			}
 			
 		});
-		twentythirdMessageGuideEvent.setCondition(new ConditionalBehavior() {
+		/*twentythirdMessageGuideEvent.setCondition(new ConditionalBehavior() {
 			
 			private FleetMovementEvent initiatedEvent;
 			
@@ -885,7 +877,7 @@ public class TutorialLoader {
 				return twentythirdMessageGuideEvent.getElapsed() > twentythirdMessageGuideEvent.getDuration();
 			}
 			
-		});
+		});*/
 		guideQueue.add(twentythirdMessageGuideEvent);
 		
 		CameraMoveGuideEvent panAwayToMapGuideEvent = new CameraMoveGuideEvent();
@@ -917,7 +909,7 @@ public class TutorialLoader {
 				
 				@Override
 				public boolean isEndConditionMet() {
-					return EngineUtility.getPlanet(GameModel.activeGameState, 7).ownerId == 1;
+					return EngineUtility.getPlanet(GameModel.activeGameState.planets, 7).ownerId == 1;
 				}
 				
 			});
@@ -1008,7 +1000,7 @@ public class TutorialLoader {
 			
 			@Override
 			public boolean isEndConditionMet() {
-				return EngineUtility.getPlanet(GameModel.activeGameState, 2).ownerId == 1;
+				return EngineUtility.getPlanet(GameModel.activeGameState.planets, 2).ownerId == 1;
 			}
 		});
 		ancientCaptureMessageGuideEvent.setAction(new ActionBehavior() {

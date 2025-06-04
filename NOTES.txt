@@ -14,6 +14,19 @@
 
 - settings change skin color
 
+Shipnames:
+- Hawk
+- Tovak
+- Trannel
+- Xela IV
+- Spahiton
+- Turtle
+- Teneta R.E.D
+- Epoch
+- Evo
+- Autumn
+- Spirit of Fire
+
 !!!!
 - routes dragging through friendly planets
 

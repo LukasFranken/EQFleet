@@ -1,8 +1,8 @@
 package de.instinct.eqfleet.game.frontend.ui;
 
-import de.instinct.engine.EngineUtility;
 import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.Player;
+import de.instinct.engine.util.EngineUtility;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.frontend.ui.model.PlayerData;
 
@@ -10,12 +10,12 @@ public class UIDataUtility {
 
 	public static PlayerData getPlayerData(GameState state) {
 		PlayerData playerData = PlayerData.builder().build();
-		playerData.setSelf(EngineUtility.getPlayer(state, GameModel.playerId));
+		playerData.setSelf(EngineUtility.getPlayer(state.players, GameModel.playerId));
 		for (Player player : GameModel.activeGameState.players) {
-			if (player.playerId == 0) {
+			if (player.id == 0) {
 				continue;
 			}
-			if (player.playerId == playerData.getSelf().playerId) {
+			if (player.id == playerData.getSelf().id) {
 				continue;
 			}
 			if (player.teamId == playerData.getSelf().teamId) {

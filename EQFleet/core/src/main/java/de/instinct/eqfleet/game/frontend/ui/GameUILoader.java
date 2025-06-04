@@ -7,9 +7,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
-import de.instinct.engine.EngineUtility;
-import de.instinct.engine.model.Planet;
 import de.instinct.engine.model.Player;
+import de.instinct.engine.model.planet.Planet;
+import de.instinct.engine.util.EngineUtility;
 import de.instinct.eqfleet.game.GameConfig;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.frontend.ui.model.GameUIElement;
@@ -103,8 +103,8 @@ public class GameUILoader {
 			@Override
 			public void execute() {
 				PlayerData playerData = UIDataUtility.getPlayerData(ownCPElement.getCurrentGameState());
-				createShape(ownCPElement.getTag(), bounds.getOwnCPBar(), GameConfig.getPlayerColor(playerData.getSelf().playerId));
-				createShape(ownCPElement.getTag() + "Label", bounds.getOwnCPBarLabel(), GameConfig.getPlayerColor(playerData.getSelf().playerId));
+				createShape(ownCPElement.getTag(), bounds.getOwnCPBar(), GameConfig.getPlayerColor(playerData.getSelf().id));
+				createShape(ownCPElement.getTag() + "Label", bounds.getOwnCPBarLabel(), GameConfig.getPlayerColor(playerData.getSelf().id));
 			}
 			
 		});
@@ -125,7 +125,7 @@ public class GameUILoader {
 			public void execute() {
 				PlayerData playerData = UIDataUtility.getPlayerData(ownCPElement.getCurrentGameState());
 				Label cpLabel = new Label("CP");
-				cpLabel.setColor(GameConfig.getPlayerColor(playerData.getSelf().playerId));
+				cpLabel.setColor(GameConfig.getPlayerColor(playerData.getSelf().id));
 				cpLabel.setBounds(bounds.getOwnCPBarLabel());
 				cpLabel.render();
 				TextureManager.draw(tagPrefix + ownCPElement.getTag() + "Label");
@@ -147,8 +147,8 @@ public class GameUILoader {
 			@Override
 			public void execute() {
 				PlayerData playerData = UIDataUtility.getPlayerData(teammate1CPElement.getCurrentGameState());
-				createShape(teammate1CPElement.getTag(), bounds.getTeammate1CPBar(), GameConfig.getPlayerColor(playerData.getTeammate1().playerId));
-				createShape(teammate1CPElement.getTag() + "Label", bounds.getTeammate1CPBarLabel(), GameConfig.getPlayerColor(playerData.getTeammate1().playerId));
+				createShape(teammate1CPElement.getTag(), bounds.getTeammate1CPBar(), GameConfig.getPlayerColor(playerData.getTeammate1().id));
+				createShape(teammate1CPElement.getTag() + "Label", bounds.getTeammate1CPBarLabel(), GameConfig.getPlayerColor(playerData.getTeammate1().id));
 			}
 			
 		});
@@ -169,7 +169,7 @@ public class GameUILoader {
 			public void execute() {
 				PlayerData playerData = UIDataUtility.getPlayerData(teammate1CPElement.getCurrentGameState());
 				Label cpLabel = new Label("CP");
-				cpLabel.setColor(GameConfig.getPlayerColor(playerData.getTeammate1().playerId));
+				cpLabel.setColor(GameConfig.getPlayerColor(playerData.getTeammate1().id));
 				cpLabel.setBounds(bounds.getTeammate1CPBarLabel());
 				cpLabel.render();
 				TextureManager.draw(tagPrefix + teammate1CPElement.getTag() + "Label");
@@ -191,8 +191,8 @@ public class GameUILoader {
 			@Override
 			public void execute() {
 				PlayerData playerData = UIDataUtility.getPlayerData(teammate2CPElement.getCurrentGameState());
-				createShape(teammate2CPElement.getTag(), bounds.getTeammate2CPBar(), GameConfig.getPlayerColor(playerData.getTeammate2().playerId));
-				createShape(teammate2CPElement.getTag() + "Label", bounds.getTeammate2CPBarLabel(), GameConfig.getPlayerColor(playerData.getTeammate2().playerId));
+				createShape(teammate2CPElement.getTag(), bounds.getTeammate2CPBar(), GameConfig.getPlayerColor(playerData.getTeammate2().id));
+				createShape(teammate2CPElement.getTag() + "Label", bounds.getTeammate2CPBarLabel(), GameConfig.getPlayerColor(playerData.getTeammate2().id));
 			}
 			
 		});
@@ -213,7 +213,7 @@ public class GameUILoader {
 			public void execute() {
 				PlayerData playerData = UIDataUtility.getPlayerData(teammate2CPElement.getCurrentGameState());
 				Label cpLabel = new Label("CP");
-				cpLabel.setColor(GameConfig.getPlayerColor(playerData.getTeammate2().playerId));
+				cpLabel.setColor(GameConfig.getPlayerColor(playerData.getTeammate2().id));
 				cpLabel.setBounds(bounds.getTeammate2CPBarLabel());
 				cpLabel.render();
 				TextureManager.draw(tagPrefix + teammate2CPElement.getTag() + "Label");
@@ -235,8 +235,8 @@ public class GameUILoader {
 			@Override
 			public void execute() {
 				PlayerData playerData = UIDataUtility.getPlayerData(enemy1CPElement.getCurrentGameState());
-				createShape(enemy1CPElement.getTag(), bounds.getEnemy1CPBar(), GameConfig.getPlayerColor(playerData.getEnemy1().playerId));
-				createShape(enemy1CPElement.getTag() + "Label", bounds.getEnemy1CPBarLabel(), GameConfig.getPlayerColor(playerData.getEnemy1().playerId));
+				createShape(enemy1CPElement.getTag(), bounds.getEnemy1CPBar(), GameConfig.getPlayerColor(playerData.getEnemy1().id));
+				createShape(enemy1CPElement.getTag() + "Label", bounds.getEnemy1CPBarLabel(), GameConfig.getPlayerColor(playerData.getEnemy1().id));
 			}
 			
 		});
@@ -257,7 +257,7 @@ public class GameUILoader {
 			public void execute() {
 				PlayerData playerData = UIDataUtility.getPlayerData(enemy1CPElement.getCurrentGameState());
 				Label cpLabel = new Label("CP");
-				cpLabel.setColor(GameConfig.getPlayerColor(playerData.getEnemy1().playerId));
+				cpLabel.setColor(GameConfig.getPlayerColor(playerData.getEnemy1().id));
 				cpLabel.setBounds(bounds.getEnemy1CPBarLabel());
 				cpLabel.render();
 				TextureManager.draw(tagPrefix + enemy1CPElement.getTag() + "Label");
@@ -279,7 +279,7 @@ public class GameUILoader {
 			@Override
 			public void execute() {
 				PlayerData playerData = UIDataUtility.getPlayerData(enemy2CPElement.getCurrentGameState());
-				createShape(enemy2CPElement.getTag(), bounds.getEnemy2CPBar(), GameConfig.getPlayerColor(playerData.getEnemy2().playerId));
+				createShape(enemy2CPElement.getTag(), bounds.getEnemy2CPBar(), GameConfig.getPlayerColor(playerData.getEnemy2().id));
 			}
 			
 		});
@@ -316,7 +316,7 @@ public class GameUILoader {
 			@Override
 			public void execute() {
 				PlayerData playerData = UIDataUtility.getPlayerData(enemy3CPElement.getCurrentGameState());
-				createShape(enemy3CPElement.getTag(), bounds.getEnemy3CPBar(), GameConfig.getPlayerColor(playerData.getEnemy3().playerId));
+				createShape(enemy3CPElement.getTag(), bounds.getEnemy3CPBar(), GameConfig.getPlayerColor(playerData.getEnemy3().id));
 			}
 			
 		});
@@ -387,14 +387,14 @@ public class GameUILoader {
 						activeAncientPlanet = planet;
 					}
 				}
-				Player owner = EngineUtility.getPlayer(GameModel.activeGameState, activeAncientPlanet.ownerId);
+				Player owner = EngineUtility.getPlayer(GameModel.activeGameState.players, activeAncientPlanet.ownerId);
 				if (owner.teamId != playerData.getSelf().teamId && glowAlpha == 0f) {
 		        	elapsed = 0f;
 		        }
 				if (activeAncientPlanet != null) {
 			    	if (activeAncientPlanet.ownerId != 0) {
 			    		
-					    Player self = EngineUtility.getPlayer(GameModel.activeGameState, GameModel.playerId);
+					    Player self = EngineUtility.getPlayer(GameModel.activeGameState.players, GameModel.playerId);
 			    		if (owner.teamId == self.teamId) {
 			    			alphaStore += Gdx.graphics.getDeltaTime();
 			    		}

@@ -1,4 +1,4 @@
-package de.instinct.engine.test;
+package de.instinct.engine.tools.devrunner.panel;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 
 import de.instinct.engine.model.planet.Planet;
 import de.instinct.engine.order.types.ShipMovementOrder;
+import de.instinct.engine.tools.devrunner.TestEngineManager;
 
 public class ActionPanel extends JPanel {
 

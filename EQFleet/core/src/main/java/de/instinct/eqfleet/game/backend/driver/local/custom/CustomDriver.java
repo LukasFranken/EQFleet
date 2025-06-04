@@ -2,12 +2,13 @@ package de.instinct.eqfleet.game.backend.driver.local.custom;
 
 import de.instinct.api.core.API;
 import de.instinct.api.meta.dto.LoadoutData;
-import de.instinct.engine.EngineUtility;
+import de.instinct.engine.initialization.GameStateInitialization;
 import de.instinct.engine.net.message.NetworkMessage;
 import de.instinct.engine.net.message.types.FleetMovementMessage;
 import de.instinct.engine.net.message.types.LoadedMessage;
 import de.instinct.engine.order.GameOrder;
-import de.instinct.engine.order.types.FleetMovementOrder;
+import de.instinct.engine.order.types.ShipMovementOrder;
+import de.instinct.engine.util.EngineUtility;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.backend.driver.local.LocalDriver;
@@ -24,8 +25,10 @@ public class CustomDriver extends LocalDriver {
 	@Override
 	public void setup() {
 		LoadoutData loadout = API.meta().loadout(API.authKey);
+		System.out.println(loadout);
 		GameModel.playerId = 1;
-		GameModel.activeGameState = customLoader.generateGameState(loadout);
+		GameStateInitialization initialGameState = customLoader.generateInitialGameState(loadout);
+		GameModel.activeGameState = engine.initializeGameState(initialGameState);
 		GameModel.lastUpdateTimestampMS = System.currentTimeMillis();
 	}
 	
@@ -45,7 +48,7 @@ public class CustomDriver extends LocalDriver {
 	}
 	
 	private GameOrder getOrder(FleetMovementMessage message) {
-		FleetMovementOrder order = new FleetMovementOrder();
+		ShipMovementOrder order = new ShipMovementOrder();
 		order.playerId = message.userUUID.contentEquals(API.authKey) ? 1 : 2;
 		order.fromPlanetId = message.fromPlanetId;
 		order.toPlanetId = message.toPlanetId;
