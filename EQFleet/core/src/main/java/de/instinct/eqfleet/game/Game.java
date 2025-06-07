@@ -1,5 +1,7 @@
 package de.instinct.eqfleet.game;
 
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 import de.instinct.engine.model.GameState;
 import de.instinct.engine.net.message.types.PlayerAssigned;
 import de.instinct.eqfleet.game.backend.driver.local.custom.CustomDriver;
@@ -22,6 +24,7 @@ public class Game {
     public static void init() {
     	GameModel.outputMessageQueue = new MessageQueue<>();
     	GameModel.inputMessageQueue = new MessageQueue<>();
+    	GameModel.receivedGameState = new ConcurrentLinkedQueue<>();
     	renderer = new GameRenderer();
     	onlineDriver = new OnlineDriver();
     	customDriver = new CustomDriver();
@@ -58,16 +61,19 @@ public class Game {
 
 	public static void render() {
     	if (GameModel.active) {
+    		if (!GameModel.receivedGameState.isEmpty()) {
+    			GameModel.activeGameState = GameModel.receivedGameState.poll();
+    			GameModel.lastUpdateTimestampMS = System.currentTimeMillis();
+    	    	if (GameModel.activeGameState.winner != 0) {
+    	    		Game.stop();
+    	    	}
+    		}
         	renderer.render(GameModel.activeGameState);
     	}
     }
 	
 	public static void update(GameState newGameState) {
-		GameModel.activeGameState = newGameState;
-		GameModel.lastUpdateTimestampMS = System.currentTimeMillis();
-    	if (GameModel.activeGameState.winner != 0) {
-    		Game.stop();
-    	}
+		GameModel.receivedGameState.add(newGameState);
 	}
 
 	public static void dispose() {

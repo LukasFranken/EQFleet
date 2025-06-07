@@ -1,5 +1,6 @@
 package de.instinct.eqfleet.game.backend.driver.local.tutorial;
 
+import de.instinct.engine.initialization.GameStateInitialization;
 import de.instinct.engine.net.message.NetworkMessage;
 import de.instinct.engine.net.message.types.FleetMovementMessage;
 import de.instinct.engine.net.message.types.LoadedMessage;
@@ -32,7 +33,8 @@ public class TutorialDriver extends LocalDriver {
 		}
 		GameModel.guidedEvents = tutorialLoader.load(mode);
 		GameModel.playerId = 1;
-		GameModel.activeGameState = tutorialLoader.generateGameState();
+		GameStateInitialization initialGameState = tutorialLoader.generateInitialGameState();
+		GameModel.activeGameState = engine.initializeGameState(initialGameState);
 		GameModel.lastUpdateTimestampMS = System.currentTimeMillis();
 		new Runnable() {
 

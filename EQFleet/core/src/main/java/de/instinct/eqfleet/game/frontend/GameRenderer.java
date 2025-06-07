@@ -1,31 +1,28 @@
 package de.instinct.eqfleet.game.frontend;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 
 import de.instinct.engine.combat.Combat;
+import de.instinct.engine.combat.Projectile;
 import de.instinct.engine.combat.Ship;
+import de.instinct.engine.entity.Entity;
+import de.instinct.engine.entity.EntityManager;
 import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.Player;
 import de.instinct.engine.model.PlayerConnectionStatus;
 import de.instinct.engine.model.planet.Planet;
+import de.instinct.engine.model.ship.WeaponType;
 import de.instinct.engine.util.EngineUtility;
-import de.instinct.eqfleet.ApplicationMode;
-import de.instinct.eqfleet.GlobalStaticData;
 import de.instinct.eqfleet.game.GameConfig;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.GuideEvent;
@@ -39,20 +36,15 @@ import de.instinct.eqlibgdxutils.rendering.model.ModelRenderer;
 import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
-import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.ComplexShapeRenderer;
 
 public class GameRenderer {
 
 	private PerspectiveCamera camera;
-	private ShapeRenderer shapeRenderer;
-	private SpriteBatch batch;
-	private GameInputManager inputManager;
 	private GridRenderer gridRenderer;
-	private ComplexShapeRenderer complexShapeRenderer;
 	
 	private Map<Integer, ModelInstance> planetModels;
 	private Map<Ship, ModelInstance> shipModels;
+	private Map<Projectile, ModelInstance> projectileModels;
 	
 	private float planetRotationAngle = 0f;
 	
@@ -68,10 +60,10 @@ public class GameRenderer {
 
 	public void init() {
 		uiRenderer = new GameUIRenderer();
-		complexShapeRenderer = new ComplexShapeRenderer();
 		
 		planetModels = new HashMap<>();
 		shipModels = new HashMap<>();
+		projectileModels = new HashMap<>();
 		
 		camera = new PerspectiveCamera(30, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		camera.position.set(BASE_CAM_POS);
@@ -81,10 +73,7 @@ public class GameRenderer {
 		camera.far = 5000f;
 		camera.update();
 
-		shapeRenderer = new ShapeRenderer();
 		gridRenderer = new GridRenderer();
-		inputManager = new GameInputManager();
-		batch = new SpriteBatch();
 		
 		visible = true;
 	}
@@ -101,19 +90,16 @@ public class GameRenderer {
 					checkFlip();
 					gridRenderer.drawGrid(camera);
 					uiRenderer.renderParticles(camera);
-					renderFleetConnections(state);
 					renderPlanets(state);
 					renderFleet(state);
-					inputManager.handleInput(camera, state);
-					renderSelection(state);
-					uiRenderer.render(state);
+					renderProjectiles(state);
 				} else {
 					renderLoadingScreen(state);
 				}
 			}
+			uiRenderer.render(state, camera);
 		}
 		
-		renderMessageText();
 		renderGuideEvents();
 	}
 
@@ -300,61 +286,7 @@ public class GameRenderer {
 
 			    ModelRenderer.render(camera, instance);
 		    }
-
-		    Vector3 screenPos = camera.project(new Vector3(planet.position.x, planet.position.y, 0f));
-		    String value = String.valueOf((int) planet.currentResources);
-		    float labelWidth = FontUtil.getFontTextWidthPx(value);
-		    float labelHeight = FontUtil.getFontHeightPx();
-		    float labelX = screenPos.x - labelWidth / 2f;
-		    float labelY = screenPos.y - labelHeight / 2f;
-		    
-		    Player owner = EngineUtility.getPlayer(state.players, planet.ownerId);
-		    renderResourceCircle(planet.position.x, planet.position.y, GameConfig.getPlayerColor(owner.id), (float)(planet.currentResources / owner.planetData.maxResourceCapacity));
-
-		    if (GlobalStaticData.mode == ApplicationMode.DEV) {
-		    	shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
-			    Gdx.gl.glEnable(GL20.GL_BLEND);
-			    shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-			    shapeRenderer.setColor(0f, 0f, 0f, 0.7f);
-			    shapeRenderer.rect(labelX - 4, labelY - 2, labelWidth + 8, labelHeight + 4);
-			    shapeRenderer.end();
-			    Gdx.gl.glDisable(GL20.GL_BLEND);
-			    
-			    Label valueLabel = new Label(value);
-			    valueLabel.setColor(Color.WHITE);
-			    valueLabel.setBounds(new Rectangle(labelX, labelY, labelWidth, labelHeight));
-			    valueLabel.render();
-		    }
 		}
-	}
-
-	private void renderResourceCircle(float x, float y, Color color, float value) {
-		complexShapeRenderer.setProjectionMatrix(camera.combined);
-		complexShapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-		complexShapeRenderer.setColor(color);
-		complexShapeRenderer.cleanArc(x, y, EngineUtility.PLANET_RADIUS + 12, EngineUtility.PLANET_RADIUS + 20, 90, value * 360f);
-		complexShapeRenderer.end();
-		
-	}
-
-	private void renderMessageText() {
-		String message = "Connecting...";
-		if (GameModel.activeGameState != null) {
-			int winner = GameModel.activeGameState.winner;
-			if (winner != 0) {
-				if (winner == EngineUtility.getPlayer(GameModel.activeGameState.players, GameModel.playerId).teamId) {
-					message = "VICTORY";
-				} else if (winner != 0) {
-					message = "DEFEATED";
-				}
-			} else {
-				message = "";
-			}
-		}
-		Label messageLabel = new Label(message);
-		messageLabel.setColor(Color.WHITE);
-		messageLabel.setBounds(new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-		messageLabel.render();
 	}
 	
 	private void renderFleet(GameState state) {
@@ -369,14 +301,12 @@ public class GameRenderer {
 
 	            Planet from = EngineUtility.getPlanet(state.planets, combat.planetIds.get(0));
 	            Planet to = EngineUtility.getPlanet(state.planets, combat.planetIds.get(1));
-	            Vector3 pos = new Vector3(from.position.x, from.position.y, 0f);
-
 	            float dx = to.position.x - from.position.x;
 	            float dy = to.position.y - from.position.y;
 	            float angleDeg = (float) Math.toDegrees(Math.atan2(dy, dx));
 
 	            shipModel.transform.idt();
-	            shipModel.transform.translate(pos);
+	            shipModel.transform.translate(new Vector3(ship.position.x, ship.position.y, 0f));
 	            shipModel.transform.rotate(Vector3.Z, angleDeg - 90f);
 	            shipModel.transform.scale(15f, 15f, 15f);
 
@@ -389,126 +319,45 @@ public class GameRenderer {
 	    	}
 	    }
 	}
-
-	private void renderFleetConnections(GameState state) {
-		List<PlanetPair> movements = new ArrayList<>();
-
+	
+	private void renderProjectiles(GameState state) {
 		for (Combat combat : state.activeCombats) {
-			PlanetPair pair = new PlanetPair(combat.planetIds.get(0), combat.planetIds.get(1));
-			movements.add(pair);
-		}
+			for (Projectile projectile : combat.projectiles) {
+				Entity from = EntityManager.getEntity(state, projectile.id);
+				Entity to = EntityManager.getEntity(state, projectile.targetId);
+	            
+	            float dx = to.position.x - from.position.x;
+	            float dy = to.position.y - from.position.y;
+	            float angleDeg = (float) Math.toDegrees(Math.atan2(dy, dx));
+	            
+				ModelInstance projectileModel = projectileModels.get(projectile);
+	            if (projectileModel == null) {
+	            	projectileModel = ModelLoader.instanciate("projectile");
+	            	projectileModel.transform.rotate(Vector3.Z, angleDeg - 90f);
+	            	projectileModels.put(projectile, projectileModel);
+	            }
+	            
+	            if (to != null) {
+		            projectileModel.transform.idt();
+		            projectileModel.transform.translate(new Vector3(projectile.position.x, projectile.position.y, 0f));
+		            
+		            projectileModel.transform.scale(4f, 4f, 4f);
 
-		Map<PlanetPair, Color> connectionLines = new HashMap<>();
+		            Color color = Color.GRAY;
+		            if (projectile.weaponType == WeaponType.LASER) {
+		            	color = Color.RED;
+		            }
+		            if (projectile.weaponType == WeaponType.MISSILE) {
+		            	color = Color.BROWN;
+		            }
+		            for (Material material : projectileModel.materials) {
+		                material.set(ColorAttribute.createDiffuse(color));
+		            }
 
-		for (PlanetPair pair : movements) {
-			PlanetPair reverse = new PlanetPair(pair.toId, pair.fromId);
-			boolean hasForward = movements.contains(pair);
-			boolean hasReverse = movements.contains(reverse);
-
-			if (hasForward && hasReverse) {
-				if (pair.fromId > pair.toId) continue;
-				connectionLines.put(pair, Color.WHITE);
-			} else {
-				connectionLines.put(pair, GameConfig.getPlayerColor(EngineUtility.getPlanet(state.planets, pair.fromId).ownerId));
+		            ModelRenderer.render(camera, projectileModel);
+	            }
 			}
 		}
-
-		Gdx.gl.glEnable(GL20.GL_BLEND);
-		
-		float baseLineWidth = 2f;
-		float dynamicLineWidth = baseLineWidth * (Gdx.graphics.getDensity() > 1 ? Gdx.graphics.getDensity() : 1f);
-		Gdx.gl.glLineWidth(dynamicLineWidth);
-		
-		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-		for (Map.Entry<PlanetPair, Color> entry : connectionLines.entrySet()) {
-			Planet from = EngineUtility.getPlanet(state.planets, entry.getKey().fromId);
-			Planet to = EngineUtility.getPlanet(state.planets, entry.getKey().toId);
-
-			Color faded = new Color(entry.getValue());
-			faded.a = 0.25f;
-
-			shapeRenderer.setColor(faded);
-			shapeRenderer.line(from.position.x, from.position.y, to.position.x, to.position.y);
-		}
-		shapeRenderer.end();
-		Gdx.gl.glLineWidth(1f);
-		Gdx.gl.glDisable(GL20.GL_BLEND);
-	}
-
-	private void renderSelection(GameState state) {
-		Integer selectedId = inputManager.getSelectedPlanetId();
-		Planet selected = (selectedId != null) ? EngineUtility.getPlanet(state.planets, selectedId) : null;
-		Planet hovered = inputManager.getHoveredPlanet(camera, state);
-
-		shapeRenderer.setProjectionMatrix(camera.combined);
-		Gdx.gl.glEnable(GL20.GL_BLEND);
-		float baseLineWidth = 2f;
-		float density = Gdx.graphics.getDensity();
-		Gdx.gl.glLineWidth(baseLineWidth * (density > 1f ? density : 1f));
-		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-		shapeRenderer.setColor(Color.LIGHT_GRAY);
-
-		if (selected != null) {
-			shapeRenderer.circle(selected.position.x, selected.position.y, EngineUtility.PLANET_RADIUS + 5);
-			Player owner = EngineUtility.getPlayer(state.players, selected.ownerId);
-			int fleetCost = owner.ships.get(0).cost;
-			if (fleetCost > 0 && owner.planetData.maxResourceCapacity > 0) {
-				renderResourceCircle(selected.position.x, selected.position.y, fleetCost < selected.currentResources ? Color.GREEN : Color.RED, (float)(fleetCost / owner.planetData.maxResourceCapacity));
-			}
-		}
-
-		if (hovered != null) {
-			boolean isSelectingOrigin = (selected == null && hovered.ownerId == GameModel.playerId);
-			boolean isTargeting = (selected != null && hovered.id != selected.id);
-			if (isSelectingOrigin || isTargeting) {
-				shapeRenderer.circle(hovered.position.x, hovered.position.y, EngineUtility.PLANET_RADIUS + 5);
-			}
-			if (isTargeting) {
-				Player owner = EngineUtility.getPlayer(state.players, selected.ownerId);
-				Player target = EngineUtility.getPlayer(state.players, hovered.ownerId);
-				int fleetCost = owner.ships.get(0).cost;
-				if (owner.teamId == target.teamId) {
-					renderResourceCircle(hovered.position.x, hovered.position.y, Color.GREEN, (float)(fleetCost / target.planetData.maxResourceCapacity));
-				}
-			}
-		}
-		shapeRenderer.end();
-		Gdx.gl.glDisable(GL20.GL_BLEND);
-
-		if (selected != null && Gdx.input.isTouched()) {
-			Vector3 cursorWorld = inputManager.getCurrentTouchWorldPosition(camera);
-
-			shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-			shapeRenderer.setColor(Color.LIGHT_GRAY);
-			shapeRenderer.line(selected.position.x, selected.position.y, cursorWorld.x, cursorWorld.y);
-			shapeRenderer.end();
-
-			shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-			shapeRenderer.setColor(Color.LIGHT_GRAY);
-			drawArrow(cursorWorld, selected.position.x, selected.position.y);
-			shapeRenderer.end();
-		}
-		Gdx.gl.glLineWidth(1f);
-	}
-
-	private void drawArrow(Vector3 to, float fromX, float fromY) {
-		float dx = fromX - to.x;
-		float dy = fromY - to.y;
-		float angle = (float) Math.atan2(dy, dx);
-
-		float arrowLength = 20f;
-		float arrowOffset = 20f;
-
-		float baseX = to.x + (float) Math.cos(angle) * arrowOffset;
-		float baseY = to.y + (float) Math.sin(angle) * arrowOffset;
-
-		float leftX = baseX + (float) Math.cos(angle + Math.PI / 6) * arrowLength;
-		float leftY = baseY + (float) Math.sin(angle + Math.PI / 6) * arrowLength;
-
-		float rightX = baseX + (float) Math.cos(angle - Math.PI / 6) * arrowLength;
-		float rightY = baseY + (float) Math.sin(angle - Math.PI / 6) * arrowLength;
-
-		shapeRenderer.triangle(to.x, to.y, leftX, leftY, rightX, rightY);
 	}
 
 	public void flip() {

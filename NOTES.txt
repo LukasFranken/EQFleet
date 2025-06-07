@@ -14,6 +14,8 @@
 
 - settings change skin color
 
+- pause game for up to 30 sec total per team on DC
+
 Shipnames:
 - Hawk
 - Tovak

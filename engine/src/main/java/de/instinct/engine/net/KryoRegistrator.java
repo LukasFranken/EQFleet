@@ -13,7 +13,9 @@ import de.instinct.engine.combat.Projectile;
 import de.instinct.engine.combat.Ship;
 import de.instinct.engine.model.AiPlayer;
 import de.instinct.engine.model.GameState;
+import de.instinct.engine.model.PlanetData;
 import de.instinct.engine.model.Player;
+import de.instinct.engine.model.PlayerConnectionStatus;
 import de.instinct.engine.model.planet.Planet;
 import de.instinct.engine.model.ship.Defense;
 import de.instinct.engine.model.ship.ShipData;
@@ -25,6 +27,9 @@ import de.instinct.engine.net.message.types.FleetMovementMessage;
 import de.instinct.engine.net.message.types.JoinMessage;
 import de.instinct.engine.net.message.types.LoadedMessage;
 import de.instinct.engine.net.message.types.PlayerAssigned;
+import de.instinct.engine.order.GameOrder;
+import de.instinct.engine.order.OrderType;
+import de.instinct.engine.order.types.ShipMovementOrder;
 
 public class KryoRegistrator {
 	
@@ -52,6 +57,11 @@ public class KryoRegistrator {
 		kryo.register(Projectile.class);
 		kryo.register(Vector2.class);
 		kryo.register(Combat.class);
+		kryo.register(PlayerConnectionStatus.class);
+		kryo.register(PlanetData.class);
+		kryo.register(ShipMovementOrder.class);
+		kryo.register(OrderType.class);
+		kryo.register(GameOrder.class);
 	}
 
 }

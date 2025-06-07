@@ -8,7 +8,6 @@ import de.instinct.engine.entity.EntityManager;
 import de.instinct.engine.entity.Unit;
 import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.Player;
-import de.instinct.engine.model.ship.Weapon;
 import de.instinct.engine.util.EngineUtility;
 import de.instinct.engine.util.VectorUtil;
 
@@ -61,11 +60,13 @@ public class ProjectileProcessor {
         target.currentArmor -= remainingDamage;
     }
 
-    public Projectile createProjectileInstance(Weapon weapon, int ownerId, int targetId, Vector2 position) {
-        Projectile projectile = EntityManager.createProjectile(weapon);
-        projectile.ownerId = ownerId;
-        projectile.targetId = targetId;
-        projectile.position = position;
+    public Projectile createProjectileInstance(Unit origin, Unit target) {
+    	Vector2 startPosition = VectorUtil.getTargetPosition(origin.position, target.position, origin.radius);
+        Projectile projectile = EntityManager.createProjectile(origin.weapon);
+        projectile.ownerId = origin.ownerId;
+        projectile.originId = origin.id;
+        projectile.targetId = target.id;
+        projectile.position = startPosition;
         return projectile;
     }
 }

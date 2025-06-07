@@ -30,7 +30,10 @@ public class PlanetCombatProcessor {
         }
         Unit target = weaponProcessor.getClosestInRangeTarget(planet, state, combat);
         if (target != null) {
-            weaponProcessor.fireAtTarget(planet, target, combat, deltaTime);
+            Projectile newProjectile = weaponProcessor.fireAtTarget(planet, target, deltaTime);
+			if (newProjectile != null) {
+				combat.projectiles.add(newProjectile);
+			}
         }
     }
 

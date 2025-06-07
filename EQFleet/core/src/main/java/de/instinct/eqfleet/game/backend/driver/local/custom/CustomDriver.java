@@ -25,7 +25,6 @@ public class CustomDriver extends LocalDriver {
 	@Override
 	public void setup() {
 		LoadoutData loadout = API.meta().loadout(API.authKey);
-		System.out.println(loadout);
 		GameModel.playerId = 1;
 		GameStateInitialization initialGameState = customLoader.generateInitialGameState(loadout);
 		GameModel.activeGameState = engine.initializeGameState(initialGameState);

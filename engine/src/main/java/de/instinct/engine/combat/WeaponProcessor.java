@@ -3,15 +3,12 @@ package de.instinct.engine.combat;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.math.Vector2;
-
 import de.instinct.engine.entity.EntityManager;
 import de.instinct.engine.entity.Unit;
 import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.Player;
 import de.instinct.engine.model.planet.Planet;
 import de.instinct.engine.util.EngineUtility;
-import de.instinct.engine.util.VectorUtil;
 
 public class WeaponProcessor {
     
@@ -21,14 +18,14 @@ public class WeaponProcessor {
         projectileProcessor = new ProjectileProcessor();
     }
     
-    public void fireAtTarget(Unit unit, Unit closestInRangeTarget, Combat combat, long deltaTime) {
+    public Projectile fireAtTarget(Unit unit, Unit closestInRangeTarget, long deltaTime) {
         if (unit.currentWeaponCooldown <= deltaTime) {
             long remainingDeltaTime = deltaTime - unit.currentWeaponCooldown;
             unit.currentWeaponCooldown = unit.weapon.cooldown - remainingDeltaTime;
-            Vector2 startPosition = VectorUtil.getTargetPosition(unit.position, closestInRangeTarget.position, unit.radius);
-            combat.projectiles.add(projectileProcessor.createProjectileInstance(unit.weapon, unit.ownerId, closestInRangeTarget.id, startPosition));
+            return projectileProcessor.createProjectileInstance(unit, closestInRangeTarget);
         } else {
             unit.currentWeaponCooldown -= deltaTime;
+            return null;
         }
     }
     

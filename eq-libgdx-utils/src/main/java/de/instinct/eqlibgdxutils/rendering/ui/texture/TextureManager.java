@@ -64,6 +64,10 @@ public class TextureManager {
 		return texture;
 	}
 	
+	public static Texture getLoadedTexture(String tag) {
+		return textures.get(tag);
+	}
+	
 	public static void put(String key, Texture texture) {
 		textures.put(key, texture);
 	}

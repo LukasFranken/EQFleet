@@ -31,7 +31,10 @@ public class ShipProcessor {
 			}
 			Unit closestInRangeTarget = weaponProcessor.getClosestInRangeTarget(ship, state, combat);
 			if (closestInRangeTarget != null) {
-				weaponProcessor.fireAtTarget(ship, closestInRangeTarget, combat, deltaTime);
+				Projectile newProjectile = weaponProcessor.fireAtTarget(ship, closestInRangeTarget, deltaTime);
+				if (newProjectile != null) {
+					combat.projectiles.add(newProjectile);
+				}
 			} else {
 				if (moveShip(ship, state, deltaTime)) {
 					shipsToRemove.add(ship);

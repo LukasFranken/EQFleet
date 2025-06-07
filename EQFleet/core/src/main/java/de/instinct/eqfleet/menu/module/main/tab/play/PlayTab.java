@@ -27,7 +27,7 @@ public class PlayTab {
 	
 	private static Task updateTask;
 	
-	private static float QUEUE_UPDATE_CLOCK_MS = 500;
+	private static float QUEUE_UPDATE_CLOCK_MS = 1000;
 	
 	public static void update() {
 		

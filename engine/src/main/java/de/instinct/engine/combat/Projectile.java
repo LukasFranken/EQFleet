@@ -7,6 +7,7 @@ import lombok.ToString;
 @ToString
 public class Projectile extends Entity {
 	
+	public int originId;
 	public int targetId;
 	public WeaponType weaponType;
 	public float movementSpeed;

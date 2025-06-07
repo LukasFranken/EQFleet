@@ -1,7 +1,6 @@
 package de.instinct.eqfleet.game.backend.driver.local.tutorial;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Queue;
 import java.util.UUID;
@@ -9,10 +8,15 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.badlogic.gdx.math.Vector3;
 
+import de.instinct.engine.ai.AiDifficulty;
 import de.instinct.engine.ai.AiEngine;
-import de.instinct.engine.model.GameState;
+import de.instinct.engine.initialization.GameStateInitialization;
+import de.instinct.engine.map.GameMap;
+import de.instinct.engine.model.AiPlayer;
 import de.instinct.engine.model.Player;
 import de.instinct.engine.model.planet.Planet;
+import de.instinct.engine.model.ship.ShipData;
+import de.instinct.engine.model.ship.ShipType;
 import de.instinct.engine.net.message.types.FleetMovementMessage;
 import de.instinct.engine.util.EngineUtility;
 import de.instinct.eqfleet.game.Game;
@@ -34,19 +38,13 @@ public class TutorialLoader {
 		aiEngine = new AiEngine();
 	}
 
-	public GameState generateGameState() {
-		GameState initialGameState = new GameState();
+	public GameStateInitialization generateInitialGameState() {
+		GameStateInitialization initialGameState = new GameStateInitialization();
 		initialGameState.gameUUID = UUID.randomUUID().toString();
-		initialGameState.planets = generateMap();
 		initialGameState.players = loadPlayers();
-		initialGameState.gameTimeMS = 0;
-		initialGameState.maxGameTimeMS = 600_000;
-		initialGameState.winner = 0;
+		initialGameState.map = new GameMap();
+		initialGameState.map.planets = new ArrayList<>();
 		initialGameState.atpToWin = 30;
-		initialGameState.teamATPs = new HashMap<>();
-		initialGameState.teamATPs.put(0, 0D);
-		initialGameState.teamATPs.put(1, 0D);
-		initialGameState.teamATPs.put(2, 0D);
 		return initialGameState;
 	}
 
@@ -58,44 +56,35 @@ public class TutorialLoader {
 		neutralPlayer.teamId = 0;
 		players.add(neutralPlayer);
 		
-		/*Player player1 = new Player();
-		player1.playerId = 1;
+		Player player1 = new Player();
+		player1.id = 1;
 		player1.teamId = 1;
-		player1.connected = true;
 		player1.name = "Player 1";
 		player1.ships = new ArrayList<>();
-		Ship tutorialShip = new Ship();
+		ShipData tutorialShip = new ShipData();
 		tutorialShip.type = ShipType.FIGHTER;
 		tutorialShip.model = "hawk";
 		tutorialShip.movementSpeed = 100f;
-		tutorialShip.power = 5;
 		tutorialShip.cost = 3;
 		player1.ships.add(tutorialShip);
-		player1.resourceGenerationSpeed = 0.5f;
 		player1.maxCommandPoints = 10;
 		player1.startCommandPoints = 1;
 		player1.commandPointsGenerationSpeed = 0.2;
 		player1.currentCommandPoints = player1.startCommandPoints;
-		player1.maxPlanetCapacity = 20;
 		players.add(player1);
 
 		AiPlayer aiPlayer = aiEngine.initialize(AiDifficulty.RETARDED);
-		aiPlayer.playerId = 2;
+		aiPlayer.id = 2;
 		aiPlayer.teamId = 2;
-		aiPlayer.connected = true;
-		aiPlayer.loaded = true;
-		aiPlayer.resourceGenerationSpeed = 0f;
 		aiPlayer.ships = new ArrayList<>();
-		Ship aiTutorialShip = new Ship();
+		ShipData aiTutorialShip = new ShipData();
 		aiTutorialShip.type = ShipType.FIGHTER;
 		aiTutorialShip.model = "hawk";
 		aiTutorialShip.movementSpeed = 100f;
-		aiTutorialShip.power = 5;
 		aiTutorialShip.cost = 3;
 		aiPlayer.ships.add(aiTutorialShip);
 		aiPlayer.currentCommandPoints = aiPlayer.startCommandPoints;
-		aiPlayer.maxPlanetCapacity = 20;
-		players.add(aiPlayer);*/
+		players.add(aiPlayer);
 
 		return players;
 	}

@@ -20,6 +20,7 @@ public class GameModel {
 	
 	public static volatile String playerUUID = UUID.randomUUID().toString();
     public static volatile int playerId;
+    public static volatile Queue<GameState> receivedGameState;
     public static volatile GameState activeGameState;
     public static volatile long lastUpdateTimestampMS;
 
