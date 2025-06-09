@@ -49,7 +49,7 @@ public class AiEngine {
 		Weapon aiPlanetWeapon = new Weapon();
 		aiPlanetWeapon.type = WeaponType.LASER;
 		aiPlanetWeapon.damage = 3;
-		aiPlanetWeapon.range = 60f;
+		aiPlanetWeapon.range = 100f;
 		aiPlanetWeapon.cooldown = 2000;
 		aiPlanetWeapon.speed = 50f;
 		aiPlanetData.weapon = aiPlanetWeapon;

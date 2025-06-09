@@ -1,6 +1,8 @@
 package de.instinct.eqfleet.game.frontend;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
@@ -322,7 +324,8 @@ public class GameRenderer {
 	
 	private void renderProjectiles(GameState state) {
 		for (Combat combat : state.activeCombats) {
-			for (Projectile projectile : combat.projectiles) {
+			List<Projectile> projectilesToRender = new ArrayList<>(combat.projectiles);
+			for (Projectile projectile : projectilesToRender) {
 				Entity from = EntityManager.getEntity(state, projectile.id);
 				Entity to = EntityManager.getEntity(state, projectile.targetId);
 	            
