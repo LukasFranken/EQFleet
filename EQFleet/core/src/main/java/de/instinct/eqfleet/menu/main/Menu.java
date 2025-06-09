@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 import de.instinct.api.core.API;
 import de.instinct.api.core.modules.MenuModule;
+import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.module.inventory.Inventory;
@@ -65,6 +66,7 @@ public class Menu {
 	}
 	
 	public static void open() {
+		Game.dispose();
 		loadModules();
 		scheduler = Executors.newSingleThreadScheduledExecutor();
 		scheduler.scheduleAtFixedRate(() -> {

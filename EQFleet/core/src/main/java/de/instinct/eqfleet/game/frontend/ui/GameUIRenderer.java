@@ -226,7 +226,7 @@ public class GameUIRenderer {
 		shapeRenderer.setColor(Color.LIGHT_GRAY);
 
 		if (selected != null) {
-			shapeRenderer.circle(selected.position.x, selected.position.y, EngineUtility.PLANET_RADIUS + 5);
+			shapeRenderer.circle(selected.position.x, selected.position.y, EngineUtility.PLANET_RADIUS);
 			Player owner = EngineUtility.getPlayer(state.players, selected.ownerId);
 			int fleetCost = owner.ships.get(0).cost;
 			if (fleetCost > 0 && owner.planetData.maxResourceCapacity > 0) {
@@ -238,7 +238,7 @@ public class GameUIRenderer {
 			boolean isSelectingOrigin = (selected == null && hovered.ownerId == GameModel.playerId);
 			boolean isTargeting = (selected != null && hovered.id != selected.id);
 			if (isSelectingOrigin || isTargeting) {
-				shapeRenderer.circle(hovered.position.x, hovered.position.y, EngineUtility.PLANET_RADIUS + 5);
+				shapeRenderer.circle(hovered.position.x, hovered.position.y, EngineUtility.PLANET_RADIUS);
 			}
 			if (isTargeting) {
 				Player owner = EngineUtility.getPlayer(state.players, selected.ownerId);
@@ -289,12 +289,13 @@ public class GameUIRenderer {
 	}
 	
 	private void renderResourceCircle(float x, float y, Color color, float value, PerspectiveCamera camera) {
+		float radius = EngineUtility.PLANET_RADIUS + 5f;
+		float thickness = 8f;
 		complexShapeRenderer.setProjectionMatrix(camera.combined);
 		complexShapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 		complexShapeRenderer.setColor(color);
-		complexShapeRenderer.cleanArc(x, y, EngineUtility.PLANET_RADIUS + 12, EngineUtility.PLANET_RADIUS + 20, 90, value * 360f);
+		complexShapeRenderer.cleanArc(x, y, radius, radius + thickness, 90, value * 360f);
 		complexShapeRenderer.end();
-		
 	}
 	
 	private void renderFleetConnections(GameState state) {

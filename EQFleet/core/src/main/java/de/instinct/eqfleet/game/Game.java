@@ -4,6 +4,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import de.instinct.engine.model.GameState;
 import de.instinct.engine.net.message.types.PlayerAssigned;
+import de.instinct.eqfleet.game.backend.driver.Driver;
 import de.instinct.eqfleet.game.backend.driver.local.custom.CustomDriver;
 import de.instinct.eqfleet.game.backend.driver.local.tutorial.TutorialDriver;
 import de.instinct.eqfleet.game.backend.driver.local.tutorial.TutorialMode;
@@ -17,46 +18,42 @@ public class Game {
 
     private static GameRenderer renderer;
     
-    private static OnlineDriver onlineDriver;
-    private static CustomDriver customDriver;
-    private static TutorialDriver tutorialDriver;
+    private static Driver currentDriver;
 
     public static void init() {
     	GameModel.outputMessageQueue = new MessageQueue<>();
     	GameModel.inputMessageQueue = new MessageQueue<>();
     	GameModel.receivedGameState = new ConcurrentLinkedQueue<>();
     	renderer = new GameRenderer();
-    	onlineDriver = new OnlineDriver();
-    	customDriver = new CustomDriver();
-    	tutorialDriver = new TutorialDriver();
     }
     
     public static void start() {
+    	currentDriver = new OnlineDriver();
     	renderer.init();
     	GameModel.active = true;
-    	onlineDriver.start();
+    	currentDriver.start();
     	GameModel.inputEnabled = true;
     }
     
     public static void startTutorial(TutorialMode mode) {
+    	currentDriver = new TutorialDriver();
 		renderer.init();
 		GameModel.active = true;
-		tutorialDriver.setMode(mode);
-		tutorialDriver.start();
+		((TutorialDriver)currentDriver).setMode(mode);
+		currentDriver.start();
 	}
     
     public static void startCustom() {
+    	currentDriver = new CustomDriver();
     	renderer.init();
     	GameModel.active = true;
-		customDriver.start();
+    	currentDriver.start();
 		GameModel.inputEnabled = true;
     }
 
     public static void stop() {
     	GameModel.inputEnabled = false;
-    	onlineDriver.stop();
-    	customDriver.stop();
-    	tutorialDriver.stop();
+    	currentDriver.stop();
 	}
 
 	public static void render() {
@@ -77,10 +74,12 @@ public class Game {
 	}
 
 	public static void dispose() {
-		renderer.dispose();
-		onlineDriver.dispose();
-    	customDriver.dispose();
-    	tutorialDriver.dispose();
+		if (renderer != null) {
+			renderer.dispose();
+		}
+		if (currentDriver != null) {
+			currentDriver.dispose();
+		}
 	}
 
 	public static void assignPlayer(PlayerAssigned playerAssigned) {
