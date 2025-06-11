@@ -91,7 +91,13 @@ public class ProjectileRenderer {
 				ParticleRenderer.stop(projectileInstance.getParticlesTag());
 			}
 		}
-		projectileInstances.removeIf(projectileInstance -> !projectileInstance.isActive());
+		List<ProjectileInstance> toRemove = new ArrayList<>();
+		for (ProjectileInstance instance : projectileInstances) {
+			if (!instance.isActive()) {
+				toRemove.add(instance);
+			}
+		}
+		projectileInstances.removeAll(toRemove);
 	}
 
 	private ProjectileInstance getProjectileInstance(Projectile projectile) {
