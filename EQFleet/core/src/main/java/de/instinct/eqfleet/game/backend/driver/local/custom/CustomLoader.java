@@ -68,7 +68,7 @@ public class CustomLoader {
 		neutralPlanetWeapon.damage = 5;
 		neutralPlanetWeapon.range = 100f; 
 		neutralPlanetWeapon.cooldown = 1000;
-		neutralPlanetWeapon.speed = 70f;
+		neutralPlanetWeapon.speed = 120f;
 		neutralPlanetData.weapon = neutralPlanetWeapon;
 		Defense neutralPlanetDefense = new Defense();
 		neutralPlanetDefense.armor = 50;
@@ -222,37 +222,37 @@ public class CustomLoader {
 		PlanetInitialization neutralPlanet2 = new PlanetInitialization();
     	neutralPlanet2.ownerId = 0;
     	neutralPlanet2.position = new Vector2(0, -250);
-    	neutralPlanet2.startArmorPercent = 0.6f;
+    	neutralPlanet2.startArmorPercent = 0.3f;
     	planets.add(neutralPlanet2);
     	
     	PlanetInitialization neutralPlanet3 = new PlanetInitialization();
     	neutralPlanet3.ownerId = 0;
     	neutralPlanet3.position = new Vector2(0, 250);
-    	neutralPlanet3.startArmorPercent = 0.6f;
+    	neutralPlanet3.startArmorPercent = 0.3f;
     	planets.add(neutralPlanet3);
     	
     	PlanetInitialization neutralPlanet4 = new PlanetInitialization();
     	neutralPlanet4.ownerId = 0;
-    	neutralPlanet4.position = new Vector2(150, -250);
-    	neutralPlanet4.startArmorPercent = 0.4f;
+    	neutralPlanet4.position = new Vector2(250, 0);
+    	neutralPlanet4.startArmorPercent = 0.2f;
     	planets.add(neutralPlanet4);
     	
     	PlanetInitialization neutralPlanet5 = new PlanetInitialization();
     	neutralPlanet5.ownerId = 0;
-    	neutralPlanet5.position = new Vector2(-150, 250);
-    	neutralPlanet5.startArmorPercent = 0.4f;
+    	neutralPlanet5.position = new Vector2(-250, 0);
+    	neutralPlanet5.startArmorPercent = 0.2f;
     	planets.add(neutralPlanet5);
     	
     	PlanetInitialization neutralPlanet6 = new PlanetInitialization();
     	neutralPlanet6.ownerId = 0;
-    	neutralPlanet6.position = new Vector2(150, 400);
-    	neutralPlanet6.startArmorPercent = 0.2f;
+    	neutralPlanet6.position = new Vector2(250, 400);
+    	neutralPlanet6.startArmorPercent = 0.1f;
     	planets.add(neutralPlanet6);
     	
     	PlanetInitialization neutralPlanet7 = new PlanetInitialization();
     	neutralPlanet7.ownerId = 0;
-    	neutralPlanet7.position = new Vector2(-150, -400);
-    	neutralPlanet7.startArmorPercent = 0.2f;
+    	neutralPlanet7.position = new Vector2(-250, -400);
+    	neutralPlanet7.startArmorPercent = 0.1f;
     	planets.add(neutralPlanet7);
 	}
 

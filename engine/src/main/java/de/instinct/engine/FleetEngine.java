@@ -8,7 +8,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import de.instinct.engine.combat.CombatProcessor;
-import de.instinct.engine.entity.EntityManager;
+import de.instinct.engine.combat.unit.UnitManager;
 import de.instinct.engine.initialization.GameStateInitialization;
 import de.instinct.engine.initialization.PlanetInitialization;
 import de.instinct.engine.model.GameState;
@@ -47,6 +47,8 @@ public class FleetEngine {
 		state.players = initializePlayers(initialization.players);
 		state.connectionStati = generateConnectionStati(initialization.players);
 		state.planets = generateInitialPlanets(initialization);
+		state.ships = new ArrayList<>();
+		state.projectiles = new ArrayList<>();
 		state.gameTimeMS = 0;
 		state.maxGameTimeMS = initialization.gameTimeLimitMS;
 		state.winner = 0;
@@ -56,8 +58,6 @@ public class FleetEngine {
 		state.teamATPs.put(1, 0D);
 		state.teamATPs.put(2, 0D);
 		state.ancientPlanetResourceDegradationFactor = initialization.ancientPlanetResourceDegradationFactor;
-		state.activeCombats = new ArrayList<>();
-		state.finishedCombats = new ArrayList<>();
 		state.started = false;
 		return state;
 	}
@@ -83,14 +83,12 @@ public class FleetEngine {
 		List<Planet> initialPlanets = new ArrayList<>();
 		for (PlanetInitialization init : initialization.map.planets) {
 			Player planetOwner = EngineUtility.getPlayer(initialization.players, init.ownerId);
-			Planet initialPlanet = EntityManager.createPlanet(planetOwner.planetData);
+			Planet initialPlanet = UnitManager.createPlanet(planetOwner.planetData);
 			initialPlanet.ownerId = init.ownerId;
 			initialPlanet.position = init.position;
-			initialPlanet.currentArmor = initialPlanet.defense.armor * init.startArmorPercent;
+			initialPlanet.defense.currentArmor = initialPlanet.defense.armor * init.startArmorPercent;
 			if (init.ancient) {
 				initialPlanet.ancient = true;
-				initialPlanet.currentShield = 0;
-				initialPlanet.currentArmor = 0;
 				initialPlanet.weapon = null;
 				initialPlanet.defense = null;
 			}
@@ -99,17 +97,19 @@ public class FleetEngine {
 		return initialPlanets;
 	}
 
-	public boolean update(GameState state, long progressionMS) {
-		if (state.started) {
-			long targetTime = state.gameTimeMS + progressionMS;
-			advanceTime(state, progressionMS);
-		    state.gameTimeMS = targetTime;
-		    
-		    boolean newOrder = workOnOrderQueue(state);
-		    integrateNewOrders(state);
-		    return newOrder;
+	public void update(GameState state, long progressionMS) {
+		try {
+			if (state.started) {
+				long targetTime = state.gameTimeMS + progressionMS;
+				advanceTime(state, progressionMS);
+			    state.gameTimeMS = targetTime;
+			    
+			    workOnOrderQueue(state);
+			    integrateNewOrders(state);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		return false;
 	}
 	
 	private void integrateNewOrders(GameState state) {
@@ -143,5 +143,9 @@ public class FleetEngine {
 	public void queue(GameState state, GameOrder order) {
 		unprocessedOrders.add(order);
 	}
-
+	
+	public boolean containsUnprocessedOrders() {
+		return !unprocessedOrders.isEmpty();
+	}
+	
 }

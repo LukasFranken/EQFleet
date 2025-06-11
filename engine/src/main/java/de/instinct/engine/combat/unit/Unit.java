@@ -1,5 +1,6 @@
-package de.instinct.engine.entity;
+package de.instinct.engine.combat.unit;
 
+import de.instinct.engine.entity.Entity;
 import de.instinct.engine.model.ship.Defense;
 import de.instinct.engine.model.ship.Weapon;
 import lombok.ToString;
@@ -9,10 +10,6 @@ public class Unit extends Entity {
 
 	public Defense defense;
 	public Weapon weapon;
-	
-	public float currentShield;
-	public float currentArmor;
-	public long currentWeaponCooldown;
 	
 	public Unit clone() {
 		Unit clone = (Unit) super.clone();

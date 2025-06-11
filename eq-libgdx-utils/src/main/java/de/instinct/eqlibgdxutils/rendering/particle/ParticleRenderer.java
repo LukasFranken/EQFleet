@@ -123,6 +123,18 @@ public class ParticleRenderer {
 	    }
 	}
 	
+	public static void setEmitterAngle(String effectName, float startAngleDeg, float endAngleDeg) {
+	    ParticleAnimation animation = particleAnimations.get(effectName);
+	    if (animation != null) {
+	        for (ParticleEffect effect : animation.getParticleEffects()) {
+	            for (ParticleEmitter emitter : effect.getEmitters()) {
+	                emitter.getAngle().setHigh(startAngleDeg);
+	                emitter.getAngle().setHighMax(endAngleDeg);
+	            }
+	        }
+	    }
+	}
+	
 	public static void setEmitterVelocity(String effectName, float velocity) {
 	    ParticleAnimation animation = particleAnimations.get(effectName);
 	    if (animation != null) {

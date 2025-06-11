@@ -87,6 +87,7 @@ public class App extends ApplicationAdapter {
         Menu.dispose();
         TextureManager.dispose();
         AudioManager.dispose();
+        ModelRenderer.dispose();
         Logger.log(LOGTAG, "EQFLEET TERMINATED", ConsoleColor.YELLOW);
     }
     

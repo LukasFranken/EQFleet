@@ -21,8 +21,6 @@ public class ResourceProcessor {
 	            	state.teamATPs.put(owner.teamId, newATPValue > state.atpToWin ? state.atpToWin : newATPValue);
 
 	            	if (planet.currentResources <= 0) {
-	            		planet.currentShield = 0;
-	            		planet.currentArmor = 0;
 	    				planet.weapon = null;
 	    				planet.defense = null;
 	            	    planet.ownerId = 0;

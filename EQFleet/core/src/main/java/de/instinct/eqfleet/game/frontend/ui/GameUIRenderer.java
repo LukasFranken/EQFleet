@@ -1,22 +1,17 @@
 package de.instinct.eqfleet.game.frontend.ui;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import de.instinct.api.core.API;
-import de.instinct.engine.combat.Combat;
 import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.Player;
 import de.instinct.engine.model.planet.Planet;
@@ -27,7 +22,6 @@ import de.instinct.eqfleet.GlobalStaticData;
 import de.instinct.eqfleet.game.GameConfig;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.frontend.GameInputManager;
-import de.instinct.eqfleet.game.frontend.PlanetPair;
 import de.instinct.eqfleet.game.frontend.ui.model.GameUIElement;
 import de.instinct.eqfleet.game.frontend.ui.model.UIBounds;
 import de.instinct.eqlibgdxutils.rendering.particle.ParticleRenderer;
@@ -46,7 +40,6 @@ public class GameUIRenderer {
 	
 	private ShapeRenderer shapeRenderer;
 	private ComplexShapeRenderer complexShapeRenderer;
-	private SpriteBatch batch;
 	private GameInputManager inputManager;
 	private DefenseUIRenderer defenseUIRenderer;
 	
@@ -56,7 +49,6 @@ public class GameUIRenderer {
 		ParticleRenderer.stop("ancient");
 		shapeRenderer = new ShapeRenderer();
 		complexShapeRenderer = new ComplexShapeRenderer();
-		batch = new SpriteBatch();
 		inputManager = new GameInputManager();
 		defenseUIRenderer = new DefenseUIRenderer();
 	}
@@ -110,9 +102,8 @@ public class GameUIRenderer {
 				inputManager.handleInput(camera, state);
 				updateStaticUI(state);
 				renderStaticUI(state);
-				defenseUIRenderer.render(state, camera);
 				renderResourceCircles(state, camera);
-				renderFleetConnections(state);
+				defenseUIRenderer.render(state, camera);
 				renderSelection(state, camera);
 			}
 		}
@@ -132,7 +123,6 @@ public class GameUIRenderer {
 		    renderResourceCircle(planet.position.x, planet.position.y, GameConfig.getPlayerColor(owner.id), (float)(planet.currentResources / owner.planetData.maxResourceCapacity), camera);
 
 		    if (GlobalStaticData.mode == ApplicationMode.DEV) {
-		    	shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
 			    Gdx.gl.glEnable(GL20.GL_BLEND);
 			    shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 			    shapeRenderer.setColor(0f, 0f, 0f, 0.7f);
@@ -296,51 +286,6 @@ public class GameUIRenderer {
 		complexShapeRenderer.setColor(color);
 		complexShapeRenderer.cleanArc(x, y, radius, radius + thickness, 90, value * 360f);
 		complexShapeRenderer.end();
-	}
-	
-	private void renderFleetConnections(GameState state) {
-		List<PlanetPair> movements = new ArrayList<>();
-
-		for (Combat combat : state.activeCombats) {
-			PlanetPair pair = new PlanetPair(combat.planetIds.get(0), combat.planetIds.get(1));
-			movements.add(pair);
-		}
-
-		Map<PlanetPair, Color> connectionLines = new HashMap<>();
-
-		for (PlanetPair pair : movements) {
-			PlanetPair reverse = new PlanetPair(pair.toId, pair.fromId);
-			boolean hasForward = movements.contains(pair);
-			boolean hasReverse = movements.contains(reverse);
-
-			if (hasForward && hasReverse) {
-				if (pair.fromId > pair.toId) continue;
-				connectionLines.put(pair, Color.WHITE);
-			} else {
-				connectionLines.put(pair, GameConfig.getPlayerColor(EngineUtility.getPlanet(state.planets, pair.fromId).ownerId));
-			}
-		}
-
-		Gdx.gl.glEnable(GL20.GL_BLEND);
-		
-		float baseLineWidth = 2f;
-		float dynamicLineWidth = baseLineWidth * (Gdx.graphics.getDensity() > 1 ? Gdx.graphics.getDensity() : 1f);
-		Gdx.gl.glLineWidth(dynamicLineWidth);
-		
-		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-		for (Map.Entry<PlanetPair, Color> entry : connectionLines.entrySet()) {
-			Planet from = EngineUtility.getPlanet(state.planets, entry.getKey().fromId);
-			Planet to = EngineUtility.getPlanet(state.planets, entry.getKey().toId);
-
-			Color faded = new Color(entry.getValue());
-			faded.a = 0.25f;
-
-			shapeRenderer.setColor(faded);
-			shapeRenderer.line(from.position.x, from.position.y, to.position.x, to.position.y);
-		}
-		shapeRenderer.end();
-		Gdx.gl.glLineWidth(1f);
-		Gdx.gl.glDisable(GL20.GL_BLEND);
 	}
 
 	private void renderMessageText() {

@@ -23,5 +23,17 @@ public class VectorUtil {
 			origin.y + (target.y - origin.y) * (distance / dst(origin, target))
 		);
 	}
+	
+	public static Vector2 getDirectionalTargetPosition(Vector2 origin, Vector2 direction, float distance) {
+		return new Vector2(
+			origin.x + direction.x * distance,
+			origin.y + direction.y * distance
+		);
+	}
+
+	public static Vector2 getDirection(Vector2 origin, Vector2 target) {
+		Vector2 direction = new Vector2(target.x - origin.x, target.y - origin.y);
+		return direction.nor();
+	}
 
 }

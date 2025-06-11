@@ -10,6 +10,7 @@ public class Weapon {
 	public float range;
 	public float speed;
 	public long cooldown;
+	public long currentCooldown;
 	
 	public Weapon clone() {
 		Weapon clone = new Weapon();
@@ -18,6 +19,7 @@ public class Weapon {
 		clone.range = this.range;
 		clone.speed = this.speed;
 		clone.cooldown = this.cooldown;
+		clone.currentCooldown = this.currentCooldown;
 		return clone;
 	}
 

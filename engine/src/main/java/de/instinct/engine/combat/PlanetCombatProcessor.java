@@ -1,9 +1,9 @@
 package de.instinct.engine.combat;
 
-import de.instinct.engine.entity.Unit;
+import de.instinct.engine.combat.unit.Unit;
+import de.instinct.engine.combat.unit.UnitManager;
 import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.planet.Planet;
-import de.instinct.engine.util.EngineUtility;
 
 public class PlanetCombatProcessor {
     
@@ -13,45 +13,25 @@ public class PlanetCombatProcessor {
         weaponProcessor = new WeaponProcessor();
     }
     
-    public void updatePlanets(Combat combat, GameState state, long deltaTime) {
-        for (int planetId : combat.planetIds) {
-        	Planet planet = EngineUtility.getPlanet(state.planets, planetId);
-        	if (planet.currentArmor <= 0) {
+    public void updatePlanets(GameState state, long deltaTime) {
+        for (Planet planet : state.planets) {
+        	if (planet.defense != null && planet.defense.currentArmor <= 0) {
     			planet.defense = null;
     			planet.weapon = null;
             }
-            updatePlanet(planet, combat, state, deltaTime);
+            updatePlanet(planet, state, deltaTime);
         }
     }
     
-    private void updatePlanet(Planet planet, Combat combat, GameState state, long deltaTime) {
+    private void updatePlanet(Planet planet, GameState state, long deltaTime) {
         if (planet == null || planet.weapon == null) {
             return;
         }
-        Unit target = weaponProcessor.getClosestInRangeTarget(planet, state, combat);
+        weaponProcessor.updateWeapon(planet.weapon, deltaTime);
+        Unit target = UnitManager.getClosestInRangeTarget(planet, state);
         if (target != null) {
-            Projectile newProjectile = weaponProcessor.fireAtTarget(planet, target, deltaTime);
-			if (newProjectile != null) {
-				combat.projectiles.add(newProjectile);
-			}
+            weaponProcessor.fireAtTarget(planet, target, state, deltaTime);
         }
     }
 
-	public void resetPlanetCooldowns(GameState state, Combat combat) {
-    	for (int planetId : combat.planetIds) {
-    		Planet planet1 = EngineUtility.getPlanet(state.planets, planetId);
-    		if (!isPlanetStillInCombat(state, planetId)) {
-                planet1.currentWeaponCooldown = 0;
-            }
-		}
-    }
-
-    private boolean isPlanetStillInCombat(GameState state, int planetId) {
-        for (Combat activeCombat : state.activeCombats) {
-            if (activeCombat.planetIds.contains(planetId)) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

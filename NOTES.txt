@@ -1,3 +1,38 @@
+Predicted Direction: (-0.91885775,-0.39458886)
+
+InterceptionCalculationModel
+originPosition=(200.0,0.0), 
+originSpeed=150.0, 
+originRadius=50.0, 
+targetPosition=(77.320854,-90.71601), 
+targetDirection=(0.24253589,0.9701424), 
+targetSpeed=60.0, 
+targetRadius=3.0)
+
+Projectile: 
+id=10,
+ownerId=0,
+position=(150.00009,-0.09819589),
+radius=1.0,
+originId=1,
+weaponType=PROJECTILE, 
+movementSpeed=150.0, 
+damage=5.0, 
+elapsedMS=0.0, 
+lifetimeMS=666, 
+alive=true, 
+direction=(-0.91885775,-0.39458886)
+
+
+
+
+
+
+
+
+
+
+
 ./gradlew ios:launchIPhoneSimulator -P robovm.device.name='iPhone 16 Pro Max'
 ./gradlew lwjgl3:dist
 ./gradlew ios:launchIOSDevice

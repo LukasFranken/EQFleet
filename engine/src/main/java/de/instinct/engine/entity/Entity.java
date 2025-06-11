@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import lombok.ToString;
 
-@ToString
+@ToString(callSuper = true)
 public abstract class Entity implements Cloneable {
 	
 	public int id;

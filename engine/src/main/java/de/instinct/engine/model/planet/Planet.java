@@ -1,6 +1,6 @@
 package de.instinct.engine.model.planet;
 
-import de.instinct.engine.entity.Unit;
+import de.instinct.engine.combat.unit.Unit;
 import lombok.ToString;
 
 @ToString

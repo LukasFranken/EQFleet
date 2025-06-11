@@ -5,8 +5,9 @@ import java.util.List;
 
 import com.badlogic.gdx.math.Vector2;
 
+import de.instinct.engine.combat.unit.Unit;
+import de.instinct.engine.combat.unit.UnitManager;
 import de.instinct.engine.entity.EntityManager;
-import de.instinct.engine.entity.Unit;
 import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.Player;
 import de.instinct.engine.model.planet.Planet;
@@ -22,19 +23,17 @@ public class ShipProcessor {
 		weaponProcessor = new WeaponProcessor();
 	}
 
-	public void updateShips(Combat combat, GameState state, long deltaTime) {
+	public void updateShips(GameState state, long deltaTime) {
 		List<Ship> shipsToRemove = new ArrayList<>();
-		for (Ship ship : combat.ships) {
-			if (ship.currentArmor <= 0) {
+		for (Ship ship : state.ships) {
+			if (ship.defense.currentArmor <= 0) {
 				shipsToRemove.add(ship);
 				continue;
 			}
-			Unit closestInRangeTarget = weaponProcessor.getClosestInRangeTarget(ship, state, combat);
+			weaponProcessor.updateWeapon(ship.weapon, deltaTime);
+			Unit closestInRangeTarget = UnitManager.getClosestInRangeTarget(ship, state);
 			if (closestInRangeTarget != null) {
-				Projectile newProjectile = weaponProcessor.fireAtTarget(ship, closestInRangeTarget, deltaTime);
-				if (newProjectile != null) {
-					combat.projectiles.add(newProjectile);
-				}
+				weaponProcessor.fireAtTarget(ship, closestInRangeTarget, state, deltaTime);
 			} else {
 				if (moveShip(ship, state, deltaTime)) {
 					shipsToRemove.add(ship);
@@ -42,7 +41,7 @@ public class ShipProcessor {
 			}
 		}
 		for (Ship ship : shipsToRemove) {
-			combat.ships.remove(ship);
+			state.ships.remove(ship);
 		}
 	}
 	
@@ -50,7 +49,7 @@ public class ShipProcessor {
 		Planet fromPlanet = EngineUtility.getPlanet(state.planets, movement.fromPlanetId);
 		Planet toPlanet = EngineUtility.getPlanet(state.planets, movement.toPlanetId);
 		Player player = EngineUtility.getPlayer(state.players, movement.playerId);
-		Ship newShip = EntityManager.createShip(player.ships.get(movement.playerShipId));
+		Ship newShip = UnitManager.createShip(player.ships.get(movement.playerShipId));
 		player.currentCommandPoints -= player.ships.get(movement.playerShipId).commandPointsCost;
 		newShip.ownerId = movement.playerId;
 		newShip.position = VectorUtil.getTargetPosition(fromPlanet.position, toPlanet.position, EngineUtility.PLANET_RADIUS);
@@ -81,11 +80,11 @@ public class ShipProcessor {
 	
 	private void conquerPlanet(Planet planet, Player newOwner) {
 		planet.ownerId = newOwner.id;
-		planet.currentWeaponCooldown = 0;
-		planet.currentShield = 0;
 		planet.defense = newOwner.planetData.defense;
+		planet.defense.currentShield = 0;
+		planet.defense.currentArmor = newOwner.planetData.defense.armor * newOwner.planetData.percentOfArmorAfterCapture;
 		planet.weapon = newOwner.planetData.weapon;
-		planet.currentArmor = newOwner.planetData.defense.armor * newOwner.planetData.percentOfArmorAfterCapture;
+		planet.weapon.currentCooldown = planet.weapon.cooldown;
 		planet.resourceGenerationSpeed = newOwner.planetData.resourceGenerationSpeed;
 		planet.maxResourceCapacity = newOwner.planetData.maxResourceCapacity;
 		planet.currentResources = 0;

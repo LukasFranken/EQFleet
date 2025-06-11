@@ -1,6 +1,6 @@
 package de.instinct.engine.combat;
 
-import de.instinct.engine.entity.Unit;
+import de.instinct.engine.combat.unit.Unit;
 import de.instinct.engine.model.ship.ShipType;
 import lombok.ToString;
 

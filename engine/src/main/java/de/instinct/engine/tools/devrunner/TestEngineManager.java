@@ -67,15 +67,15 @@ public class TestEngineManager {
 		neutralPlanetData.maxResourceCapacity = 0;
 		neutralPlanetData.percentOfArmorAfterCapture = 0;
 		Weapon neutralPlanetWeapon = new Weapon();
-		neutralPlanetWeapon.type = WeaponType.PROJECTILE;
+		neutralPlanetWeapon.type = WeaponType.MISSILE;
 		neutralPlanetWeapon.damage = 5;
 		neutralPlanetWeapon.range = 100f;
 		neutralPlanetWeapon.cooldown = 1000;
-		neutralPlanetWeapon.speed = 50f;
+		neutralPlanetWeapon.speed = 80f;
 		neutralPlanetData.weapon = neutralPlanetWeapon;
 		Defense neutralPlanetDefense = new Defense();
 		neutralPlanetDefense.shield = 0;
-		neutralPlanetDefense.armor = 100;
+		neutralPlanetDefense.armor = 50;
 		neutralPlanetDefense.shieldRegenerationSpeed = 0;
 		neutralPlanetData.defense = neutralPlanetDefense;
 		neutralPlayer.planetData = neutralPlanetData;
@@ -136,7 +136,7 @@ public class TestEngineManager {
 		playerPlanetWeapon.damage = 5;
 		playerPlanetWeapon.range = 100f;
 		playerPlanetWeapon.cooldown = 1000;
-		playerPlanetWeapon.speed = 50f;
+		playerPlanetWeapon.speed = 150f;
 		playerPlanetData.weapon = playerPlanetWeapon;
 		Defense playerPlanetDefense = new Defense();
 		playerPlanetDefense.shield = 10;
@@ -148,19 +148,19 @@ public class TestEngineManager {
 		ShipData playerShip = new ShipData();
 		playerShip.model = "hawk";
 		playerShip.type = ShipType.FIGHTER;
-		playerShip.movementSpeed = 50;
+		playerShip.movementSpeed = 60;
 		playerShip.cost = 2;
 		playerShip.commandPointsCost = 1;
 		Weapon playerShipWeapon = new Weapon();
 		playerShipWeapon.type = WeaponType.LASER;
 		playerShipWeapon.damage = 5;
-		playerShipWeapon.range = 60f;
+		playerShipWeapon.range = 30f;
 		playerShipWeapon.cooldown = 2000;
 		playerShipWeapon.speed = 80f;
 		playerShip.weapon = playerShipWeapon;
 		Defense playerShipDefense = new Defense();
-		playerShipDefense.shield = 2;
-		playerShipDefense.armor = 5;
+		playerShipDefense.shield = 6;
+		playerShipDefense.armor = 15;
 		playerShipDefense.shieldRegenerationSpeed = 0.1f;
 		playerShip.defense = playerShipDefense;
 		player.ships.add(playerShip);
@@ -173,13 +173,13 @@ public class TestEngineManager {
 		PlanetInitialization neutralPlanet1 = new PlanetInitialization();
 		neutralPlanet1.ownerId = 0;
 		neutralPlanet1.position = new Vector2(-200, 0);
-		neutralPlanet1.startArmorPercent = 0.1f;
+		neutralPlanet1.startArmorPercent = 0.2f;
 		planets.add(neutralPlanet1);
 		
 		PlanetInitialization neutralPlanet2 = new PlanetInitialization();
 		neutralPlanet2.ownerId = 0;
 		neutralPlanet2.position = new Vector2(200, 0);
-		neutralPlanet2.startArmorPercent = 0.1f;
+		neutralPlanet2.startArmorPercent = 0.2f;
 		planets.add(neutralPlanet2);
 		
 		PlanetInitialization ancientPlanet = new PlanetInitialization();
