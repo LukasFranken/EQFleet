@@ -34,7 +34,8 @@ public class MetricUtil {
 
 	private static final float elementMargin = 4f;
 	private static Texture backgroundColorTexture;
-	private static float topsidePanelOffset = 0f;
+	private static float topsidePanelOffset = 30f;
+	private static float horizontalPanelOffset = 20f;
 	
 	private static boolean spanHorizontal;
 	
@@ -105,14 +106,14 @@ public class MetricUtil {
 			batch.begin();
 			float panelWidth = calculatePanelWidth();
 			float panelHeight = fixedHeight == 0 ? elementMargin + (metrics.size() * (FontUtil.getFontHeightPx() + elementMargin)) : fixedHeight;
-			Rectangle panelBounds = new Rectangle(0, Gdx.graphics.getHeight() - topsidePanelOffset - panelHeight, panelWidth, panelHeight);
+			Rectangle panelBounds = new Rectangle(0, Gdx.graphics.getHeight() - panelHeight, panelWidth, panelHeight);
 			batch.setColor(1f, 1f, 1f, 0.5f);
 			batch.draw(backgroundColorTexture, panelBounds.x, panelBounds.y, panelBounds.width, panelBounds.height);
 			batch.end();
 			for (int i = 0; i < metrics.size(); i++) {
 				if (i + itemOffset < metrics.size()) {
 					float labelHeight = FontUtil.getFontHeightPx(panelFontType) + elementMargin;
-					Rectangle metricBounds = new Rectangle(elementMargin, Gdx.graphics.getHeight() - topsidePanelOffset - ((i + 1) * labelHeight) - elementMargin, calculatePanelWidth() - (elementMargin * 2), labelHeight);
+					Rectangle metricBounds = new Rectangle(horizontalPanelOffset, Gdx.graphics.getHeight() - topsidePanelOffset - ((i + 1) * (labelHeight + elementMargin)), calculatePanelWidth() - (horizontalPanelOffset * 2), labelHeight);
 					if (metricBounds.y > panelBounds.y) {
 						render(metrics.get(i + itemOffset), metricBounds, i + itemOffset);
 					}
@@ -138,13 +139,13 @@ public class MetricUtil {
 	}
 
 	private static void renderScrollButtons(Rectangle panelBounds) {
-		scrollUpButton.setPosition(panelBounds.x, panelBounds.y);
-		scrollUpButton.setFixedWidth(panelBounds.width / 2);
+		scrollUpButton.setPosition(panelBounds.x + horizontalPanelOffset, panelBounds.y);
+		scrollUpButton.setFixedWidth((panelBounds.width / 2) - (horizontalPanelOffset * 2));
 		scrollUpButton.setFixedHeight(scrollButtonButtonHeight);
 		scrollUpButton.render();
 		
-		scrollDownButton.setPosition(panelBounds.x + (panelBounds.width / 2), panelBounds.y);
-		scrollDownButton.setFixedWidth(panelBounds.width / 2);
+		scrollDownButton.setPosition(panelBounds.x + (panelBounds.width / 2) + horizontalPanelOffset, panelBounds.y);
+		scrollDownButton.setFixedWidth((panelBounds.width / 2) - (horizontalPanelOffset * 2));
 		scrollDownButton.setFixedHeight(scrollButtonButtonHeight);
 		scrollDownButton.render();
 	}

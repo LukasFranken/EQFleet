@@ -30,7 +30,7 @@ public class Console {
 	private static int tapSize = 100;
 	private static int metricsHeight = 200;
 	private static int consoleInputHeight = 30;
-	private static int bottomMargin = 20;
+	private static int borderMargin = 30;
 	
 	private static int logLineHeight = 14;
 	
@@ -114,9 +114,9 @@ public class Console {
 		int logPanelMargin = 10;
 		Rectangle logsBounds = new Rectangle(
 				logPanelMargin, 
-				consoleInputHeight + logPanelMargin + bottomMargin, 
+				consoleInputHeight + logPanelMargin + borderMargin, 
 				Gdx.graphics.getWidth() - (logPanelMargin * 2), 
-				Gdx.graphics.getHeight() - consoleInputHeight - metricsHeight - (logPanelMargin * 2) - bottomMargin);
+				Gdx.graphics.getHeight() - consoleInputHeight - metricsHeight - (logPanelMargin * 2) - borderMargin);
 		SimpleShapeRenderer.drawRectangle(logsBounds, DefaultUIValues.skinColor, 1);
 		
 		int logLineHorizontalMargin = 5;
@@ -139,7 +139,7 @@ public class Console {
 	}
 	
 	private static void renderConsoleInput() {
-		commandTextField.setBounds(new Rectangle(0, bottomMargin, Gdx.graphics.getWidth(), consoleInputHeight));
+		commandTextField.setBounds(new Rectangle(borderMargin, borderMargin, Gdx.graphics.getWidth() - (borderMargin * 2), consoleInputHeight));
 		commandTextField.render();
 	}
 
