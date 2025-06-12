@@ -1,5 +1,7 @@
 package de.instinct.eqlibgdxutils.debug.logging;
 
+import com.badlogic.gdx.graphics.Color;
+
 public enum ConsoleColor {
 	
 	DEFAULT("\u001B[0m"),
@@ -21,6 +23,31 @@ public enum ConsoleColor {
 	
 	public String getCode() {
 		return this.code;
+	}
+
+	public Color getGameColor() {
+		switch (this) {
+			case BLACK:
+				return Color.BLACK;
+			case RED:
+				return Color.RED;
+			case GREEN:
+				return Color.GREEN;
+			case YELLOW:
+				return Color.YELLOW;
+			case BLUE:
+				return Color.BLUE;
+			case MAGENTA:
+				return Color.MAGENTA;
+			case CYAN:
+				return Color.CYAN;
+			case PINK:
+				return new Color(1f, 0.41f, 0.71f, 1f);
+			case GRAY:
+				return new Color(0.588f, 0.588f, 0.588f, 1f);
+			default:
+				return Color.WHITE;
+		}
 	}
 
 }

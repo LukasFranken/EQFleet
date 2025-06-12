@@ -27,6 +27,8 @@ public class App extends ApplicationAdapter {
 	
     public static final String VERSION = "0.0.22";
     private static final String LOGTAG = "APP";
+    
+    private static boolean halted;
 
     @Override
     public void create() {
@@ -58,16 +60,20 @@ public class App extends ApplicationAdapter {
 		
 		try {
 			InputUtil.update();
-			AudioManager.update();
-			ScreenUtils.clear(0f, 0f, 0f, 1f);
-			ParticleRenderer.updateParticles();
-	        ParticleRenderer.renderParticles("stars");
-	        Intro.render();
-	        Menu.render();
-	        Game.render();
-	        PopupRenderer.render();
+			if (!halted) {
+				AudioManager.update();
+				ScreenUtils.clear(0f, 0f, 0f, 1f);
+				ParticleRenderer.updateParticles();
+		        ParticleRenderer.renderParticles("stars");
+		        Intro.render();
+		        Menu.render();
+		        Game.render();
+		        PopupRenderer.render();
+			}
 		} catch (Exception e) {
+			Logger.log("APP", e.getMessage(), ConsoleColor.RED);
 			e.printStackTrace();
+			halted = true;
 		}
         
         long endNanoTime = System.nanoTime();

@@ -35,7 +35,8 @@ public class GameClient {
     		client.addListener(connectionListener);
             client.connect(5000, ADDRESS, PORT_TCP, PORT_UDP);
         } catch (IOException e) {
-            Gdx.app.error("GameClient", "Failed to connect to server", e);
+            Logger.log("GameClient", "Failed to connect to server + " + e.getMessage(), ConsoleColor.RED);
+            e.printStackTrace();
         }
 		active = true;
 	}

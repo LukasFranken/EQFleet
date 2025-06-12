@@ -11,7 +11,6 @@ import com.badlogic.gdx.math.Rectangle;
 import de.instinct.eqlibgdxutils.InputUtil;
 import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.debug.Metric;
-import de.instinct.eqlibgdxutils.debug.MetricUpdate;
 import de.instinct.eqlibgdxutils.debug.MetricUtil;
 import de.instinct.eqlibgdxutils.debug.logging.LogLine;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
@@ -31,6 +30,7 @@ public class Console {
 	private static int tapSize = 100;
 	private static int metricsHeight = 200;
 	private static int consoleInputHeight = 30;
+	private static int bottomMargin = 20;
 	
 	private static int logLineHeight = 14;
 	
@@ -114,9 +114,9 @@ public class Console {
 		int logPanelMargin = 10;
 		Rectangle logsBounds = new Rectangle(
 				logPanelMargin, 
-				consoleInputHeight + logPanelMargin, 
+				consoleInputHeight + logPanelMargin + bottomMargin, 
 				Gdx.graphics.getWidth() - (logPanelMargin * 2), 
-				Gdx.graphics.getHeight() - consoleInputHeight - metricsHeight - (logPanelMargin * 2));
+				Gdx.graphics.getHeight() - consoleInputHeight - metricsHeight - (logPanelMargin * 2) - bottomMargin);
 		SimpleShapeRenderer.drawRectangle(logsBounds, DefaultUIValues.skinColor, 1);
 		
 		int logLineHorizontalMargin = 5;
@@ -128,6 +128,7 @@ public class Console {
 			Label logLineLabel = new Label(labelText);
 			logLineLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
 			logLineLabel.setType(FontType.TINY);
+			logLineLabel.setColor(logLine.getColor().getGameColor());
 			logLineLabel.setBounds(new Rectangle(
 					logsBounds.x + logLineHorizontalMargin,
 					logsBounds.y + (i * logLineHeight),
@@ -138,7 +139,7 @@ public class Console {
 	}
 	
 	private static void renderConsoleInput() {
-		commandTextField.setBounds(new Rectangle(0, 0, Gdx.graphics.getWidth(), consoleInputHeight));
+		commandTextField.setBounds(new Rectangle(0, bottomMargin, Gdx.graphics.getWidth(), consoleInputHeight));
 		commandTextField.render();
 	}
 

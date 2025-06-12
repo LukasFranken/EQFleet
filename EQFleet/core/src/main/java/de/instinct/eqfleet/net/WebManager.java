@@ -6,6 +6,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import de.instinct.api.core.API;
+import de.instinct.api.core.logging.LoggingHook;
 import de.instinct.eqfleet.GlobalStaticData;
 import de.instinct.eqfleet.net.model.Request;
 import de.instinct.eqfleet.net.model.RequestConsumer;
@@ -25,6 +26,14 @@ public class WebManager {
 
     public static void init() {
         requestQueue = new ConcurrentLinkedQueue<>();
+        API.setLoggingHook(new LoggingHook() {
+			
+			@Override
+			public void log(String message) {
+				Logger.log("API", message, ConsoleColor.MAGENTA);
+			}
+			
+		});
         API.initialize(GlobalStaticData.configuration);
         scheduler = Executors.newSingleThreadScheduledExecutor();
 		scheduler.scheduleAtFixedRate(() -> {
