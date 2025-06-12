@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.badlogic.gdx.math.Vector2;
 
+import de.instinct.engine.combat.Ship;
 import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.Player;
 import de.instinct.engine.model.PlayerConnectionStatus;
@@ -44,12 +45,37 @@ public class EngineUtility {
 	public static void checkVictory(GameState state) {
 	    if (state.winner != 0) return;
 
-	    for (Player p : state.players) {
-	        if (state.teamATPs.get(p.teamId) >= state.atpToWin) {
-	            state.winner = p.teamId;
+	    for (Player player : state.players) {
+	        if (state.teamATPs.get(player.teamId) >= state.atpToWin) {
+	            state.winner = player.teamId;
 	            return;
 	        }
 	    }
+	    
+	    boolean team1HasUnit = false;
+	    boolean team2HasUnit = false;
+	    for (Planet planet : state.planets) {
+	        if (getPlayer(state.players, planet.ownerId).teamId == 1) {
+	        	team1HasUnit = true;
+	        }
+	        if (getPlayer(state.players, planet.ownerId).teamId == 2) {
+	        	team2HasUnit = true;
+	        }
+	    }
+	    for (Ship ship : state.ships) {
+	        if (getPlayer(state.players, ship.ownerId).teamId == 1) {
+	        	team1HasUnit = true;
+	        }
+	        if (getPlayer(state.players, ship.ownerId).teamId == 2) {
+	        	team2HasUnit = true;
+	        }
+	    }
+	    if (!team1HasUnit) {
+	    	state.winner = 2;
+	    }
+		if (!team2HasUnit) {
+			state.winner = 1;
+		}
 
 	    if (state.gameTimeMS >= state.maxGameTimeMS) {
 	    	int highestTeamId = 1;
