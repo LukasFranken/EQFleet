@@ -99,6 +99,10 @@ public class Menu {
 	}
 	
 	public static void render() {
+		if (MenuModel.moduleChanged) {
+			reload();
+			MenuModel.moduleChanged = false;
+		}
 		while (reloadRequired.peek() != null) {
 			renderers.get(reloadRequired.poll()).reload();
 		}
@@ -134,7 +138,7 @@ public class Menu {
 			    result -> {
 			    	if (result != null) {
 			    		MenuModel.modules = result;
-			    		reload();
+			    		MenuModel.moduleChanged = true;
 			    		queue(LoadProfileMessage.builder().build());
 			    		queue(LoadResourcesMessage.builder().build());
 					} else {

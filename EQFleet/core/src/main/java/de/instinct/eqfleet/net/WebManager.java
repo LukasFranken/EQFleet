@@ -1,8 +1,9 @@
 package de.instinct.eqfleet.net;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
-
-import com.badlogic.gdx.utils.Timer;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import de.instinct.api.core.API;
 import de.instinct.eqfleet.GlobalStaticData;
@@ -18,19 +19,17 @@ public class WebManager {
 	
     public static ConcurrentLinkedQueue<Request<?>> requestQueue;
 
-    private static final float NETWORK_UPDATE_CLOCK_MS = 20;
+    private static final long NETWORK_UPDATE_CLOCK_MS = 50;
+    
+    private static ScheduledExecutorService scheduler;
 
     public static void init() {
         requestQueue = new ConcurrentLinkedQueue<>();
         API.initialize(GlobalStaticData.configuration);
-        Timer.schedule(new Timer.Task() {
-        	
-            @Override
-            public void run() {
-                update();
-            }
-            
-        }, 0, NETWORK_UPDATE_CLOCK_MS / 1000f);
+        scheduler = Executors.newSingleThreadScheduledExecutor();
+		scheduler.scheduleAtFixedRate(() -> {
+			update();
+		}, 0, NETWORK_UPDATE_CLOCK_MS, TimeUnit.MILLISECONDS);
     }
 
     private static void update() {
@@ -49,6 +48,13 @@ public class WebManager {
             if (result != null) Logger.log(LOGTAG, "received response: " + result, ConsoleColor.BLUE);
         });
         requestQueue.add(request);
+    }
+    
+    public static void dispose() {
+        if (scheduler != null) {
+            scheduler.shutdownNow();
+        }
+        requestQueue.clear();
     }
     
 }

@@ -41,8 +41,6 @@ public class GlowShapeRenderer {
             throw new RuntimeException("Blur shader failed to compile:\n" + blurShader.getLog());
         }
         blurShader.bind();
-        blurShader.setUniformf("u_radius", radius);
-        blurShader.setUniformf("u_dropoff", dropoff);
         float texelX = 1f / Gdx.graphics.getWidth();
         float texelY = 1f / Gdx.graphics.getHeight();
         blurShader.setUniformf("u_texelSize", texelX, texelY);
@@ -73,6 +71,8 @@ public class GlowShapeRenderer {
         batch.setShader(blurShader);
         batch.begin();
         blurShader.setUniformf("u_strength", glow);
+        blurShader.setUniformf("u_radius", radius);
+        blurShader.setUniformf("u_dropoff", dropoff);
         batch.draw(fboA.getColorBufferTexture(), 0, 0, w, h);
         batch.end();
         batch.setShader(null);

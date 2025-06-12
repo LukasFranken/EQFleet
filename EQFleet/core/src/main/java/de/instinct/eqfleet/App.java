@@ -40,6 +40,7 @@ public class App extends ApplicationAdapter {
     	WebManager.init();
         initializeDebugger();
         TextureManager.init();
+        TextureManager.setDefaultGlowRadius(2f);
         Intro.init();
         Menu.init();
         Game.init();
@@ -88,6 +89,7 @@ public class App extends ApplicationAdapter {
         TextureManager.dispose();
         AudioManager.dispose();
         ModelRenderer.dispose();
+        WebManager.dispose();
         Logger.log(LOGTAG, "EQFLEET TERMINATED", ConsoleColor.YELLOW);
     }
     

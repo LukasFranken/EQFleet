@@ -1,5 +1,6 @@
 package de.instinct.eqfleet.menu.module.main.tab.play;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 
@@ -42,8 +43,10 @@ public class PlayTab {
 	}
 	
 	private static void connectToGameserver() {
-		Game.start();
-		Menu.close();
+		Gdx.app.postRunnable(() -> {
+		    Game.start();
+		    Menu.close();
+		  });
 	}
 
 	public static void startMatchmaking() {
@@ -143,6 +146,7 @@ public class PlayTab {
 	            	        			() -> API.matchmaking().matchmaking(lobbyUUID),
 	            					    result -> {
 	            					    	currentMatchmakingStatus = result;
+	            					    	System.out.println("Matchmaking status: " + currentMatchmakingStatus);
 	            					    	if (result.getCode() == MatchmakingStatusResponseCode.READY) {
 	            					    		connectToGameserver();
 	            					    	}

@@ -11,5 +11,6 @@ public class MenuModel {
 	public static volatile Rectangle moduleBounds;
 	public static volatile MenuModule activeModule;
 	public static volatile ModuleData modules;
+	public static volatile boolean moduleChanged;
 
 }

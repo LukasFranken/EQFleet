@@ -80,21 +80,12 @@ public class TextureManager {
 		textures.put(tag, colorTextureLoader.createTexture(color));
 	}
 	
+	public static void setDefaultGlowRadius(float radius) {
+		glowShapeRenderer.radius = radius;
+	}
+	
 	public static void createShapeTexture(String tag, ComplexShapeType type, Rectangle bounds, Color color) {
-		switch (type) {
-		case RECTANGLE:
-			
-			break;
-		case ROUNDED_RECTANGLE:
-			put(tag, glowShapeRenderer.getGlowTexture(bounds, color));
-			break;
-		case CIRCTANGLE:
-			
-			break;
-		case CIRCLE:
-			
-			break;
-		}
+		createShapeTexture(tag, type, bounds, color, glowShapeRenderer.defaultGlow);
 	}
 	
 	public static void createShapeTexture(String tag, ComplexShapeType type, Rectangle bounds, Color color, float glow) {

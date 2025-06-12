@@ -57,7 +57,12 @@ public class CustomDriver extends LocalDriver {
 	@Override
 	protected void postEngineUpdate() {
 		if (GameModel.activeGameState != null && GameModel.activeGameState.started) {
-        	EngineUtility.checkVictory(GameModel.activeGameState);
+			try {
+				EngineUtility.checkVictory(GameModel.activeGameState);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+        	
         	if (GameModel.activeGameState.winner != 0) {
     			Game.stop();
     		}

@@ -101,10 +101,12 @@ public class ProjectileRenderer {
 	}
 
 	private ProjectileInstance getProjectileInstance(Projectile projectile) {
-		return projectileInstances.stream()
-				.filter(instance -> instance.getData().id == projectile.id)
-				.findFirst()
-				.orElse(null);
+		for (ProjectileInstance instance : projectileInstances) {
+			if (instance.getData().id == projectile.id) {
+				return instance;
+			}
+		}
+		return null;
 	}
 
 	private ProjectileInstance instanciateProjectileInstance(Projectile projectile, GameState state) {
