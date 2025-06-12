@@ -9,6 +9,8 @@ import com.esotericsoftware.kryo.Kryo;
 
 import de.instinct.engine.ai.AiDifficulty;
 import de.instinct.engine.combat.Ship;
+import de.instinct.engine.combat.projectile.DirectionalProjectile;
+import de.instinct.engine.combat.projectile.HomingProjectile;
 import de.instinct.engine.combat.projectile.Projectile;
 import de.instinct.engine.model.AiPlayer;
 import de.instinct.engine.model.GameState;
@@ -54,6 +56,8 @@ public class KryoRegistrator {
 		kryo.register(Defense.class);
 		kryo.register(Ship.class);
 		kryo.register(Projectile.class);
+		kryo.register(DirectionalProjectile.class);
+		kryo.register(HomingProjectile.class);
 		kryo.register(Vector2.class);
 		kryo.register(PlayerConnectionStatus.class);
 		kryo.register(PlanetData.class);
