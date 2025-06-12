@@ -4,6 +4,7 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 
+import de.instinct.eqlibgdxutils.InputUtil;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
 import de.instinct.eqlibgdxutils.rendering.ui.module.hover.HoverInfo;
@@ -19,13 +20,14 @@ public abstract class Button extends Component {
 	private boolean down;
 	private boolean hovered;
 	private HoverInfo hoverInfo;
+	private boolean consoleBypass;
 
 	@Override
 	public void update() {
 		super.update();
 		Vector3 touchPoint = new Vector3(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY(), 0);
         if (getBounds().contains(touchPoint.x, touchPoint.y)) {
-        	if (Gdx.input.justTouched()) {
+        	if (consoleBypass ? InputUtil.isPressedConsole() : InputUtil.isPressed()) {
     			if (!down) {
     				down = true;
             	}

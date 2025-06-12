@@ -76,7 +76,7 @@ public class PopupRenderer {
 			popup.getContentContainer().setPosition(popupBounds.x + MARGIN, popupBounds.y + MARGIN);
 			popup.getContentContainer().update();
 			popup.getContentContainer().render();
-			if (Gdx.input.justTouched() && !popupBounds.contains(InputUtil.getMousePosition())) {
+			if (InputUtil.isClicked() && !popupBounds.contains(InputUtil.getMousePosition())) {
 				close();
 			}
 		}

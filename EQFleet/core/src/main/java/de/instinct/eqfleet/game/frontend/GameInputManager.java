@@ -11,6 +11,7 @@ import de.instinct.engine.model.planet.Planet;
 import de.instinct.engine.net.message.types.FleetMovementMessage;
 import de.instinct.engine.util.EngineUtility;
 import de.instinct.eqfleet.game.GameModel;
+import de.instinct.eqlibgdxutils.InputUtil;
 
 public class GameInputManager {
 	
@@ -24,7 +25,7 @@ public class GameInputManager {
 		}
 	    Vector3 worldTouch = getTouchWorldPosition(camera);
 
-	    if (Gdx.input.justTouched()) {
+	    if (InputUtil.isClicked()) {
 	        for (Planet planet : state.planets) {
 	            if (planet.ownerId == GameModel.playerId && isClickInsidePlanet(worldTouch, planet)) {
 	                selectedPlanetId = planet.id;

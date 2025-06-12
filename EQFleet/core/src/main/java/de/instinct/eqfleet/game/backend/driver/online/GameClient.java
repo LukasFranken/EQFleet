@@ -23,7 +23,7 @@ public class GameClient {
 	public boolean active;
 	
 	public GameClient() {
-		client = new Client();
+		client = new Client(8192, 8192);
         Kryo kryo = client.getKryo();
         KryoRegistrator.registerAll(kryo);
         connectionListener = new GameConnectionListener();

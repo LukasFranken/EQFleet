@@ -29,6 +29,14 @@ public class StringUtils {
 		decimalFormat.setMaximumFractionDigits(decimals);
 		return decimalFormat.format(value).replace(",", ".");
 	}
+	
+	public static String formatFixed(double value, int decimals) {
+	    decimalFormat.setMinimumFractionDigits(decimals);
+	    decimalFormat.setMaximumFractionDigits(decimals);
+	    String result = decimalFormat.format(value).replace(",", ".");
+	    decimalFormat.setMinimumFractionDigits(0);
+	    return result;
+	}
 
 	public static String barLabelFormat(double value, double maxValue) {
 		return format(value, 2) + " / " + format(maxValue, 2);
@@ -48,6 +56,10 @@ public class StringUtils {
 
 	public static String limit(String message, int limit) {
 		return message.length() > limit ? message.substring(0, limit) : message;
+	}
+	
+	public static String limitWithDotDotDot(String message, int limit) {
+		return message.length() > limit ? message.substring(0, limit - 3) + "..." : message;
 	}
 
 	public static String compress(String text) {

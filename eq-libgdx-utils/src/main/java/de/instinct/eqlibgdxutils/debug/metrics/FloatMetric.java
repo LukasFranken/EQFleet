@@ -17,7 +17,7 @@ public class FloatMetric extends Metric<Float> {
 
 	@Override
 	public String getValueString() {
-		return StringUtils.format(getValue() == null ? 0F : getValue(), decimals);
+		return StringUtils.formatFixed(getValue() == null ? 0F : getValue(), decimals);
 	}
 
 }

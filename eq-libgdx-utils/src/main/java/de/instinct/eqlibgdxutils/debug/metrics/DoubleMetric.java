@@ -17,7 +17,7 @@ public class DoubleMetric extends Metric<Double> {
 
 	@Override
 	public String getValueString() {
-		return StringUtils.format(getValue() == null ? 0D : getValue(), decimals);
+		return StringUtils.formatFixed(getValue() == null ? 0D : getValue(), decimals);
 	}
 
 }

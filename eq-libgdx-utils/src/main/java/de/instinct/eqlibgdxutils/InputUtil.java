@@ -5,14 +5,49 @@ import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
+import de.instinct.eqlibgdxutils.debug.console.Console;
+
 public class InputUtil {
 	
+	private static boolean touched;
+	private static boolean pressed;
+	private static boolean released;
+	
+	public static void update() {
+		if (Gdx.input.isTouched()) {
+			pressed = true;
+		} else {
+			pressed = false;
+			released = true;
+		}
+		if (!touched && released) {
+			if (pressed) {
+				touched = true;
+				released = false;
+			}
+		} else {
+			touched = false;
+		}
+	}
+	
 	public static boolean mouseIsOver(Rectangle rectangle) {
-		return rectangle.contains(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+		return rectangle.contains(getMouseX(), getMouseY());
 	}
 
-	public static boolean leftMouseIsClicked() {
-		return Gdx.input.isButtonJustPressed(Buttons.LEFT);
+	public static boolean isClicked() {
+		return touched && !Console.isActive();
+	}
+	
+	public static boolean isPressed() {
+		return pressed && !Console.isActive();
+	}
+	
+	public static boolean isPressedConsole() {
+		return pressed;
+	}
+	
+	public static boolean isClickedConsole() {
+		return touched;
 	}
 	
 	public static boolean rightMouseIsClicked() {

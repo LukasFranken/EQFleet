@@ -163,7 +163,9 @@ public class Menu {
 		close();
 		menuRenderer.dispose();
 		for (BaseModuleRenderer renderer : renderers.values()) {
-			renderer.dispose();
+			if (renderer != null) {
+				renderer.dispose();
+			}
 		}
 	}
 

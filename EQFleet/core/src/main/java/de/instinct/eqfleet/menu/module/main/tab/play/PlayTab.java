@@ -146,7 +146,6 @@ public class PlayTab {
 	            	        			() -> API.matchmaking().matchmaking(lobbyUUID),
 	            					    result -> {
 	            					    	currentMatchmakingStatus = result;
-	            					    	System.out.println("Matchmaking status: " + currentMatchmakingStatus);
 	            					    	if (result.getCode() == MatchmakingStatusResponseCode.READY) {
 	            					    		connectToGameserver();
 	            					    	}

@@ -13,6 +13,7 @@ import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
 import de.instinct.eqfleet.menu.module.inventory.InventoryModel;
 import de.instinct.eqfleet.menu.module.profile.ProfileModel;
+import de.instinct.eqlibgdxutils.InputUtil;
 import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
@@ -112,8 +113,8 @@ public class MenuRenderer extends BaseModuleRenderer {
 	
 	private void calculateMenuBounds() {
 		float margin = 20f;
-		menuBounds = new Rectangle(margin, margin, Gdx.graphics.getWidth() - (margin * 2), Gdx.graphics.getHeight() - 130);
-		MenuModel.moduleBounds = new Rectangle(margin, margin, Gdx.graphics.getWidth() - (margin * 2), Gdx.graphics.getHeight() - 130 - titleHeight);
+		menuBounds = new Rectangle(margin, margin + 20, Gdx.graphics.getWidth() - (margin * 2), Gdx.graphics.getHeight() - 150);
+		MenuModel.moduleBounds = new Rectangle(margin, margin + 20, Gdx.graphics.getWidth() - (margin * 2), Gdx.graphics.getHeight() - 150 - titleHeight);
 	}
 
 	private void createModuleButton(MenuModule module) {
@@ -194,7 +195,7 @@ public class MenuRenderer extends BaseModuleRenderer {
 				Rectangle profileBounds = new Rectangle(0, menuBounds.y + menuBounds.height + 10, 185, 200);
 				Vector3 touchPoint = new Vector3(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY(), 0);
 		        if (profileBounds.contains(touchPoint.x, touchPoint.y)) {
-		        	if (Gdx.input.justTouched()) {
+		        	if (InputUtil.isClicked()) {
 		        		Menu.openModule(MenuModule.PROFILE);
 		        	}
 		        }
@@ -209,7 +210,7 @@ public class MenuRenderer extends BaseModuleRenderer {
 				Rectangle inventoryBounds = new Rectangle(menuBounds.x + menuBounds.width - 80, menuBounds.y + menuBounds.height + 10, 120, 120);
 				Vector3 touchPoint = new Vector3(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY(), 0);
 		        if (inventoryBounds.contains(touchPoint.x, touchPoint.y)) {
-		        	if (Gdx.input.justTouched()) {
+		        	if (InputUtil.isClicked()) {
 		        		Menu.openModule(MenuModule.INVENTORY);
 		        	}
 		        }
