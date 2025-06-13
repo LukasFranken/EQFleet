@@ -27,7 +27,7 @@ import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.SimpleShapeRenderer;
 @SuppressWarnings("rawtypes")
 public class Console {
 	
-	private static int tapSize = 100;
+	private static int tapSize = 150;
 	private static int metricsHeight = 200;
 	private static int consoleInputHeight = 30;
 	private static int borderMargin = 30;

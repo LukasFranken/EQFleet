@@ -50,7 +50,7 @@ public class Intro {
 			loadFirstTimeSlides();
 		}
 		versionLabel = new Label("v" + App.VERSION);
-		versionLabel.setBounds(new Rectangle(20, 20, 60, 20));
+		versionLabel.setBounds(new Rectangle(30, 30, 60, 20));
 		versionLabel.setColor(DefaultUIValues.skinColor);
 	}
 
