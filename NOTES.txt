@@ -1,55 +1,80 @@
-Predicted Direction: (-0.91885775,-0.39458886)
+ALPHA RELEASE TODO:
+GENERAL:
+- remove player from matchmaking on dc (not game)
 
-InterceptionCalculationModel
-originPosition=(200.0,0.0), 
-originSpeed=150.0, 
-originRadius=50.0, 
-targetPosition=(77.320854,-90.71601), 
-targetDirection=(0.24253589,0.9701424), 
-targetSpeed=60.0, 
-targetRadius=3.0)
+- preference manager (local)
+ -> glow radius
+ -> skin color
+- copy key in settings
 
-Projectile: 
-id=10,
-ownerId=0,
-position=(150.00009,-0.09819589),
-radius=1.0,
-originId=1,
-weaponType=PROJECTILE, 
-movementSpeed=150.0, 
-damage=5.0, 
-elapsedMS=0.0, 
-lifetimeMS=666, 
-alive=true, 
-direction=(-0.91885775,-0.39458886)
+- Audio
+ -> BG music
+ -> sound FX
 
+GAME:
+- pause game for up to 30 sec total per team on DC
+- AI acting
+ -> at least one difficulty for now, maybe two
+ 
+- Damage types effect implementation
 
+- ingame menu
 
+META:
+- Intro rework
+ -> add back button for intro
+ -> click tutorial screen to skip timed event?
+ 
+- conquest map
+ -> conquering one star system after another
+ -> split in sectors
+ -> like gemcraft
+ -> or any other conquest mode
+ 
+- shipyard expansion
+ -> blueprints in packs in shop?
+ -> higher classes unlocked with rank?
+  -> cruiser, destroyer, titan
+ 
+- Construction expansion
+ -> planet defense
 
+---------------------------------------------------------------------
+FUTURE RELEASES TODO:
+GENERAL:
 
+GAME:
+-> variable ship slots radial menu above planet
+ -> variable building slots below
 
+META:
+- Technology module to unlock abilities and stuff like range and defensebar
 
+- abilities 
+ -> need to be ressearched over time with techtree
+ -> techtree advances with ability usage exp gain
+   -> usage depends on ability effect e.g. damage dealt / units slowed etc.
 
+- Shipyard
+ -> multiple ships
 
-
-
+- Construction expansion
+ -> buildings
+ 
+- factions
+ -> swapable any time
+ -> grants bonus based on loyalty
+ -> malus for changing, but still worth it long term
+ -> mostly affects economy and CP and ship/build/ability slots
+ 
+- market 
+ -> open to trade resources
+ 
+- casino with slight win for generating stuff
+---------------------------------------------------------------------
 ./gradlew ios:launchIPhoneSimulator -P robovm.device.name='iPhone 16 Pro Max'
 ./gradlew lwjgl3:dist
 ./gradlew ios:launchIOSDevice
-
-- toggle debug and show version in debug
-- debug client status
-- custom window
-- custom desktop window start animation
-
-- externalize client prefs
-- preference manager
-
-- copy key in settings
-
-- settings change skin color
-
-- pause game for up to 30 sec total per team on DC
 
 Shipnames:
 - Hawk
@@ -64,66 +89,6 @@ Shipnames:
 - Autumn
 - Spirit of Fire
 
-!!!!
-- routes dragging through friendly planets
-
-- ai acting
-
-- conquest map
- -> conquering one star system after another
- -> split in sectors
- -> like gemcraft
-
-- ships
- -> blueprints in packs in shop
- -> higher classes unlocked with rank
-  -> cruiser, destroyer, titan
-
-- market to trade resources specific to gametype
-
-- abilities need to be ressearched over time with techtree
- -> techtree advances with ability usage exp gain
- 
-- buildings
-
-- factions
- -> swapable any time
- -> grants bonus based on loyalty
- -> mostly affects economy and CP and ship/build/ability slots
-
-- variable ship slots radial menu above planet
-- variable building slots below
-!!!!
-
-- missing lobby update bug
- -> change to event system
-
-- map with enemy strengths and types and resources
-
-- casino with slight win for generating stuff
-
-- maximum planet capacity
- -> replace numbers with bars
-
-- refactor intro logic
-- proper logging especially in webcontroller
-
-- remove player from matchmaking on dc (not game)
-- allow rejoin into game after dc
-
-- add back button for intro
-- click tutorial screen to skip timed event?
-
-- audio manager update on seperate thread?
-- audio queued smooth only first time bug
-- audio sporadically crashes
-
-- inventory service
- -> items, resources
- 
-- store service
- -> assistants, ships, skins etc.
-
 AI
 - consider CP to multi-planet-attack
 - aggressivity mode
@@ -132,8 +97,6 @@ AI
 
 IDEAS
 - equilibrium as resource
- -> resonates with spirit
- -> changes subatomic structure based on closest spirit
  -> when accumulated, can be spent on global goals
  -> global goals give unique rewards
  -> full coop?
@@ -146,20 +109,11 @@ IDEAS
 - web admin panel
  - > with tools like map creator
 - buildings for resource generation
-- 2v2, 3v3?
-- cp abilities
-- market trading
-- different currencies for different upgrades
 - pvp, pve, solo duo - each give different resources
  -> can be exchanged on the market
 - store: only a message: fuck mobile pay2win!
 - Only pay for feature expansions and skins
-- add glow effect shader to game
-- game gets more complex with milestones
 - pvp only at certain complexity
-- tutorial voice
-- music, intensified last minute
-- when fleet collide - battle
 - coop gives bonus resources
 
 Voice mod steps:

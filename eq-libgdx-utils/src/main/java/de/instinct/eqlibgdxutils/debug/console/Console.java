@@ -27,6 +27,8 @@ import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.SimpleShapeRenderer;
 @SuppressWarnings("rawtypes")
 public class Console {
 	
+	private static CommandProcessor commandProcessor;
+	
 	private static int tapSize = 150;
 	private static int metricsHeight = 200;
 	private static int consoleInputHeight = 30;
@@ -66,6 +68,7 @@ public class Console {
 			@Override
 			public void confirmed() {
 				Logger.log("Command", commandTextField.getContent());
+				if (commandProcessor != null) commandProcessor.process(commandTextField.getContent());
 				commandTextField.setContent("");
 			}
 			
@@ -78,6 +81,10 @@ public class Console {
     	if (!MetricUtil.isActive()) {
 			MetricUtil.toggle();
 		}
+	}
+	
+	public static void setCommandProcessor(CommandProcessor newCommandProcessor) {
+		commandProcessor = newCommandProcessor;
 	}
 	
 	public static void toggle() {

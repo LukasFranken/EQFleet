@@ -26,22 +26,29 @@ public class WebManager {
 
     public static void init() {
         requestQueue = new ConcurrentLinkedQueue<>();
-        API.setLoggingHook(new LoggingHook() {
-			
-			@Override
-			public void log(String message) {
-				Logger.log("API", message, ConsoleColor.MAGENTA);
-			}
-			
-		});
-        API.initialize(GlobalStaticData.configuration);
         scheduler = Executors.newSingleThreadScheduledExecutor();
 		scheduler.scheduleAtFixedRate(() -> {
-			update();
+			try {
+				update();
+			} catch (Exception e) {
+				e.printStackTrace();
+				Logger.log(LOGTAG, "Error during network update: " + e.getMessage(), ConsoleColor.RED);
+			}
 		}, 0, NETWORK_UPDATE_CLOCK_MS, TimeUnit.MILLISECONDS);
     }
 
     private static void update() {
+    	if (!API.isInitialized()) {
+    		API.setLoggingHook(new LoggingHook() {
+    			
+    			@Override
+    			public void log(String message) {
+    				Logger.log("API", message, ConsoleColor.MAGENTA);
+    			}
+    			
+    		});
+            API.initialize(GlobalStaticData.configuration);
+    	}
         Request<?> request = requestQueue.peek();
         if (request != null) {
             request.getRequestAction().execute();

@@ -36,6 +36,7 @@ public class App extends ApplicationAdapter {
     	TextureManager.init();
         TextureManager.setDefaultGlowRadius(2f);
     	Console.init();
+    	Console.setCommandProcessor(new EQFleetCommandProcessor());
     	AudioManager.init();
     	FontUtil.init();
     	Gdx.input.setInputProcessor(new InputMultiplexer());
@@ -52,6 +53,7 @@ public class App extends ApplicationAdapter {
         		.decimals(2)
         		.tag("this_frame_time_MS")
         		.build());
+        Logger.log(LOGTAG, "Initialization completed", ConsoleColor.YELLOW);
     }
 
 	@Override
