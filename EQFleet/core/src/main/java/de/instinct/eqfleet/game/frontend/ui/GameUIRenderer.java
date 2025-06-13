@@ -238,6 +238,13 @@ public class GameUIRenderer {
 					renderResourceCircle(hovered.position.x, hovered.position.y, Color.GREEN, (float)(fleetCost / target.planetData.maxResourceCapacity), camera);
 				}
 			}
+			if (hovered.weapon != null) {
+				shapeRenderer.end();
+				Gdx.gl.glLineWidth(1 * (density > 1f ? density : 1f));
+				shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+				shapeRenderer.setColor(GameConfig.getPlayerColor(hovered.ownerId));
+				shapeRenderer.circle(hovered.position.x, hovered.position.y, hovered.weapon.range + EngineUtility.PLANET_RADIUS);
+			}
 		}
 		shapeRenderer.end();
 		Gdx.gl.glDisable(GL20.GL_BLEND);
