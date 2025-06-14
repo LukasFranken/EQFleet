@@ -6,8 +6,6 @@ GENERAL:
  -> glow radius
  -> skin color
  -> audio
- 
-- copy key in settings
 
 - Audio
  -> BG music
