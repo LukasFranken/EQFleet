@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 import de.instinct.api.core.API;
 import de.instinct.api.core.modules.MenuModule;
+import de.instinct.api.matchmaking.dto.LobbyStatusCode;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
@@ -160,6 +161,9 @@ public class Menu {
 	}
 
 	public static void dispose() {
+		if (PlayTab.lobbyStatus != null && PlayTab.lobbyStatus.getCode() == LobbyStatusCode.MATCHING) {
+			PlayTab.stopMatching();
+		}
 		close();
 		menuRenderer.dispose();
 		for (BaseModuleRenderer renderer : renderers.values()) {

@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.api.matchmaking.dto.InviteResponse;
+import de.instinct.api.matchmaking.dto.LobbyStatusCode;
 import de.instinct.api.matchmaking.model.FactionMode;
 import de.instinct.api.matchmaking.model.GameMode;
 import de.instinct.api.matchmaking.model.GameType;
@@ -33,6 +34,7 @@ public class PlayRenderer extends BaseModuleRenderer {
 	private ColorButton startCustomButton;
 	private ColorButton createLobbyButton;
 	private ColorButton leaveLobbyButton;
+	private ColorButton cancelMatchmakingButton;
 	private ActionList invites;
 	
 	private ColorButton aiButton;
@@ -114,6 +116,18 @@ public class PlayRenderer extends BaseModuleRenderer {
 				PlayTab.leaveLobby();
 				selectedVersusMode = null;
 				selectedFactionMode = null;
+			}
+			
+		});
+		
+		cancelMatchmakingButton = getBaseButton("Cancel Matchmaking");
+		cancelMatchmakingButton.setFixedWidth(180f);
+		cancelMatchmakingButton.setFixedHeight(30f);
+		cancelMatchmakingButton.setAction(new Action() {
+			
+			@Override
+			public void execute() {
+				PlayTab.stopMatching();
 			}
 			
 		});
@@ -252,15 +266,19 @@ public class PlayRenderer extends BaseModuleRenderer {
 			if (PlayTab.lobbyStatus != null) {
 				if (PlayTab.lobbyStatus.getType() == null) {
 					renderModeSelection();
+					leaveLobbyButton.setPosition(40, 100);
+					leaveLobbyButton.render();
 				} else {
-					if (PlayTab.currentMatchmakingStatus == null) {
-						renderLobbyOverview();
-					} else {
+					if (PlayTab.lobbyStatus.getCode() == LobbyStatusCode.MATCHING && PlayTab.currentMatchmakingStatus != null) {
 						renderQueueStatus();
+						cancelMatchmakingButton.setPosition((Gdx.graphics.getWidth() - cancelMatchmakingButton.getFixedWidth()) / 2, 100);
+						cancelMatchmakingButton.render();
+					} else {
+						renderLobbyOverview();
+						leaveLobbyButton.setPosition(40, 100);
+						leaveLobbyButton.render();
 					}
 				}
-				leaveLobbyButton.setPosition(40, 100);
-				leaveLobbyButton.render();
 			}
 		}
 	}
@@ -380,15 +398,13 @@ public class PlayRenderer extends BaseModuleRenderer {
 	}
 	
 	private void renderQueueStatus() {
-		if (PlayTab.currentMatchmakingStatus.getCode() != null) {
-			Label statusLabel = new Label(PlayTab.currentMatchmakingStatus.getCode().toString());
-			statusLabel.setBounds(new Rectangle(0, 50, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-			statusLabel.render();
-			
-			Label playerLabel = new Label(PlayTab.currentMatchmakingStatus.getFoundPlayers() + " / " + PlayTab.currentMatchmakingStatus.getRequiredPlayers() + " players found");
-			playerLabel.setBounds(new Rectangle(0, -50, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-			playerLabel.render();
-		}
+		Label statusLabel = new Label(PlayTab.currentMatchmakingStatus.getCode().toString());
+		statusLabel.setBounds(new Rectangle(0, 50, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		statusLabel.render();
+		
+		Label playerLabel = new Label(PlayTab.currentMatchmakingStatus.getFoundPlayers() + " / " + PlayTab.currentMatchmakingStatus.getRequiredPlayers() + " players found");
+		playerLabel.setBounds(new Rectangle(0, -50, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		playerLabel.render();
 	}
 
 	@Override

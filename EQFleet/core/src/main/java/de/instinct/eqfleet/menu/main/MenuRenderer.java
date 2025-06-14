@@ -33,7 +33,7 @@ public class MenuRenderer extends BaseModuleRenderer {
 	private Label usernameLabel;
 	private Label creditsLabel;
 	
-	private final float OPEN_ANIMATION_DURATION = 3f;
+	private final float OPEN_ANIMATION_DURATION = 1.5f;
 	private float elapsed;
 	private Label menuBackground;
 	private Label title;

@@ -34,7 +34,7 @@ public class App extends ApplicationAdapter {
     public void create() {
     	Logger.log(LOGTAG, "Welcome to EQFLEET v" + VERSION, ConsoleColor.YELLOW);
     	TextureManager.init();
-        TextureManager.setDefaultGlowRadius(2f);
+        TextureManager.setDefaultGlowRadius(30f);
     	Console.init();
     	Console.setCommandProcessor(new EQFleetCommandProcessor());
     	AudioManager.init();

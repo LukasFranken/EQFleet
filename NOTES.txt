@@ -1,15 +1,19 @@
 ALPHA RELEASE TODO:
 GENERAL:
-- remove player from matchmaking on dc (not game)
+- remove player from matchmaking on exit (not dc)
 
 - preference manager (local)
  -> glow radius
  -> skin color
+ -> audio
+ 
 - copy key in settings
 
 - Audio
  -> BG music
  -> sound FX
+ 
+- improve fonts
 
 GAME:
 - pause game for up to 30 sec total per team on DC
@@ -18,6 +22,8 @@ GAME:
  
 - Damage types effect implementation
 
+- no stacking health bars
+
 - ingame menu
 
 META:
@@ -25,19 +31,28 @@ META:
  -> add back button for intro
  -> click tutorial screen to skip timed event?
  
-- conquest map
- -> conquering one star system after another
+- combat
+ -> conquest, match, ?? .... 
+ - conquest map
+ -> available with higher rank
+ -> conquering one star system after anotherj
  -> split in sectors
  -> like gemcraft
  -> or any other conquest mode
+ -> proper exp and resource rewards
+ - match
+ -> like now with custom and pvp/ai
+ -> available to beginners, especially vs AI
  
 - shipyard expansion
- -> blueprints in packs in shop?
+ -> blueprints can be bought at will, no rng
  -> higher classes unlocked with rank?
   -> cruiser, destroyer, titan
  
 - Construction expansion
  -> planet defense
+ 
+- playtab logic finished refactoring
 
 ---------------------------------------------------------------------
 FUTURE RELEASES TODO:
@@ -48,6 +63,8 @@ GAME:
  -> variable building slots below
 
 META:
+- social features (friends teams messages etc.)
+
 - Technology module to unlock abilities and stuff like range and defensebar
 
 - abilities 

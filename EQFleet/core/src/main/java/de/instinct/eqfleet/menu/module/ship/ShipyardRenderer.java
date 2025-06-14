@@ -85,7 +85,7 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 		popupContent.getElements().add(createLabelStack("WEAPON", ship.getWeapon().getType().toString()));
 		popupContent.getElements().add(createLabelStack("DAMAGE", StringUtils.format(ship.getWeapon().getDamage(), 0)));
 		popupContent.getElements().add(createLabelStack("RANGE", StringUtils.format(ship.getWeapon().getRange(), 0)));
-		popupContent.getElements().add(createLabelStack("RATE/SEC", StringUtils.format(1000/ship.getWeapon().getCooldown(), 1)));
+		popupContent.getElements().add(createLabelStack("COOLDOWN", StringUtils.format(ship.getWeapon().getCooldown()/1000f, 1) + "s"));
 		popupContent.getElements().add(createLabelStack("SPEED", StringUtils.format(ship.getWeapon().getSpeed(), 0)));
 		popupContent.getElements().add(createLabelStack("--------", "--------"));
 		popupContent.getElements().add(createLabelStack("DEFENSE", ""));

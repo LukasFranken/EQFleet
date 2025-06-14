@@ -28,7 +28,7 @@ public class PlayTab {
 	
 	private static Task updateTask;
 	
-	private static float QUEUE_UPDATE_CLOCK_MS = 1000;
+	private static float QUEUE_UPDATE_CLOCK_MS = 300;
 	
 	public static void update() {
 		
@@ -110,6 +110,13 @@ public class PlayTab {
 			    }
 		);
 	}
+	
+	public static void stopMatching() {
+		WebManager.enqueue(
+			    () -> API.matchmaking().stop(lobbyUUID),
+			    result -> {}
+		);
+	}
 
 	public static void loadData() {
 		lobbyUUID = null;
@@ -121,13 +128,13 @@ public class PlayTab {
 	            @Override
 	            public void run() {
 	            	if (MenuModel.activeModule == MenuModule.PLAY && MenuModel.active) {
+	            		WebManager.enqueue(
+                    			() -> API.matchmaking().get(),
+            				    result -> {
+            				    	lobbyUUID = result;
+            				    }
+            			);
 	            		if (lobbyUUID == null || lobbyUUID.contentEquals("")) {
-	                		WebManager.enqueue(
-	                    			() -> API.matchmaking().get(),
-	            				    result -> {
-	            				    	lobbyUUID = result;
-	            				    }
-	            			);
 	                		WebManager.enqueue(
 	                    			() -> API.matchmaking().invites(),
 	            				    result -> {
