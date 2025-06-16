@@ -6,6 +6,9 @@ GENERAL:
  -> glow radius
  -> skin color
  -> audio
+ 
+- externalize most gamedata like ships, stats, gameloader, mapo etc.
+- increase all HP so that battles last longer
 
 - Audio
  -> BG music
@@ -25,6 +28,8 @@ GAME:
 
 - ingame menu
 
+- fix inverted resource circle for other player
+
 META:
 - Intro rework
  -> add back button for intro
@@ -42,10 +47,6 @@ META:
  - match
  -> like now with custom and pvp/ai
  -> available to beginners, especially vs AI
- 
-- Construction expansion
- -> planet defense
-  -> for now just swap between damage types with balanced values
  
 - playtab logic finished refactoring
 

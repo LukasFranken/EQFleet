@@ -130,7 +130,7 @@ public class ActionList extends BaseModule {
 	        }
 			Label label = new Label(element.getLabel());
 			label.setColor(Color.LIGHT_GRAY);
-			label.setBounds(new Rectangle(getBounds().x + 10, getBounds().y + getBounds().height - (position * getElementHeight()) + (getElementHeight() / 2), getBounds().width / 2, getElementHeight()));
+			label.setBounds(new Rectangle(getBounds().x + 10, getBounds().y + getBounds().height - (position * getElementHeight()), getBounds().width / 2, getElementHeight()));
 			label.render();
 		}
 	}

@@ -12,6 +12,7 @@ import de.instinct.engine.ai.AiEngine;
 import de.instinct.engine.initialization.GameStateInitialization;
 import de.instinct.engine.initialization.PlanetInitialization;
 import de.instinct.engine.map.GameMap;
+import de.instinct.engine.model.AiPlayer;
 import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.PlanetData;
 import de.instinct.engine.model.Player;
@@ -27,8 +28,10 @@ public class TestEngineManager {
 	public static GameState state;
 	
 	private static FleetEngine engine;
+	private static AiEngine aiEngine;
 	
 	public static void init() {
+		aiEngine = new AiEngine();
 		engine = new FleetEngine();
 		engine.initialize();
 		state = engine.initializeGameState(getGameStateInitialization());
@@ -36,6 +39,14 @@ public class TestEngineManager {
 	
 	public static void update(long deltaTime) {
 		engine.update(state, deltaTime);
+		for (Player player : state.players) {
+			if (player instanceof AiPlayer) {
+				List<GameOrder> aiOrders = aiEngine.act((AiPlayer)player, state);
+				for (GameOrder order : aiOrders) {
+					engine.queue(state, order);
+				}
+			}
+		}
 	}
 	
 	public static void queue(GameOrder order) {

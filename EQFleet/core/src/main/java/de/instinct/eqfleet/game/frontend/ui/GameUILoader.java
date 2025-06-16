@@ -40,11 +40,11 @@ public class GameUILoader {
 		loadTimeLabel(bounds);
 		loadOwnCPBar(bounds);
 		loadEnemy1CPBar(bounds);
-		if (PlayTab.lobbyStatus != null && PlayTab.lobbyStatus.getType().factionMode.teamPlayerCount >= 2) {
+		if (PlayTab.lobbyStatus != null && PlayTab.lobbyStatus.getType() != null && PlayTab.lobbyStatus.getType().factionMode.teamPlayerCount >= 2) {
 			loadTeammate1CPBar(bounds);
 			loadEnemy2CPBar(bounds);
 		}
-		if (PlayTab.lobbyStatus != null && PlayTab.lobbyStatus.getType().factionMode.teamPlayerCount >= 3) {
+		if (PlayTab.lobbyStatus != null && PlayTab.lobbyStatus.getType() != null && PlayTab.lobbyStatus.getType().factionMode.teamPlayerCount >= 3) {
 			loadTeammate2CPBar(bounds);
 			loadEnemy3CPBar(bounds);
 		}

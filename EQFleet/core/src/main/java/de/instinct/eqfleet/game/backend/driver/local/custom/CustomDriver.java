@@ -1,8 +1,13 @@
 package de.instinct.eqfleet.game.backend.driver.local.custom;
 
+import java.util.List;
+
 import de.instinct.api.core.API;
 import de.instinct.api.meta.dto.LoadoutData;
+import de.instinct.engine.ai.AiEngine;
 import de.instinct.engine.initialization.GameStateInitialization;
+import de.instinct.engine.model.AiPlayer;
+import de.instinct.engine.model.Player;
 import de.instinct.engine.net.message.NetworkMessage;
 import de.instinct.engine.net.message.types.FleetMovementMessage;
 import de.instinct.engine.net.message.types.LoadedMessage;
@@ -16,10 +21,12 @@ import de.instinct.eqfleet.game.backend.driver.local.LocalDriver;
 public class CustomDriver extends LocalDriver {
 	
 	private CustomLoader customLoader;
+	private AiEngine aiEngine;
 	
 	public CustomDriver() {
 		super();
 		customLoader = new CustomLoader();
+		aiEngine = new AiEngine();
 	}
 
 	@Override
@@ -58,6 +65,14 @@ public class CustomDriver extends LocalDriver {
 	protected void postEngineUpdate() {
 		if (GameModel.activeGameState != null && GameModel.activeGameState.started) {
 			try {
+				for (Player player : GameModel.activeGameState.players) {
+					if (player instanceof AiPlayer) {
+						List<GameOrder> aiOrders = aiEngine.act((AiPlayer)player, GameModel.activeGameState);
+						for (GameOrder order : aiOrders) {
+							engine.queue(GameModel.activeGameState, order);
+						}
+					}
+				}
 				EngineUtility.checkVictory(GameModel.activeGameState);
 			} catch (Exception e) {
 				e.printStackTrace();

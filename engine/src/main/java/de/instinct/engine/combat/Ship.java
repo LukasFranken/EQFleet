@@ -12,6 +12,7 @@ public class Ship extends Unit {
 	public float movementSpeed;
 	public int cost;
 	public int targetPlanetId;
+	public int originPlanetId;
 	
 	public Ship clone() {
 		Ship clone = (Ship) super.clone();

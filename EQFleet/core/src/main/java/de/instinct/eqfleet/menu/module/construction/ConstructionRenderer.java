@@ -127,6 +127,7 @@ private List<ColorButton> turretButtons;
 
 	@Override
 	public void dispose() {
+		if (turretButtons == null) return;
 		for (ColorButton turretButton : turretButtons) {
 			turretButton.dispose();
 		}

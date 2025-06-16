@@ -48,16 +48,12 @@ public class Console {
 		initializeMetrics();
 		activationScreenTaps = new ArrayList<>();
 		activationScreenTaps.add(ActivationScreenTap.builder()
-				.region(new Rectangle(0, 0, tapSize, tapSize))
-				.build());
-		activationScreenTaps.add(ActivationScreenTap.builder()
 				.region(new Rectangle(0, Gdx.graphics.getHeight() - tapSize, tapSize, tapSize))
+				.activated(false)
 				.build());
 		activationScreenTaps.add(ActivationScreenTap.builder()
 				.region(new Rectangle(Gdx.graphics.getWidth() - tapSize, Gdx.graphics.getHeight() - tapSize, tapSize, tapSize))
-				.build());
-		activationScreenTaps.add(ActivationScreenTap.builder()
-				.region(new Rectangle(Gdx.graphics.getWidth() - tapSize, 0, tapSize, tapSize))
+				.activated(false)
 				.build());
 		
 		commandTextField = new LimitedInputField();

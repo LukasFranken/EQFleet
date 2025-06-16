@@ -54,6 +54,7 @@ public class ShipProcessor {
 		newShip.ownerId = movement.playerId;
 		newShip.position = VectorUtil.getTargetPosition(fromPlanet.position, toPlanet.position, EngineUtility.PLANET_RADIUS);
 		newShip.targetPlanetId = movement.toPlanetId;
+		newShip.originPlanetId = movement.fromPlanetId;
 		return newShip;
 	}
 	

@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryo.Kryo;
 
 import de.instinct.engine.ai.AiDifficulty;
+import de.instinct.engine.ai.difficulty.AiBehaviorParameters;
 import de.instinct.engine.combat.Ship;
 import de.instinct.engine.combat.projectile.DirectionalProjectile;
 import de.instinct.engine.combat.projectile.HomingProjectile;
@@ -64,6 +65,7 @@ public class KryoRegistrator {
 		kryo.register(ShipMovementOrder.class);
 		kryo.register(OrderType.class);
 		kryo.register(GameOrder.class);
+		kryo.register(AiBehaviorParameters.class);
 	}
 
 }

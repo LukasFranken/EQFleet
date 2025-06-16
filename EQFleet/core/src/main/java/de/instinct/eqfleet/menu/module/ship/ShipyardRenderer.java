@@ -132,6 +132,7 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 
 	@Override
 	public void dispose() {
+		if (shipButtons == null) return;
 		for (ColorButton shipButton : shipButtons) {
 			shipButton.dispose();
 		}
