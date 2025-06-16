@@ -128,23 +128,27 @@ public class StringUtils {
 	}
 
 	public static String formatBigNumber(long value) {
+	    return formatBigNumber(value, 2);
+	}
+	
+	public static String formatBigNumber(long value, int decimals) {
 	    if (value < 1000) {
 	        return String.valueOf(value);
 	    }
 
 	    if (value < 1_000_000) {
-	    	return cleanDecimal(String.format("%.2f K", value / 1_000.0).replace(',', '.'));
+	    	return cleanDecimal(String.format("%." + decimals + "f K", value / 1_000.0).replace(',', '.'));
 	    }
 
 	    if (value < 1_000_000_000) {
-	        return cleanDecimal(String.format("%.2f M", value / 1_000_000.0).replace(',', '.'));
+	        return cleanDecimal(String.format("%." + decimals + "f M", value / 1_000_000.0).replace(',', '.'));
 	    }
 
 	    if (value < 1_000_000_000_000L) {
-	        return cleanDecimal(String.format("%.2f B", value / 1_000_000_000.0).replace(',', '.'));
+	        return cleanDecimal(String.format("%." + decimals + "f B", value / 1_000_000_000.0).replace(',', '.'));
 	    }
 
-	    return cleanDecimal(String.format("%.2f T", value / 1_000_000_000_000.0).replace(',', '.'));
+	    return cleanDecimal(String.format("%." + decimals + "f T", value / 1_000_000_000_000.0).replace(',', '.'));
 	}
 
 	private static String cleanDecimal(String number) {

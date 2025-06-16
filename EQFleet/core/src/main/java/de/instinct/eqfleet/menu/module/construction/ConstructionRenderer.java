@@ -1,16 +1,16 @@
-package de.instinct.eqfleet.menu.module.ship;
+package de.instinct.eqfleet.menu.module.construction;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.Color;
 
-import de.instinct.api.shipyard.dto.ShipBlueprint;
+import de.instinct.api.construction.dto.PlanetTurretBlueprint;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.main.MenuModel;
-import de.instinct.eqfleet.menu.module.ship.message.UseShipMessage;
+import de.instinct.eqfleet.menu.module.construction.message.UseTurretMessage;
 import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
@@ -23,82 +23,77 @@ import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
 import de.instinct.eqlibgdxutils.rendering.ui.popup.Popup;
 import de.instinct.eqlibgdxutils.rendering.ui.popup.PopupRenderer;
 
-public class ShipyardRenderer extends BaseModuleRenderer {
+public class ConstructionRenderer extends BaseModuleRenderer {
 
-	private List<ColorButton> shipButtons;
+private List<ColorButton> turretButtons;
 	
 	private final float popupWidth = 200f;
 	
 	@Override
 	public void render() {
-		if (shipButtons != null) {
-			renderShips();
+		if (turretButtons != null) {
+			renderTurrets();
 		}
 	}
 
-	private void renderShips() {
+	private void renderTurrets() {
 		int elementsPerRow = 5;
 		float margin = (((float)MenuModel.moduleBounds.width) - (50 * elementsPerRow)) / ((float)(elementsPerRow + 1));
 		
 		int i = 0;
-		for (ColorButton shipButton : shipButtons) {
+		for (ColorButton turretButton : turretButtons) {
 			int column = i % elementsPerRow;
 			int row = 1 + ((int)i / elementsPerRow);
-			shipButton.setPosition(MenuModel.moduleBounds.x + margin + ((50 + margin) * column),
+			turretButton.setPosition(MenuModel.moduleBounds.x + margin + ((50 + margin) * column),
 					MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - ((50 + margin) * row));
-			shipButton.render();
+			turretButton.render();
 			i++;
 		}
 	}
 
 	@Override
 	public void reload() {
-		shipButtons = new ArrayList<>();
-		if (ShipyardModel.shipyard != null && ShipyardModel.shipyard.getOwnedShips() != null) {
-			for (ShipBlueprint ship : ShipyardModel.shipyard.getOwnedShips()) {
-				shipButtons.add(createShipButton(ship));
+		turretButtons = new ArrayList<>();
+		if (ConstructionModel.infrastructure != null && ConstructionModel.infrastructure.getPlanetTurretBlueprints() != null) {
+			for (PlanetTurretBlueprint blueprint : ConstructionModel.infrastructure.getPlanetTurretBlueprints()) {
+				turretButtons.add(createTurretButton(blueprint));
 			}
 		}
 	}
 	
-	private ColorButton createShipButton(ShipBlueprint ship) {
-		ColorButton shipButton = DefaultButtonFactory.colorButton(ship.getModel().substring(0, 3), new Action() {
+	private ColorButton createTurretButton(PlanetTurretBlueprint blueprint) {
+		ColorButton shipButton = DefaultButtonFactory.colorButton(blueprint.getName().substring(0, 3), new Action() {
 			
 			@Override
 			public void execute() {
-				createShipPopup(ship);
+				createTurretPopup(blueprint);
 			}
 			
 		});
-		shipButton.getBorder().setColor(ship.isInUse() ? Color.GREEN : DefaultUIValues.skinColor);
+		shipButton.getBorder().setColor(blueprint.isInUse() ? Color.GREEN : DefaultUIValues.skinColor);
 		return shipButton;
 	}
 	
-	private void createShipPopup(ShipBlueprint ship) {
+	private void createTurretPopup(PlanetTurretBlueprint blueprint) {
 		ElementList popupContent = new ElementList();
 		popupContent.setMargin(10f);
-		popupContent.getElements().add(createLabelStack("TYPE", ship.getType().toString()));
-		popupContent.getElements().add(createLabelStack("COST", ship.getCost() + ""));
-		popupContent.getElements().add(createLabelStack("CP COST", ship.getCommandPointsCost() + ""));
-		popupContent.getElements().add(createLabelStack("SPEED", StringUtils.format(ship.getMovementSpeed(), 0) + ""));
-		popupContent.getElements().add(createLabelStack("--------", "--------"));
-		popupContent.getElements().add(createLabelStack("WEAPON", ship.getWeapon().getType().toString()));
-		popupContent.getElements().add(createLabelStack("DAMAGE", StringUtils.format(ship.getWeapon().getDamage(), 0)));
-		popupContent.getElements().add(createLabelStack("RANGE", StringUtils.format(ship.getWeapon().getRange(), 0)));
-		popupContent.getElements().add(createLabelStack("COOLDOWN", StringUtils.format(ship.getWeapon().getCooldown()/1000f, 1) + "s"));
-		popupContent.getElements().add(createLabelStack("SPEED", StringUtils.format(ship.getWeapon().getSpeed(), 0)));
+		popupContent.getElements().add(createLabelStack("WEAPON", blueprint.getPlanetWeapon().getType().toString()));
+		popupContent.getElements().add(createLabelStack("DAMAGE", StringUtils.format(blueprint.getPlanetWeapon().getDamage(), 0)));
+		popupContent.getElements().add(createLabelStack("RANGE", StringUtils.format(blueprint.getPlanetWeapon().getRange(), 0)));
+		popupContent.getElements().add(createLabelStack("COOLDOWN", StringUtils.format(blueprint.getPlanetWeapon().getCooldown()/1000f, 1) + "s"));
+		popupContent.getElements().add(createLabelStack("SPEED", StringUtils.format(blueprint.getPlanetWeapon().getSpeed(), 0)));
 		popupContent.getElements().add(createLabelStack("--------", "--------"));
 		popupContent.getElements().add(createLabelStack("DEFENSE", ""));
-		popupContent.getElements().add(createLabelStack("ARMOR", StringUtils.format(ship.getDefense().getArmor(), 0)));
-		popupContent.getElements().add(createLabelStack("SHIELD", StringUtils.format(ship.getDefense().getShield(), 0)));
-		popupContent.getElements().add(createLabelStack("SHIELD/SEC", StringUtils.format(ship.getDefense().getShieldRegenerationSpeed(), 1)));
+		popupContent.getElements().add(createLabelStack("ARMOR", StringUtils.format(blueprint.getPlanetDefense().getArmor(), 0)));
+		popupContent.getElements().add(createLabelStack("SHIELD", StringUtils.format(blueprint.getPlanetDefense().getShield(), 0)));
+		popupContent.getElements().add(createLabelStack("SHIELD/SEC", StringUtils.format(blueprint.getPlanetDefense().getShieldRegenerationSpeed(), 1)));
 		
 		ColorButton useButton = DefaultButtonFactory.colorButton("Use", new Action() {
 			
 			@Override
 			public void execute() {
-				Menu.queue(UseShipMessage.builder()
-						.shipUUID(ship.getUuid())
+				Menu.queue(UseTurretMessage.builder()
+						.turretUUID(blueprint.getUuid())
 						.build());
 				
 				PopupRenderer.close();
@@ -110,7 +105,7 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 		popupContent.getElements().add(useButton);
 		
 		PopupRenderer.create(Popup.builder()
-				.title(ship.getModel())
+				.title(blueprint.getName())
 				.contentContainer(popupContent)
 				.build());
 	}
@@ -132,9 +127,9 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 
 	@Override
 	public void dispose() {
-		for (ColorButton shipButton : shipButtons) {
-			shipButton.dispose();
+		for (ColorButton turretButton : turretButtons) {
+			turretButton.dispose();
 		}
 	}
-
+	
 }

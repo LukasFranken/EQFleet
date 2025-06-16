@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 
 import de.instinct.api.core.modules.MenuModule;
+import de.instinct.api.core.modules.ModuleUnlockRequirement;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
 import de.instinct.eqfleet.menu.module.inventory.InventoryModel;
@@ -17,7 +18,9 @@ import de.instinct.eqlibgdxutils.InputUtil;
 import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
+import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.Button;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
+import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ImageButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.HorizontalAlignment;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.subtypes.PlainRectangularLoadingBar;
@@ -28,7 +31,7 @@ import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.ComplexShapeType;
 
 public class MenuRenderer extends BaseModuleRenderer {
 	
-	private Map<MenuModule, ColorButton> tabButtons;
+	private Map<MenuModule, Button> tabButtons;
 	private PlainRectangularLoadingBar expBar;
 	private Label usernameLabel;
 	private Label creditsLabel;
@@ -101,8 +104,14 @@ public class MenuRenderer extends BaseModuleRenderer {
 		TextureManager.createShapeTexture("main_creditsOutline", ComplexShapeType.ROUNDED_RECTANGLE, new Rectangle(menuBounds.x + menuBounds.width - 103, menuBounds.y + menuBounds.height + 10, 85, 20), Color.GREEN);
 		elapsed = 0f;
 		tabButtons = new LinkedHashMap<>();
-		for (MenuModule module : MenuModel.modules.getEnabledModules()) {
+		for (MenuModule module : MenuModel.unlockedModules.getEnabledModules()) {
 			createModuleButton(module);
+		}
+		
+		if (MenuModel.lockedModules != null && MenuModel.lockedModules.getUnlockRequirements() != null) {
+			for (ModuleUnlockRequirement moduleUnlockRequirement : MenuModel.lockedModules.getUnlockRequirements()) {
+				createModuleButton(moduleUnlockRequirement);
+			}
 		}
 	}
 	
@@ -118,8 +127,13 @@ public class MenuRenderer extends BaseModuleRenderer {
 	}
 
 	private void createModuleButton(MenuModule module) {
-		ColorButton tabButton = DefaultButtonFactory.moduleButton(module.getLabel(), module);
+		ColorButton tabButton = DefaultButtonFactory.moduleButton(module);
 		tabButtons.put(module, tabButton);
+	}
+	
+	private void createModuleButton(ModuleUnlockRequirement moduleUnlockRequirement) {
+		ImageButton tabButton = DefaultButtonFactory.moduleButton(moduleUnlockRequirement);
+		tabButtons.put(moduleUnlockRequirement.getModule(), tabButton);
 	}
 
 	@Override
@@ -139,7 +153,7 @@ public class MenuRenderer extends BaseModuleRenderer {
 
 	private void renderTitle() {
 		Rectangle titleBounds = new Rectangle(MenuModel.moduleBounds.x, MenuModel.moduleBounds.y + MenuModel.moduleBounds.height, MenuModel.moduleBounds.width, titleHeight);
-		title.setText(MenuModel.activeModule.getLabel());
+		title.setText(MenuModel.activeModule.toString());
 		title.setBounds(new Rectangle(titleBounds.x + 20f, titleBounds.y, titleBounds.width - 40f, titleBounds.height));
 		title.render();
 		closeModuleButton.setFixedHeight(titleHeight);
@@ -205,7 +219,7 @@ public class MenuRenderer extends BaseModuleRenderer {
 				TextureManager.draw("main_expOutline", alpha);
 			}
 		}
-		if (InventoryModel.resources != null && MenuModel.modules.getEnabledModules().contains(MenuModule.INVENTORY)) {
+		if (InventoryModel.resources != null && MenuModel.unlockedModules.getEnabledModules().contains(MenuModule.INVENTORY)) {
 			if (MenuModel.activeModule != MenuModule.INVENTORY) {
 				Rectangle inventoryBounds = new Rectangle(menuBounds.x + menuBounds.width - 80, menuBounds.y + menuBounds.height + 10, 120, 120);
 				Vector3 touchPoint = new Vector3(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY(), 0);
@@ -230,7 +244,7 @@ public class MenuRenderer extends BaseModuleRenderer {
 		float margin = (((float)menuBounds.width) - (50 * elementsPerRow)) / ((float)(elementsPerRow + 1));
 		
 		int i = 0;
-		for (ColorButton moduleButton : tabButtons.values()) {
+		for (Button moduleButton : tabButtons.values()) {
 			int column = i % elementsPerRow;
 			int row = 1 + ((int)i / elementsPerRow);
 			moduleButton.setPosition(menuBounds.x + margin + ((50 + margin) * column), menuBounds.y + menuBounds.height - ((50 + margin) * row));

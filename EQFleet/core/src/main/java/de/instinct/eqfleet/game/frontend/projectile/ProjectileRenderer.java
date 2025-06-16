@@ -44,47 +44,49 @@ public class ProjectileRenderer {
             }
             
             Entity from = EntityManager.getEntity(state, projectile.id);
-    		Vector2 to = new Vector2();
-    		if (projectile instanceof DirectionalProjectile) {
-    			to = new Vector2(projectile.position).add(((DirectionalProjectile) projectile).direction);
-    		}
-    		if (projectile instanceof HomingProjectile) {
-    			to = EntityManager.getEntity(state, ((HomingProjectile) projectile).targetId).position;
-    		}
-    		float dx = to.x - from.position.x;
-            float dy = to.y - from.position.y;
-            float angleDeg = (float) Math.toDegrees(Math.atan2(dy, dx));
-            
-            Vector3 worldPos = new Vector3(projectile.position.x, projectile.position.y, 0f);
-            projectileInstance.getModel().transform.idt();
-            projectileInstance.getModel().transform.translate(worldPos);
-            projectileInstance.getModel().transform.scale(5f, 5f, 5f);
-            projectileInstance.getModel().transform.rotate(Vector3.Z, angleDeg - 90f);
+    		if (from != null) {
+    			Vector2 to = new Vector2();
+        		if (projectile instanceof DirectionalProjectile) {
+        			to = new Vector2(projectile.position).add(((DirectionalProjectile) projectile).direction);
+        		}
+        		if (projectile instanceof HomingProjectile) {
+        			to = EntityManager.getEntity(state, ((HomingProjectile) projectile).targetId).position;
+        		}
+        		float dx = to.x - from.position.x;
+                float dy = to.y - from.position.y;
+                float angleDeg = (float) Math.toDegrees(Math.atan2(dy, dx));
+                
+                Vector3 worldPos = new Vector3(projectile.position.x, projectile.position.y, 0f);
+                projectileInstance.getModel().transform.idt();
+                projectileInstance.getModel().transform.translate(worldPos);
+                projectileInstance.getModel().transform.scale(5f, 5f, 5f);
+                projectileInstance.getModel().transform.rotate(Vector3.Z, angleDeg - 90f);
 
-            Color color = Color.GRAY;
-            if (projectile.weaponType == WeaponType.LASER) {
-            	color = Color.RED;
-            }
-            if (projectile.weaponType == WeaponType.MISSILE) {
-            	color = Color.BROWN;
-            }
-            if (projectile.weaponType == WeaponType.BEAM) {
-            	color = Color.GREEN;
-            }
-            for (Material material : projectileInstance.getModel().materials) {
-                material.set(ColorAttribute.createDiffuse(color));
-            }
+                Color color = Color.GRAY;
+                if (projectile.weaponType == WeaponType.LASER) {
+                	color = Color.RED;
+                }
+                if (projectile.weaponType == WeaponType.MISSILE) {
+                	color = Color.BROWN;
+                }
+                if (projectile.weaponType == WeaponType.BEAM) {
+                	color = Color.GREEN;
+                }
+                for (Material material : projectileInstance.getModel().materials) {
+                    material.set(ColorAttribute.createDiffuse(color));
+                }
 
-            ModelRenderer.render(camera, projectileInstance.getModel());
-            Vector3 screenPos = camera.project(worldPos);
-            if (projectile.weaponType == WeaponType.BEAM) {
-            	ParticleRenderer.setEmitterAngle(projectileInstance.getParticlesTag(), angleDeg - 150f, angleDeg - 210f);
-            }
-            if (projectile.weaponType == WeaponType.MISSILE) {
-            	ParticleRenderer.setEmitterAngle(projectileInstance.getParticlesTag(), angleDeg - 170f, angleDeg - 190f);
-            }
-            ParticleRenderer.renderParticles(projectileInstance.getParticlesTag(), new Vector2(screenPos.x, screenPos.y));
-            projectileInstance.setActive(true);
+                ModelRenderer.render(camera, projectileInstance.getModel());
+                Vector3 screenPos = camera.project(worldPos);
+                if (projectile.weaponType == WeaponType.BEAM) {
+                	ParticleRenderer.setEmitterAngle(projectileInstance.getParticlesTag(), angleDeg - 150f, angleDeg - 210f);
+                }
+                if (projectile.weaponType == WeaponType.MISSILE) {
+                	ParticleRenderer.setEmitterAngle(projectileInstance.getParticlesTag(), angleDeg - 170f, angleDeg - 190f);
+                }
+                ParticleRenderer.renderParticles(projectileInstance.getParticlesTag(), new Vector2(screenPos.x, screenPos.y));
+                projectileInstance.setActive(true);
+    		}
 		}
 		for (ProjectileInstance projectileInstance : projectileInstances) {
 			if (!projectileInstance.isActive()) {

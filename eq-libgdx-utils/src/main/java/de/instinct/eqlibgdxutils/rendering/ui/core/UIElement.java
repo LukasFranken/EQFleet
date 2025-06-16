@@ -25,16 +25,16 @@ public abstract class UIElement {
 	}
 
 	public void update() {
-		if (fixedWidth < calculateWidth()) {
-			bounds.width = calculateWidth();
-		} else {
+		if (fixedWidth > 0) {
 			bounds.width = fixedWidth;
+		} else {
+			bounds.width = calculateWidth();
 		}
 
-		if (fixedHeight < calculateHeight()) {
-			bounds.height = calculateHeight();
-		} else {
+		if (fixedHeight > 0) {
 			bounds.height = fixedHeight;
+		} else {
+			bounds.height = calculateHeight();
 		}
 	}
 

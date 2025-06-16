@@ -11,16 +11,20 @@ import de.instinct.eqfleet.GlobalStaticData;
 import de.instinct.eqfleet.net.model.Request;
 import de.instinct.eqfleet.net.model.RequestConsumer;
 import de.instinct.eqfleet.net.model.RequestSupplier;
+import de.instinct.eqlibgdxutils.debug.console.Console;
 import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
+import de.instinct.eqlibgdxutils.debug.metrics.NumberMetric;
 
 public class WebManager {
 
 	private static final String LOGTAG = "WebManager";
+	private static final String PING_METRIC_TAG = "server_ping_MS";
 	
     public static ConcurrentLinkedQueue<Request<?>> requestQueue;
 
     private static final long NETWORK_UPDATE_CLOCK_MS = 50;
+    private static final int PING_UPDATE_CLOCK_MS = 1000;
     
     private static ScheduledExecutorService scheduler;
 
@@ -35,6 +39,15 @@ public class WebManager {
 				Logger.log(LOGTAG, "Error during network update: " + e.getMessage(), ConsoleColor.RED);
 			}
 		}, 0, NETWORK_UPDATE_CLOCK_MS, TimeUnit.MILLISECONDS);
+		
+		Console.registerMetric(NumberMetric.builder()
+				.tag(PING_METRIC_TAG)
+				.build());
+		scheduler.scheduleAtFixedRate(() -> {
+			if (API.isInitialized()) {
+				Console.updateMetric(PING_METRIC_TAG, API.discovery().ping());
+			}
+		}, 0, PING_UPDATE_CLOCK_MS, TimeUnit.MILLISECONDS);
     }
 
     private static void update() {
@@ -61,12 +74,12 @@ public class WebManager {
         request.setRequestAction(() -> {
             T result = requestSupplier.get();
             responseHandler.accept(result);
-            if (result != null) Logger.log(LOGTAG, "received response: " + result, ConsoleColor.BLUE);
         });
         requestQueue.add(request);
     }
     
     public static void dispose() {
+    	Console.remove(PING_METRIC_TAG);
         if (scheduler != null) {
             scheduler.shutdownNow();
         }

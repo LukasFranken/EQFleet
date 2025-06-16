@@ -16,7 +16,7 @@ import de.instinct.eqlibgdxutils.PreferenceUtil;
 import de.instinct.eqlibgdxutils.debug.console.Console;
 import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
-import de.instinct.eqlibgdxutils.debug.metrics.DoubleMetric;
+import de.instinct.eqlibgdxutils.debug.metrics.NumberMetric;
 import de.instinct.eqlibgdxutils.rendering.model.ModelRenderer;
 import de.instinct.eqlibgdxutils.rendering.particle.ParticleRenderer;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
@@ -49,7 +49,7 @@ public class App extends ApplicationAdapter {
         ParticleRenderer.init();
         ModelRenderer.init();
         
-        Console.registerMetric(DoubleMetric.builder()
+        Console.registerMetric(NumberMetric.builder()
         		.decimals(2)
         		.tag("this_frame_time_MS")
         		.build());
@@ -79,7 +79,8 @@ public class App extends ApplicationAdapter {
 		}
         
         long endNanoTime = System.nanoTime();
-        Console.updateMetric("this_frame_time_MS", (endNanoTime - startNanoTime) / 1_000_000.0);
+        double deltaTime = (endNanoTime - startNanoTime) / 1_000_000.0;
+        Console.updateMetric("this_frame_time_MS", deltaTime);
         Console.render();
     }
 

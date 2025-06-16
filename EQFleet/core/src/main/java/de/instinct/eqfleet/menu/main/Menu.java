@@ -1,6 +1,8 @@
 package de.instinct.eqfleet.menu.main;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -11,9 +13,12 @@ import java.util.concurrent.TimeUnit;
 import de.instinct.api.core.API;
 import de.instinct.api.core.modules.MenuModule;
 import de.instinct.api.matchmaking.dto.LobbyStatusCode;
+import de.instinct.api.meta.dto.modules.ModuleInfoRequest;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
+import de.instinct.eqfleet.menu.module.construction.Construction;
+import de.instinct.eqfleet.menu.module.construction.ConstructionRenderer;
 import de.instinct.eqfleet.menu.module.inventory.Inventory;
 import de.instinct.eqfleet.menu.module.inventory.InventoryRenderer;
 import de.instinct.eqfleet.menu.module.inventory.message.LoadResourcesMessage;
@@ -62,6 +67,8 @@ public class Menu {
 		renderers.put(MenuModule.SETTINGS, new SettingsRenderer());
 		modules.put(MenuModule.SHIPYARD, new Shipyard());
 		renderers.put(MenuModule.SHIPYARD, new ShipyardRenderer());
+		modules.put(MenuModule.CONSTRUCTION, new Construction());
+		renderers.put(MenuModule.CONSTRUCTION, new ConstructionRenderer());
 		
 		moduleMessageQueue = new ConcurrentLinkedQueue<>();
 	}
@@ -93,7 +100,7 @@ public class Menu {
 			module.processBackendMessage(message);
 		}
 		for (BaseModule module : modules.values()) {
-			if (MenuModel.modules != null && MenuModel.modules.getEnabledModules().contains(module.getMenuModule())) {
+			if (MenuModel.unlockedModules != null && MenuModel.unlockedModules.getEnabledModules().contains(module.getMenuModule())) {
 				module.update();
 			}
 		}
@@ -138,10 +145,29 @@ public class Menu {
 			    () -> API.meta().modules(API.authKey),
 			    result -> {
 			    	if (result != null) {
-			    		MenuModel.modules = result;
-			    		MenuModel.moduleChanged = true;
-			    		queue(LoadProfileMessage.builder().build());
-			    		queue(LoadResourcesMessage.builder().build());
+			    		MenuModel.unlockedModules = result;
+			    		
+			    		List<MenuModule> lockedModules = new ArrayList<>();
+			    		for (MenuModule module : MenuModule.values()) {
+			    			if (!MenuModel.unlockedModules.getEnabledModules().contains(module)) {
+			    				lockedModules.add(module);
+			    			}
+			    		}
+			    		WebManager.enqueue(
+			    			    () -> API.meta().moduleInfo(ModuleInfoRequest.builder()
+			    			    		.requestedModuleInfos(lockedModules)
+			    			    		.build()),
+			    			    result2 -> {
+			    			    	if (result2 != null) {
+			    			    		MenuModel.lockedModules = result2;
+			    			    		MenuModel.moduleChanged = true;
+			    			    		queue(LoadProfileMessage.builder().build());
+			    			    		queue(LoadResourcesMessage.builder().build());
+			    					} else {
+			    						Logger.log("Menu", "ModuleData couldn't be loaded!");
+			    					}
+			    			    }
+			    		);
 					} else {
 						Logger.log("Menu", "ModuleData couldn't be loaded!");
 					}

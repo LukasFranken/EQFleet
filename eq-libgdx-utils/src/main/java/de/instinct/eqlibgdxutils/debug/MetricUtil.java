@@ -194,11 +194,14 @@ public class MetricUtil {
 
 		String tag = null;
 		while ((tag = metricsRemoveQueue.poll()) != null) {
+			Metric metricToRemove = null;
 			for (Metric currentMetric : metrics) {
 				if (currentMetric.getTag().contentEquals(tag)) {
-					metrics.remove(currentMetric);
+					metricToRemove = currentMetric;
+					break;
 				}
 			}
+			if (metricToRemove != null) metrics.remove(metricToRemove);
 		}
 	}
 

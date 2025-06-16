@@ -116,6 +116,10 @@ public class Console {
 	public static void updateMetric(String tag, Object value) {
 		MetricUtil.update(tag, value);
 	}
+	
+	public static void remove(String tag) {
+		MetricUtil.remove(tag);
+	}
 
 	private static void renderLogs() {
 		int logPanelMargin = 10;

@@ -10,14 +10,24 @@ import lombok.experimental.SuperBuilder;
 @Data
 @SuperBuilder
 @EqualsAndHashCode(callSuper = false)
-public class FloatMetric extends Metric<Float> {
-
+public class NumberMetric extends Metric<Number> {
+	
 	@Builder.Default
 	private int decimals = 2;
 
 	@Override
 	public String getValueString() {
-		return StringUtils.formatFixed(getValue() == null ? 0F : getValue(), decimals);
+		if (getValue() == null) {
+			return "null";
+		} else {
+			if (getValue().longValue() > 1000) {
+				long value = getValue().longValue();
+				return StringUtils.formatBigNumber(value);
+			} else {
+				double value = getValue().doubleValue();
+				return StringUtils.formatFixed(value, decimals);
+			}
+		}
 	}
-
+	
 }

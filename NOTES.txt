@@ -21,6 +21,7 @@ GAME:
 - Damage types effect implementation
 
 - no stacking health bars
+ -> stack below each other, not next to
 
 - ingame menu
 
@@ -42,13 +43,9 @@ META:
  -> like now with custom and pvp/ai
  -> available to beginners, especially vs AI
  
-- shipyard expansion
- -> blueprints can be bought at will, no rng
- -> higher classes unlocked with rank?
-  -> cruiser, destroyer, titan
- 
 - Construction expansion
  -> planet defense
+  -> for now just swap between damage types with balanced values
  
 - playtab logic finished refactoring
 
@@ -61,6 +58,9 @@ GAME:
  -> variable building slots below
 
 META:
+- shop
+ -> ship blueprints
+
 - social features (friends teams messages etc.)
 
 - Technology module to unlock abilities and stuff like range and defensebar
@@ -72,9 +72,16 @@ META:
 
 - Shipyard
  -> multiple ships
+ -> higher classes
+  -> cruiser, destroyer, titan
+ -> blueprints can be bought in shop at will, no rng
+ 
+- Workshop
+ -> ship modulation
 
 - Construction expansion
  -> buildings
+ -> planet defense modulation
  
 - factions
  -> swapable any time

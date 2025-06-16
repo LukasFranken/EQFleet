@@ -1,6 +1,7 @@
 package de.instinct.eqlibgdxutils.rendering.ui.component.active.button;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 import lombok.Data;
@@ -14,6 +15,8 @@ public class ImageButton extends Button {
 	private Texture hoverTexture;
 	private Texture activeTexture;
 	private Texture downTexture;
+	
+	private float margin;
 
 	@Override
 	protected float calculateWidth() {
@@ -28,18 +31,23 @@ public class ImageButton extends Button {
 	@Override
 	public void renderElement() {
 		super.update();
-		TextureManager.draw(getButtonTexture(), getBounds(), getAlpha());
+		Rectangle imageBounds = new Rectangle(getBounds());
+		imageBounds.x += margin;
+		imageBounds.y += margin;
+		imageBounds.width -= 2 * margin;
+		imageBounds.height -= 2 * margin;
+		TextureManager.draw(getButtonTexture(), imageBounds, getAlpha());
 	}
 
 	private Texture getButtonTexture() {
 		Texture currentTexture = imageTexture;
-		if (isActive()) {
+		if (isActive() && activeTexture != null) {
 			currentTexture = activeTexture;
 		}
-		if (isHovered()) {
+		if (isHovered() && hoverTexture != null) {
 			currentTexture = hoverTexture;
 		}
-		if (isDown()) {
+		if (isDown() && downTexture != null) {
 			currentTexture = downTexture;
 		}
 		return currentTexture;
