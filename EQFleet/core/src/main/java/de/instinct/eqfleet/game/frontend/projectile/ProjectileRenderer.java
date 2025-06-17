@@ -34,8 +34,7 @@ public class ProjectileRenderer {
 		for (ProjectileInstance projectileInstance : projectileInstances) {
 			projectileInstance.setActive(false);
 		}
-		List<Projectile> projectilesToRender = new ArrayList<>(state.projectiles);
-		for (Projectile projectile : projectilesToRender) {
+		for (Projectile projectile : state.projectiles) {
             
             ProjectileInstance projectileInstance = getProjectileInstance(projectile);
             if (projectileInstance == null) {

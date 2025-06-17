@@ -1,8 +1,6 @@
 package de.instinct.eqfleet.game.frontend.ships;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
@@ -34,8 +32,7 @@ public class ShipRenderer {
 	}
 	
 	public void render(GameState state, PerspectiveCamera camera) {
-		List<Ship> shipsToRender = new ArrayList<>(state.ships);
-		for (Ship ship : shipsToRender) {
+		for (Ship ship : state.ships) {
     		ModelInstance shipModel = shipModels.get(ship);
             if (shipModel == null) {
             	shipModel = ModelLoader.instanciate("ship");

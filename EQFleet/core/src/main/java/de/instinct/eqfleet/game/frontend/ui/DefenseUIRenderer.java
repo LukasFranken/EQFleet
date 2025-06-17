@@ -36,7 +36,7 @@ public class DefenseUIRenderer {
 	public void render(GameState state, PerspectiveCamera camera) {
 		for (Planet planet : state.planets) {
 			if (planet.defense != null) {
-				Defense defense = planet.defense.clone();
+				Defense defense = planet.defense;
 				Vector3 screenPos = camera.project(new Vector3(planet.position.x, planet.position.y, 0f));
 				TextureManager.draw("ui_defense_border_planet", 
 						new Rectangle(screenPos.x - 20 - 100, 
@@ -58,37 +58,32 @@ public class DefenseUIRenderer {
 				shieldBar.render();
 			}
 		}
+		
 		List<Rectangle> occupiedAreas = new ArrayList<>();
-
 	    for (Ship ship : state.ships) {
 	        if (ship.defense != null) {
-	        	Defense defense = ship.defense.clone();
+	        	Defense defense = ship.defense;
 	            Vector3 screenPos = camera.project(new Vector3(ship.position.x, ship.position.y, 0f));
 
-	            // Default position and size of defense bar area (including a small buffer)
 	            Rectangle defenseArea = new Rectangle(screenPos.x - 10, screenPos.y - 17, 20, 4);
 	            float originalY = defenseArea.y;
 
-	            // Find the lowest overlapping bar
 	            float maxBottom = originalY;
 	            for (Rectangle occupied : occupiedAreas) {
 	                if (defenseArea.overlaps(occupied)) {
 	                    float occupiedBottom = occupied.y;
-	                    maxBottom = Math.min(maxBottom, occupiedBottom - 4); // 4 pixels for height + small spacing
+	                    maxBottom = Math.min(maxBottom, occupiedBottom - 4);
 	                }
 	            }
 
-	            // If we found an overlap, adjust y position
 	            float yOffset = 0;
 	            if (maxBottom < originalY) {
 	                yOffset = maxBottom - originalY;
 	                defenseArea.y = maxBottom;
 	            }
 
-	            // Add this area to occupied areas
 	            occupiedAreas.add(new Rectangle(defenseArea));
 
-	            // Draw UI with calculated offset
 	            TextureManager.draw("ui_defense_border_ship",
 	                    new Rectangle(screenPos.x - 10 - 100,
 	                            screenPos.y - 17 - 100 + yOffset,
@@ -96,7 +91,6 @@ public class DefenseUIRenderer {
 	                            Gdx.graphics.getHeight()),
 	                    1f);
 
-	            // Both bars remain overlapped for each individual ship
 	            PlainRectangularLoadingBar armorBar = createBar(Color.ORANGE);
 	            armorBar.setBounds(new Rectangle(screenPos.x - 9, screenPos.y - 16 + yOffset, 18, 2));
 	            armorBar.setCurrentValue(defense.currentArmor);

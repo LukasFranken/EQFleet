@@ -25,7 +25,7 @@ import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 
 public class App extends ApplicationAdapter {
 	
-    public static final String VERSION = "0.0.25";
+    public static final String VERSION = "0.0.26";
     private static final String LOGTAG = "APP";
     
     private static boolean halted;

@@ -56,17 +56,18 @@ public class Game {
     	currentDriver.stop();
 	}
 
-	public static void render() {
-    	if (GameModel.active) {
-    		if (!GameModel.receivedGameState.isEmpty()) {
-    			GameModel.activeGameState = GameModel.receivedGameState.poll();
-    			GameModel.lastUpdateTimestampMS = System.currentTimeMillis();
-    	    	if (GameModel.activeGameState.winner != 0) {
-    	    		Game.stop();
-    	    	}
-    		}
-        	renderer.render(GameModel.activeGameState);
-    	}
+    public static void render() {
+        if (GameModel.active) {
+            if (!GameModel.receivedGameState.isEmpty()) {
+            	GameModel.activeGameState = GameModel.receivedGameState.poll();
+                GameModel.lastUpdateTimestampMS = System.currentTimeMillis();
+            }
+            
+            if (GameModel.activeGameState != null) {
+            	currentDriver.update();
+                renderer.render(GameModel.activeGameState);
+            }
+        }
     }
 	
 	public static void update(GameState newGameState) {

@@ -1,5 +1,6 @@
 package de.instinct.engine.model;
-
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,7 +10,7 @@ import de.instinct.engine.model.planet.Planet;
 import de.instinct.engine.order.GameOrder;
 import lombok.ToString;
 
-@ToString
+@ToString(callSuper = true)
 public class GameState {
 	
 	public String gameUUID;
@@ -26,5 +27,42 @@ public class GameState {
 	public float ancientPlanetResourceDegradationFactor;
 	public Map<Integer, Double> teamATPs;
 	public boolean started;
+	
+	public GameState clone() {
+		GameState clone = new GameState();
+		clone.gameUUID = this.gameUUID;
+		clone.players = new ArrayList<>();
+		for (Player player : this.players) {
+			clone.players.add(player.clone());
+		}
+		clone.connectionStati = new ArrayList<>();
+		for (PlayerConnectionStatus connectionStatus : this.connectionStati) {
+			clone.connectionStati.add(connectionStatus.clone());
+		}
+		clone.planets = new ArrayList<>();
+		for (Planet planet : this.planets) {
+			clone.planets.add(planet.clone());
+		}
+		clone.ships = new ArrayList<>();
+		for (Ship ship : this.ships) {
+			clone.ships.add(ship.clone());
+		}
+		clone.projectiles = new ArrayList<>();
+		for (Projectile projectile : this.projectiles) {
+			clone.projectiles.add(projectile.clone());
+		}
+		clone.orders = new ArrayList<>();
+		for (GameOrder gameOrder : this.orders) {
+			clone.orders.add(gameOrder.clone());
+		}
+		clone.gameTimeMS = this.gameTimeMS;
+		clone.maxGameTimeMS = this.maxGameTimeMS;
+		clone.winner = this.winner;
+		clone.atpToWin = this.atpToWin;
+		clone.ancientPlanetResourceDegradationFactor = this.ancientPlanetResourceDegradationFactor;
+		clone.teamATPs = new HashMap<>(this.teamATPs);
+		clone.started = this.started;
+		return clone;
+	}
 
 }

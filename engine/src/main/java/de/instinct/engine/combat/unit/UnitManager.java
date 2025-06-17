@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.instinct.engine.combat.Ship;
+import de.instinct.engine.entity.Entity;
 import de.instinct.engine.entity.EntityManager;
 import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.PlanetData;
@@ -44,7 +45,7 @@ public class UnitManager {
 		unit.defense.currentArmor = defense.armor;
 	}
 	
-	public static Unit getClosestInRangeTarget(Unit origin, GameState state) {
+	public static Unit getClosestInRangeTarget(Entity origin, float range, GameState state) {
         List<Unit> potentialTargets = new ArrayList<>();
         
         Player originPlayer = EngineUtility.getPlayer(state.players, origin.ownerId);
@@ -66,7 +67,7 @@ public class UnitManager {
         float closestDistance = Float.MAX_VALUE;
         for (Unit candidate : potentialTargets) {
             float distance = EntityManager.entityDistance(origin, candidate);
-            if (distance <= origin.weapon.range && distance < closestDistance) {
+            if (distance <= range && distance < closestDistance) {
                 closestDistance = distance;
                 closestTarget = candidate;
             }

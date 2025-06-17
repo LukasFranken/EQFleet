@@ -31,7 +31,7 @@ public class ShipProcessor {
 				continue;
 			}
 			weaponProcessor.updateWeapon(ship.weapon, deltaTime);
-			Unit closestInRangeTarget = UnitManager.getClosestInRangeTarget(ship, state);
+			Unit closestInRangeTarget = UnitManager.getClosestInRangeTarget(ship, ship.weapon.range, state);
 			if (closestInRangeTarget != null) {
 				weaponProcessor.fireAtTarget(ship, closestInRangeTarget, state, deltaTime);
 			} else {

@@ -47,7 +47,15 @@ public class ProjectileProcessor {
         if (projectile instanceof HomingProjectile) {
         	HomingProjectile homingProjectile = (HomingProjectile) projectile;
         	Unit target = (Unit) EntityManager.getEntity(state, homingProjectile.targetId);
-        	targetPosition = VectorUtil.getTargetPosition(projectile.position, target.position, distanceTraveled);
+        	if (target == null) {
+        		target = findNewTarget(homingProjectile, state);
+        	}
+        	if (target == null) {
+        		targetPosition = VectorUtil.getDirectionalTargetPosition(projectile.position, homingProjectile.lastDirection, distanceTraveled);
+        	} else {
+        		targetPosition = VectorUtil.getTargetPosition(projectile.position, target.position, distanceTraveled);
+        		homingProjectile.lastDirection = VectorUtil.getDirection(projectile.position, target.position);
+        	}
         }
 		if (projectile instanceof DirectionalProjectile) {
 			DirectionalProjectile directionalProjectile = (DirectionalProjectile) projectile;
@@ -56,7 +64,12 @@ public class ProjectileProcessor {
         projectile.position = targetPosition;
     }
 
-    private void calculateHit(Projectile projectile, GameState state) {
+    private Unit findNewTarget(HomingProjectile projectile, GameState state) {
+    	float remainingMissileRange = (projectile.lifetimeMS - projectile.elapsedMS) / 1000f * projectile.movementSpeed;
+		return UnitManager.getClosestInRangeTarget(projectile, remainingMissileRange, state);
+	}
+
+	private void calculateHit(Projectile projectile, GameState state) {
     	Player projectileOwner = EngineUtility.getPlayer(state.players, projectile.ownerId);
         for (Ship ship : state.ships) {
         	checkHit(projectile, projectileOwner, ship, state);
@@ -130,7 +143,7 @@ public class ProjectileProcessor {
         
         if (target instanceof Ship) {
             Ship ship = (Ship) target;
-            Unit closestInRangeTarget = UnitManager.getClosestInRangeTarget(ship, state);
+            Unit closestInRangeTarget = UnitManager.getClosestInRangeTarget(ship, ship.weapon.range, state);
             if (closestInRangeTarget == null && ship.targetPlanetId > 0) {
                 Planet targetPlanet = EngineUtility.getPlanet(state.planets, ship.targetPlanetId);
                 if (targetPlanet != null) {

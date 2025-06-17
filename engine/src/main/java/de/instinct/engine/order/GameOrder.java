@@ -15,5 +15,13 @@ public abstract class GameOrder {
 	public OrderType type;
 	public long acceptedTimeMS;
 	public boolean processed;
+	
+	public GameOrder clone() {
+		try {
+			return (GameOrder) super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new RuntimeException("Cloning not supported for GameOrder", e);
+		}
+	}
 
 }

@@ -28,7 +28,7 @@ public class PlanetCombatProcessor {
             return;
         }
         weaponProcessor.updateWeapon(planet.weapon, deltaTime);
-        Unit target = UnitManager.getClosestInRangeTarget(planet, state);
+        Unit target = UnitManager.getClosestInRangeTarget(planet, planet.weapon.range, state);
         if (target != null) {
             weaponProcessor.fireAtTarget(planet, target, state, deltaTime);
         }

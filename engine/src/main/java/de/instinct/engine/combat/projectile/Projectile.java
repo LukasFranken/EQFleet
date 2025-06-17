@@ -17,13 +17,6 @@ public abstract class Projectile extends Entity {
 
 	public Projectile clone() {
 		Projectile clone = (Projectile) super.clone();
-		clone.originId = this.originId;
-		clone.weaponType = this.weaponType;
-		clone.movementSpeed = this.movementSpeed;
-		clone.damage = this.damage;
-		clone.elapsedMS = this.elapsedMS;
-		clone.lifetimeMS = this.lifetimeMS;
-		clone.alive = this.alive;
 		return clone;
 	}
 	

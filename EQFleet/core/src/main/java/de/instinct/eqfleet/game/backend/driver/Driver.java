@@ -2,7 +2,6 @@ package de.instinct.eqfleet.game.backend.driver;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import de.instinct.engine.FleetEngine;
@@ -14,8 +13,6 @@ public abstract class Driver {
 	protected FleetEngine engine;
 	
 	private ScheduledExecutorService scheduler;
-    private ScheduledFuture<?> logicUpdateTask;
-    private long BACKEND_UPDATE_CLOCK_MS = 20;
 	
 	public Driver() {
 		engine = new FleetEngine();
@@ -25,17 +22,12 @@ public abstract class Driver {
 	public void start() {
 		engine.initialize();
 		setup();
-		logicUpdateTask = scheduler.scheduleAtFixedRate(() -> {
-			try {
-				preEngineUpdate();
-				updateEngine();
-				postEngineUpdate();
-			} catch (Exception e) {
-				e.printStackTrace();
-				stop();
-				dispose();
-			}
-		}, BACKEND_UPDATE_CLOCK_MS, BACKEND_UPDATE_CLOCK_MS, TimeUnit.MILLISECONDS);
+	}
+	
+	public void update() {
+		preEngineUpdate();
+		updateEngine();
+		postEngineUpdate();
 	}
 
 	public abstract void setup();
@@ -54,9 +46,6 @@ public abstract class Driver {
 	
 	public void stop() {
 		finish();
-		if (logicUpdateTask != null && !logicUpdateTask.isCancelled()) {
-			logicUpdateTask.cancel(true);
-		}
 		scheduler.schedule(() -> {
 			
 			GameModel.activeGameState = null;
