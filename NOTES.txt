@@ -22,12 +22,8 @@ GENERAL:
 
 GAME:
 - pause game for up to 30 sec total per team on DC
-- improved AI acting
  
 - Damage types effect implementation
-
-- no stacking health bars
- -> stack below each other, not next to
 
 - ingame menu
  -> pause + surrender button, sound settings
@@ -61,6 +57,8 @@ GENERAL:
 GAME:
 -> variable ship slots radial menu above planet
  -> variable building slots below
+ 
+- improved ai
 
 META:
 - shop

@@ -49,7 +49,12 @@ public class ProjectileRenderer {
         			to = new Vector2(projectile.position).add(((DirectionalProjectile) projectile).direction);
         		}
         		if (projectile instanceof HomingProjectile) {
-        			to = EntityManager.getEntity(state, ((HomingProjectile) projectile).targetId).position;
+        			Entity target = EntityManager.getEntity(state, ((HomingProjectile) projectile).targetId);
+        			if (target != null) {
+        				to = new Vector2(target.position);
+        			} else {
+        				to = new Vector2(projectile.position).add(((HomingProjectile) projectile).lastDirection);
+        			}
         		}
         		float dx = to.x - from.position.x;
                 float dy = to.y - from.position.y;

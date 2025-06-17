@@ -29,7 +29,7 @@ public class Console {
 	
 	private static CommandProcessor commandProcessor;
 	
-	private static int tapSize = 150;
+	private static int tapSize = 100;
 	private static int metricsHeight = 200;
 	private static int consoleInputHeight = 30;
 	private static int borderMargin = 30;

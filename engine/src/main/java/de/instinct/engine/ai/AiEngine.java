@@ -81,48 +81,47 @@ public class AiEngine {
 	public List<GameOrder> act(AiPlayer aiPlayer, GameState state) {
 		List<GameOrder> newOrders = new ArrayList<>();
 		
-		GameOrder offensiveOrder = calculateOffensiveOrder(aiPlayer, state);
-		if (offensiveOrder != null) newOrders.add(offensiveOrder);
-		
-		GameOrder defensiveOrder = calculateDefensiveOrder(aiPlayer, state);
-		if (defensiveOrder != null) newOrders.add(defensiveOrder);
-		
+		if (aiPlayer.currentCommandPoints >= 1) {
+			GameOrder offensiveOrder = calculateOffensiveOrder(aiPlayer, state);
+			if (offensiveOrder != null) newOrders.add(offensiveOrder);
+			
+			GameOrder defensiveOrder = calculateDefensiveOrder(aiPlayer, state);
+			if (defensiveOrder != null) newOrders.add(defensiveOrder);
+		}
 		return newOrders;
 	}
 
 	private GameOrder calculateOffensiveOrder(AiPlayer aiPlayer, GameState state) {
-		if (aiPlayer.currentCommandPoints > 0) {
-			List<Planet> ownPlanets = new ArrayList<>();
-			for (Planet planet : state.planets) {
-				if (planet.ownerId == aiPlayer.id) {
-					ownPlanets.add(planet);
-				}
+		List<Planet> ownPlanets = new ArrayList<>();
+		for (Planet planet : state.planets) {
+			if (planet.ownerId == aiPlayer.id) {
+				ownPlanets.add(planet);
 			}
-			float distanceToClosestPlanet = Float.MAX_VALUE;
-			Planet closestNeutralPlanet = null;
-			Planet closestOwnPlanet = null;
-			for (Planet planet : state.planets) {
-				Player planetOwner = EngineUtility.getPlayer(state.players, planet.ownerId);
-				if (planetOwner.teamId != aiPlayer.teamId && !planet.ancient) {
-					for (Planet ownPlanet : ownPlanets) {
-						if (distanceToClosestPlanet > ownPlanet.position.dst(planet.position)) {
-							distanceToClosestPlanet = ownPlanet.position.dst(planet.position);
-							closestNeutralPlanet = planet;
-							closestOwnPlanet = ownPlanet;
-						}
+		}
+		float distanceToClosestPlanet = Float.MAX_VALUE;
+		Planet closestNeutralPlanet = null;
+		Planet closestOwnPlanet = null;
+		for (Planet planet : state.planets) {
+			Player planetOwner = EngineUtility.getPlayer(state.players, planet.ownerId);
+			if (planetOwner.teamId != aiPlayer.teamId && !planet.ancient) {
+				for (Planet ownPlanet : ownPlanets) {
+					if (distanceToClosestPlanet > ownPlanet.position.dst(planet.position)) {
+						distanceToClosestPlanet = ownPlanet.position.dst(planet.position);
+						closestNeutralPlanet = planet;
+						closestOwnPlanet = ownPlanet;
 					}
 				}
 			}
-			if (closestNeutralPlanet != null && closestOwnPlanet != null) {
-				if (closestOwnPlanet.currentResources >= aiPlayer.ships.get(0).cost) {
-					if (aiPlayer.currentCommandPoints >= 3) {
-						ShipMovementOrder newShipMovementOrder = new ShipMovementOrder();
-						newShipMovementOrder.fromPlanetId = closestOwnPlanet.id;
-						newShipMovementOrder.toPlanetId = closestNeutralPlanet.id;
-						newShipMovementOrder.playerId = aiPlayer.id;
-						newShipMovementOrder.playerShipId = 0;
-						return newShipMovementOrder;
-					}
+		}
+		if (closestNeutralPlanet != null && closestOwnPlanet != null) {
+			if (closestOwnPlanet.currentResources >= aiPlayer.ships.get(0).cost) {
+				if (aiPlayer.currentCommandPoints >= 3) {
+					ShipMovementOrder newShipMovementOrder = new ShipMovementOrder();
+					newShipMovementOrder.fromPlanetId = closestOwnPlanet.id;
+					newShipMovementOrder.toPlanetId = closestNeutralPlanet.id;
+					newShipMovementOrder.playerId = aiPlayer.id;
+					newShipMovementOrder.playerShipId = 0;
+					return newShipMovementOrder;
 				}
 			}
 		}
@@ -130,27 +129,25 @@ public class AiEngine {
 	}
 	
 	private GameOrder calculateDefensiveOrder(AiPlayer aiPlayer, GameState state) {
-		if (aiPlayer.currentCommandPoints > 0) {
-			List<Planet> ownPlanets = new ArrayList<>();
-			for (Planet planet : state.planets) {
-				if (planet.ownerId == aiPlayer.id) {
-					ownPlanets.add(planet);
-				}
+		List<Planet> ownPlanets = new ArrayList<>();
+		for (Planet planet : state.planets) {
+			if (planet.ownerId == aiPlayer.id) {
+				ownPlanets.add(planet);
 			}
-			for (Ship ship : state.ships) {
-				Player shipOwner = EngineUtility.getPlayer(state.players, ship.ownerId);
-				if (shipOwner.teamId != aiPlayer.teamId) {
-					for (Planet ownPlanet : ownPlanets) {
-						if (ship.targetPlanetId == ownPlanet.id) {
-							if (ownPlanet.position.dst(ship.position) <= aiPlayer.behaviorParameters.defensiveShipDistanceThreshold) {
-								if (ownPlanet.currentResources >= aiPlayer.ships.get(0).cost) {
-									ShipMovementOrder newShipMovementOrder = new ShipMovementOrder();
-									newShipMovementOrder.fromPlanetId = ownPlanet.id;
-									newShipMovementOrder.toPlanetId = ship.originPlanetId;
-									newShipMovementOrder.playerId = aiPlayer.id;
-									newShipMovementOrder.playerShipId = 0;
-									return newShipMovementOrder;
-								}
+		}
+		for (Ship ship : state.ships) {
+			Player shipOwner = EngineUtility.getPlayer(state.players, ship.ownerId);
+			if (shipOwner.teamId != aiPlayer.teamId) {
+				for (Planet ownPlanet : ownPlanets) {
+					if (ship.targetPlanetId == ownPlanet.id) {
+						if (ownPlanet.position.dst(ship.position) <= aiPlayer.behaviorParameters.defensiveShipDistanceThreshold) {
+							if (ownPlanet.currentResources >= aiPlayer.ships.get(0).cost) {
+								ShipMovementOrder newShipMovementOrder = new ShipMovementOrder();
+								newShipMovementOrder.fromPlanetId = ownPlanet.id;
+								newShipMovementOrder.toPlanetId = ship.originPlanetId;
+								newShipMovementOrder.playerId = aiPlayer.id;
+								newShipMovementOrder.playerShipId = 0;
+								return newShipMovementOrder;
 							}
 						}
 					}

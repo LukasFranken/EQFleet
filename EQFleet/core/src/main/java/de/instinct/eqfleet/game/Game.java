@@ -58,13 +58,8 @@ public class Game {
 
     public static void render() {
         if (GameModel.active) {
-            if (!GameModel.receivedGameState.isEmpty()) {
-            	GameModel.activeGameState = GameModel.receivedGameState.poll();
-                GameModel.lastUpdateTimestampMS = System.currentTimeMillis();
-            }
-            
+            currentDriver.update();
             if (GameModel.activeGameState != null) {
-            	currentDriver.update();
                 renderer.render(GameModel.activeGameState);
             }
         }

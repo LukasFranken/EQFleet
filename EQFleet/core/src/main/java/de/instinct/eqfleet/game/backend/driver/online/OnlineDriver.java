@@ -2,7 +2,6 @@ package de.instinct.eqfleet.game.backend.driver.online;
 
 import de.instinct.api.core.API;
 import de.instinct.engine.model.GameState;
-import de.instinct.engine.net.message.NetworkMessage;
 import de.instinct.engine.net.message.types.JoinMessage;
 import de.instinct.engine.net.message.types.PlayerAssigned;
 import de.instinct.eqfleet.game.Game;
@@ -40,10 +39,16 @@ public class OnlineDriver extends Driver {
 
 	@Override
 	protected void postEngineUpdate() {
-		NetworkMessage newMessage = GameModel.outputMessageQueue.next();
-		if (newMessage != null) {
-			gameClient.send(newMessage);
+		if (GameModel.outputMessageQueue.peek() != null && gameClient.client.isConnected()) {
+			gameClient.send(GameModel.outputMessageQueue.next());
 		}
+		if (!GameModel.receivedGameState.isEmpty()) {
+        	GameModel.activeGameState = GameModel.receivedGameState.poll();
+            GameModel.lastUpdateTimestampMS = System.currentTimeMillis();
+            if (GameModel.activeGameState.winner != 0) {
+    			Game.stop();
+    		}
+        }
 	}
 
 	@Override

@@ -32,6 +32,8 @@ public class FleetEngine {
 	
 	private long orderIdCounter;
 	
+	private boolean updateContainedValidOrder;
+	
 	public void initialize() {
 		orderValidator = new OrderValidator();
 		unprocessedOrders = new ConcurrentLinkedQueue<>();
@@ -127,25 +129,24 @@ public class FleetEngine {
 		}
 	}
 	
-	private boolean workOnOrderQueue(GameState state) {
-		boolean containedValidOrder = false;
+	private void workOnOrderQueue(GameState state) {
+		updateContainedValidOrder = false;
 		while (!unprocessedOrders.isEmpty()) {
 			GameOrder order = unprocessedOrders.poll();
 			if (orderValidator.isValid(state, order)) {
 				order.orderId = orderIdCounter++;
 				state.orders.add(order);
-				containedValidOrder = true;
+				updateContainedValidOrder = true;
 			}
 		}
-		return containedValidOrder;
 	}
 	
 	public void queue(GameState state, GameOrder order) {
 		unprocessedOrders.add(order);
 	}
 	
-	public boolean containsUnprocessedOrders() {
-		return !unprocessedOrders.isEmpty();
+	public boolean containedValidOrders() {
+		return updateContainedValidOrder;
 	}
 	
 }
