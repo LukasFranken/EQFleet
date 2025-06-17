@@ -7,8 +7,12 @@ GENERAL:
  -> skin color
  -> audio
  
-- externalize most gamedata like ships, stats, gameloader, mapo etc.
+- externalize gamedata like ships, stats, gameloader, map etc.
+- probably databases already
 - increase all HP so that battles last longer
+
+- appicon, ios loadscreen etc.
+- check android
 
 - Audio
  -> BG music
@@ -18,8 +22,7 @@ GENERAL:
 
 GAME:
 - pause game for up to 30 sec total per team on DC
-- AI acting
- -> at least one difficulty for now, maybe two
+- improved AI acting
  
 - Damage types effect implementation
 
@@ -27,6 +30,7 @@ GAME:
  -> stack below each other, not next to
 
 - ingame menu
+ -> pause + surrender button, sound settings
 
 - fix inverted resource circle for other player
 

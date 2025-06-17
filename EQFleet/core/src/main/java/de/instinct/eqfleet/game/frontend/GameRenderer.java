@@ -22,7 +22,6 @@ public class GameRenderer {
 
 	private final Vector3 BASE_CAM_POS = new Vector3(0f, 0f, 4400f);
 	private PerspectiveCamera camera;
-	private boolean isFlipped;
 	
 	private GridRenderer gridRenderer;
 	private GameUIRenderer uiRenderer;
@@ -34,6 +33,8 @@ public class GameRenderer {
 	private GuideRenderer guideRenderer;
 	
 	public boolean visible;
+	
+	public static boolean isFlipped;
 
 	public void init() {
 		isFlipped = false;

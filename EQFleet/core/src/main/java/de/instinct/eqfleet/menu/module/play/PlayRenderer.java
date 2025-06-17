@@ -121,7 +121,7 @@ public class PlayRenderer extends BaseModuleRenderer {
 		});
 		
 		cancelMatchmakingButton = getBaseButton("Cancel Matchmaking");
-		cancelMatchmakingButton.setFixedWidth(180f);
+		cancelMatchmakingButton.setFixedWidth(200f);
 		cancelMatchmakingButton.setFixedHeight(30f);
 		cancelMatchmakingButton.setAction(new Action() {
 			

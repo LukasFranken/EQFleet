@@ -22,6 +22,7 @@ import de.instinct.eqfleet.GlobalStaticData;
 import de.instinct.eqfleet.game.GameConfig;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.frontend.GameInputManager;
+import de.instinct.eqfleet.game.frontend.GameRenderer;
 import de.instinct.eqfleet.game.frontend.ui.model.GameUIElement;
 import de.instinct.eqfleet.game.frontend.ui.model.UIBounds;
 import de.instinct.eqlibgdxutils.rendering.particle.ParticleRenderer;
@@ -291,7 +292,7 @@ public class GameUIRenderer {
 		complexShapeRenderer.setProjectionMatrix(camera.combined);
 		complexShapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 		complexShapeRenderer.setColor(color);
-		complexShapeRenderer.cleanArc(x, y, radius, radius + thickness, 90, value * 360f);
+		complexShapeRenderer.cleanArc(x, y, radius, radius + thickness, 90 + (GameRenderer.isFlipped ? 180 : 0), value * 360f);
 		complexShapeRenderer.end();
 	}
 
