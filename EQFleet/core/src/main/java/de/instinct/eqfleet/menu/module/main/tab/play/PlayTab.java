@@ -33,6 +33,7 @@ public class PlayTab {
 	
 	public static void init() {
 		scheduler = Executors.newSingleThreadScheduledExecutor();
+		loadData();
 	}
 	
 	public static void update() {

@@ -10,6 +10,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import com.badlogic.gdx.Gdx;
+
 import de.instinct.api.core.API;
 import de.instinct.api.core.modules.MenuModule;
 import de.instinct.api.matchmaking.dto.LobbyStatusCode;
@@ -71,24 +73,26 @@ public class Menu {
 		renderers.put(MenuModule.CONSTRUCTION, new ConstructionRenderer());
 		
 		moduleMessageQueue = new ConcurrentLinkedQueue<>();
+		
+		PlayTab.init();
+		MenuModel.loaded = false;
 	}
 	
-	public static void open() {
-		Game.dispose();
-		loadModules();
+	public static void load() {
+		MenuModel.loaded = false;
 		scheduler = Executors.newSingleThreadScheduledExecutor();
 		scheduler.scheduleAtFixedRate(() -> {
 			update();
 		}, 0, UPDATE_CLOCK_MS, TimeUnit.MILLISECONDS);
+		loadModules();
+	}
+	
+	public static void open() {
+		Game.dispose();
 		MenuModel.active = true;
-		PlayTab.init();
-		PlayTab.loadData();
 	}
 	
 	public static void close() {
-		if (scheduler != null) {
-			scheduler.shutdownNow();
-		}
 		MenuModel.active = false;
 		menuRenderer.close();
 	}
@@ -108,10 +112,6 @@ public class Menu {
 	}
 	
 	public static void render() {
-		if (MenuModel.moduleChanged) {
-			reload();
-			MenuModel.moduleChanged = false;
-		}
 		while (reloadRequired.peek() != null) {
 			renderers.get(reloadRequired.poll()).reload();
 		}
@@ -147,7 +147,8 @@ public class Menu {
 			    result -> {
 			    	if (result != null) {
 			    		MenuModel.unlockedModules = result;
-			    		
+			    		queue(LoadProfileMessage.builder().build());
+			    		queue(LoadResourcesMessage.builder().build());
 			    		List<MenuModule> lockedModules = new ArrayList<>();
 			    		for (MenuModule module : MenuModule.values()) {
 			    			if (!MenuModel.unlockedModules.getEnabledModules().contains(module)) {
@@ -161,9 +162,7 @@ public class Menu {
 			    			    result2 -> {
 			    			    	if (result2 != null) {
 			    			    		MenuModel.lockedModules = result2;
-			    			    		MenuModel.moduleChanged = true;
-			    			    		queue(LoadProfileMessage.builder().build());
-			    			    		queue(LoadResourcesMessage.builder().build());
+			    			    		reload();
 			    					} else {
 			    						Logger.log("Menu", "ModuleData couldn't be loaded!");
 			    					}
@@ -177,10 +176,13 @@ public class Menu {
 	}
 	
 	private static void reload() {
-		menuRenderer.reload();
-		for (BaseModuleRenderer renderer : renderers.values()) {
-			renderer.reload();
-		}
+		Gdx.app.postRunnable(() -> {
+			menuRenderer.reload();
+			for (BaseModuleRenderer renderer : renderers.values()) {
+				renderer.reload();
+			}
+			MenuModel.loaded = true;
+		});
 	}
 	
 	public static void requireReload(MenuModule module) {
@@ -188,6 +190,9 @@ public class Menu {
 	}
 
 	public static void dispose() {
+		if (scheduler != null) {
+			scheduler.shutdownNow();
+		}
 		if (PlayTab.lobbyStatus != null && PlayTab.lobbyStatus.getCode() == LobbyStatusCode.MATCHING) {
 			PlayTab.stopMatching();
 		}

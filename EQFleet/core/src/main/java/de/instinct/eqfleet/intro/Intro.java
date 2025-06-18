@@ -13,6 +13,7 @@ import de.instinct.eqfleet.App;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.backend.driver.local.tutorial.TutorialMode;
 import de.instinct.eqfleet.menu.main.Menu;
+import de.instinct.eqfleet.menu.main.MenuModel;
 import de.instinct.eqfleet.net.WebManager;
 import de.instinct.eqlibgdxutils.PreferenceUtil;
 import de.instinct.eqlibgdxutils.generic.Action;
@@ -25,6 +26,7 @@ import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.interactive
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.interactive.MultiChoiceDialog;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.model.SlideAction;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.model.SlideButton;
+import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.model.SlideCondition;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.timed.Macro;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.timed.Message;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.timed.Pause;
@@ -74,13 +76,13 @@ public class Intro {
 	}
 	
 	private static void loadMenu() {
+		Menu.load();
 		Macro startClientMacro = new Macro();
 		startClientMacro.setAction(new Action() {
 			
 			@Override
 			public void execute() {
-				active = false;
-				Menu.open();
+				deactivate();
 			}
 			
 		});
@@ -98,11 +100,20 @@ public class Intro {
 
 	private static void loadWelcomeSlides() {
 		Pause startDelay = new Pause();
-		startDelay.setDuration(0.5f);
+		startDelay.setDuration(1f);
 		elementQueue.add(startDelay);
 		
 		Message welcomeMessage = new Message("Welcome!");
 		welcomeMessage.setDuration(2f);
+		welcomeMessage.getConditions().add(new SlideCondition() {
+			
+			@Override
+			public boolean isMet() {
+				
+				return !MenuModel.loaded;
+			}
+			
+		});
 		elementQueue.add(welcomeMessage);
 	}
 	
@@ -268,6 +279,12 @@ public class Intro {
 				});
 		firstTimeDialog.build();
 		elementQueue.add(firstTimeDialog);
+	}
+	
+	private static void deactivate() {
+		active = false;
+		elementQueue.clear();
+		Menu.open();
 	}
 
 	public static void render() {

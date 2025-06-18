@@ -13,6 +13,6 @@ public class MenuModel {
 	public static volatile MenuModule activeModule;
 	public static volatile ModuleData unlockedModules;
 	public static volatile ModuleInfoResponse lockedModules;
-	public static volatile boolean moduleChanged;
+	public static volatile boolean loaded;
 
 }

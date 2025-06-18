@@ -9,6 +9,7 @@ import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.backend.audio.AudioManager;
 import de.instinct.eqfleet.intro.Intro;
 import de.instinct.eqfleet.menu.main.Menu;
+import de.instinct.eqfleet.menu.module.main.tab.play.PlayTab;
 import de.instinct.eqfleet.net.WebManager;
 import de.instinct.eqlibgdxutils.CursorUtil;
 import de.instinct.eqlibgdxutils.InputUtil;
@@ -86,6 +87,7 @@ public class App extends ApplicationAdapter {
 
 	@Override
     public void dispose() {
+		PlayTab.dispose();
         Game.dispose();
         Menu.dispose();
         TextureManager.dispose();
