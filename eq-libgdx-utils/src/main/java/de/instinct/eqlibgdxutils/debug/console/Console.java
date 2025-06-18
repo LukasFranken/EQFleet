@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
@@ -43,7 +44,11 @@ public class Console {
 	
 	private static boolean active;
 	
+	private static List<String> commandList;
+	private static int lastCommandIndex = -1;
+	
 	public static void init() {
+		commandList = new ArrayList<>();
 		backgroundTexture = TextureManager.createTexture(new Color(0, 0, 0, 0.8f));
 		initializeMetrics();
 		activationScreenTaps = new ArrayList<>();
@@ -63,7 +68,9 @@ public class Console {
 			
 			@Override
 			public void confirmed() {
+				lastCommandIndex = -1;
 				Logger.log("Command", commandTextField.getContent());
+				commandList.add(commandTextField.getContent());
 				if (commandProcessor != null) commandProcessor.process(commandTextField.getContent());
 				commandTextField.setContent("");
 			}
@@ -146,6 +153,22 @@ public class Console {
 	}
 	
 	private static void renderConsoleInput() {
+		if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+	        if (!commandList.isEmpty()) {
+	            if (lastCommandIndex < commandList.size() - 1) {
+	                lastCommandIndex++;
+	            }
+	            commandTextField.setContent(commandList.get(commandList.size() - 1 - lastCommandIndex));
+	        }
+	    } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+	        if (lastCommandIndex > 0) {
+	            lastCommandIndex--;
+	            commandTextField.setContent(commandList.get(commandList.size() - 1 - lastCommandIndex));
+	        } else if (lastCommandIndex == 0) {
+	            lastCommandIndex = -1;
+	            commandTextField.setContent("");
+	        }
+	    }
 		commandTextField.setBounds(new Rectangle(borderMargin, borderMargin, Gdx.graphics.getWidth() - (borderMargin * 2), consoleInputHeight));
 		commandTextField.render();
 	}

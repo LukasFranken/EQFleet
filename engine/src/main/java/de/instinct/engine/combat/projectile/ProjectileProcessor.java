@@ -72,22 +72,33 @@ public class ProjectileProcessor {
 	private void calculateHit(Projectile projectile, GameState state) {
     	Player projectileOwner = EngineUtility.getPlayer(state.players, projectile.ownerId);
         for (Ship ship : state.ships) {
-        	checkHit(projectile, projectileOwner, ship, state);
+        	if (checkHit(projectile, projectileOwner, ship, state)) {
+        		dealDamage(projectile, ship);
+        		projectile.alive = false;
+        		break;
+        	}
         }
-        for (Planet planet : state.planets) {
-        	checkHit(projectile, projectileOwner, planet, state);
-        }
+        if (projectile.alive) {
+        	for (Planet planet : state.planets) {
+        		if (checkHit(projectile, projectileOwner, planet, state)) {
+            		dealDamage(projectile, planet);
+            		projectile.alive = false;
+            		break;
+            	}
+            }
+		}
+        
     }
 
-    private void checkHit(Projectile projectile, Player projectileOwner, Unit potencialTarget, GameState state) {
+    private boolean checkHit(Projectile projectile, Player projectileOwner, Unit potencialTarget, GameState state) {
     	float distanceToTarget = EntityManager.entityDistance(projectile, potencialTarget);
     	if (distanceToTarget <= 0) {
     		Player targetOwner = EngineUtility.getPlayer(state.players, potencialTarget.ownerId);
         	if (projectileOwner.teamId != targetOwner.teamId && potencialTarget.defense != null) {
-        		dealDamage(projectile, potencialTarget);
-        		projectile.alive = false;
+        		return true;
         	}
     	}
+    	return false;
 	}
 
 	private void dealDamage(Projectile projectile, Unit target) {

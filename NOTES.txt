@@ -14,7 +14,7 @@ GENERAL:
 - appicon, ios loadscreen etc.
 - check android
 
-- fix shitty animation ios
+- fix popup renderer open flicker
 
 - Audio
  -> BG music

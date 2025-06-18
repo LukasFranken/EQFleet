@@ -94,7 +94,7 @@ public class MenuRenderer extends BaseModuleRenderer {
 	}
 
 	public void reload() {
-		alpha = 0f;
+		close();
 		calculateMenuBounds();
 		TextureManager.createShapeTexture("main_menuOutline", ComplexShapeType.ROUNDED_RECTANGLE, menuBounds, DefaultUIValues.skinColor);
 		TextureManager.createShapeTexture("main_titleOutline", ComplexShapeType.ROUNDED_RECTANGLE, new Rectangle(menuBounds.x, menuBounds.y + menuBounds.height - titleHeight, menuBounds.width, 2), DefaultUIValues.skinColor);
@@ -102,7 +102,7 @@ public class MenuRenderer extends BaseModuleRenderer {
 		TextureManager.createShapeTexture("main_nameOutline", ComplexShapeType.ROUNDED_RECTANGLE, new Rectangle(menuBounds.x + 45, menuBounds.y + menuBounds.height + 20, 120, 25), DefaultUIValues.skinColor);
 		TextureManager.createShapeTexture("main_expOutline", ComplexShapeType.ROUNDED_RECTANGLE, new Rectangle(menuBounds.x + 65, menuBounds.y + menuBounds.height + 10, 100, 7), Color.BLUE);
 		TextureManager.createShapeTexture("main_creditsOutline", ComplexShapeType.ROUNDED_RECTANGLE, new Rectangle(menuBounds.x + menuBounds.width - 103, menuBounds.y + menuBounds.height + 10, 85, 20), Color.GREEN);
-		elapsed = 0f;
+		
 		tabButtons = new LinkedHashMap<>();
 		for (MenuModule module : MenuModel.unlockedModules.getEnabledModules()) {
 			createModuleButton(module);
@@ -117,6 +117,7 @@ public class MenuRenderer extends BaseModuleRenderer {
 	
 	public void close() {
 		alpha = 0f;
+		elapsed = 0f;
 		menuBounds = null;
 	}
 	
@@ -148,6 +149,8 @@ public class MenuRenderer extends BaseModuleRenderer {
 				renderTitle();
 			}
 			elapsed += Gdx.graphics.getDeltaTime();
+		} else {
+			calculateMenuBounds();
 		}
 	}
 

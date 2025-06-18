@@ -175,7 +175,7 @@ public class Menu {
 		);
 	}
 	
-	private static void reload() {
+	public static void reload() {
 		Gdx.app.postRunnable(() -> {
 			menuRenderer.reload();
 			for (BaseModuleRenderer renderer : renderers.values()) {
