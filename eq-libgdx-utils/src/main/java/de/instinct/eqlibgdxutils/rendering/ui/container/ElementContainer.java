@@ -23,8 +23,8 @@ public abstract class ElementContainer extends UIElement {
 		for (UIElement element : elements) {
 			element.update();
 		}
-		super.update();
 		updateElementsPosition();
+		super.update();
 	}
 
 	protected abstract void updateElementsPosition();

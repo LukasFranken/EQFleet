@@ -63,7 +63,6 @@ public class PopupRenderer {
 	public static void render() {
 		destroy();
 		if (popup != null) {
-			System.out.println(popupBounds);
 			TextureManager.draw(BG_DARKENING_TAG, new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), BG_DARKENING);
 			TextureManager.draw(POPUP_BG_TAG, popupBounds, 1f);
 			TextureManager.draw(currentWindowTextureTag);

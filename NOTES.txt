@@ -14,8 +14,6 @@ GENERAL:
 - appicon, ios loadscreen etc.
 - check android
 
-- fix popup renderer open flicker
-
 - Audio
  -> BG music
  -> sound FX
@@ -29,8 +27,6 @@ GAME:
 
 - ingame menu
  -> pause + surrender button, sound settings
-
-- fix inverted resource circle for other player
 
 META:
 - Intro rework

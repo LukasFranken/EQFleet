@@ -90,6 +90,8 @@ public class Menu {
 	public static void open() {
 		Game.dispose();
 		MenuModel.active = true;
+		queue(LoadProfileMessage.builder().build());
+		queue(LoadResourcesMessage.builder().build());
 	}
 	
 	public static void close() {
@@ -147,8 +149,6 @@ public class Menu {
 			    result -> {
 			    	if (result != null) {
 			    		MenuModel.unlockedModules = result;
-			    		queue(LoadProfileMessage.builder().build());
-			    		queue(LoadResourcesMessage.builder().build());
 			    		List<MenuModule> lockedModules = new ArrayList<>();
 			    		for (MenuModule module : MenuModule.values()) {
 			    			if (!MenuModel.unlockedModules.getEnabledModules().contains(module)) {
