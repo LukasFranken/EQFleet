@@ -14,6 +14,8 @@ GENERAL:
 - appicon, ios loadscreen etc.
 - check android
 
+- fix shitty animation ios
+
 - Audio
  -> BG music
  -> sound FX

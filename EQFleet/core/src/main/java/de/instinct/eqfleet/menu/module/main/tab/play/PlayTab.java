@@ -1,8 +1,10 @@
 package de.instinct.eqfleet.menu.module.main.tab.play;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.utils.Timer;
-import com.badlogic.gdx.utils.Timer.Task;
 
 import de.instinct.api.core.API;
 import de.instinct.api.core.modules.MenuModule;
@@ -26,9 +28,12 @@ public class PlayTab {
 	public static InvitesStatusResponse inviteStatus;
 	public static InviteResponse inviteResponse;
 	
-	private static Task updateTask;
+	private static ScheduledExecutorService scheduler;
+	private static int QUEUE_UPDATE_CLOCK_MS = 500;
 	
-	private static float QUEUE_UPDATE_CLOCK_MS = 500;
+	public static void init() {
+		scheduler = Executors.newSingleThreadScheduledExecutor();
+	}
 	
 	public static void update() {
 		
@@ -39,7 +44,9 @@ public class PlayTab {
 	}
 	
 	public static void dispose() {
-		
+		if (scheduler != null) {
+			scheduler.shutdownNow();
+		}
 	}
 	
 	private static void connectToGameserver() {
@@ -122,49 +129,42 @@ public class PlayTab {
 		lobbyUUID = null;
 		lobbyStatus = null;
 		currentMatchmakingStatus = null;
-		if (updateTask == null) {
-			updateTask = Timer.schedule(new Timer.Task() {
-	        	
-	            @Override
-	            public void run() {
-	            	if (MenuModel.activeModule == MenuModule.PLAY && MenuModel.active) {
-	            		WebManager.enqueue(
-                    			() -> API.matchmaking().get(),
-            				    result -> {
-            				    	lobbyUUID = result;
-            				    }
-            			);
-	            		if (lobbyUUID == null || lobbyUUID.contentEquals("")) {
-	                		WebManager.enqueue(
-	                    			() -> API.matchmaking().invites(),
-	            				    result -> {
-	            				    	inviteStatus = result;
-	            				    }
-	            			);
-	            		} else {
-	            			WebManager.enqueue(
-	                    			() -> API.matchmaking().status(lobbyUUID),
-	        					    result -> {
-	        					    	lobbyStatus = result;
-	        					    }
-	        				);
-	            			if (lobbyStatus != null && (lobbyStatus.getCode() == LobbyStatusCode.MATCHING || lobbyStatus.getCode() == LobbyStatusCode.IN_GAME)) {
-	            				WebManager.enqueue(
-	            	        			() -> API.matchmaking().matchmaking(lobbyUUID),
-	            					    result -> {
-	            					    	currentMatchmakingStatus = result;
-	            					    	if (result.getCode() == MatchmakingStatusResponseCode.READY) {
-	            					    		connectToGameserver();
-	            					    	}
-	            					    }
-	            				);
-	            			}
-	            		}
-	            	}
-	            }
-	            
-	        }, 0, QUEUE_UPDATE_CLOCK_MS / 1000f);
-		}
+		scheduler.scheduleAtFixedRate(() -> {
+			if (MenuModel.activeModule == MenuModule.PLAY && MenuModel.active) {
+        		WebManager.enqueue(
+            			() -> API.matchmaking().get(),
+    				    result -> {
+    				    	lobbyUUID = result;
+    				    }
+    			);
+        		if (lobbyUUID == null || lobbyUUID.contentEquals("")) {
+            		WebManager.enqueue(
+                			() -> API.matchmaking().invites(),
+        				    result -> {
+        				    	inviteStatus = result;
+        				    }
+        			);
+        		} else {
+        			WebManager.enqueue(
+                			() -> API.matchmaking().status(lobbyUUID),
+    					    result -> {
+    					    	lobbyStatus = result;
+    					    }
+    				);
+        			if (lobbyStatus != null && (lobbyStatus.getCode() == LobbyStatusCode.MATCHING || lobbyStatus.getCode() == LobbyStatusCode.IN_GAME)) {
+        				WebManager.enqueue(
+        	        			() -> API.matchmaking().matchmaking(lobbyUUID),
+        					    result -> {
+        					    	currentMatchmakingStatus = result;
+        					    	if (result.getCode() == MatchmakingStatusResponseCode.READY) {
+        					    		connectToGameserver();
+        					    	}
+        					    }
+        				);
+        			}
+        		}
+        	}
+		}, 0, QUEUE_UPDATE_CLOCK_MS, TimeUnit.MILLISECONDS);
 	}
 	
 }

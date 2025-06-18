@@ -81,6 +81,7 @@ public class Menu {
 			update();
 		}, 0, UPDATE_CLOCK_MS, TimeUnit.MILLISECONDS);
 		MenuModel.active = true;
+		PlayTab.init();
 		PlayTab.loadData();
 	}
 	
