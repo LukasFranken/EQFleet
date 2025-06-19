@@ -8,7 +8,6 @@ import com.badlogic.gdx.math.Rectangle;
 import de.instinct.eqlibgdxutils.ClipboardUtil;
 import de.instinct.eqlibgdxutils.MathUtil;
 import de.instinct.eqlibgdxutils.StringUtils;
-import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
@@ -16,6 +15,7 @@ import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.Slide;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.model.SlideCondition;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.model.SlideLifeCycleStage;
+import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -59,7 +59,7 @@ public class ClipboardDialog extends Slide {
 
 	public void build() {
 		Border buttonBorder = new Border();
-		buttonBorder.setColor(new Color(DefaultUIValues.skinColor));
+		buttonBorder.setColor(new Color(SkinManager.skinColor));
 		buttonBorder.setSize(2);
 
 		useButton = new ColorButton("Use");
@@ -67,9 +67,9 @@ public class ClipboardDialog extends Slide {
 		useButton.setColor(Color.BLACK);
 		useButton.setFixedWidth(50);
 		useButton.setFixedHeight(30);
-		useButton.setLabelColor(new Color(DefaultUIValues.skinColor));
-		useButton.setHoverColor(new Color(DefaultUIValues.darkerSkinColor));
-		useButton.setDownColor(new Color(DefaultUIValues.lighterSkinColor));
+		useButton.setLabelColor(new Color(SkinManager.skinColor));
+		useButton.setHoverColor(new Color(SkinManager.darkerSkinColor));
+		useButton.setDownColor(new Color(SkinManager.lighterSkinColor));
 	}
 
 	@Override
@@ -97,7 +97,7 @@ public class ClipboardDialog extends Slide {
 			useButton.setAlpha(Math.min(clipboardLabelAlpha, slideAlpha));
 			useButton.update();
 			useButton.render();
-			Color fontColor = new Color(DefaultUIValues.lighterSkinColor);
+			Color fontColor = new Color(SkinManager.lighterSkinColor);
 			fontColor.a = clipboardLabelAlpha;
 			String authKeyLabel = StringUtils.elide(authKey, 6);
 			keyLabel.setText(authKeyLabel);

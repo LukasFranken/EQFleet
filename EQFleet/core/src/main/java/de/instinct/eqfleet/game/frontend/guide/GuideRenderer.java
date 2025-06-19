@@ -11,9 +11,9 @@ import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.GuideEvent;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.subtypes.CameraMoveGuideEvent;
 import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.subtypes.DialogGuideEvent;
 import de.instinct.eqlibgdxutils.MathUtil;
-import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
+import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 
 public class GuideRenderer {
 	
@@ -99,7 +99,7 @@ public class GuideRenderer {
 				}
 				messageLabel.setBackgroundColor(Color.BLACK);
 				Border labelBorder = new Border();
-				labelBorder.setColor(DefaultUIValues.skinColor);
+				labelBorder.setColor(SkinManager.skinColor);
 				labelBorder.setSize(2);
 				messageLabel.setBorder(labelBorder);
 				messageLabel.render();

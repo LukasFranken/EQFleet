@@ -3,10 +3,10 @@ package de.instinct.eqlibgdxutils.rendering.ui.component.passive.label;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
-import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
+import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -26,7 +26,7 @@ public class Label extends Component {
 	public Label(String text) {
 		super();
 		this.text = text;
-		color = new Color(DefaultUIValues.skinColor);
+		color = new Color(SkinManager.skinColor);
 		verticalAlignment = VerticalAlignment.CENTER;
 		horizontalAlignment = HorizontalAlignment.CENTER;
 		lineSpacing = 5;

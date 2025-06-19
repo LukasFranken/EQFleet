@@ -22,6 +22,7 @@ import de.instinct.eqlibgdxutils.rendering.model.ModelRenderer;
 import de.instinct.eqlibgdxutils.rendering.particle.ParticleRenderer;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.popup.PopupRenderer;
+import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 
 public class App extends ApplicationAdapter {
@@ -34,15 +35,15 @@ public class App extends ApplicationAdapter {
     @Override
     public void create() {
     	Logger.log(LOGTAG, "Welcome to EQFLEET v" + VERSION, ConsoleColor.YELLOW);
+    	PreferenceUtil.init("EQFleet");
+    	SkinManager.init();
     	TextureManager.init();
-        TextureManager.setDefaultGlowRadius(30f);
     	Console.init();
-    	Console.setCommandProcessor(new EQFleetCommandProcessor());
+    	Console.setCommands(new EQFleetCommandLoader());
     	AudioManager.init();
     	FontUtil.init();
     	Gdx.input.setInputProcessor(new InputMultiplexer());
     	CursorUtil.createCursor();
-    	PreferenceUtil.init("EQFleet");
     	WebManager.init();
         Intro.init();
         Menu.init();

@@ -15,13 +15,13 @@ import de.instinct.eqlibgdxutils.debug.Metric;
 import de.instinct.eqlibgdxutils.debug.MetricUtil;
 import de.instinct.eqlibgdxutils.debug.logging.LogLine;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
-import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.LimitedInputField;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.model.TextfieldActionHandler;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.HorizontalAlignment;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
+import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.SimpleShapeRenderer;
 
@@ -44,11 +44,12 @@ public class Console {
 	
 	private static boolean active;
 	
-	private static List<String> commandList;
+	private static List<String> inputList;
 	private static int lastCommandIndex = -1;
 	
 	public static void init() {
-		commandList = new ArrayList<>();
+		commandProcessor = new CommandProcessor();
+		inputList = new ArrayList<>();
 		backgroundTexture = TextureManager.createTexture(new Color(0, 0, 0, 0.8f));
 		initializeMetrics();
 		activationScreenTaps = new ArrayList<>();
@@ -70,8 +71,8 @@ public class Console {
 			public void confirmed() {
 				lastCommandIndex = -1;
 				Logger.log("Command", commandTextField.getContent());
-				commandList.add(commandTextField.getContent());
-				if (commandProcessor != null) commandProcessor.process(commandTextField.getContent());
+				inputList.add(commandTextField.getContent());
+				commandProcessor.process(commandTextField.getContent());
 				commandTextField.setContent("");
 			}
 			
@@ -86,8 +87,8 @@ public class Console {
 		}
 	}
 	
-	public static void setCommandProcessor(CommandProcessor newCommandProcessor) {
-		commandProcessor = newCommandProcessor;
+	public static void setCommands(CommandLoader commandLoader) {
+		commandProcessor.setCommands(commandLoader.getCommands());
 	}
 	
 	public static void toggle() {
@@ -131,7 +132,7 @@ public class Console {
 				consoleInputHeight + logPanelMargin + borderMargin, 
 				Gdx.graphics.getWidth() - (logPanelMargin * 2), 
 				Gdx.graphics.getHeight() - consoleInputHeight - metricsHeight - (logPanelMargin * 2) - borderMargin);
-		SimpleShapeRenderer.drawRectangle(logsBounds, DefaultUIValues.skinColor, 1);
+		SimpleShapeRenderer.drawRectangle(logsBounds, SkinManager.skinColor, 1);
 		
 		int logLineHorizontalMargin = 5;
 		List<LogLine> logLines = Logger.getLogs((int)(logsBounds.height / logLineHeight));
@@ -154,21 +155,24 @@ public class Console {
 	
 	private static void renderConsoleInput() {
 		if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-	        if (!commandList.isEmpty()) {
-	            if (lastCommandIndex < commandList.size() - 1) {
+	        if (!inputList.isEmpty()) {
+	            if (lastCommandIndex < inputList.size() - 1) {
 	                lastCommandIndex++;
 	            }
-	            commandTextField.setContent(commandList.get(commandList.size() - 1 - lastCommandIndex));
+	            commandTextField.setContent(inputList.get(inputList.size() - 1 - lastCommandIndex));
 	        }
 	    } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
 	        if (lastCommandIndex > 0) {
 	            lastCommandIndex--;
-	            commandTextField.setContent(commandList.get(commandList.size() - 1 - lastCommandIndex));
+	            commandTextField.setContent(inputList.get(inputList.size() - 1 - lastCommandIndex));
 	        } else if (lastCommandIndex == 0) {
 	            lastCommandIndex = -1;
 	            commandTextField.setContent("");
 	        }
 	    }
+		if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
+			commandTextField.setContent(commandProcessor.autocomplete(commandTextField.getContent()));
+		}
 		commandTextField.setBounds(new Rectangle(borderMargin, borderMargin, Gdx.graphics.getWidth() - (borderMargin * 2), consoleInputHeight));
 		commandTextField.render();
 	}

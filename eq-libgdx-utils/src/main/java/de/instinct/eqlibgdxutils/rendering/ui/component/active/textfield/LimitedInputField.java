@@ -11,7 +11,6 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
-import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.model.EnableConditionHandler;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.model.InputFieldProcessor;
@@ -22,6 +21,7 @@ import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Horizontal
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
+import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -188,7 +188,7 @@ public class LimitedInputField extends Component {
 	}
 
 	private void updateBorderColor() {
-		 getBorder().setColor(enabled ? (focused ? new Color(DefaultUIValues.skinColor) : Color.GRAY) : Color.DARK_GRAY);
+		 getBorder().setColor(enabled ? (focused ? new Color(SkinManager.skinColor) : Color.GRAY) : Color.DARK_GRAY);
 	}
 
 	private void drawLimit() {

@@ -6,7 +6,6 @@ import de.instinct.api.core.modules.MenuModule;
 import de.instinct.api.core.modules.ModuleUnlockRequirement;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqlibgdxutils.generic.Action;
-import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ImageButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
@@ -14,13 +13,14 @@ import de.instinct.eqlibgdxutils.rendering.ui.container.list.ElementList;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
 import de.instinct.eqlibgdxutils.rendering.ui.popup.Popup;
 import de.instinct.eqlibgdxutils.rendering.ui.popup.PopupRenderer;
+import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 
 public class DefaultButtonFactory {
 	
 	public static ColorButton moduleButton(MenuModule module) {
 		Border buttonBorder = new Border();
-		buttonBorder.setColor(new Color(DefaultUIValues.skinColor));
+		buttonBorder.setColor(new Color(SkinManager.skinColor));
 		buttonBorder.setSize(2);
 
 		ColorButton moduleButton = new ColorButton(module.toString().substring(0, 3));
@@ -28,9 +28,9 @@ public class DefaultButtonFactory {
 		moduleButton.setColor(Color.BLACK);
 		moduleButton.setFixedHeight(50);
 		moduleButton.setFixedWidth(50);
-		moduleButton.setLabelColor(new Color(DefaultUIValues.skinColor));
-		moduleButton.setHoverColor(new Color(DefaultUIValues.darkerSkinColor));
-		moduleButton.setDownColor(new Color(DefaultUIValues.lighterSkinColor));
+		moduleButton.setLabelColor(new Color(SkinManager.skinColor));
+		moduleButton.setHoverColor(new Color(SkinManager.darkerSkinColor));
+		moduleButton.setDownColor(new Color(SkinManager.lighterSkinColor));
 		moduleButton.setAction(new Action() {
 			
 			@Override
@@ -45,7 +45,7 @@ public class DefaultButtonFactory {
 	
 	public static ImageButton moduleButton(ModuleUnlockRequirement moduleUnlockRequirement) {
 		Border buttonBorder = new Border();
-		buttonBorder.setColor(new Color(DefaultUIValues.skinColor));
+		buttonBorder.setColor(new Color(SkinManager.skinColor));
 		buttonBorder.setSize(2);
 
 		ImageButton moduleButton = new ImageButton();
@@ -74,16 +74,16 @@ public class DefaultButtonFactory {
 	
 	public static ColorButton colorButton(String label, Action clickAction) {
 		Border buttonBorder = new Border();
-		buttonBorder.setColor(new Color(DefaultUIValues.skinColor));
+		buttonBorder.setColor(new Color(SkinManager.skinColor));
 		buttonBorder.setSize(2);
 
 		ColorButton colorButton = new ColorButton(label);
 		colorButton.setBorder(buttonBorder);
 		colorButton.setColor(Color.BLACK);
 		colorButton.setFixedHeight(50);
-		colorButton.setLabelColor(new Color(DefaultUIValues.skinColor));
-		colorButton.setHoverColor(new Color(DefaultUIValues.darkerSkinColor));
-		colorButton.setDownColor(new Color(DefaultUIValues.lighterSkinColor));
+		colorButton.setLabelColor(new Color(SkinManager.skinColor));
+		colorButton.setHoverColor(new Color(SkinManager.darkerSkinColor));
+		colorButton.setDownColor(new Color(SkinManager.lighterSkinColor));
 		colorButton.setAction(clickAction);
 		
 		return colorButton;

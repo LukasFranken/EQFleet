@@ -8,9 +8,9 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
-import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.module.BaseModule;
+import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.draw.TextureDrawMode;
 import lombok.Data;
@@ -36,8 +36,8 @@ public class ActionList extends BaseModule {
 		setScrollable(true);
 		setElementHeight(40);
 		setHoverColor(new Color(0.1f, 0.1f, 0.1f, 1));
-		setActiveElementColor(DefaultUIValues.darkerSkinColor);
-		setElementBorderColor(DefaultUIValues.darkestSkinColor);
+		setActiveElementColor(SkinManager.darkerSkinColor);
+		setElementBorderColor(SkinManager.darkestSkinColor);
 		setDecorated(false);
 	}
 

@@ -4,9 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
-import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
 import de.instinct.eqlibgdxutils.rendering.ui.core.UIElement;
+import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -31,7 +31,9 @@ public abstract class BaseModule extends UIElement {
 		setBounds(new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		defaultBorder = new Border();
 		defaultBorder.setSize(2);
-		defaultBorder.setColor(DefaultUIValues.darkestSkinColor);
+		Color borderColor = new Color(SkinManager.skinColor);
+		borderColor.mul(0.5f, 0.5f, 0.5f, 1f);
+		defaultBorder.setColor(borderColor);
     }
 
     @Override

@@ -5,8 +5,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.eqlibgdxutils.InputUtil;
-import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
+import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.ComplexShapeType;
 
@@ -48,13 +48,13 @@ public class PopupRenderer {
 				currentWindowTextureTag, 
 				ComplexShapeType.ROUNDED_RECTANGLE,
 				popupBounds,
-				DefaultUIValues.skinColor);
+				SkinManager.skinColor);
 		currentWindowTitlebarTextureTag = currentWindowTextureTag + "_titlebar";
 		TextureManager.createShapeTexture(
 				currentWindowTitlebarTextureTag, 
 				ComplexShapeType.ROUNDED_RECTANGLE,
 				new Rectangle(popupBounds.x, popupBounds.y + popupBounds.height - TITLE_BAR_HEIGHT, popupBounds.width, 2),
-				DefaultUIValues.skinColor);
+				SkinManager.skinColor);
 		TextureManager.createTexture(BG_DARKENING_TAG, Color.BLACK);
 		TextureManager.createTexture(POPUP_BG_TAG, Color.BLACK);
 		title = new Label(newPopup.getTitle());

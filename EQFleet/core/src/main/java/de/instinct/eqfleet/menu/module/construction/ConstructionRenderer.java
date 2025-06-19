@@ -13,7 +13,6 @@ import de.instinct.eqfleet.menu.main.MenuModel;
 import de.instinct.eqfleet.menu.module.construction.message.UseTurretMessage;
 import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.generic.Action;
-import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.HorizontalAlignment;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
@@ -22,6 +21,7 @@ import de.instinct.eqlibgdxutils.rendering.ui.container.list.ElementStack;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
 import de.instinct.eqlibgdxutils.rendering.ui.popup.Popup;
 import de.instinct.eqlibgdxutils.rendering.ui.popup.PopupRenderer;
+import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 
 public class ConstructionRenderer extends BaseModuleRenderer {
 
@@ -62,7 +62,7 @@ private List<ColorButton> turretButtons;
 	}
 	
 	private ColorButton createTurretButton(PlanetTurretBlueprint blueprint) {
-		ColorButton shipButton = DefaultButtonFactory.colorButton(blueprint.getName().substring(0, 3), new Action() {
+		ColorButton turretButton = DefaultButtonFactory.colorButton(blueprint.getName().substring(0, 3), new Action() {
 			
 			@Override
 			public void execute() {
@@ -70,8 +70,9 @@ private List<ColorButton> turretButtons;
 			}
 			
 		});
-		shipButton.getBorder().setColor(blueprint.isInUse() ? Color.GREEN : DefaultUIValues.skinColor);
-		return shipButton;
+		turretButton.setFixedWidth(50);
+		turretButton.getBorder().setColor(blueprint.isInUse() ? Color.GREEN : SkinManager.skinColor);
+		return turretButton;
 	}
 	
 	private void createTurretPopup(PlanetTurretBlueprint blueprint) {

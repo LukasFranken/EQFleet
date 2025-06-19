@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.eqlibgdxutils.MathUtil;
-import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
@@ -16,6 +15,7 @@ import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.Slide;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.model.SlideButton;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.model.SlideCondition;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.model.SlideLifeCycleStage;
+import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -66,7 +66,7 @@ public class MultiChoiceDialog extends Slide {
 	
 	private ColorButton createSlideButton(String label) {
 		Border buttonBorder = new Border();
-		buttonBorder.setColor(new Color(DefaultUIValues.skinColor));
+		buttonBorder.setColor(new Color(SkinManager.skinColor));
 		buttonBorder.setSize(2);
 
 		ColorButton slideButton = new ColorButton(label);
@@ -74,9 +74,9 @@ public class MultiChoiceDialog extends Slide {
 		slideButton.setColor(Color.BLACK);
 		slideButton.setFixedWidth(Gdx.graphics.getWidth() - (BUTTON_MARGIN * 2));
 		slideButton.setFixedHeight(40);
-		slideButton.setLabelColor(new Color(DefaultUIValues.skinColor));
-		slideButton.setHoverColor(new Color(DefaultUIValues.darkerSkinColor));
-		slideButton.setDownColor(new Color(DefaultUIValues.lighterSkinColor));
+		slideButton.setLabelColor(new Color(SkinManager.skinColor));
+		slideButton.setHoverColor(new Color(SkinManager.darkerSkinColor));
+		slideButton.setDownColor(new Color(SkinManager.lighterSkinColor));
 		return slideButton;
 	}
 	

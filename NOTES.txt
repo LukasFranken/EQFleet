@@ -1,10 +1,6 @@
 ALPHA RELEASE TODO:
 GENERAL:
-- remove player from matchmaking on exit (not dc)
-
 - preference manager (local)
- -> glow radius
- -> skin color
  -> audio
  
 - externalize gamedata like ships, stats, gameloader, map etc.
@@ -29,24 +25,17 @@ GAME:
  -> pause + surrender button, sound settings
 
 META:
+-> multiple ships
+
 - Intro rework
  -> add back button for intro
  -> click tutorial screen to skip timed event?
  
-- combat
- -> conquest, match, ?? .... 
- - conquest map
- -> available with higher rank
- -> conquering one star system after anotherj
- -> split in sectors
- -> like gemcraft
- -> or any other conquest mode
- -> proper exp and resource rewards
- - match
- -> like now with custom and pvp/ai
- -> available to beginners, especially vs AI
- 
 - playtab logic finished refactoring
+
+- shop
+ -> ship blueprints
+ -> ship slots
 
 ---------------------------------------------------------------------
 FUTURE RELEASES TODO:
@@ -59,8 +48,18 @@ GAME:
 - improved ai
 
 META:
-- shop
- -> ship blueprints
+- combat
+ -> conquest, match, ?? .... 
+ - conquest map
+ -> available with higher rank
+ -> conquering one star system after anotherj
+ -> split in sectors
+ -> like gemcraft
+ -> or any other conquest mode
+ -> proper exp and resource rewards
+ - match
+ -> like now with custom and pvp/ai
+ -> available to beginners, especially vs AI
 
 - social features (friends teams messages etc.)
 
@@ -72,7 +71,6 @@ META:
    -> usage depends on ability effect e.g. damage dealt / units slowed etc.
 
 - Shipyard
- -> multiple ships
  -> higher classes
   -> cruiser, destroyer, titan
  -> blueprints can be bought in shop at will, no rng

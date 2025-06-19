@@ -4,9 +4,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
-import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.HorizontalAlignment;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
+import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -29,10 +29,10 @@ public class LabeledImageButton extends Button {
 		spacing = 20f;
 		messageLabel = new Label(message);
 		messageLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
-		Color hoverColor = new Color(DefaultUIValues.darkerSkinColor);
+		Color hoverColor = new Color(SkinManager.darkerSkinColor);
 		hoverColor.a = 0.4f;
 		hoverTexture = TextureManager.createTexture(hoverColor);
-		Color clickColor = new Color(DefaultUIValues.skinColor);
+		Color clickColor = new Color(SkinManager.skinColor);
 		clickColor.a = 0.4f;
 		clickTexture = TextureManager.createTexture(clickColor);
 	}

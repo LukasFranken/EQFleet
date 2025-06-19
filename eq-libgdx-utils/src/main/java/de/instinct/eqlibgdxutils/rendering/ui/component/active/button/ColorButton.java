@@ -2,10 +2,10 @@ package de.instinct.eqlibgdxutils.rendering.ui.component.active.button;
 
 import com.badlogic.gdx.graphics.Color;
 
-import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
+import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -29,13 +29,14 @@ public class ColorButton extends Button {
 	public ColorButton(String text) {
 		super();
 		label = new Label(text);
-		labelColor = DefaultUIValues.buttonColor;
-		color = DefaultUIValues.buttonDownColor;
-		downColor = DefaultUIValues.buttonDownActiveColor;
-		downActiveColor = DefaultUIValues.activeColor;
-		activeColor = DefaultUIValues.buttonLabelColor;
-		hoverColor = DefaultUIValues.buttonHoverColor;
-		hoverActiveColor = DefaultUIValues.buttonHoverActiveColor;
+		
+		labelColor = Color.GRAY;
+		color = Color.DARK_GRAY;
+		downColor = new Color(SkinManager.darkestSkinColor);
+		downActiveColor = new Color(SkinManager.darkerSkinColor);
+		activeColor = Color.BLACK;
+		hoverColor = Color.LIGHT_GRAY;
+		hoverActiveColor = new Color(SkinManager.skinColor);
 		contentMargin = 5;
 	}
 

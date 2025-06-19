@@ -17,7 +17,6 @@ import de.instinct.eqfleet.menu.module.profile.ProfileModel;
 import de.instinct.eqlibgdxutils.InputUtil;
 import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.generic.Action;
-import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.Button;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ImageButton;
@@ -26,6 +25,7 @@ import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.subtypes.PlainRectangularLoadingBar;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
+import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.ComplexShapeType;
 
@@ -66,7 +66,7 @@ public class MenuRenderer extends BaseModuleRenderer {
 		
 		menuBackground = new Label("");
 		Border backgroundBorder = new Border();
-		backgroundBorder.setColor(DefaultUIValues.skinColor);
+		backgroundBorder.setColor(SkinManager.skinColor);
 		backgroundBorder.setSize(2f);
 		menuBackground.setBorder(backgroundBorder);
 		
@@ -87,7 +87,7 @@ public class MenuRenderer extends BaseModuleRenderer {
 		});
 		closeModuleButton.setBorder(null);
 		closeModuleButton.setColor(Color.CLEAR);
-		Color downColor = new Color(DefaultUIValues.skinColor);
+		Color downColor = new Color(SkinManager.skinColor);
 		downColor.a = 0.4f;
 		closeModuleButton.setDownColor(downColor);
 		closeModuleButton.setHoverColor(downColor);
@@ -96,10 +96,10 @@ public class MenuRenderer extends BaseModuleRenderer {
 	public void reload() {
 		close();
 		calculateMenuBounds();
-		TextureManager.createShapeTexture("main_menuOutline", ComplexShapeType.ROUNDED_RECTANGLE, menuBounds, DefaultUIValues.skinColor);
-		TextureManager.createShapeTexture("main_titleOutline", ComplexShapeType.ROUNDED_RECTANGLE, new Rectangle(menuBounds.x, menuBounds.y + menuBounds.height - titleHeight, menuBounds.width, 2), DefaultUIValues.skinColor);
-		TextureManager.createShapeTexture("main_rankOutline", ComplexShapeType.ROUNDED_RECTANGLE, new Rectangle(menuBounds.x, menuBounds.y + menuBounds.height + 10, 35, 35), DefaultUIValues.skinColor);
-		TextureManager.createShapeTexture("main_nameOutline", ComplexShapeType.ROUNDED_RECTANGLE, new Rectangle(menuBounds.x + 45, menuBounds.y + menuBounds.height + 20, 120, 25), DefaultUIValues.skinColor);
+		TextureManager.createShapeTexture("main_menuOutline", ComplexShapeType.ROUNDED_RECTANGLE, menuBounds, SkinManager.skinColor);
+		TextureManager.createShapeTexture("main_titleOutline", ComplexShapeType.ROUNDED_RECTANGLE, new Rectangle(menuBounds.x, menuBounds.y + menuBounds.height - titleHeight, menuBounds.width, 2), SkinManager.skinColor);
+		TextureManager.createShapeTexture("main_rankOutline", ComplexShapeType.ROUNDED_RECTANGLE, new Rectangle(menuBounds.x, menuBounds.y + menuBounds.height + 10, 35, 35), SkinManager.skinColor);
+		TextureManager.createShapeTexture("main_nameOutline", ComplexShapeType.ROUNDED_RECTANGLE, new Rectangle(menuBounds.x + 45, menuBounds.y + menuBounds.height + 20, 120, 25), SkinManager.skinColor);
 		TextureManager.createShapeTexture("main_expOutline", ComplexShapeType.ROUNDED_RECTANGLE, new Rectangle(menuBounds.x + 65, menuBounds.y + menuBounds.height + 10, 100, 7), Color.BLUE);
 		TextureManager.createShapeTexture("main_creditsOutline", ComplexShapeType.ROUNDED_RECTANGLE, new Rectangle(menuBounds.x + menuBounds.width - 103, menuBounds.y + menuBounds.height + 10, 85, 20), Color.GREEN);
 		

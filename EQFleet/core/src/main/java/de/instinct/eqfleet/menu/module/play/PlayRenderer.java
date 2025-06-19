@@ -18,7 +18,6 @@ import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.module.main.tab.play.PlayTab;
 import de.instinct.eqlibgdxutils.generic.Action;
-import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.LimitedInputField;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.model.TextfieldActionHandler;
@@ -28,6 +27,7 @@ import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
 import de.instinct.eqlibgdxutils.rendering.ui.module.list.ActionList;
 import de.instinct.eqlibgdxutils.rendering.ui.module.list.ActionListElement;
 import de.instinct.eqlibgdxutils.rendering.ui.module.list.ListActionHandler;
+import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 
 public class PlayRenderer extends BaseModuleRenderer {
 
@@ -251,10 +251,10 @@ public class PlayRenderer extends BaseModuleRenderer {
 		newColorButton.setBorder(buttonBorder);
 		newColorButton.setColor(Color.BLACK);
 		newColorButton.setFixedHeight(30);
-		newColorButton.setLabelColor(new Color(DefaultUIValues.skinColor));
-		newColorButton.setHoverColor(new Color(DefaultUIValues.darkerSkinColor));
-		newColorButton.setDownColor(new Color(DefaultUIValues.lighterSkinColor));
-		newColorButton.setActiveColor(new Color(DefaultUIValues.darkestSkinColor));
+		newColorButton.setLabelColor(new Color(SkinManager.skinColor));
+		newColorButton.setHoverColor(new Color(SkinManager.darkerSkinColor));
+		newColorButton.setDownColor(new Color(SkinManager.lighterSkinColor));
+		newColorButton.setActiveColor(new Color(SkinManager.darkestSkinColor));
 		return newColorButton;
 	}
 	

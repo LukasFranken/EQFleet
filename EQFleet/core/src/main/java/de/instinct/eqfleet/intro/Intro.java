@@ -17,7 +17,6 @@ import de.instinct.eqfleet.menu.main.MenuModel;
 import de.instinct.eqfleet.net.WebManager;
 import de.instinct.eqlibgdxutils.PreferenceUtil;
 import de.instinct.eqlibgdxutils.generic.Action;
-import de.instinct.eqlibgdxutils.rendering.ui.DefaultUIValues;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.Slide;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.Slideshow;
@@ -30,6 +29,7 @@ import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.model.Slide
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.timed.Macro;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.timed.Message;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.timed.Pause;
+import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 
 public class Intro {
 	
@@ -53,7 +53,7 @@ public class Intro {
 		}
 		versionLabel = new Label("v" + App.VERSION);
 		versionLabel.setBounds(new Rectangle(30, 30, 60, 20));
-		versionLabel.setColor(DefaultUIValues.skinColor);
+		versionLabel.setColor(SkinManager.skinColor);
 	}
 
 	private static void verifyAuthKey(String authKey, boolean loadfirst) {

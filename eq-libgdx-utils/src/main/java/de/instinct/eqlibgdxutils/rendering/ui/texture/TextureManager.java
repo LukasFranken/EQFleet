@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
+import de.instinct.eqlibgdxutils.PreferenceUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.draw.TextureDrawMode;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.draw.TextureRenderer;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.load.ColorTextureLoader;
@@ -28,6 +29,12 @@ public class TextureManager {
 		textureLoader = new TextureLoader();
 		colorTextureLoader = new ColorTextureLoader();
 		glowShapeRenderer = new GlowShapeRenderer();
+		String glowString = PreferenceUtil.load("glow");
+    	if (glowString.contentEquals("")) {
+    		TextureManager.setDefaultGlowRadius(30);
+    	} else {
+    		TextureManager.setDefaultGlowRadius(Float.parseFloat(glowString));
+    	}
 	}
 	
 	public static void draw(Texture texture, Rectangle bounds) {
