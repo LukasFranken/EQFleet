@@ -2,9 +2,11 @@ package de.instinct.eqfleet.menu.module.ship;
 
 import de.instinct.api.core.API;
 import de.instinct.api.core.modules.MenuModule;
+import de.instinct.api.shipyard.dto.UnuseShipResponseCode;
 import de.instinct.api.shipyard.dto.UseShipResponseCode;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
 import de.instinct.eqfleet.menu.main.ModuleMessage;
+import de.instinct.eqfleet.menu.module.ship.message.UnuseShipMessage;
 import de.instinct.eqfleet.menu.module.ship.message.UseShipMessage;
 import de.instinct.eqfleet.net.WebManager;
 
@@ -48,6 +50,18 @@ public class Shipyard extends BaseModule {
 					() -> API.shipyard().use(API.authKey, useShipMessage.getShipUUID()),
 					result -> {
 						if (result == UseShipResponseCode.SUCCESS) {
+							loadData();
+						}
+					}
+			);
+			return true;
+		}
+		if (message instanceof UnuseShipMessage) {
+			UnuseShipMessage unuseShipMessage = (UnuseShipMessage) message;
+			WebManager.enqueue(
+					() -> API.shipyard().unuse(API.authKey, unuseShipMessage.getShipUUID()),
+					result -> {
+						if (result == UnuseShipResponseCode.SUCCESS) {
 							loadData();
 						}
 					}

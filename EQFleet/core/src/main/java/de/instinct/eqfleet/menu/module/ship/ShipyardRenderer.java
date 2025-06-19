@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.api.shipyard.dto.ShipBlueprint;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.main.MenuModel;
+import de.instinct.eqfleet.menu.module.ship.message.UnuseShipMessage;
 import de.instinct.eqfleet.menu.module.ship.message.UseShipMessage;
 import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.generic.Action;
@@ -31,9 +33,35 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 	
 	@Override
 	public void render() {
-		if (shipButtons != null) {
-			renderShips();
+		if (ShipyardModel.shipyard != null) {
+			renderShipyardInfo();
+			if (shipButtons != null) {
+				renderShips();
+			}
 		}
+	}
+
+	private void renderShipyardInfo() {
+		Rectangle labelBounds = new Rectangle(
+				MenuModel.moduleBounds.x + 20,
+				MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - 30,
+				MenuModel.moduleBounds.width - 40,
+				20);
+		Label hangarLabel = new Label("Hangar: " + ShipyardModel.shipyard.getOwnedShips().size() + "/" + ShipyardModel.shipyard.getSlots());
+		hangarLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
+		hangarLabel.setBounds(labelBounds);
+		hangarLabel.render();
+		
+		int active = 0;
+		for (ShipBlueprint ship : ShipyardModel.shipyard.getOwnedShips()) {
+			if (ship.isInUse()) {
+				active++;
+			}
+		}
+		Label activeLabel = new Label("Active: " + active + "/" + ShipyardModel.shipyard.getActiveShipSlots());
+		activeLabel.setHorizontalAlignment(HorizontalAlignment.RIGHT);
+		activeLabel.setBounds(labelBounds);
+		activeLabel.render();
 	}
 
 	private void renderShips() {
@@ -45,7 +73,7 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 			int column = i % elementsPerRow;
 			int row = 1 + ((int)i / elementsPerRow);
 			shipButton.setPosition(MenuModel.moduleBounds.x + margin + ((50 + margin) * column),
-					MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - ((50 + margin) * row));
+					MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - 20 - ((50 + margin) * row));
 			shipButton.render();
 			i++;
 		}
@@ -94,13 +122,19 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 		popupContent.getElements().add(createLabelStack("SHIELD", StringUtils.format(ship.getDefense().getShield(), 0)));
 		popupContent.getElements().add(createLabelStack("SHIELD/SEC", StringUtils.format(ship.getDefense().getShieldRegenerationSpeed(), 1)));
 		
-		ColorButton useButton = DefaultButtonFactory.colorButton("Use", new Action() {
+		ColorButton useButton = DefaultButtonFactory.colorButton(ship.isInUse() ? "Unuse" : "Use", new Action() {
 			
 			@Override
 			public void execute() {
-				Menu.queue(UseShipMessage.builder()
-						.shipUUID(ship.getUuid())
-						.build());
+				if (ship.isInUse()) {
+					Menu.queue(UnuseShipMessage.builder()
+							.shipUUID(ship.getUuid())
+							.build());
+				} else {
+					Menu.queue(UseShipMessage.builder()
+							.shipUUID(ship.getUuid())
+							.build());
+				}
 				
 				PopupRenderer.close();
 			}

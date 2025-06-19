@@ -5,6 +5,7 @@ import de.instinct.engine.model.AiPlayer;
 
 public class DifficultyLoader {
 
+	@SuppressWarnings("incomplete-switch")
 	public void load(AiPlayer aiPlayer, AiDifficulty difficulty) {
 		AiBehaviorParameters behaviorParameters = new AiBehaviorParameters();
 		switch (difficulty) {

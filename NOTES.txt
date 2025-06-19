@@ -1,7 +1,5 @@
 ALPHA RELEASE TODO:
 GENERAL:
-- preference manager (local)
- -> audio
  
 - externalize gamedata like ships, stats, gameloader, map etc.
 - probably databases already
@@ -13,6 +11,7 @@ GENERAL:
 - Audio
  -> BG music
  -> sound FX
+ -> audio settings
  
 - improve fonts
 
