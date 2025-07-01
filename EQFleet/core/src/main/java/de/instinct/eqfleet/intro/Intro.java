@@ -103,7 +103,7 @@ public class Intro {
 		startDelay.setDuration(1f);
 		elementQueue.add(startDelay);
 		
-		Message welcomeMessage = new Message("Welcome!");
+		Message welcomeMessage = new Message("Welcome");
 		welcomeMessage.setDuration(2f);
 		welcomeMessage.getConditions().add(new SlideCondition() {
 			

@@ -63,12 +63,13 @@ public class GameRenderer {
 		}
 		if (visible) {
 			camera.update();
-
+			uiRenderer.setCamera(camera);
+			uiRenderer.setState(state);
 			if (state != null && state.winner == 0) {
 				if (state.started) {
 					checkFlip();
 					gridRenderer.drawGrid(camera);
-					uiRenderer.renderParticles(camera);
+					uiRenderer.renderParticles();
 					planetRenderer.render(state, camera);
 					shipRenderer.render(state, camera);
 					projectileRenderer.render(state, camera);
@@ -76,7 +77,7 @@ public class GameRenderer {
 					renderLoadingScreen(state);
 				}
 			}
-			uiRenderer.render(state, camera);
+			uiRenderer.render();
 			guideRenderer.renderEvents(camera);
 		}
 	}

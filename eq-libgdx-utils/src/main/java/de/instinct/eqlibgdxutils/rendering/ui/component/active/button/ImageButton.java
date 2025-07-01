@@ -30,7 +30,6 @@ public class ImageButton extends Button {
 
 	@Override
 	public void renderElement() {
-		super.update();
 		Rectangle imageBounds = new Rectangle(getBounds());
 		imageBounds.x += margin;
 		imageBounds.y += margin;

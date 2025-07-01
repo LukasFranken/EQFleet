@@ -4,12 +4,16 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Setter;
 
 @Data
 public abstract class UIElement {
 
+	@Setter(AccessLevel.NONE)
 	private Rectangle bounds;
+	
 	private float fixedWidth;
 	private float fixedHeight;
 
@@ -23,18 +27,15 @@ public abstract class UIElement {
 		alpha = 1f;
 		bounds = new Rectangle();
 	}
-
-	public void update() {
-		if (fixedWidth > 0) {
-			bounds.width = fixedWidth;
+	
+	public void setBounds(Rectangle bounds) {
+		this.bounds = bounds;
+		if (bounds != null) {
+			fixedWidth = bounds.width;
+			fixedHeight = bounds.height;
 		} else {
-			bounds.width = calculateWidth();
-		}
-
-		if (fixedHeight > 0) {
-			bounds.height = fixedHeight;
-		} else {
-			bounds.height = calculateHeight();
+			fixedWidth = 0f;
+			fixedHeight = 0f;
 		}
 	}
 
@@ -48,6 +49,7 @@ public abstract class UIElement {
 	}
 
 	public void render() {
+		update();
 		renderElement();
 		if (debug) {
 			border = new Border();
@@ -58,6 +60,23 @@ public abstract class UIElement {
 			drawBorder();
 		}
 	}
+	
+	public void update() {
+		if (fixedWidth > 0) {
+			bounds.width = fixedWidth;
+		} else {
+			bounds.width = calculateWidth();
+		}
+
+		if (fixedHeight > 0) {
+			bounds.height = fixedHeight;
+		} else {
+			bounds.height = calculateHeight();
+		}
+		updateElement();
+	}
+
+	protected abstract void updateElement();
 
 	public void debug() {
 		debug = true;

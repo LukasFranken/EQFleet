@@ -23,9 +23,11 @@ GAME:
 - ingame menu
  -> pause + surrender button, sound settings
 
-META:
--> multiple ships
+-> multiple ships better ui
 
+- multiple ship models
+
+META:
 - Intro rework
  -> add back button for intro
  -> click tutorial screen to skip timed event?
@@ -34,7 +36,7 @@ META:
 
 - shop
  -> ship blueprints
- -> ship slots
+ -> turret blueprints
 
 ---------------------------------------------------------------------
 FUTURE RELEASES TODO:
@@ -48,7 +50,6 @@ GAME:
 
 META:
 - combat
- -> conquest, match, ?? .... 
  - conquest map
  -> available with higher rank
  -> conquering one star system after anotherj
@@ -59,6 +60,8 @@ META:
  - match
  -> like now with custom and pvp/ai
  -> available to beginners, especially vs AI
+ -> pvp has clash royale like ladder for 1v1,2v2,3v3
+ - each mode grants unique resources (pvp/ai , conquest)
 
 - social features (friends teams messages etc.)
 

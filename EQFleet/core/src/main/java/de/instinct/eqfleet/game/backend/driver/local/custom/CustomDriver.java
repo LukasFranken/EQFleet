@@ -58,12 +58,13 @@ public class CustomDriver extends LocalDriver {
 		order.playerId = message.userUUID.contentEquals(API.authKey) ? 1 : 2;
 		order.fromPlanetId = message.fromPlanetId;
 		order.toPlanetId = message.toPlanetId;
+		order.playerShipId = message.shipId;
 		return order;
 	}
 
 	@Override
 	protected void postEngineUpdate() {
-		if (GameModel.activeGameState != null && GameModel.activeGameState.started) {
+		if (GameModel.activeGameState != null && GameModel.activeGameState.started && GameModel.activeGameState.winner == 0) {
 			try {
 				for (Player player : GameModel.activeGameState.players) {
 					if (player instanceof AiPlayer) {
@@ -73,11 +74,11 @@ public class CustomDriver extends LocalDriver {
 						}
 					}
 				}
-				EngineUtility.checkVictory(GameModel.activeGameState);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
         	
+			EngineUtility.checkVictory(GameModel.activeGameState);
         	if (GameModel.activeGameState.winner != 0) {
     			Game.stop();
     		}

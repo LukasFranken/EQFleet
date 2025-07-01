@@ -44,6 +44,9 @@ public class GameUIRenderer {
 	private GameInputManager inputManager;
 	private DefenseUIRenderer defenseUIRenderer;
 	
+	private PerspectiveCamera camera;
+	private GameState state;
+	
 	public GameUIRenderer() {
 		uiLoader = new GameUILoader();
 		ParticleRenderer.loadParticles("ancient", "ancient");
@@ -97,21 +100,21 @@ public class GameUIRenderer {
 		.build();
 	}
 	
-	public void render(GameState state, PerspectiveCamera camera) {
+	public void render() {
 		if (GameModel.activeGameState != null) {
 			if (initialized && state.winner == 0) {
 				inputManager.handleInput(camera, state);
-				updateStaticUI(state);
-				renderStaticUI(state);
-				renderResourceCircles(state, camera);
+				updateStaticUI();
+				renderStaticUI();
+				renderResourceCircles();
 				defenseUIRenderer.render(state, camera);
-				renderSelection(state, camera);
+				renderShipSelection();
 			}
 		}
 		renderMessageText();
 	}
 
-	private void renderResourceCircles(GameState state, PerspectiveCamera camera) {
+	private void renderResourceCircles() {
 		for (Planet planet : state.planets) {
 			Vector3 screenPos = camera.project(new Vector3(planet.position.x, planet.position.y, 0f));
 		    String value = String.valueOf((int) planet.currentResources);
@@ -121,7 +124,7 @@ public class GameUIRenderer {
 		    float labelY = screenPos.y - labelHeight / 2f;
 		    
 		    Player owner = EngineUtility.getPlayer(state.players, planet.ownerId);
-		    renderResourceCircle(planet.position.x, planet.position.y, GameConfig.getPlayerColor(owner.id), (float)(planet.currentResources / owner.planetData.maxResourceCapacity), camera);
+		    renderResourceCircle(planet.position.x, planet.position.y, GameConfig.getPlayerColor(owner.id), (float)(planet.currentResources / owner.planetData.maxResourceCapacity));
 
 		    if (GlobalStaticData.mode == ApplicationMode.DEV) {
 			    Gdx.gl.glEnable(GL20.GL_BLEND);
@@ -139,7 +142,7 @@ public class GameUIRenderer {
 		}
 	}
 
-	private void updateStaticUI(GameState state) {
+	private void updateStaticUI() {
 		for (GameUIElement<?> gameUIelement : elements) {
 			if (gameUIelement.isVisible()) {
 				gameUIelement.setCurrentGameState(GameModel.activeGameState);
@@ -148,7 +151,7 @@ public class GameUIRenderer {
 		}
 	}
 
-	private void renderStaticUI(GameState state) {
+	private void renderStaticUI() {
 		for (GameUIElement<?> gameUIelement : elements) {
 			if (gameUIelement.isVisible()) {
 				if (gameUIelement.getElement() != null) {
@@ -160,7 +163,7 @@ public class GameUIRenderer {
 		}
 	}
 
-	public void renderParticles(PerspectiveCamera camera) {
+	public void renderParticles() {
 		if (initialized) {
 			Planet activeAncientPlanet = null;
 			for (Planet planet : GameModel.activeGameState.planets) {
@@ -203,28 +206,54 @@ public class GameUIRenderer {
 		}
 	}
 	
-	private void renderSelection(GameState state, PerspectiveCamera camera) {
-		Integer selectedId = inputManager.getSelectedPlanetId();
-		Planet selected = (selectedId != null) ? EngineUtility.getPlanet(state.planets, selectedId) : null;
-		Planet hovered = inputManager.getHoveredPlanet(camera, state);
-
+	private void renderShipSelection() {
 		shapeRenderer.setProjectionMatrix(camera.combined);
 		Gdx.gl.glEnable(GL20.GL_BLEND);
-		float baseLineWidth = 2f;
-		float density = Gdx.graphics.getDensity();
-		Gdx.gl.glLineWidth(baseLineWidth * (density > 1f ? density : 1f));
+		setDensityLineWidth();
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 		shapeRenderer.setColor(Color.LIGHT_GRAY);
-
+		
+		renderSelected();
+		renderHovered();
+		renderArrow();
+		
+		shapeRenderer.end();
+		Gdx.gl.glDisable(GL20.GL_BLEND);
+	}
+	
+	private void renderSelected() {
+		Integer selectedId = inputManager.getSelectedPlanetId();
+		Planet selected = (selectedId != null) ? EngineUtility.getPlanet(state.planets, selectedId) : null;
+		
 		if (selected != null) {
 			shapeRenderer.circle(selected.position.x, selected.position.y, EngineUtility.PLANET_RADIUS);
 			Player owner = EngineUtility.getPlayer(state.players, selected.ownerId);
-			int fleetCost = owner.ships.get(0).cost;
-			if (fleetCost > 0 && owner.planetData.maxResourceCapacity > 0) {
-				renderResourceCircle(selected.position.x, selected.position.y, fleetCost < selected.currentResources ? Color.GREEN : Color.RED, (float)(fleetCost / owner.planetData.maxResourceCapacity), camera);
+			
+			Integer shipIndex = inputManager.getSelectedShipId();
+			if (owner.ships.size() == 1) shipIndex = 0;
+			if (shipIndex != null) {
+				int fleetCost = owner.ships.get(shipIndex).cost;
+				if (fleetCost > 0 && owner.planetData.maxResourceCapacity > 0) {
+					renderResourceCircle(selected.position.x, selected.position.y, fleetCost < selected.currentResources ? Color.GREEN : Color.RED, (float)(fleetCost / owner.planetData.maxResourceCapacity));
+				}
+			}
+			if (owner.ships.size() > 1 && inputManager.getSelectedShipId() == null) {
+				renderShipSelectionCircle(selected.position.x, selected.position.y, owner, inputManager.getSelectedShipId());
 			}
 		}
+	}
 
+	private void setDensityLineWidth() {
+		float baseLineWidth = 2f;
+		float density = Gdx.graphics.getDensity();
+		Gdx.gl.glLineWidth(baseLineWidth * (density > 1f ? density : 1f));
+	}
+
+	private void renderHovered() {
+		Integer selectedId = inputManager.getSelectedPlanetId();
+		Planet selected = (selectedId != null) ? EngineUtility.getPlanet(state.planets, selectedId) : null;
+		Planet hovered = inputManager.getHoveredPlanet(camera, state);
+		
 		if (hovered != null) {
 			boolean isSelectingOrigin = (selected == null && hovered.ownerId == GameModel.playerId);
 			boolean isTargeting = (selected != null && hovered.id != selected.id);
@@ -236,34 +265,94 @@ public class GameUIRenderer {
 				Player target = EngineUtility.getPlayer(state.players, hovered.ownerId);
 				int fleetCost = owner.ships.get(0).cost;
 				if (owner.teamId == target.teamId) {
-					renderResourceCircle(hovered.position.x, hovered.position.y, Color.GREEN, (float)(fleetCost / target.planetData.maxResourceCapacity), camera);
+					renderResourceCircle(hovered.position.x, hovered.position.y, Color.GREEN, (float)(fleetCost / target.planetData.maxResourceCapacity));
 				}
 			}
 			if (hovered.weapon != null) {
 				shapeRenderer.end();
-				Gdx.gl.glLineWidth(1 * (density > 1f ? density : 1f));
+				setDensityLineWidth();
 				shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 				shapeRenderer.setColor(GameConfig.getPlayerColor(hovered.ownerId));
 				shapeRenderer.circle(hovered.position.x, hovered.position.y, hovered.weapon.range + EngineUtility.PLANET_RADIUS);
 			}
 		}
-		shapeRenderer.end();
-		Gdx.gl.glDisable(GL20.GL_BLEND);
+	}
 
+	private void renderArrow() {
+		Integer selectedId = inputManager.getSelectedPlanetId();
+		Planet selected = (selectedId != null) ? EngineUtility.getPlanet(state.planets, selectedId) : null;
 		if (selected != null && Gdx.input.isTouched()) {
 			Vector3 cursorWorld = inputManager.getCurrentTouchWorldPosition(camera);
-
+			
+			shapeRenderer.end();
 			shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 			shapeRenderer.setColor(Color.LIGHT_GRAY);
 			shapeRenderer.line(selected.position.x, selected.position.y, cursorWorld.x, cursorWorld.y);
+			
 			shapeRenderer.end();
-
 			shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 			shapeRenderer.setColor(Color.LIGHT_GRAY);
 			drawArrow(cursorWorld, selected.position.x, selected.position.y);
 			shapeRenderer.end();
+			Gdx.gl.glLineWidth(1f);
 		}
-		Gdx.gl.glLineWidth(1f);
+	}
+
+	private void renderShipSelectionCircle(float x, float y, Player owner, Integer selectedShipId) {
+	    int shipCount = owner.ships.size();
+	    float outerRadius = EngineUtility.PLANET_RADIUS + 30f;
+	    float innerRadius = EngineUtility.PLANET_RADIUS + 10f;
+	    float sectionAngle = 360f / shipCount;
+	    
+	    shapeRenderer.end();
+	    Gdx.gl.glEnable(GL20.GL_BLEND);
+	    Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+	    
+	    shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+	    
+	    // Draw selection circle divided into sections
+	    for (int i = 0; i < shipCount; i++) {
+	        // Highlight selected ship
+	        boolean isSelected = (selectedShipId != null && selectedShipId == i);
+	        if (isSelected) {
+	            shapeRenderer.setColor(1f, 1f, 0.5f, 0.7f); // Highlight color
+	        } else {
+	            shapeRenderer.setColor(0.5f, 0.5f, 0.5f, 0.5f); // Normal color
+	        }
+	        
+	        float startAngle = i * sectionAngle;
+	        float endAngle = (i + 1) * sectionAngle;
+	        
+	        // Draw wedge for this ship type
+	        for (float angle = startAngle; angle < endAngle; angle += 1f) {
+	            float rad1 = (float) Math.toRadians(angle);
+	            float rad2 = (float) Math.toRadians(angle + 1f);
+	            
+	            float x1 = x + innerRadius * (float) Math.cos(rad1);
+	            float y1 = y + innerRadius * (float) Math.sin(rad1);
+	            float x2 = x + outerRadius * (float) Math.cos(rad1);
+	            float y2 = y + outerRadius * (float) Math.sin(rad1);
+	            float x3 = x + outerRadius * (float) Math.cos(rad2);
+	            float y3 = y + outerRadius * (float) Math.sin(rad2);
+	            float x4 = x + innerRadius * (float) Math.cos(rad2);
+	            float y4 = y + innerRadius * (float) Math.sin(rad2);
+	            
+	            shapeRenderer.triangle(x1, y1, x2, y2, x3, y3);
+	            shapeRenderer.triangle(x1, y1, x3, y3, x4, y4);
+	        }
+	        
+	        // Draw ship type indicator (could be improved with ship icons later)
+	        float midAngle = (float) Math.toRadians((startAngle + endAngle) / 2);
+	        float labelX = x + (innerRadius + outerRadius) / 2 * (float) Math.cos(midAngle);
+	        float labelY = y + (innerRadius + outerRadius) / 2 * (float) Math.sin(midAngle);
+	        
+	        shapeRenderer.setColor(Color.WHITE);
+	        shapeRenderer.circle(labelX, labelY, 5f);
+	    }
+	    
+	    shapeRenderer.end();
+	    Gdx.gl.glDisable(GL20.GL_BLEND);
+	    shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 	}
 
 	private void drawArrow(Vector3 to, float fromX, float fromY) {
@@ -286,7 +375,7 @@ public class GameUIRenderer {
 		shapeRenderer.triangle(to.x, to.y, leftX, leftY, rightX, rightY);
 	}
 	
-	private void renderResourceCircle(float x, float y, Color color, float value, PerspectiveCamera camera) {
+	private void renderResourceCircle(float x, float y, Color color, float value) {
 		float radius = EngineUtility.PLANET_RADIUS + 5f;
 		float thickness = 8f;
 		complexShapeRenderer.setProjectionMatrix(camera.combined);
@@ -314,6 +403,14 @@ public class GameUIRenderer {
 		messageLabel.setColor(Color.WHITE);
 		messageLabel.setBounds(new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		messageLabel.render();
+	}
+
+	public void setCamera(PerspectiveCamera camera) {
+		this.camera = camera;
+	}
+
+	public void setState(GameState state) {
+		this.state = state;
 	}
 	
 }

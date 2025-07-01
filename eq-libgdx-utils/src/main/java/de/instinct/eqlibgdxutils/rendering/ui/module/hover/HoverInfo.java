@@ -50,6 +50,11 @@ public class HoverInfo extends BaseModule {
 	}
 
 	@Override
+	protected void updateElement() {
+		
+	}
+	
+	@Override
 	protected void renderContent() {
 		elementList.render();
 	}

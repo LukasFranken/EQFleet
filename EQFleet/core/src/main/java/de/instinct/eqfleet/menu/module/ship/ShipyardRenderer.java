@@ -147,6 +147,7 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 		PopupRenderer.create(Popup.builder()
 				.title(ship.getModel())
 				.contentContainer(popupContent)
+				.closeOnClickOutside(true)
 				.build());
 	}
 	

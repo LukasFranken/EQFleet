@@ -31,6 +31,11 @@ public class Image extends Component {
 	}
 
 	@Override
+	protected void updateElement() {
+		
+	}
+	
+	@Override
 	public void renderElement() {
 		TextureManager.draw(texture, getBounds(), getAlpha());
 	}

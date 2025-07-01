@@ -19,12 +19,11 @@ public abstract class ElementContainer extends UIElement {
 	}
 
 	@Override
-	public void update() {
+	public void updateElement() {
 		for (UIElement element : elements) {
 			element.update();
 		}
 		updateElementsPosition();
-		super.update();
 	}
 
 	protected abstract void updateElementsPosition();

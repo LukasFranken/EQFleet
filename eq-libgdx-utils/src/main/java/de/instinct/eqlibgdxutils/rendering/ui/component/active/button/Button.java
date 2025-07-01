@@ -23,8 +23,7 @@ public abstract class Button extends Component {
 	private boolean consoleBypass;
 
 	@Override
-	public void update() {
-		super.update();
+	public void updateElement() {
 		Vector3 touchPoint = new Vector3(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY(), 0);
         if (getBounds().contains(touchPoint.x, touchPoint.y)) {
         	if (consoleBypass ? InputUtil.isPressedConsole() : InputUtil.isPressed()) {

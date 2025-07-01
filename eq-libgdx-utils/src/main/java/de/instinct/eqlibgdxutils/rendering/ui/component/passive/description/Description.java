@@ -48,6 +48,11 @@ public class Description extends Component {
 	protected float calculateHeight() {
 		return (lines.size() * FontUtil.getFontHeightPx()) + ((lines.size() - 1) * lineSpacing);
 	}
+	
+	@Override
+	protected void updateElement() {
+		
+	}
 
 	@Override
 	public void renderElement() {

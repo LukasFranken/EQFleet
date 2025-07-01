@@ -108,6 +108,7 @@ private List<ColorButton> turretButtons;
 		PopupRenderer.create(Popup.builder()
 				.title(blueprint.getName())
 				.contentContainer(popupContent)
+				.closeOnClickOutside(true)
 				.build());
 	}
 	

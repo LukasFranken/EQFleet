@@ -49,13 +49,11 @@ public class LabeledImageButton extends Button {
 
 	@Override
 	protected void renderElement() {
-		super.update();
 		Rectangle imageBounds = calculateImageBounds();
 		TextureManager.draw(imageTexture, imageBounds);
 		messageLabel.setPosition(getBounds().x + imageBounds.width + contentMargin + spacing, getBounds().y);
 		messageLabel.setFixedWidth(getBounds().width - imageBounds.width - (contentMargin * 2) - spacing);
 		messageLabel.setFixedHeight(getBounds().height);
-		messageLabel.update();
 		messageLabel.render();
 		if (isHovered()) {
 			TextureManager.draw(hoverTexture, getBounds());

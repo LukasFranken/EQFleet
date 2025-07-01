@@ -2,10 +2,13 @@ package de.instinct.eqfleet.menu.module.ship;
 
 import de.instinct.api.core.API;
 import de.instinct.api.core.modules.MenuModule;
+import de.instinct.api.shipyard.dto.ShipBlueprint;
 import de.instinct.api.shipyard.dto.UnuseShipResponseCode;
 import de.instinct.api.shipyard.dto.UseShipResponseCode;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
+import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.main.ModuleMessage;
+import de.instinct.eqfleet.menu.module.ship.message.ReloadShipyardMessage;
 import de.instinct.eqfleet.menu.module.ship.message.UnuseShipMessage;
 import de.instinct.eqfleet.menu.module.ship.message.UseShipMessage;
 import de.instinct.eqfleet.net.WebManager;
@@ -28,13 +31,7 @@ public class Shipyard extends BaseModule {
 	}
 	
 	private void loadData() {
-		WebManager.enqueue(
-				() -> API.shipyard().data(API.authKey),
-			    result -> {
-			    	ShipyardModel.shipyard = result;
-			    	super.requireUIReload();
-			    }
-		);
+		Menu.queue(ReloadShipyardMessage.builder().build());
 	}
 
 	@Override
@@ -44,6 +41,16 @@ public class Shipyard extends BaseModule {
 
 	@Override
 	public boolean process(ModuleMessage message) {
+		if (message instanceof ReloadShipyardMessage) {
+			WebManager.enqueue(
+					() -> API.shipyard().data(API.authKey),
+				    result -> {
+				    	ShipyardModel.shipyard = result;
+				    	super.requireUIReload();
+				    }
+			);
+			return true;
+		}
 		if (message instanceof UseShipMessage) {
 			UseShipMessage useShipMessage = (UseShipMessage) message;
 			WebManager.enqueue(
@@ -69,6 +76,17 @@ public class Shipyard extends BaseModule {
 			return true;
 		}
 		return false;
+	}
+
+	public static boolean hasActiveShip() {
+		boolean hasActiveShip = false;
+		for (ShipBlueprint ship : ShipyardModel.shipyard.getOwnedShips()) {
+			if (ship.isInUse()) {
+				hasActiveShip = true;
+				break;
+			}
+		}
+		return hasActiveShip;
 	}
 
 }

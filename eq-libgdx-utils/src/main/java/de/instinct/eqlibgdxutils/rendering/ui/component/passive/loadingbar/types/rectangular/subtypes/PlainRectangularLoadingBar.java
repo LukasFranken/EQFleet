@@ -37,6 +37,11 @@ public class PlainRectangularLoadingBar extends RectangularLoadingBar {
 	protected float calculateHeight() {
 		return getBounds().height;
 	}
+	
+	@Override
+	protected void updateElement() {
+		
+	}
 
 	@Override
 	protected void renderContent() {

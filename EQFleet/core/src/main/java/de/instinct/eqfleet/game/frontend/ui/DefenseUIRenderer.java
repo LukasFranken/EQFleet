@@ -67,21 +67,20 @@ public class DefenseUIRenderer {
 
 	            Rectangle defenseArea = new Rectangle(screenPos.x - 10, screenPos.y - 17, 20, 4);
 	            float originalY = defenseArea.y;
+	            boolean overlapping = true;
 
-	            float maxBottom = originalY;
-	            for (Rectangle occupied : occupiedAreas) {
-	                if (defenseArea.overlaps(occupied)) {
-	                    float occupiedBottom = occupied.y;
-	                    maxBottom = Math.min(maxBottom, occupiedBottom - 4);
+	            while (overlapping) {
+	                overlapping = false;
+	                for (Rectangle occupied : occupiedAreas) {
+	                    if (defenseArea.overlaps(occupied)) {
+	                        defenseArea.y = occupied.y - 4;
+	                        overlapping = true;
+	                        break;
+	                    }
 	                }
 	            }
 
-	            float yOffset = 0;
-	            if (maxBottom < originalY) {
-	                yOffset = maxBottom - originalY;
-	                defenseArea.y = maxBottom;
-	            }
-
+	            float yOffset = defenseArea.y - originalY;
 	            occupiedAreas.add(new Rectangle(defenseArea));
 
 	            TextureManager.draw("ui_defense_border_ship",

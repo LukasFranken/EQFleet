@@ -39,7 +39,6 @@ public abstract class BaseModule extends UIElement {
     @Override
     public void update() {
     	updateContent();
-    	super.update();
     	updatePosition();
     	restrictTo(getBounds());
     	updateContentPosition();

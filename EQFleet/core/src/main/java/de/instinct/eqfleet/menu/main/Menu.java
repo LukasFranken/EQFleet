@@ -34,6 +34,9 @@ import de.instinct.eqfleet.menu.module.settings.Settings;
 import de.instinct.eqfleet.menu.module.settings.SettingsRenderer;
 import de.instinct.eqfleet.menu.module.ship.Shipyard;
 import de.instinct.eqfleet.menu.module.ship.ShipyardRenderer;
+import de.instinct.eqfleet.menu.module.ship.message.ReloadShipyardMessage;
+import de.instinct.eqfleet.menu.module.shop.Shop;
+import de.instinct.eqfleet.menu.module.shop.ShopRenderer;
 import de.instinct.eqfleet.net.WebManager;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
 
@@ -71,19 +74,21 @@ public class Menu {
 		renderers.put(MenuModule.SHIPYARD, new ShipyardRenderer());
 		modules.put(MenuModule.CONSTRUCTION, new Construction());
 		renderers.put(MenuModule.CONSTRUCTION, new ConstructionRenderer());
+		modules.put(MenuModule.SHOP, new Shop());
+		renderers.put(MenuModule.SHOP, new ShopRenderer());
 		
 		moduleMessageQueue = new ConcurrentLinkedQueue<>();
 		
 		PlayTab.init();
 		MenuModel.loaded = false;
-	}
-	
-	public static void load() {
-		MenuModel.loaded = false;
 		scheduler = Executors.newSingleThreadScheduledExecutor();
 		scheduler.scheduleAtFixedRate(() -> {
 			update();
 		}, 0, UPDATE_CLOCK_MS, TimeUnit.MILLISECONDS);
+	}
+	
+	public static void load() {
+		MenuModel.loaded = false;
 		loadModules();
 	}
 	
@@ -92,6 +97,7 @@ public class Menu {
 		MenuModel.active = true;
 		queue(LoadProfileMessage.builder().build());
 		queue(LoadResourcesMessage.builder().build());
+		queue(ReloadShipyardMessage.builder().build());
 	}
 	
 	public static void close() {

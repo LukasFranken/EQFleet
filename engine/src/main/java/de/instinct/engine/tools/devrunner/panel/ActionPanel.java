@@ -13,7 +13,9 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import de.instinct.engine.model.Player;
 import de.instinct.engine.model.planet.Planet;
+import de.instinct.engine.model.ship.ShipData;
 import de.instinct.engine.order.types.ShipMovementOrder;
 import de.instinct.engine.tools.devrunner.TestEngineManager;
 
@@ -26,6 +28,7 @@ public class ActionPanel extends JPanel {
     
     private JComboBox<String> originDropdown;
     private JComboBox<String> targetDropdown;
+    private JComboBox<String> shipDropdown;
     private JButton sendButton;
     private JButton startButton;
     
@@ -52,15 +55,24 @@ public class ActionPanel extends JPanel {
         targetDropdown.setBounds(70, 55, 120, 30);
         add(targetDropdown);
         
+        JLabel shipLabel = new JLabel("ship:");
+        shipLabel.setForeground(Color.WHITE);
+        shipLabel.setBounds(10, 100, 50, 30);
+        add(shipLabel);
+        
+        shipDropdown = new JComboBox<>();
+        shipDropdown.setBounds(70, 100, 120, 30);
+        add(shipDropdown);
+        
         sendButton = new JButton("send");
-        sendButton.setBounds(10, 100, 180, 20);
+        sendButton.setBounds(10, 140, 180, 20);
         sendButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				ShipMovementOrder order = new ShipMovementOrder();
 				order.playerId = 1;
-				order.playerShipId = 0;
+				order.playerShipId = Integer.parseInt(((String) shipDropdown.getSelectedItem()).substring(0, 1));
 				order.fromPlanetId = Integer.parseInt((String) originDropdown.getSelectedItem());
 				order.toPlanetId = Integer.parseInt((String) targetDropdown.getSelectedItem());
 				TestEngineManager.queue(order);
@@ -97,12 +109,22 @@ public class ActionPanel extends JPanel {
 	private void updatePanel() {
 		List<String> ownPlanets = new ArrayList<>();
 		List<String> targetPlanets = new ArrayList<>();
+		List<String> ships = new ArrayList<>();
 		if (TestEngineManager.state != null) {
 			for (Planet planet : TestEngineManager.state.planets) {
 				if (planet.ownerId == 1) {
 					ownPlanets.add(planet.id + "");
 				}
 				targetPlanets.add(planet.id + "");
+			}
+			for (Player player : TestEngineManager.state.players) {
+				if (player.id == 1) {
+					int i = 0;
+					for (ShipData ship : player.ships) {
+						ships.add(i + "-" + ship.model);
+						i++;
+					}
+				}
 			}
 		}
 		
@@ -123,6 +145,15 @@ public class ActionPanel extends JPanel {
 			}
 		}
 		for (String item : targetPlanets) targetDropdown.addItem(item);
+		
+		for (int i = 0; i < shipDropdown.getItemCount(); i++) {
+			if (ships.contains(shipDropdown.getItemAt(i))) {
+				ships.remove(shipDropdown.getItemAt(i));
+			} else {
+				shipDropdown.removeItemAt(i);
+			}
+		}
+		for (String item : ships) shipDropdown.addItem(item);
 	}
     
 }

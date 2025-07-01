@@ -28,6 +28,7 @@ public class ElementList extends ElementContainer {
 	protected float calculateWidth() {
 		float width = 0;
 		for (UIElement element : getElements()) {
+			element.update();
 			width = Math.max(width, element.getBounds().width);
 		}
 		return width;
@@ -37,6 +38,7 @@ public class ElementList extends ElementContainer {
 	protected float calculateHeight() {
 		float height = 0;
 		for (int i = 0; i < getElements().size(); i++) {
+			getElements().get(i).update();
 			height += getElements().get(i).getBounds().height;
 			if (i > 0) {
 				height += margin;

@@ -10,5 +10,6 @@ public class FleetMovementMessage extends NetworkMessage {
 	public String userUUID;
 	public int fromPlanetId;
 	public int toPlanetId;
+	public int shipId;
 
 }

@@ -8,10 +8,7 @@ import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ImageButton;
-import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
-import de.instinct.eqlibgdxutils.rendering.ui.container.list.ElementList;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
-import de.instinct.eqlibgdxutils.rendering.ui.popup.Popup;
 import de.instinct.eqlibgdxutils.rendering.ui.popup.PopupRenderer;
 import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
@@ -58,13 +55,7 @@ public class DefaultButtonFactory {
 			
 			@Override
 			public void execute() {
-				Label lockedMessage = new Label("Required Rank: " + moduleUnlockRequirement.getRequiredRank().getLabel());
-				ElementList popupContent = new ElementList();
-				popupContent.getElements().add(lockedMessage);
-				PopupRenderer.create(Popup.builder()
-						.title("Module Locked")
-						.contentContainer(popupContent)
-						.build());
+				PopupRenderer.createMessageDialog("Module Locked", "Required Rank: " + moduleUnlockRequirement.getRequiredRank().getLabel());
 			}
 			
 		});
@@ -80,7 +71,6 @@ public class DefaultButtonFactory {
 		ColorButton colorButton = new ColorButton(label);
 		colorButton.setBorder(buttonBorder);
 		colorButton.setColor(Color.BLACK);
-		colorButton.setFixedHeight(50);
 		colorButton.setLabelColor(new Color(SkinManager.skinColor));
 		colorButton.setHoverColor(new Color(SkinManager.darkerSkinColor));
 		colorButton.setDownColor(new Color(SkinManager.lighterSkinColor));

@@ -84,6 +84,11 @@ public class ActionList extends BaseModule {
 	public void updateContentPosition() {
 		
 	}
+	
+	@Override
+	protected void updateElement() {
+		
+	}
 
 	@Override
 	protected void renderContent() {

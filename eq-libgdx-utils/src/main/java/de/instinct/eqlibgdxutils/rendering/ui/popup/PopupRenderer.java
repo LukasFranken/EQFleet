@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.eqlibgdxutils.InputUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
+import de.instinct.eqlibgdxutils.rendering.ui.container.list.ElementList;
 import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.ComplexShapeType;
@@ -18,7 +19,7 @@ public class PopupRenderer {
 	
 	private static final float TITLE_BAR_HEIGHT = 30f;
 	private static final float MARGIN = 10f;
-	private static final float BG_DARKENING = 0.5f;
+	private static final float BG_DARKENING = 0.7f;
 	
 	private static String currentWindowTextureTag;
 	private static String currentWindowTitlebarTextureTag;
@@ -26,6 +27,17 @@ public class PopupRenderer {
 	private static final String POPUP_BG_TAG = "popup_bg";
 	
 	private static boolean flagForDestroy;
+	
+	public static void createMessageDialog(String title, String message) {
+		Label messageLabel = new Label(message);
+		ElementList popupContent = new ElementList();
+		popupContent.getElements().add(messageLabel);
+		create(Popup.builder()
+				.title(title)
+				.contentContainer(popupContent)
+				.closeOnClickOutside(true)
+				.build());
+	}
 	
 	public static void create(Popup newPopup) {
 		createWindowTextures(newPopup);
@@ -74,9 +86,8 @@ public class PopupRenderer {
 					TITLE_BAR_HEIGHT));
 			title.render();
 			popup.getContentContainer().setPosition(popupBounds.x + MARGIN, popupBounds.y + MARGIN);
-			popup.getContentContainer().update();
 			popup.getContentContainer().render();
-			if (InputUtil.isClicked() && !popupBounds.contains(InputUtil.getMousePosition())) {
+			if (popup.isCloseOnClickOutside() && InputUtil.isClicked() && !popupBounds.contains(InputUtil.getMousePosition())) {
 				close();
 			}
 		}

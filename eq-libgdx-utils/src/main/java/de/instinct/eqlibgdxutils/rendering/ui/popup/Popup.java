@@ -14,5 +14,6 @@ public class Popup {
 	
 	private String title;
 	private ElementContainer contentContainer;
+	private boolean closeOnClickOutside;
 
 }

@@ -119,6 +119,11 @@ public class LimitedInputField extends Component {
 	protected float calculateHeight() {
 		return 40;
 	}
+	
+	@Override
+	protected void updateElement() {
+		
+	}
 
 	@Override
 	protected void renderElement() {

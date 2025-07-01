@@ -10,6 +10,7 @@ import de.instinct.eqfleet.game.backend.driver.local.tutorial.TutorialDriver;
 import de.instinct.eqfleet.game.backend.driver.local.tutorial.TutorialMode;
 import de.instinct.eqfleet.game.backend.driver.online.OnlineDriver;
 import de.instinct.eqfleet.game.frontend.GameRenderer;
+import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
 import de.instinct.eqlibgdxutils.net.MessageQueue;
@@ -52,6 +53,7 @@ public class Game {
     }
 
     public static void stop() {
+    	Menu.load();
     	GameModel.inputEnabled = false;
     	currentDriver.stop();
 	}

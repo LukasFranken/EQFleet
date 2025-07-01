@@ -52,7 +52,6 @@ public class ColorButton extends Button {
 
 	@Override
 	public void renderElement() {
-		super.update();
 		TextureManager.draw(TextureManager.createTexture(getButtonColor()), getBounds(), getAlpha());
 		label.setAlpha(getAlpha());
 		label.setBounds(getBounds());

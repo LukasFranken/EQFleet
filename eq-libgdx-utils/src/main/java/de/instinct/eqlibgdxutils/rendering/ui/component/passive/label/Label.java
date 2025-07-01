@@ -51,6 +51,11 @@ public class Label extends Component {
 		String[] lines = text.split("\n");
 		return lines.length * FontUtil.getFontHeightPx(type) + (lines.length - 1) * lineSpacing;
 	}
+	
+	@Override
+	protected void updateElement() {
+		
+	}
 
 	@Override
 	protected void renderElement() {
@@ -109,4 +114,5 @@ public class Label extends Component {
 	@Override
 	public void dispose() {
 	}
+	
 }

@@ -17,6 +17,7 @@ import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.module.main.tab.play.PlayTab;
+import de.instinct.eqfleet.menu.module.ship.Shipyard;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.LimitedInputField;
@@ -27,6 +28,7 @@ import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
 import de.instinct.eqlibgdxutils.rendering.ui.module.list.ActionList;
 import de.instinct.eqlibgdxutils.rendering.ui.module.list.ActionListElement;
 import de.instinct.eqlibgdxutils.rendering.ui.module.list.ListActionHandler;
+import de.instinct.eqlibgdxutils.rendering.ui.popup.PopupRenderer;
 import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 
 public class PlayRenderer extends BaseModuleRenderer {
@@ -90,7 +92,11 @@ public class PlayRenderer extends BaseModuleRenderer {
 			
 			@Override
 			public void execute() {
-				PlayTab.createLobby();
+				if (Shipyard.hasActiveShip()) {
+					PlayTab.createLobby();
+				} else {
+					PopupRenderer.createMessageDialog("Unable to start", "No active ship\nin Shipyard");
+				}
 			}
 			
 		});
@@ -100,8 +106,12 @@ public class PlayRenderer extends BaseModuleRenderer {
 			
 			@Override
 			public void execute() {
-				Game.startCustom();
-				Menu.close();
+				if (Shipyard.hasActiveShip()) {
+					Game.startCustom();
+					Menu.close();
+				} else {
+					PopupRenderer.createMessageDialog("Unable to start", "No active ship\nin Shipyard");
+				}
 			}
 			
 		});
@@ -216,7 +226,11 @@ public class PlayRenderer extends BaseModuleRenderer {
 			
 			@Override
 			public void triggered(ActionListElement element) {
-				PlayTab.accept(element.getValue());
+				if (Shipyard.hasActiveShip()) {
+					PlayTab.accept(element.getValue());
+				} else {
+					PopupRenderer.createMessageDialog("Unable to start", "No active ship\nin Shipyard");
+				}
 			}
 			
 		});
@@ -242,7 +256,7 @@ public class PlayRenderer extends BaseModuleRenderer {
 			
 		});
 	}
-	
+
 	private ColorButton getBaseButton(String label) {
 		Border buttonBorder = new Border();
 		buttonBorder.setSize(2);

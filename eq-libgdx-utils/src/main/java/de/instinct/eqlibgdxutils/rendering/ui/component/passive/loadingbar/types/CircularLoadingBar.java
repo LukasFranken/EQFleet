@@ -17,6 +17,11 @@ public class CircularLoadingBar extends LoadingBar {
 	protected float calculateHeight() {
 		return getBounds().height;
 	}
+	
+	@Override
+	protected void updateElement() {
+		
+	}
 
 	@Override
 	protected void renderElement() {

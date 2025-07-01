@@ -8,9 +8,6 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public abstract class Component extends UIElement {
 
-	@Override
-	public void render() {
-		super.render();
-	}
+	
 
 }
