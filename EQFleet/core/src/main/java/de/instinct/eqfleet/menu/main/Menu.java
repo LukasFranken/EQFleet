@@ -37,6 +37,8 @@ import de.instinct.eqfleet.menu.module.ship.ShipyardRenderer;
 import de.instinct.eqfleet.menu.module.ship.message.ReloadShipyardMessage;
 import de.instinct.eqfleet.menu.module.shop.Shop;
 import de.instinct.eqfleet.menu.module.shop.ShopRenderer;
+import de.instinct.eqfleet.menu.module.starmap.Starmap;
+import de.instinct.eqfleet.menu.module.starmap.StarmapRenderer;
 import de.instinct.eqfleet.net.WebManager;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
 
@@ -76,6 +78,12 @@ public class Menu {
 		renderers.put(MenuModule.CONSTRUCTION, new ConstructionRenderer());
 		modules.put(MenuModule.SHOP, new Shop());
 		renderers.put(MenuModule.SHOP, new ShopRenderer());
+		modules.put(MenuModule.STARMAP, new Starmap());
+		renderers.put(MenuModule.STARMAP, new StarmapRenderer());
+		
+		for (BaseModule module : modules.values()) {
+			module.init();
+		}
 		
 		moduleMessageQueue = new ConcurrentLinkedQueue<>();
 		

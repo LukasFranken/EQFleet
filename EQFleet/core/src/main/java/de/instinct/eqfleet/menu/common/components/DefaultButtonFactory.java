@@ -78,5 +78,15 @@ public class DefaultButtonFactory {
 		
 		return colorButton;
 	}
+	
+	public static ImageButton backButton(Action backAction) {
+		ImageButton backButton = new ImageButton();
+		backButton.setImageTexture(TextureManager.getTexture("ui/image", "arrowicon"));
+		backButton.setFixedHeight(20);
+		backButton.setFixedWidth(20);
+		backButton.setAction(backAction);
+
+		return backButton;
+	}
 
 }

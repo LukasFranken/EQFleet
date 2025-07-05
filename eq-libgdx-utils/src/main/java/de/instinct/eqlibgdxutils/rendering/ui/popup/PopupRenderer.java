@@ -28,6 +28,8 @@ public class PopupRenderer {
 	
 	private static boolean flagForDestroy;
 	
+	private static boolean inCreationFrame = false;
+	
 	public static void createMessageDialog(String title, String message) {
 		Label messageLabel = new Label(message);
 		ElementList popupContent = new ElementList();
@@ -42,6 +44,7 @@ public class PopupRenderer {
 	public static void create(Popup newPopup) {
 		createWindowTextures(newPopup);
 		popup = newPopup;
+		inCreationFrame = true;
 	}
 	
 	public static boolean isActive() {
@@ -86,9 +89,13 @@ public class PopupRenderer {
 					TITLE_BAR_HEIGHT));
 			title.render();
 			popup.getContentContainer().setPosition(popupBounds.x + MARGIN, popupBounds.y + MARGIN);
-			popup.getContentContainer().render();
-			if (popup.isCloseOnClickOutside() && InputUtil.isClicked() && !popupBounds.contains(InputUtil.getMousePosition())) {
-				close();
+			if (inCreationFrame) {
+				inCreationFrame = false;
+			} else {
+				popup.getContentContainer().render();
+				if (popup.isCloseOnClickOutside() && InputUtil.isClicked() && !popupBounds.contains(InputUtil.getMousePosition())) {
+					close();
+				}
 			}
 		}
 	}

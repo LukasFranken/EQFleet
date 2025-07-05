@@ -1,6 +1,8 @@
 package de.instinct.eqlibgdxutils;
 
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 
 public class MathUtil {
 
@@ -40,6 +42,14 @@ public class MathUtil {
 			return value2 - value1;
 		}
 		return 0;
+	}
+	
+	public static Vector2 translate(Vector2 point, Rectangle fromBounds, Rectangle toBounds) {
+		float xRatio = (point.x - fromBounds.x) / fromBounds.width;
+		float x = toBounds.x + (xRatio * toBounds.width);
+		float yRatio = (point.y - fromBounds.y) / fromBounds.height;
+		float y = toBounds.y + (yRatio * toBounds.height);
+		return new Vector2(x, y);
 	}
 
 }

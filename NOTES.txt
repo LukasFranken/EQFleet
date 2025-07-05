@@ -13,9 +13,22 @@ GENERAL:
  -> sound FX
  -> audio settings
  
+- externalize planet resource bar to circularloadingbar component
+ 
 - improve fonts
 
+- turning 3d model of ship in selection
+- seperate sections for weapon and defense with different image
+
+- module icons with small name under icon
+
+- client doensnt seem to close on mac
+
 GAME:
+- try different cam angles
+ -> small cam panning anim on game start
+ -> with countdown to start
+
 - pause game for up to 30 sec total per team on DC
  
 - Damage types effect implementation
@@ -27,6 +40,8 @@ GAME:
 
 - multiple ship models
 
+- list all commands command
+
 META:
 - Intro rework
  -> add back button for intro
@@ -37,6 +52,17 @@ META:
 - shop
  -> ship blueprints
  -> turret blueprints
+ 
+- proper inventory
+ 
+- Cluster map
+ -> galaxy selection
+ -> star system selection
+ -> selecting galaxy zooms in and makes galaxy image transparent background
+ -> ancient planet = sun
+ -> star system connected with lines for progression
+  -> comparable to gemcraft
+ - galaxies show up after finishing the previous one
 
 ---------------------------------------------------------------------
 FUTURE RELEASES TODO:

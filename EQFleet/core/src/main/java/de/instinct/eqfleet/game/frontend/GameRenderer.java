@@ -15,12 +15,14 @@ import de.instinct.eqfleet.game.frontend.planet.PlanetRenderer;
 import de.instinct.eqfleet.game.frontend.projectile.ProjectileRenderer;
 import de.instinct.eqfleet.game.frontend.ships.ShipRenderer;
 import de.instinct.eqfleet.game.frontend.ui.GameUIRenderer;
-import de.instinct.eqlibgdxutils.rendering.GridRenderer;
+import de.instinct.eqlibgdxutils.rendering.grid.GridConfiguration;
+import de.instinct.eqlibgdxutils.rendering.grid.GridRenderer;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 
 public class GameRenderer {
 
 	private final Vector3 BASE_CAM_POS = new Vector3(0f, 0f, 4400f);
+	//private final Vector3 BASE_CAM_POS = new Vector3(0f, -2200f, 2500f);
 	private PerspectiveCamera camera;
 	
 	private GridRenderer gridRenderer;
@@ -45,10 +47,10 @@ public class GameRenderer {
 		camera.lookAt(0f, 0f, 0f);
 		camera.up.set(0f, 1f, 0f);
 		camera.near = 1f;
-		camera.far = 5000f;
+		camera.far = 10000f;
 		camera.update();
 
-		gridRenderer = new GridRenderer();
+		gridRenderer = new GridRenderer(GridConfiguration.builder().build());
 		projectileRenderer = new ProjectileRenderer();
 		planetRenderer = new PlanetRenderer();
 		shipRenderer = new ShipRenderer();

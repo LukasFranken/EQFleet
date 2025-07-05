@@ -1,4 +1,4 @@
-package de.instinct.eqlibgdxutils.rendering.ui.component.passive;
+package de.instinct.eqlibgdxutils.rendering.ui.component.passive.image;
 
 import com.badlogic.gdx.graphics.Texture;
 
