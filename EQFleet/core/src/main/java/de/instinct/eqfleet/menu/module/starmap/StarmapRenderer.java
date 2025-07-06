@@ -237,10 +237,10 @@ public class StarmapRenderer extends BaseModuleRenderer {
 		camera.update();
 
 		gridRenderer = new GridRenderer(GridConfiguration.builder().step(2).build());
-
+		
 		decalBatch = new DecalBatch(new CameraGroupStrategy(camera));
 
-		selectedGalaxy = null;
+		StarmapModel.selectedGalaxyId = -1;
 		galaxyZoomElapsed = 0f;
 		galaxyZoomFactor = 0f;
 		galaxies = new ArrayList<>();
