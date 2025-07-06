@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 
+import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqlibgdxutils.PreferenceUtil;
 import de.instinct.eqlibgdxutils.debug.console.Command;
@@ -57,6 +58,7 @@ public class EQFleetCommandLoader implements CommandLoader {
 				.build());
 		commands.addAll(getMenuCommands());
 		commands.addAll(getConfigCommands());
+		commands.addAll(getGameCommands());
 		return commands;
 	}
 
@@ -183,6 +185,23 @@ public class EQFleetCommandLoader implements CommandLoader {
 				})
 				.build());
 		return configCommands;
+	}
+	
+	private List<Command> getGameCommands() {
+		List<Command> menuCommands = new ArrayList<>();
+		menuCommands.add(Command.builder()
+				.method("game.stop")
+				.action(new Action() {
+					
+					@Override
+					public void execute() {
+						Game.stop();
+						log("Game stopped");
+					}
+					
+				})
+				.build());
+		return menuCommands;
 	}
 
 	private void log(String message) {

@@ -54,7 +54,6 @@ public class PlanetRenderer {
 		    	instance.transform.idt();
 			    instance.transform.translate(planet.position.x, planet.position.y, 0f);
 
-			    //rotate
 			    Vector3 planetPos = new Vector3(planet.position.x, planet.position.y, 0f);
 			    Vector3 toCamera = new Vector3(camera.position).sub(planetPos).nor();
 			    float angle = (float) Math.toDegrees(Math.atan2(toCamera.z, toCamera.y));

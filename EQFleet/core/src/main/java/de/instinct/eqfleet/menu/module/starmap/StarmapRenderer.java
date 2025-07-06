@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -107,15 +108,23 @@ public class StarmapRenderer extends BaseModuleRenderer {
 	private void handleInput() {
 		if (InputUtil.isClicked() && !PopupRenderer.isActive()) {
 			if (StarmapModel.selectedGalaxyId == -1) {
-				Galaxy galaxyAtMouse = getGalaxyAtScreenPos(InputUtil.getMouseX(), Gdx.input.getY());
+				Galaxy galaxyAtMouse = getClickedGalaxy();
 				if (galaxyAtMouse != null) {
 					createTravelInfoPopup(galaxyAtMouse);
+				}
+			} else {
+				if (zoomIn) {
+					StarsystemData starsystemAtMouse = getClickedStarsystem();
+					if (starsystemAtMouse != null) {
+						createCombatInfoPopup(starsystemAtMouse);
+					}
 				}
 			}
 		}
 	}
 
 	private void renderSectorMap() {
+		Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT);
 		for (Galaxy galaxy : galaxies) {
 			Decal decal = galaxy.getDecal();
 			decal.lookAt(camera.position, camera.up);
@@ -144,11 +153,38 @@ public class StarmapRenderer extends BaseModuleRenderer {
 		travelButton.setFixedWidth(popupWidth);
 		ElementList galaxyInfoElements = new ElementList();
 		galaxyInfoElements.setMargin(10);
-		galaxyInfoElements.getElements().add(DefaultLabelFactory.createLabelStack("Systems:",
-				galaxy.getData().getStarsystems().size() + "", popupWidth));
+		galaxyInfoElements.getElements().add(DefaultLabelFactory.createLabelStack("Systems:", galaxy.getData().getStarsystems().size() + "", popupWidth));
 		galaxyInfoElements.getElements().add(travelButton);
-		Popup galaxyInfoPopup = Popup.builder().closeOnClickOutside(true).title(galaxy.getData().getName())
-				.contentContainer(galaxyInfoElements).build();
+		Popup galaxyInfoPopup = Popup.builder()
+				.closeOnClickOutside(true)
+				.title(galaxy.getData().getName())
+				.contentContainer(galaxyInfoElements)
+				.build();
+		PopupRenderer.create(galaxyInfoPopup);
+	}
+	
+	private void createCombatInfoPopup(StarsystemData starsystem) {
+		float popupWidth = 200;
+		ColorButton travelButton = DefaultButtonFactory.colorButton("Combat", new Action() {
+
+			@Override
+			public void execute() {
+				System.out.println("start combat in starsystem: " + starsystem.getId());
+				PopupRenderer.close();
+			}
+
+		});
+		travelButton.setFixedHeight(30);
+		travelButton.setFixedWidth(popupWidth);
+		ElementList galaxyInfoElements = new ElementList();
+		galaxyInfoElements.setMargin(10);
+		galaxyInfoElements.getElements().add(DefaultLabelFactory.createLabelStack("Threat Level:", starsystem.getThreatLevel() + "", popupWidth));
+		galaxyInfoElements.getElements().add(travelButton);
+		Popup galaxyInfoPopup = Popup.builder()
+				.closeOnClickOutside(true)
+				.title(starsystem.getName())
+				.contentContainer(galaxyInfoElements)
+				.build();
 		PopupRenderer.create(galaxyInfoPopup);
 	}
 
@@ -158,19 +194,22 @@ public class StarmapRenderer extends BaseModuleRenderer {
 				Image image = new Image(TextureManager.getTexture("ui/image", "starsystem"));
 				image.setFixedWidth(20f);
 				image.setFixedHeight(20f);
-				Vector2 imagePos = MathUtil.translate(new Vector2(starsystem.getMapPosX(), starsystem.getMapPosY()),
-						MAP_BOUNDS, 
-						new Rectangle(
-								MenuModel.moduleBounds.x, 
-								MenuModel.moduleBounds.y + (MenuModel.moduleBounds.height / 2) - (MenuModel.moduleBounds.width / 2), 
-								MenuModel.moduleBounds.width, 
-								MenuModel.moduleBounds.width));
-				System.out.println("Image position: " + imagePos);
+				Vector2 imagePos = getStarsystemScreenPosition(starsystem);
 				image.setPosition(imagePos.x - 10f, imagePos.y - 10f);
 				image.render();
 			}
 			backButton.render();
 		}
+	}
+
+	private Vector2 getStarsystemScreenPosition(StarsystemData starsystem) {
+		return MathUtil.translate(new Vector2(starsystem.getMapPosX(), starsystem.getMapPosY()),
+				MAP_BOUNDS, 
+				new Rectangle(
+						MenuModel.moduleBounds.x, 
+						MenuModel.moduleBounds.y + (MenuModel.moduleBounds.height / 2) - (MenuModel.moduleBounds.width / 2), 
+						MenuModel.moduleBounds.width, 
+						MenuModel.moduleBounds.width));
 	}
 
 	@Override
@@ -219,8 +258,8 @@ public class StarmapRenderer extends BaseModuleRenderer {
 		return Galaxy.builder().data(galaxy).decal(decal).build();
 	}
 
-	private Galaxy getGalaxyAtScreenPos(float screenX, float screenY) {
-		Ray ray = camera.getPickRay(screenX, screenY, MenuModel.moduleBounds.x, MenuModel.moduleBounds.y,
+	private Galaxy getClickedGalaxy() {
+		Ray ray = camera.getPickRay(InputUtil.getMouseX(), Gdx.input.getY(), MenuModel.moduleBounds.x, MenuModel.moduleBounds.y,
 				MenuModel.moduleBounds.width, MenuModel.moduleBounds.height);
 
 		float t = -ray.origin.z / ray.direction.z;
@@ -243,6 +282,17 @@ public class StarmapRenderer extends BaseModuleRenderer {
 		}
 
 		return closest;
+	}
+	
+	private StarsystemData getClickedStarsystem() {
+		float selectionRadius = 20f;
+		for (StarsystemData starsystem : selectedGalaxy.getData().getStarsystems()) {
+			if (getStarsystemScreenPosition(starsystem).dst(InputUtil.getMouseX(), InputUtil.getMouseY()) < selectionRadius) {
+				return starsystem;
+			}
+		}
+
+		return null;
 	}
 
 	@Override
