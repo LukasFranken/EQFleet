@@ -16,7 +16,6 @@ import de.instinct.api.matchmaking.model.VersusMode;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.main.Menu;
-import de.instinct.eqfleet.menu.module.main.tab.play.PlayTab;
 import de.instinct.eqfleet.menu.module.ship.Shipyard;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
@@ -69,7 +68,7 @@ public class PlayRenderer extends BaseModuleRenderer {
 			@Override
 			public void confirmed() {
 				if (usernameTextField.getForbiddenCharsMobile() == null) {
-					PlayTab.invite(usernameTextField.getContent());
+					Play.invite(usernameTextField.getContent());
 					usernameTextField.setContent("");
 				}
 			}
@@ -81,7 +80,7 @@ public class PlayRenderer extends BaseModuleRenderer {
 			
 			@Override
 			public void execute() {
-				PlayTab.invite(usernameTextField.getContent());
+				Play.invite(usernameTextField.getContent());
 				usernameTextField.setContent("");
 			}
 			
@@ -93,7 +92,7 @@ public class PlayRenderer extends BaseModuleRenderer {
 			@Override
 			public void execute() {
 				if (Shipyard.hasActiveShip()) {
-					PlayTab.createLobby();
+					Play.createLobby();
 				} else {
 					PopupRenderer.createMessageDialog("Unable to start", "No active ship\nin Shipyard");
 				}
@@ -123,7 +122,7 @@ public class PlayRenderer extends BaseModuleRenderer {
 			
 			@Override
 			public void execute() {
-				PlayTab.leaveLobby();
+				Play.leaveLobby();
 				selectedVersusMode = null;
 				selectedFactionMode = null;
 			}
@@ -137,7 +136,7 @@ public class PlayRenderer extends BaseModuleRenderer {
 			
 			@Override
 			public void execute() {
-				PlayTab.stopMatching();
+				Play.stopMatching();
 			}
 			
 		});
@@ -147,7 +146,8 @@ public class PlayRenderer extends BaseModuleRenderer {
 			
 			@Override
 			public void execute() {
-				PlayTab.setType(GameType.builder()
+				Play.setType(GameType.builder()
+						.map("test")
 						.gameMode(GameMode.KING_OF_THE_HILL)
 						.versusMode(selectedVersusMode)
 						.factionMode(selectedFactionMode)
@@ -227,7 +227,7 @@ public class PlayRenderer extends BaseModuleRenderer {
 			@Override
 			public void triggered(ActionListElement element) {
 				if (Shipyard.hasActiveShip()) {
-					PlayTab.accept(element.getValue());
+					Play.accept(element.getValue());
 				} else {
 					PopupRenderer.createMessageDialog("Unable to start", "No active ship\nin Shipyard");
 				}
@@ -239,7 +239,7 @@ public class PlayRenderer extends BaseModuleRenderer {
 			
 			@Override
 			public void triggered(ActionListElement element) {
-				PlayTab.decline(element.getValue());
+				Play.decline(element.getValue());
 			}
 			
 		});
@@ -251,7 +251,7 @@ public class PlayRenderer extends BaseModuleRenderer {
 			
 			@Override
 			public void execute() {
-				PlayTab.startMatchmaking();
+				Play.startMatchmaking();
 			}
 			
 		});
@@ -274,16 +274,16 @@ public class PlayRenderer extends BaseModuleRenderer {
 	
 	@Override
 	public void render() {
-		if (PlayTab.lobbyUUID == null || PlayTab.lobbyUUID.contentEquals("")) {
+		if (PlayModel.lobbyUUID == null || PlayModel.lobbyUUID.contentEquals("")) {
 			renderPreLobbyView();
 		} else {
-			if (PlayTab.lobbyStatus != null) {
-				if (PlayTab.lobbyStatus.getType() == null) {
+			if (PlayModel.lobbyStatus != null) {
+				if (PlayModel.lobbyStatus.getType() == null) {
 					renderModeSelection();
 					leaveLobbyButton.setPosition(40, 100);
 					leaveLobbyButton.render();
 				} else {
-					if (PlayTab.lobbyStatus.getCode() == LobbyStatusCode.MATCHING && PlayTab.currentMatchmakingStatus != null) {
+					if (PlayModel.lobbyStatus.getCode() == LobbyStatusCode.MATCHING && PlayModel.currentMatchmakingStatus != null) {
 						renderQueueStatus();
 						cancelMatchmakingButton.setPosition((Gdx.graphics.getWidth() - cancelMatchmakingButton.getFixedWidth()) / 2, 100);
 						cancelMatchmakingButton.render();
@@ -309,8 +309,8 @@ public class PlayRenderer extends BaseModuleRenderer {
 		startCustomButton.render();
 		
 		invites.setElements(new ArrayList<>());
-		if (PlayTab.inviteStatus != null && PlayTab.inviteStatus.getInvites().size() > 0) {
-			for (Invite invite : PlayTab.inviteStatus.getInvites()) {
+		if (PlayModel.inviteStatus != null && PlayModel.inviteStatus.getInvites().size() > 0) {
+			for (Invite invite : PlayModel.inviteStatus.getInvites()) {
 				invites.getElements().add(ActionListElement.builder()
 						.value(invite.getLobbyUUID())
 						.label(invite.getFromUsername())
@@ -367,19 +367,19 @@ public class PlayRenderer extends BaseModuleRenderer {
 	}
 	
 	private void renderLobbyOverview() {
-		GameType selectedGameType = PlayTab.lobbyStatus.getType();
-		Label gameTypeLabel = new Label(selectedGameType.getVersusMode() + " - " + selectedGameType.getFactionMode());
+		GameType selectedGameType = PlayModel.lobbyStatus.getType();
+		Label gameTypeLabel = new Label(selectedGameType.gameMode + " - " + selectedGameType.getVersusMode() + " - " + selectedGameType.getFactionMode());
 		gameTypeLabel.setBounds(new Rectangle(0, 550, Gdx.graphics.getWidth(), 30));
 		gameTypeLabel.render();
 		
 		int i = 0;
-		for (String userName : PlayTab.lobbyStatus.getUserNames()) {
+		for (String userName : PlayModel.lobbyStatus.getUserNames()) {
 			Label userNameLabel = new Label(userName == null ? "???" : userName);
 			userNameLabel.setBounds(new Rectangle(0, 500 - i, Gdx.graphics.getWidth(), 30));
 			userNameLabel.render();
 			i += 30;
 		}
-		if (PlayTab.lobbyStatus.getUserNames().size() < selectedGameType.getFactionMode().teamPlayerCount) {
+		if (PlayModel.lobbyStatus.getUserNames().size() < selectedGameType.getFactionMode().teamPlayerCount) {
 			usernameTextField.setBounds(new Rectangle((Gdx.graphics.getWidth() / 2) - 88, 340, 176, 40));
 			usernameTextField.render();
 			
@@ -388,12 +388,12 @@ public class PlayRenderer extends BaseModuleRenderer {
 			inviteButton.setPosition((Gdx.graphics.getWidth() / 2) - (inviteButton.getFixedWidth() / 2), 300);
 			inviteButton.render();
 			
-			if (PlayTab.inviteResponse != null) {
-				if (PlayTab.inviteResponse == InviteResponse.ALREADY_INVITED) inviteMessage = "Already invited";
-				if (PlayTab.inviteResponse == InviteResponse.ERROR) inviteMessage = "Server error";
-				if (PlayTab.inviteResponse == InviteResponse.USERNAME_DOESNT_EXIST) inviteMessage = "Username doesn't exist";
-				if (PlayTab.inviteResponse == InviteResponse.INVITED) inviteMessage = "Invitation sent";
-				PlayTab.inviteResponse = null;
+			if (PlayModel.inviteResponse != null) {
+				if (PlayModel.inviteResponse == InviteResponse.ALREADY_INVITED) inviteMessage = "Already invited";
+				if (PlayModel.inviteResponse == InviteResponse.ERROR) inviteMessage = "Server error";
+				if (PlayModel.inviteResponse == InviteResponse.USERNAME_DOESNT_EXIST) inviteMessage = "Username doesn't exist";
+				if (PlayModel.inviteResponse == InviteResponse.INVITED) inviteMessage = "Invitation sent";
+				PlayModel.inviteResponse = null;
 			}
 			if (inviteMessage != null) {
 				inviteMessageElapsed += Gdx.graphics.getDeltaTime();
@@ -412,11 +412,11 @@ public class PlayRenderer extends BaseModuleRenderer {
 	}
 	
 	private void renderQueueStatus() {
-		Label statusLabel = new Label(PlayTab.currentMatchmakingStatus.getCode().toString());
+		Label statusLabel = new Label(PlayModel.currentMatchmakingStatus.getCode().toString());
 		statusLabel.setBounds(new Rectangle(0, 50, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		statusLabel.render();
 		
-		Label playerLabel = new Label(PlayTab.currentMatchmakingStatus.getFoundPlayers() + " / " + PlayTab.currentMatchmakingStatus.getRequiredPlayers() + " players found");
+		Label playerLabel = new Label(PlayModel.currentMatchmakingStatus.getFoundPlayers() + " / " + PlayModel.currentMatchmakingStatus.getRequiredPlayers() + " players found");
 		playerLabel.setBounds(new Rectangle(0, -50, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		playerLabel.render();
 	}

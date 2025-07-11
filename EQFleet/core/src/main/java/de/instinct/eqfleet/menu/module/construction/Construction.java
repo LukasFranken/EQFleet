@@ -57,4 +57,9 @@ public class Construction extends BaseModule {
 		return false;
 	}
 
+	@Override
+	public void close() {
+		
+	}
+
 }

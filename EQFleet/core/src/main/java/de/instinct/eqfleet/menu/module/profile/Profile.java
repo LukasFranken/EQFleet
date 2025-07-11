@@ -66,4 +66,9 @@ public class Profile extends BaseModule {
 		);
 	}
 
+	@Override
+	public void close() {
+		
+	}
+
 }

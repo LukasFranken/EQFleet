@@ -31,4 +31,9 @@ public class Settings extends BaseModule {
 		return false;
 	}
 
+	@Override
+	public void close() {
+		
+	}
+
 }

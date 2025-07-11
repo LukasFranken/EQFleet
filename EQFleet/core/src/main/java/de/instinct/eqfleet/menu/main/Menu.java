@@ -14,7 +14,6 @@ import com.badlogic.gdx.Gdx;
 
 import de.instinct.api.core.API;
 import de.instinct.api.core.modules.MenuModule;
-import de.instinct.api.matchmaking.dto.LobbyStatusCode;
 import de.instinct.api.meta.dto.modules.ModuleInfoRequest;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
@@ -24,7 +23,6 @@ import de.instinct.eqfleet.menu.module.construction.ConstructionRenderer;
 import de.instinct.eqfleet.menu.module.inventory.Inventory;
 import de.instinct.eqfleet.menu.module.inventory.InventoryRenderer;
 import de.instinct.eqfleet.menu.module.inventory.message.LoadResourcesMessage;
-import de.instinct.eqfleet.menu.module.main.tab.play.PlayTab;
 import de.instinct.eqfleet.menu.module.play.Play;
 import de.instinct.eqfleet.menu.module.play.PlayRenderer;
 import de.instinct.eqfleet.menu.module.profile.Profile;
@@ -87,7 +85,6 @@ public class Menu {
 		
 		moduleMessageQueue = new ConcurrentLinkedQueue<>();
 		
-		PlayTab.init();
 		MenuModel.loaded = false;
 		scheduler = Executors.newSingleThreadScheduledExecutor();
 		scheduler.scheduleAtFixedRate(() -> {
@@ -207,11 +204,13 @@ public class Menu {
 		if (scheduler != null) {
 			scheduler.shutdownNow();
 		}
-		if (PlayTab.lobbyStatus != null && PlayTab.lobbyStatus.getCode() == LobbyStatusCode.MATCHING) {
-			PlayTab.stopMatching();
-		}
 		close();
 		menuRenderer.dispose();
+		for (BaseModule module : modules.values()) {
+			if (module != null) {
+				module.close();
+			}
+		}
 		for (BaseModuleRenderer renderer : renderers.values()) {
 			if (renderer != null) {
 				renderer.dispose();

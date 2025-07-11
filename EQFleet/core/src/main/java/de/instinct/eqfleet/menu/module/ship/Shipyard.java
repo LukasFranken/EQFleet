@@ -89,4 +89,9 @@ public class Shipyard extends BaseModule {
 		return hasActiveShip;
 	}
 
+	@Override
+	public void close() {
+		
+	}
+
 }

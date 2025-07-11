@@ -15,7 +15,7 @@ import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.frontend.ui.model.GameUIElement;
 import de.instinct.eqfleet.game.frontend.ui.model.PlayerData;
 import de.instinct.eqfleet.game.frontend.ui.model.UIBounds;
-import de.instinct.eqfleet.menu.module.main.tab.play.PlayTab;
+import de.instinct.eqfleet.menu.module.play.PlayModel;
 import de.instinct.eqlibgdxutils.MathUtil;
 import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.generic.Action;
@@ -40,11 +40,11 @@ public class GameUILoader {
 		loadTimeLabel(bounds);
 		loadOwnCPBar(bounds);
 		loadEnemy1CPBar(bounds);
-		if (PlayTab.lobbyStatus != null && PlayTab.lobbyStatus.getType() != null && PlayTab.lobbyStatus.getType().factionMode.teamPlayerCount >= 2) {
+		if (PlayModel.lobbyStatus != null && PlayModel.lobbyStatus.getType() != null && PlayModel.lobbyStatus.getType().factionMode.teamPlayerCount >= 2) {
 			loadTeammate1CPBar(bounds);
 			loadEnemy2CPBar(bounds);
 		}
-		if (PlayTab.lobbyStatus != null && PlayTab.lobbyStatus.getType() != null && PlayTab.lobbyStatus.getType().factionMode.teamPlayerCount >= 3) {
+		if (PlayModel.lobbyStatus != null && PlayModel.lobbyStatus.getType() != null && PlayModel.lobbyStatus.getType().factionMode.teamPlayerCount >= 3) {
 			loadTeammate2CPBar(bounds);
 			loadEnemy3CPBar(bounds);
 		}

@@ -49,4 +49,9 @@ public class Inventory extends BaseModule {
 		);
 	}
 
+	@Override
+	public void close() {
+		
+	}
+
 }

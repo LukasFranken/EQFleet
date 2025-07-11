@@ -170,6 +170,7 @@ public class StarmapRenderer extends BaseModuleRenderer {
 			@Override
 			public void execute() {
 				System.out.println("start combat in starsystem: " + starsystem.getId());
+				Starmap.createLobby(selectedGalaxy.getData().getId(), starsystem.getId());
 				PopupRenderer.close();
 			}
 

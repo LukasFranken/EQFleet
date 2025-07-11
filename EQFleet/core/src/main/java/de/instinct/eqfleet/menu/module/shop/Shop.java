@@ -62,4 +62,9 @@ public class Shop extends BaseModule {
 		return false;
 	}
 
+	@Override
+	public void close() {
+		
+	}
+
 }

@@ -19,6 +19,8 @@ public abstract class BaseModule {
 
 	public abstract void update();
 	
+	public abstract void close();
+	
 	public void processBackendMessage(ModuleMessage message) {
 		if (!process(message)) {
 			Logger.log("BaseModule", "Unhandles ModuleMessage: " + message);
