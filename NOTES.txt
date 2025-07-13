@@ -17,12 +17,11 @@ GENERAL:
  
 - improve fonts
 
-- turning 3d model of ship in selection
 - seperate sections for weapon and defense with different image
 
 - module icons with small name under icon
 
-- client doensnt seem to close on mac
+- client doesnt seem to close on mac
 
 GAME:
 - try different cam angles

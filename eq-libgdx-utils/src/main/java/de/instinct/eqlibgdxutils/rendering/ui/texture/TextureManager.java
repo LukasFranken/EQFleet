@@ -31,7 +31,7 @@ public class TextureManager {
 		glowShapeRenderer = new GlowShapeRenderer();
 		String glowString = PreferenceUtil.load("glow");
     	if (glowString.contentEquals("")) {
-    		TextureManager.setDefaultGlowRadius(30);
+    		TextureManager.setDefaultGlowRadius(0);
     	} else {
     		TextureManager.setDefaultGlowRadius(Float.parseFloat(glowString));
     	}

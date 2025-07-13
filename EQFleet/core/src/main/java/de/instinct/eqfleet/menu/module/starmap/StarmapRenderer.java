@@ -32,7 +32,10 @@ import de.instinct.eqlibgdxutils.rendering.grid.GridConfiguration;
 import de.instinct.eqlibgdxutils.rendering.grid.GridRenderer;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.image.Image;
+import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.HorizontalAlignment;
+import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.container.list.ElementList;
+import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
 import de.instinct.eqlibgdxutils.rendering.ui.popup.Popup;
 import de.instinct.eqlibgdxutils.rendering.ui.popup.PopupRenderer;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
@@ -126,15 +129,62 @@ public class StarmapRenderer extends BaseModuleRenderer {
 	private void renderSectorMap() {
 		Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT);
 		for (Galaxy galaxy : galaxies) {
-			Decal decal = galaxy.getDecal();
-			decal.lookAt(camera.position, camera.up);
-			decalBatch.add(decal);
+			renderGalaxy(galaxy);
 		}
 		decalBatch.flush();
 		
-		if (galaxyZoomElapsed > zoomDuration - darkeningDuration) TextureManager.draw(TextureManager.createTexture(Color.BLACK),
+		if (galaxyZoomElapsed > zoomDuration - darkeningDuration) 
+			TextureManager.draw(TextureManager.createTexture(Color.BLACK),
 				GraphicsUtil.screenBounds(),
 				MathUtil.linear(0, 0.5f, (galaxyZoomElapsed - (zoomDuration - darkeningDuration)) / darkeningDuration));
+	}
+
+	private void renderGalaxy(Galaxy galaxy) {
+		if (galaxyZoomFactor < 0.05f) {
+			Vector3 screenPos = camera.project(new Vector3(galaxy.getData().getMapPosX(), galaxy.getData().getMapPosY(), 0));
+			
+			Label galaxyNameLabel = new Label(galaxy.getData().getName().toUpperCase());
+			galaxyNameLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
+			galaxyNameLabel.setType(FontType.SMALL);
+			galaxyNameLabel.setFixedWidth(100f);
+			galaxyNameLabel.setFixedHeight(20f);
+			galaxyNameLabel.setColor(Color.LIGHT_GRAY);
+			galaxyNameLabel.setPosition(screenPos.x - (galaxyNameLabel.getFixedWidth() / 2), screenPos.y + 30f);
+			galaxyNameLabel.render();
+			
+			Label galaxyLevelLabel = new Label("Threat: " + getMinThreatLevel(galaxy) + "-" + getMaxThreatLevel(galaxy));
+			galaxyLevelLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
+			galaxyLevelLabel.setType(FontType.TINY);
+			galaxyLevelLabel.setFixedWidth(100f);
+			galaxyLevelLabel.setFixedHeight(20f);
+			galaxyLevelLabel.setColor(Color.LIGHT_GRAY);
+			galaxyLevelLabel.setPosition(screenPos.x - (galaxyNameLabel.getFixedWidth() / 2), screenPos.y - 50f);
+			galaxyLevelLabel.render();
+		}
+		
+		Decal decal = galaxy.getDecal();
+		decal.lookAt(camera.position, camera.up);
+		decalBatch.add(decal);
+	}
+
+	private int getMaxThreatLevel(Galaxy galaxy) {
+		int maxThreat = Integer.MIN_VALUE;
+		for (StarsystemData starsystem : galaxy.getData().getStarsystems()) {
+			if (starsystem.getThreatLevel() > maxThreat) {
+				maxThreat = starsystem.getThreatLevel();
+			}
+		}
+		return maxThreat;
+	}
+
+	private int getMinThreatLevel(Galaxy galaxy) {
+		int minThreat = Integer.MAX_VALUE;
+		for (StarsystemData starsystem : galaxy.getData().getStarsystems()) {
+			if (starsystem.getThreatLevel() < minThreat) {
+				minThreat = starsystem.getThreatLevel();
+			}
+		}
+		return minThreat;
 	}
 
 	private void createTravelInfoPopup(Galaxy galaxy) {
@@ -169,7 +219,6 @@ public class StarmapRenderer extends BaseModuleRenderer {
 
 			@Override
 			public void execute() {
-				System.out.println("start combat in starsystem: " + starsystem.getId());
 				Starmap.createLobby(selectedGalaxy.getData().getId(), starsystem.getId());
 				PopupRenderer.close();
 			}
@@ -190,7 +239,7 @@ public class StarmapRenderer extends BaseModuleRenderer {
 	}
 
 	private void renderGalaxyMap() {
-		if (zoomIn) {
+		if (galaxyZoomFactor == 1f) {
 			for (StarsystemData starsystem : selectedGalaxy.getData().getStarsystems()) {
 				Image image = new Image(TextureManager.getTexture("ui/image", "starsystem"));
 				image.setFixedWidth(20f);
