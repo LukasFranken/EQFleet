@@ -34,7 +34,8 @@
 	<pattern>com.esotericsoftware.kryo.**</pattern>
 	<pattern>net.mgsx.gltf.data.data.GLTFBuffer</pattern>
 	<pattern>com.fasterxml.jackson.**</pattern>
-	<pattern>de.instinct.api.meta.dto.ResourceAmount</pattern>  </forceLinkClasses>
+	<pattern>de.instinct.api.meta.dto.ResourceAmount</pattern>
+   </forceLinkClasses>
   <libs>
       <lib>z</lib>
   </libs>
