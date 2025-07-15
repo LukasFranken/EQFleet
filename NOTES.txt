@@ -14,8 +14,6 @@ GENERAL:
  -> audio settings
  
 - externalize planet resource bar to circularloadingbar component
- 
-- improve fonts
 
 - seperate sections for weapon and defense with different image
 

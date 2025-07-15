@@ -15,6 +15,11 @@
 			<version>1.13.1</version>
 		</dependency>
 		<dependency>
+            <groupId>com.badlogicgames.gdx</groupId>
+            <artifactId>gdx-freetype</artifactId>
+            <version>1.9.10</version>
+        </dependency>
+		<dependency>
 			<groupId>org.jasypt</groupId>
 			<artifactId>jasypt</artifactId>
 			<version>1.9.3</version>

@@ -113,7 +113,8 @@ public class StarmapRenderer extends BaseModuleRenderer {
 			if (StarmapModel.selectedGalaxyId == -1) {
 				Galaxy galaxyAtMouse = getClickedGalaxy();
 				if (galaxyAtMouse != null) {
-					createTravelInfoPopup(galaxyAtMouse);
+					selectedGalaxy = galaxyAtMouse;
+					zoomIn = true;
 				}
 			} else {
 				if (zoomIn) {
@@ -185,32 +186,6 @@ public class StarmapRenderer extends BaseModuleRenderer {
 			}
 		}
 		return minThreat;
-	}
-
-	private void createTravelInfoPopup(Galaxy galaxy) {
-		float popupWidth = 200;
-		ColorButton travelButton = DefaultButtonFactory.colorButton("Travel", new Action() {
-
-			@Override
-			public void execute() {
-				selectedGalaxy = galaxy;
-				zoomIn = true;
-				PopupRenderer.close();
-			}
-
-		});
-		travelButton.setFixedHeight(30);
-		travelButton.setFixedWidth(popupWidth);
-		ElementList galaxyInfoElements = new ElementList();
-		galaxyInfoElements.setMargin(10);
-		galaxyInfoElements.getElements().add(DefaultLabelFactory.createLabelStack("Systems:", galaxy.getData().getStarsystems().size() + "", popupWidth));
-		galaxyInfoElements.getElements().add(travelButton);
-		Popup galaxyInfoPopup = Popup.builder()
-				.closeOnClickOutside(true)
-				.title(galaxy.getData().getName())
-				.contentContainer(galaxyInfoElements)
-				.build();
-		PopupRenderer.create(galaxyInfoPopup);
 	}
 	
 	private void createCombatInfoPopup(StarsystemData starsystem) {

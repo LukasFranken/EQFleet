@@ -19,6 +19,7 @@ import de.instinct.eqlibgdxutils.debug.logging.Logger;
 import de.instinct.eqlibgdxutils.debug.metrics.NumberMetric;
 import de.instinct.eqlibgdxutils.rendering.model.ModelRenderer;
 import de.instinct.eqlibgdxutils.rendering.particle.ParticleRenderer;
+import de.instinct.eqlibgdxutils.rendering.ui.font.FontConfiguration;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.popup.PopupRenderer;
 import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
@@ -26,7 +27,7 @@ import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 
 public class App extends ApplicationAdapter {
 	
-    public static final String VERSION = "0.0.33";
+    public static final String VERSION = "0.0.34";
     private static final String LOGTAG = "APP";
     
     private static boolean halted;
@@ -40,7 +41,16 @@ public class App extends ApplicationAdapter {
     	Console.init();
     	Console.setCommands(new EQFleetCommandLoader());
     	AudioManager.init();
-    	FontUtil.init();
+    	
+    	FontUtil.init(FontConfiguration.builder()
+    			.name("source")
+    			.largeSize(32)
+    			.normalSize(20)
+    			.boldSize(20)
+    			.smallSize(17)
+    			.tinySize(15)
+    			.build());
+    	
     	Gdx.input.setInputProcessor(new InputMultiplexer());
     	CursorUtil.createCursor();
     	WebManager.init();

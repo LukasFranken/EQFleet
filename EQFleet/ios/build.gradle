@@ -29,5 +29,7 @@ dependencies {
   implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-ios"
   implementation "com.mobidevelop.robovm:robovm-cocoatouch:$robovmVersion"
   implementation "com.mobidevelop.robovm:robovm-rt:$robovmVersion"
+  implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-ios"
+  
   implementation project(':core')
 }
