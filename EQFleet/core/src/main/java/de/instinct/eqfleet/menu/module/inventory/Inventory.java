@@ -2,6 +2,8 @@ package de.instinct.eqfleet.menu.module.inventory;
 
 import de.instinct.api.core.API;
 import de.instinct.api.core.modules.MenuModule;
+import de.instinct.api.meta.dto.Resource;
+import de.instinct.api.meta.dto.ResourceAmount;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
 import de.instinct.eqfleet.menu.main.ModuleMessage;
 import de.instinct.eqfleet.menu.module.inventory.message.LoadResourcesMessage;
@@ -52,6 +54,15 @@ public class Inventory extends BaseModule {
 	@Override
 	public void close() {
 		
+	}
+	
+	public static long getResource(Resource type) {
+		for (ResourceAmount amount : InventoryModel.resources.getResources()) {
+			if (amount.getType() == type) {
+				return amount.getAmount();
+			}
+		}
+		return 0;
 	}
 
 }

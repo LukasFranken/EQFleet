@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.Color;
 
+import de.instinct.api.meta.dto.Resource;
 import de.instinct.api.shop.dto.Purchase;
 import de.instinct.api.shop.dto.ShopCategory;
 import de.instinct.api.shop.dto.ShopItem;
@@ -13,7 +14,7 @@ import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.main.MenuModel;
-import de.instinct.eqfleet.menu.module.inventory.InventoryModel;
+import de.instinct.eqfleet.menu.module.inventory.Inventory;
 import de.instinct.eqfleet.menu.module.shop.message.BuyMessage;
 import de.instinct.eqfleet.menu.module.shop.model.ShopCategoryElement;
 import de.instinct.eqfleet.menu.module.shop.model.ShopItemElement;
@@ -165,7 +166,7 @@ public class ShopRenderer extends BaseModuleRenderer {
 	private Label createPriceLabel(long price) {
 		Label priceLabel = new Label(StringUtils.formatBigNumber(price));
 		priceLabel.setType(FontType.SMALL);
-		priceLabel.setColor(price > InventoryModel.resources.getCredits() ? Color.RED : Color.GREEN);
+		priceLabel.setColor(price > Inventory.getResource(Resource.CREDITS) ? Color.RED : Color.GREEN);
 		priceLabel.setHorizontalAlignment(HorizontalAlignment.RIGHT);
 		priceLabel.setFixedWidth(FontUtil.getFontTextWidthPx(8, priceLabel.getType()));
 		priceLabel.setFixedHeight(itemHeight);
@@ -173,7 +174,7 @@ public class ShopRenderer extends BaseModuleRenderer {
 	}
 	
 	private Image createCreditsIcon(long price) {
-		Image creditsIcon = new Image(TextureManager.getTexture("ui/image", price > InventoryModel.resources.getCredits() ? "credits_red" : "credits"));
+		Image creditsIcon = new Image(TextureManager.getTexture("ui/image", price > Inventory.getResource(Resource.CREDITS) ? "credits_red" : "credits"));
 		creditsIcon.setFixedWidth(16f);
 		creditsIcon.setFixedHeight(16f);
 		return creditsIcon;

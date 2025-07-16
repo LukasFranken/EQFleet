@@ -135,10 +135,6 @@ public class StarmapRenderer extends BaseModuleRenderer {
 		}
 		decalBatch.flush();
 		
-		for (Galaxy galaxy : galaxies) {
-			
-		}
-		
 		if (galaxyZoomElapsed > zoomDuration - darkeningDuration) 
 			TextureManager.draw(TextureManager.createTexture(Color.BLACK),
 				GraphicsUtil.screenBounds(),

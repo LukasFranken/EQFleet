@@ -10,8 +10,10 @@ import com.badlogic.gdx.math.Vector3;
 
 import de.instinct.api.core.modules.MenuModule;
 import de.instinct.api.core.modules.ModuleUnlockRequirement;
+import de.instinct.api.meta.dto.Resource;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
+import de.instinct.eqfleet.menu.module.inventory.Inventory;
 import de.instinct.eqfleet.menu.module.inventory.InventoryModel;
 import de.instinct.eqfleet.menu.module.profile.ProfileModel;
 import de.instinct.eqlibgdxutils.InputUtil;
@@ -233,7 +235,7 @@ public class MenuRenderer extends BaseModuleRenderer {
 		        }
 		        
 				creditsLabel.setBounds(new Rectangle(menuBounds.x + menuBounds.width - 95, menuBounds.y + menuBounds.height + 10, 75, 20));
-				creditsLabel.setText(StringUtils.formatBigNumber(InventoryModel.resources.getCredits()));
+				creditsLabel.setText(StringUtils.formatBigNumber(Inventory.getResource(Resource.CREDITS)));
 				creditsLabel.setAlpha(alpha);
 		        creditsLabel.render();
 		        TextureManager.draw(TextureManager.getTexture("ui/image", "credits"), new Rectangle(menuBounds.x + menuBounds.width - 16, menuBounds.y + menuBounds.height + 12, 16, 16), alpha);
