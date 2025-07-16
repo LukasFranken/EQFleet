@@ -199,7 +199,7 @@ public class MenuRenderer extends BaseModuleRenderer {
 				usernameLabel.render();
 				expBar.setBounds(new Rectangle(menuBounds.x + 65, menuBounds.y + menuBounds.height + 10, 100, 7));
 				Label expLabel = new Label("EXP");
-				expLabel.setColor(Color.CYAN);
+				expLabel.setColor(Color.BLUE);
 				expLabel.setType(FontType.TINY);
 				expLabel.setBounds(new Rectangle(menuBounds.x + 45, menuBounds.y + menuBounds.height + 10, 20, 7));
 				expLabel.setAlpha(alpha);

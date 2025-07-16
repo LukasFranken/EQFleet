@@ -72,6 +72,7 @@ public class StarmapRenderer extends BaseModuleRenderer {
 			updateZoom();
 			renderSectorMap();
 			ViewportUtil.restore();
+			renderGalaxyUI();
 			if (StarmapModel.selectedGalaxyId != -1) {
 				renderGalaxyMap();
 			}
@@ -134,6 +135,10 @@ public class StarmapRenderer extends BaseModuleRenderer {
 		}
 		decalBatch.flush();
 		
+		for (Galaxy galaxy : galaxies) {
+			
+		}
+		
 		if (galaxyZoomElapsed > zoomDuration - darkeningDuration) 
 			TextureManager.draw(TextureManager.createTexture(Color.BLACK),
 				GraphicsUtil.screenBounds(),
@@ -141,31 +146,42 @@ public class StarmapRenderer extends BaseModuleRenderer {
 	}
 
 	private void renderGalaxy(Galaxy galaxy) {
-		if (galaxyZoomFactor < 0.05f) {
-			Vector3 screenPos = camera.project(new Vector3(galaxy.getData().getMapPosX(), galaxy.getData().getMapPosY(), 0));
-			
-			Label galaxyNameLabel = new Label(galaxy.getData().getName().toUpperCase());
-			galaxyNameLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
-			galaxyNameLabel.setType(FontType.SMALL);
-			galaxyNameLabel.setFixedWidth(100f);
-			galaxyNameLabel.setFixedHeight(20f);
-			galaxyNameLabel.setColor(Color.LIGHT_GRAY);
-			galaxyNameLabel.setPosition(screenPos.x - (galaxyNameLabel.getFixedWidth() / 2), screenPos.y + 30f);
-			galaxyNameLabel.render();
-			
-			Label galaxyLevelLabel = new Label("Threat: " + getMinThreatLevel(galaxy) + "-" + getMaxThreatLevel(galaxy));
-			galaxyLevelLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
-			galaxyLevelLabel.setType(FontType.TINY);
-			galaxyLevelLabel.setFixedWidth(100f);
-			galaxyLevelLabel.setFixedHeight(20f);
-			galaxyLevelLabel.setColor(Color.LIGHT_GRAY);
-			galaxyLevelLabel.setPosition(screenPos.x - (galaxyNameLabel.getFixedWidth() / 2), screenPos.y - 50f);
-			galaxyLevelLabel.render();
-		}
-		
 		Decal decal = galaxy.getDecal();
 		decal.lookAt(camera.position, camera.up);
 		decalBatch.add(decal);
+		Vector3 renderingViewportScreenPos = camera.project(new Vector3(
+	            galaxy.getData().getMapPosX(), 
+	            galaxy.getData().getMapPosY(), 
+	            0));
+		
+		galaxy.setScreenPos(MathUtil.translate(
+				new Vector2(renderingViewportScreenPos.x, renderingViewportScreenPos.y),
+				GraphicsUtil.screenBounds(),
+				MenuModel.moduleBounds));
+	}
+	
+	private void renderGalaxyUI() {
+		if (galaxyZoomFactor < 0.05f) {
+			for (Galaxy galaxy : galaxies) {;
+				Label galaxyNameLabel = new Label(galaxy.getData().getName().toUpperCase());
+				galaxyNameLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
+				galaxyNameLabel.setType(FontType.SMALL);
+				galaxyNameLabel.setFixedWidth(200f);
+				galaxyNameLabel.setFixedHeight(20f);
+				galaxyNameLabel.setColor(Color.WHITE);
+				galaxyNameLabel.setPosition(galaxy.getScreenPos().x - (galaxyNameLabel.getFixedWidth() / 2), galaxy.getScreenPos().y + 20f);
+				galaxyNameLabel.render();
+				
+				Label galaxyLevelLabel = new Label("Threat: " + getMinThreatLevel(galaxy) + "-" + getMaxThreatLevel(galaxy));
+				galaxyLevelLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
+				galaxyLevelLabel.setType(FontType.SMALL);
+				galaxyLevelLabel.setFixedWidth(200f);
+				galaxyLevelLabel.setFixedHeight(20f);
+				galaxyLevelLabel.setColor(Color.WHITE);
+				galaxyLevelLabel.setPosition(galaxy.getScreenPos().x - (galaxyNameLabel.getFixedWidth() / 2), galaxy.getScreenPos().y - 40f);
+				galaxyLevelLabel.render();
+			}
+		}
 	}
 
 	private int getMaxThreatLevel(Galaxy galaxy) {

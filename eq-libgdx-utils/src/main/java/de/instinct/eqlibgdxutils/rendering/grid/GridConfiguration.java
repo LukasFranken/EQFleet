@@ -11,7 +11,7 @@ import lombok.Data;
 public class GridConfiguration {
 	
 	@Default
-	private Color lineColor = new Color(0f, 0.5f, 0f, 0.2f);
+	private Color lineColor = new Color(0f, 0.4f, 0f, 0.2f);
 	
 	@Default
 	private float lineThickness = 1f;

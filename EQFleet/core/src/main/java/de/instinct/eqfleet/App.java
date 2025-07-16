@@ -1,5 +1,8 @@
 package de.instinct.eqfleet;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -20,6 +23,8 @@ import de.instinct.eqlibgdxutils.debug.metrics.NumberMetric;
 import de.instinct.eqlibgdxutils.rendering.model.ModelRenderer;
 import de.instinct.eqlibgdxutils.rendering.particle.ParticleRenderer;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontConfiguration;
+import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
+import de.instinct.eqlibgdxutils.rendering.ui.font.FontTypeConfiguration;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.popup.PopupRenderer;
 import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
@@ -27,7 +32,7 @@ import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 
 public class App extends ApplicationAdapter {
 	
-    public static final String VERSION = "0.0.34";
+    public static final String VERSION = "0.0.35";
     private static final String LOGTAG = "APP";
     
     private static boolean halted;
@@ -41,16 +46,7 @@ public class App extends ApplicationAdapter {
     	Console.init();
     	Console.setCommands(new EQFleetCommandLoader());
     	AudioManager.init();
-    	
-    	FontUtil.init(FontConfiguration.builder()
-    			.name("source")
-    			.largeSize(32)
-    			.normalSize(20)
-    			.boldSize(20)
-    			.smallSize(17)
-    			.tinySize(15)
-    			.build());
-    	
+    	loadFonts();
     	Gdx.input.setInputProcessor(new InputMultiplexer());
     	CursorUtil.createCursor();
     	WebManager.init();
@@ -66,6 +62,39 @@ public class App extends ApplicationAdapter {
         		.build());
         Logger.log(LOGTAG, "Initialization completed", ConsoleColor.YELLOW);
     }
+
+	private void loadFonts() {
+		List<FontTypeConfiguration> fontTypes = new ArrayList<>();
+		fontTypes.add(FontTypeConfiguration.builder()
+				.type(FontType.LARGE)
+				.name("larabie")
+				.size(26)
+				.build());
+		fontTypes.add(FontTypeConfiguration.builder()
+				.type(FontType.NORMAL)
+				.name("larabie")
+				.size(16)
+				.build());
+		fontTypes.add(FontTypeConfiguration.builder()
+				.type(FontType.BOLD)
+				.name("larabie")
+				.size(16)
+				.build());
+		fontTypes.add(FontTypeConfiguration.builder()
+				.type(FontType.SMALL)
+				.name("bedstead")
+				.size(12)
+				.build());
+		fontTypes.add(FontTypeConfiguration.builder()
+				.type(FontType.TINY)
+				.name("source_bold")
+				.size(10)
+				.build());
+		
+		FontUtil.init(FontConfiguration.builder()
+				.fontTypes(fontTypes)
+				.build());
+	}
 
 	@Override
     public void render() {
