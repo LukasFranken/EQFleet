@@ -7,6 +7,7 @@ import de.instinct.engine.net.message.types.PlayerAssigned;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.backend.driver.Driver;
+import de.instinct.eqfleet.menu.main.Menu;
 
 public class OnlineDriver extends Driver {
 	
@@ -54,6 +55,7 @@ public class OnlineDriver extends Driver {
 	@Override
 	public void finish() {
 		gameClient.stop();
+		Menu.loadPostGame();
 	}
 
 	@Override

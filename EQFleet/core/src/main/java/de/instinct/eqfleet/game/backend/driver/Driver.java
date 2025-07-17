@@ -4,9 +4,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import de.instinct.api.core.modules.MenuModule;
+import de.instinct.api.matchmaking.model.GameMode;
 import de.instinct.engine.FleetEngine;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.menu.main.Menu;
+import de.instinct.eqfleet.menu.module.play.Play;
+import de.instinct.eqfleet.menu.module.play.PlayModel;
 
 public abstract class Driver {
 	
@@ -49,10 +53,15 @@ public abstract class Driver {
 		scheduler.schedule(() -> {
 			
 			GameModel.activeGameState = null;
+			if (PlayModel.lobbyStatus.getType().gameMode == GameMode.CONQUEST) {
+				Play.leaveLobby();
+				Menu.openModule(MenuModule.STARMAP);
+			}
 			Menu.open();
 			GameModel.active = false;
 			
-		}, 5000, TimeUnit.MILLISECONDS);
+			
+		}, 3000, TimeUnit.MILLISECONDS);
 	}
 	
 	public abstract void finish();

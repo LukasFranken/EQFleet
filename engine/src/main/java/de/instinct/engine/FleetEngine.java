@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Queue;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import de.instinct.engine.combat.CombatProcessor;
@@ -45,7 +44,7 @@ public class FleetEngine {
 	public GameState initializeGameState(GameStateInitialization initialization) {
 		GameState state = new GameState();
 		state.orders = new ArrayList<>();
-		state.gameUUID = UUID.randomUUID().toString();
+		state.gameUUID = initialization.gameUUID;
 		state.players = initializePlayers(initialization.players);
 		state.connectionStati = generateConnectionStati(initialization.players);
 		state.planets = generateInitialPlanets(initialization);

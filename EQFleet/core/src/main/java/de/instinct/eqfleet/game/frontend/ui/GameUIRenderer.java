@@ -27,6 +27,7 @@ import de.instinct.eqfleet.game.frontend.ui.model.GameUIElement;
 import de.instinct.eqfleet.game.frontend.ui.model.UIBounds;
 import de.instinct.eqlibgdxutils.rendering.particle.ParticleRenderer;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
+import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.ComplexShapeRenderer;
 
@@ -401,6 +402,7 @@ public class GameUIRenderer {
 		}
 		Label messageLabel = new Label(message);
 		messageLabel.setColor(Color.WHITE);
+		messageLabel.setType(FontType.LARGE);
 		messageLabel.setBounds(new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		messageLabel.render();
 	}

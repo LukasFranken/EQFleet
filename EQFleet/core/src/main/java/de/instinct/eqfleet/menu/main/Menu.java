@@ -16,6 +16,7 @@ import de.instinct.api.core.API;
 import de.instinct.api.core.modules.MenuModule;
 import de.instinct.api.meta.dto.modules.ModuleInfoRequest;
 import de.instinct.eqfleet.game.Game;
+import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.module.construction.Construction;
@@ -37,11 +38,14 @@ import de.instinct.eqfleet.menu.module.shop.Shop;
 import de.instinct.eqfleet.menu.module.shop.ShopRenderer;
 import de.instinct.eqfleet.menu.module.starmap.Starmap;
 import de.instinct.eqfleet.menu.module.starmap.StarmapRenderer;
+import de.instinct.eqfleet.menu.postgame.PostGameModel;
+import de.instinct.eqfleet.menu.postgame.PostGameRenderer;
 import de.instinct.eqfleet.net.WebManager;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
 
 public class Menu {
 	
+	private static PostGameRenderer postGameRenderer;
 	private static MenuRenderer menuRenderer;
 	
 	private static Map<MenuModule, BaseModule> modules;
@@ -54,6 +58,7 @@ public class Menu {
 	private static Queue<MenuModule> reloadRequired;
 	
 	public static void init() {
+		postGameRenderer = new PostGameRenderer();
 		menuRenderer = new MenuRenderer();
 		reloadRequired = new ConcurrentLinkedQueue<>();
 		
@@ -97,6 +102,18 @@ public class Menu {
 		loadModules();
 	}
 	
+	public static void loadPostGame() {
+		WebManager.enqueue(
+			    () -> API.matchmaking().result(GameModel.activeGameState.gameUUID),
+			    result -> {
+			    	PostGameModel.reward = result;
+			    	Gdx.app.postRunnable(() -> {
+			    		postGameRenderer.reload();
+			    	});
+			    }
+		);
+	}
+	
 	public static void open() {
 		Game.dispose();
 		MenuModel.active = true;
@@ -104,7 +121,7 @@ public class Menu {
 		queue(LoadResourcesMessage.builder().build());
 		queue(ReloadShipyardMessage.builder().build());
 	}
-	
+
 	public static void close() {
 		MenuModel.active = false;
 		menuRenderer.close();
@@ -129,10 +146,14 @@ public class Menu {
 			renderers.get(reloadRequired.poll()).reload();
 		}
 		if (MenuModel.active) {
-			if (MenuModel.activeModule != null) {
-				renderers.get(MenuModel.activeModule).render();
+			if (PostGameModel.reward != null) {
+				postGameRenderer.render();
+			} else {
+				if (MenuModel.activeModule != null) {
+					renderers.get(MenuModel.activeModule).render();
+				}
+				menuRenderer.render();
 			}
-			menuRenderer.render();
 		}
 	}
 	
@@ -157,9 +178,9 @@ public class Menu {
 	public static void loadModules() {
 		WebManager.enqueue(
 			    () -> API.meta().modules(API.authKey),
-			    result -> {
-			    	if (result != null) {
-			    		MenuModel.unlockedModules = result;
+			    modulesResult -> {
+			    	if (modulesResult != null) {
+			    		MenuModel.unlockedModules = modulesResult;
 			    		List<MenuModule> lockedModules = new ArrayList<>();
 			    		for (MenuModule module : MenuModule.values()) {
 			    			if (!MenuModel.unlockedModules.getEnabledModules().contains(module)) {
@@ -170,9 +191,9 @@ public class Menu {
 			    			    () -> API.meta().moduleInfo(ModuleInfoRequest.builder()
 			    			    		.requestedModuleInfos(lockedModules)
 			    			    		.build()),
-			    			    result2 -> {
-			    			    	if (result2 != null) {
-			    			    		MenuModel.lockedModules = result2;
+			    			    moduleInfoResult -> {
+			    			    	if (moduleInfoResult != null) {
+			    			    		MenuModel.lockedModules = moduleInfoResult;
 			    			    		reload();
 			    					} else {
 			    						Logger.log("Menu", "ModuleData couldn't be loaded!");
@@ -201,6 +222,7 @@ public class Menu {
 	}
 
 	public static void dispose() {
+		postGameRenderer.dispose();
 		if (scheduler != null) {
 			scheduler.shutdownNow();
 		}

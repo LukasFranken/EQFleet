@@ -1,6 +1,5 @@
 package de.instinct.eqfleet.menu.module.profile;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.api.meta.dto.NameRegisterResponseCode;
@@ -8,6 +7,7 @@ import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.main.MenuModel;
 import de.instinct.eqfleet.menu.module.profile.message.RegisterMessage;
+import de.instinct.eqfleet.menu.module.profile.model.ExperienceSection;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.LimitedInputField;
@@ -15,10 +15,7 @@ import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.model.T
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.model.inputfilter.UsernameTexfieldInputFilter;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.HorizontalAlignment;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
-import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.subtypes.PlainRectangularLoadingBar;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.ComplexShapeType;
 
 public class ProfileRenderer extends BaseModuleRenderer {
 	
@@ -29,12 +26,6 @@ public class ProfileRenderer extends BaseModuleRenderer {
 	
 	private Label usernameLabel;
 	
-	private Label currentRankNameLabel;
-	private Label nextRankNameLabel;
-	private Label currentRankEXPLabel;
-	private Label nextRankEXPLabel;
-	private PlainRectangularLoadingBar expBar;
-	
 	private float margin = 20f;
 	
 	private Rectangle registrationLabelBounds;
@@ -43,9 +34,8 @@ public class ProfileRenderer extends BaseModuleRenderer {
 	private Rectangle registrationResponseLabelBounds;
 	
 	private Rectangle usernameLabelBounds;
-	private Rectangle nameLabelBounds;
-	private Rectangle expBarBounds;
-	private Rectangle expLabelBounds;
+	
+	private ExperienceSection experienceSection;
 
 	public ProfileRenderer() {
 		registrationLabel = new Label("Choose a unique name");
@@ -85,25 +75,7 @@ public class ProfileRenderer extends BaseModuleRenderer {
 		usernameLabel.setType(FontType.LARGE);
 		usernameLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
 		
-		currentRankNameLabel = new Label("");
-		currentRankNameLabel.setColor(Color.LIGHT_GRAY);
-		currentRankNameLabel.setType(FontType.SMALL);
-		currentRankNameLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
-		nextRankNameLabel = new Label("");
-		nextRankNameLabel.setType(FontType.SMALL);
-		nextRankNameLabel.setColor(Color.LIGHT_GRAY);
-		nextRankNameLabel.setHorizontalAlignment(HorizontalAlignment.RIGHT);
-		
-		expBar = new PlainRectangularLoadingBar();
-		expBar.setBar(TextureManager.createTexture(Color.BLUE));
-		expBar.setBackground(TextureManager.createTexture(new Color(0f, 0f, 0f, 0f)));
-		
-		currentRankEXPLabel = new Label("");
-		currentRankEXPLabel.setColor(Color.BLUE);
-		currentRankEXPLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
-		nextRankEXPLabel = new Label("");
-		nextRankEXPLabel.setColor(Color.BLUE);
-		nextRankEXPLabel.setHorizontalAlignment(HorizontalAlignment.RIGHT);
+		experienceSection = new ExperienceSection();
 	}
 	
 	private void register(String content) {
@@ -131,10 +103,7 @@ public class ProfileRenderer extends BaseModuleRenderer {
 		registrationResponseLabelBounds = new Rectangle(MenuModel.moduleBounds.x, ((MenuModel.moduleBounds.y + MenuModel.moduleBounds.height) / 2) - 50, MenuModel.moduleBounds.width, 30);
 		
 		usernameLabelBounds = new Rectangle(MenuModel.moduleBounds.x + margin, MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - margin - 30, MenuModel.moduleBounds.width - (margin * 2), 30);
-		nameLabelBounds = new Rectangle(usernameLabelBounds.x + 45, usernameLabelBounds.y - 40 - margin, MenuModel.moduleBounds.width - (margin * 2) - 90, 40);
-		expBarBounds = new Rectangle(usernameLabelBounds.x, nameLabelBounds.y - 10 - margin, usernameLabelBounds.width, 20);
-		expLabelBounds = new Rectangle(expBarBounds.x, expBarBounds.y - 10 - margin, expBarBounds.width, 20);
-		TextureManager.createShapeTexture("profile_expOutline", ComplexShapeType.ROUNDED_RECTANGLE, expBarBounds, Color.BLUE);
+		experienceSection.init(MenuModel.moduleBounds.x + margin, usernameLabelBounds.y - experienceSection.getActualHeight() - margin, MenuModel.moduleBounds.width - (margin * 2));
 	}
 
 	private void renderRegistration() {
@@ -162,37 +131,7 @@ public class ProfileRenderer extends BaseModuleRenderer {
 		usernameLabel.setBounds(usernameLabelBounds);
 		usernameLabel.render();
 		
-		currentRankNameLabel.setBounds(nameLabelBounds);
-		currentRankNameLabel.setText(formatRankLabel(ProfileModel.profile.getRank().getLabel()));
-		currentRankNameLabel.render();
-		nextRankNameLabel.setBounds(nameLabelBounds);
-		nextRankNameLabel.setText(formatRankLabel(ProfileModel.profile.getRank().getNextRank().getLabel()));
-		nextRankNameLabel.render();
-		
-		TextureManager.draw(TextureManager.getTexture("ui/image/rank", ProfileModel.profile.getRank().getFileName()), new Rectangle(MenuModel.moduleBounds.x + margin, nameLabelBounds.y, 40, 40));
-		TextureManager.draw(TextureManager.getTexture("ui/image/rank", ProfileModel.profile.getRank().getNextRank().getFileName()), new Rectangle(MenuModel.moduleBounds.x + MenuModel.moduleBounds.width - margin - 40f, nameLabelBounds.y, 40, 40));
-		
-		expBar.setBounds(expBarBounds);
-		expBar.setMaxValue(ProfileModel.profile.getRank().getNextRequiredExp() - ProfileModel.profile.getRank().getRequiredExp());
-		expBar.setCurrentValue(ProfileModel.profile.getCurrentExp() - ProfileModel.profile.getRank().getRequiredExp());
-		expBar.setCustomDescriptor(ProfileModel.profile.getCurrentExp() + "");
-		expBar.render();
-		TextureManager.draw("profile_expOutline");
-		
-		currentRankEXPLabel.setBounds(expLabelBounds);
-		currentRankEXPLabel.setText(ProfileModel.profile.getRank().getRequiredExp() + "");
-		currentRankEXPLabel.render();
-		nextRankEXPLabel.setBounds(expLabelBounds);
-		nextRankEXPLabel.setText(ProfileModel.profile.getRank().getNextRequiredExp() + "");
-		nextRankEXPLabel.render();
-	}
-
-	private String formatRankLabel(String label) {
-		int maxChars = 12;
-		if (label.length() > maxChars) {
-			return label.replaceFirst(" ", "\n");
-		}
-		return label;
+		experienceSection.render();
 	}
 
 	@Override

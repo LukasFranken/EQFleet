@@ -9,6 +9,7 @@ import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ImageButton;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
+import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.popup.PopupRenderer;
 import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
@@ -75,6 +76,8 @@ public class DefaultButtonFactory {
 		colorButton.setHoverColor(new Color(SkinManager.darkerSkinColor));
 		colorButton.setDownColor(new Color(SkinManager.lighterSkinColor));
 		colorButton.setAction(clickAction);
+		colorButton.setFixedHeight(30);
+		colorButton.setFixedWidth(FontUtil.getFontTextWidthPx(label) + 20f);
 		
 		return colorButton;
 	}

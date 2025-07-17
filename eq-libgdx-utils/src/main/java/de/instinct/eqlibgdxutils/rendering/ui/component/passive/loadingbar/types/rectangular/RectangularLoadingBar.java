@@ -18,7 +18,7 @@ public abstract class RectangularLoadingBar extends LoadingBar {
 	public RectangularLoadingBar() {
 		super();
 		Border defaultBorder = new Border();
-		defaultBorder.setColor(Color.BLACK);
+		defaultBorder.setColor(new Color(Color.BLACK));
 		defaultBorder.setSize(2);
 		setBorder(defaultBorder);
 		background = TextureManager.createTexture(Color.GRAY);

@@ -164,8 +164,8 @@ public class StarmapRenderer extends BaseModuleRenderer {
 				galaxyNameLabel.setType(FontType.SMALL);
 				galaxyNameLabel.setFixedWidth(200f);
 				galaxyNameLabel.setFixedHeight(20f);
-				galaxyNameLabel.setColor(Color.WHITE);
-				galaxyNameLabel.setPosition(galaxy.getScreenPos().x - (galaxyNameLabel.getFixedWidth() / 2), galaxy.getScreenPos().y + 20f);
+				galaxyNameLabel.setColor(Color.GRAY);
+				galaxyNameLabel.setPosition(galaxy.getScreenPos().x - (galaxyNameLabel.getFixedWidth() / 2), galaxy.getScreenPos().y + 30f);
 				galaxyNameLabel.render();
 				
 				Label galaxyLevelLabel = new Label("Threat: " + getMinThreatLevel(galaxy) + "-" + getMaxThreatLevel(galaxy));
@@ -173,8 +173,8 @@ public class StarmapRenderer extends BaseModuleRenderer {
 				galaxyLevelLabel.setType(FontType.SMALL);
 				galaxyLevelLabel.setFixedWidth(200f);
 				galaxyLevelLabel.setFixedHeight(20f);
-				galaxyLevelLabel.setColor(Color.WHITE);
-				galaxyLevelLabel.setPosition(galaxy.getScreenPos().x - (galaxyNameLabel.getFixedWidth() / 2), galaxy.getScreenPos().y - 40f);
+				galaxyLevelLabel.setColor(Color.GRAY);
+				galaxyLevelLabel.setPosition(galaxy.getScreenPos().x - (galaxyNameLabel.getFixedWidth() / 2), galaxy.getScreenPos().y - 50f);
 				galaxyLevelLabel.render();
 			}
 		}
