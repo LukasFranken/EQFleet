@@ -19,7 +19,7 @@ GENERAL:
 
 - module icons with small name under icon
 
-- client doesnt seem to close on mac
+- client doesnt seem to close on mac sporadically
 
 GAME:
 - try different cam angles

@@ -34,7 +34,11 @@ public class ExperienceSection extends Component {
 	
 	private String uuid;
 	
+	private boolean rankImagesEnabled;
+	
 	public ExperienceSection() {
+		rankImagesEnabled = true;
+		
 		uuid = UUID.randomUUID().toString();
 		
 		currentRankNameLabel = new Label("");
@@ -60,8 +64,13 @@ public class ExperienceSection extends Component {
 	
 	public void init(float x, float y, float width) {
 		super.setBounds(new Rectangle(x, y, width, calculateHeight()));
-		nameLabelBounds = new Rectangle(getBounds().x + 45, getBounds().y + getBounds().height - 40, getBounds().width - 90, 40);
-		expBarBounds = new Rectangle(getBounds().x, nameLabelBounds.y - 10 - margin, getBounds().width, 20);
+		if (rankImagesEnabled) {
+			nameLabelBounds = new Rectangle(getBounds().x + 45, getBounds().y + getBounds().height - 40, getBounds().width - 90, 40);
+		} else {
+			nameLabelBounds = new Rectangle(getBounds().x, getBounds().y + getBounds().height - 20, getBounds().width, 20);
+		}
+		
+		expBarBounds = new Rectangle(getBounds().x, nameLabelBounds.y - margin - 10, getBounds().width, 20);
 		expLabelBounds = new Rectangle(expBarBounds.x, expBarBounds.y - 10 - margin, getBounds().width, 20);
 		TextureManager.createShapeTexture("profile_expOutline" + uuid, ComplexShapeType.ROUNDED_RECTANGLE, expBarBounds, Color.BLUE);
 	}
@@ -72,7 +81,11 @@ public class ExperienceSection extends Component {
 	
 	@Override
 	protected float calculateHeight() {
-		return 40 + 20 + 20 + (margin * 2);
+		if (rankImagesEnabled) {
+			return 40 + 20 + 20 + (margin * 2);
+		} else {
+			return 20 + 20 + 20 + (margin * 2);
+		}
 	}
 
 	@Override
@@ -93,9 +106,10 @@ public class ExperienceSection extends Component {
 		nextRankNameLabel.setBounds(nameLabelBounds);
 		nextRankNameLabel.setText(formatRankLabel(ProfileModel.profile.getRank().getNextRank().getLabel()));
 		nextRankNameLabel.render();
-		
-		TextureManager.draw(TextureManager.getTexture("ui/image/rank", ProfileModel.profile.getRank().getFileName()), new Rectangle(getBounds().x, nameLabelBounds.y, 40, 40));
-		TextureManager.draw(TextureManager.getTexture("ui/image/rank", ProfileModel.profile.getRank().getNextRank().getFileName()), new Rectangle(getBounds().x + getBounds().width - 40f, nameLabelBounds.y, 40, 40));
+		if (rankImagesEnabled) {
+			TextureManager.draw(TextureManager.getTexture("ui/image/rank", ProfileModel.profile.getRank().getFileName()), new Rectangle(getBounds().x, nameLabelBounds.y, 40, 40));
+			TextureManager.draw(TextureManager.getTexture("ui/image/rank", ProfileModel.profile.getRank().getNextRank().getFileName()), new Rectangle(getBounds().x + getBounds().width - 40f, nameLabelBounds.y, 40, 40));
+		}
 		
 		expBar.setBounds(expBarBounds);
 		expBar.setMaxValue(ProfileModel.profile.getRank().getNextRequiredExp() - ProfileModel.profile.getRank().getRequiredExp());

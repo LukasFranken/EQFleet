@@ -127,4 +127,14 @@ public class TextureManager {
 		}
 	}
 
+	public static void dispose(Texture texture) {
+		for (String key : textures.keySet()) {
+			if (textures.get(key) == texture) {
+				texture.dispose();
+				textures.remove(key);
+				break;
+			}
+		}
+	}
+
 }

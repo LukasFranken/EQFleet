@@ -42,7 +42,7 @@ public class Image extends Component {
 
 	@Override
 	public void dispose() {
-		texture.dispose();
+		TextureManager.dispose(texture);
 	}
 
 }

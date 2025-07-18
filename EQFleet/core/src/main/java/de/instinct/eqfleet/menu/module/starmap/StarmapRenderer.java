@@ -23,6 +23,7 @@ import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
 import de.instinct.eqfleet.menu.common.components.DefaultLabelFactory;
 import de.instinct.eqfleet.menu.main.MenuModel;
+import de.instinct.eqfleet.menu.module.starmap.model.Galaxy;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.InputUtil;
 import de.instinct.eqlibgdxutils.MathUtil;
@@ -66,7 +67,7 @@ public class StarmapRenderer extends BaseModuleRenderer {
 
 	@Override
 	public void render() {
-		if (StarmapModel.sector != null) {
+		if (StarmapModel.starmapData != null) {
 			ViewportUtil.apply(MenuModel.moduleBounds);
 			gridRenderer.drawGrid(camera);
 			updateZoom();
@@ -259,6 +260,7 @@ public class StarmapRenderer extends BaseModuleRenderer {
 			}
 			
 		});
+		zoomIn = false;
 		backButton.setFixedHeight(30);
 		backButton.setFixedWidth(100);
 		backButton.setPosition(
@@ -281,8 +283,8 @@ public class StarmapRenderer extends BaseModuleRenderer {
 		galaxyZoomElapsed = 0f;
 		galaxyZoomFactor = 0f;
 		galaxies = new ArrayList<>();
-		if (StarmapModel.sector != null) {
-			for (GalaxyData galaxy : StarmapModel.sector.getGalaxies()) {
+		if (StarmapModel.starmapData != null) {
+			for (GalaxyData galaxy : StarmapModel.starmapData.getSectorData().getGalaxies()) {
 				galaxies.add(createGalaxy(galaxy));
 			}
 		}

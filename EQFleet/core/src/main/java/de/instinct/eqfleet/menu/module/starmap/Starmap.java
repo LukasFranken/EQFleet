@@ -40,13 +40,6 @@ public class Starmap extends BaseModule {
 	public boolean process(ModuleMessage message) {
 		if (message instanceof ReloadStarmapMessage) {
 			WebManager.enqueue(
-					() -> API.starmap().sector(),
-				    result -> {
-				    	StarmapModel.sector = result;
-				    	super.requireUIReload();
-				    }
-			);
-			WebManager.enqueue(
 					() -> API.starmap().data(),
 				    result -> {
 				    	StarmapModel.starmapData = result;

@@ -11,5 +11,6 @@ public class PostGameElement {
 	private UIElement uiElement;
 	private float duration;
 	private float elapsed;
+	private AnimationAction animationAction;
 
 }

@@ -14,6 +14,7 @@ import com.badlogic.gdx.Gdx;
 
 import de.instinct.api.core.API;
 import de.instinct.api.core.modules.MenuModule;
+import de.instinct.api.matchmaking.model.GameMode;
 import de.instinct.api.meta.dto.modules.ModuleInfoRequest;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.GameModel;
@@ -25,6 +26,7 @@ import de.instinct.eqfleet.menu.module.inventory.Inventory;
 import de.instinct.eqfleet.menu.module.inventory.InventoryRenderer;
 import de.instinct.eqfleet.menu.module.inventory.message.LoadResourcesMessage;
 import de.instinct.eqfleet.menu.module.play.Play;
+import de.instinct.eqfleet.menu.module.play.PlayModel;
 import de.instinct.eqfleet.menu.module.play.PlayRenderer;
 import de.instinct.eqfleet.menu.module.profile.Profile;
 import de.instinct.eqfleet.menu.module.profile.ProfileRenderer;
@@ -38,6 +40,7 @@ import de.instinct.eqfleet.menu.module.shop.Shop;
 import de.instinct.eqfleet.menu.module.shop.ShopRenderer;
 import de.instinct.eqfleet.menu.module.starmap.Starmap;
 import de.instinct.eqfleet.menu.module.starmap.StarmapRenderer;
+import de.instinct.eqfleet.menu.module.starmap.message.ReloadStarmapMessage;
 import de.instinct.eqfleet.menu.postgame.PostGameModel;
 import de.instinct.eqfleet.menu.postgame.PostGameRenderer;
 import de.instinct.eqfleet.net.WebManager;
@@ -103,6 +106,9 @@ public class Menu {
 	}
 	
 	public static void loadPostGame() {
+		if (PlayModel.lobbyStatus.getType().gameMode == GameMode.CONQUEST) {
+			queue(ReloadStarmapMessage.builder().build());
+		}
 		WebManager.enqueue(
 			    () -> API.matchmaking().result(GameModel.activeGameState.gameUUID),
 			    result -> {
@@ -117,9 +123,11 @@ public class Menu {
 	public static void open() {
 		Game.dispose();
 		MenuModel.active = true;
-		queue(LoadProfileMessage.builder().build());
-		queue(LoadResourcesMessage.builder().build());
 		queue(ReloadShipyardMessage.builder().build());
+		if (PostGameModel.reward == null) {
+			queue(LoadProfileMessage.builder().build());
+			queue(LoadResourcesMessage.builder().build());
+		}
 	}
 
 	public static void close() {

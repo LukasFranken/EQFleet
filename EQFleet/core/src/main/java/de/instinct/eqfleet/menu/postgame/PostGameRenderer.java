@@ -9,15 +9,26 @@ import de.instinct.api.meta.dto.ResourceAmount;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
 import de.instinct.eqfleet.menu.common.components.DefaultLabelFactory;
+import de.instinct.eqfleet.menu.main.Menu;
+import de.instinct.eqfleet.menu.module.inventory.message.LoadResourcesMessage;
+import de.instinct.eqfleet.menu.module.profile.ProfileModel;
+import de.instinct.eqfleet.menu.module.profile.message.LoadProfileMessage;
 import de.instinct.eqfleet.menu.module.profile.model.ExperienceSection;
+import de.instinct.eqfleet.menu.postgame.model.AnimationAction;
 import de.instinct.eqfleet.menu.postgame.model.PostGameElement;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
+import de.instinct.eqlibgdxutils.MathUtil;
 import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
+import de.instinct.eqlibgdxutils.rendering.ui.component.passive.image.Image;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
+import de.instinct.eqlibgdxutils.rendering.ui.container.list.ElementList;
 import de.instinct.eqlibgdxutils.rendering.ui.container.list.ElementStack;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
+import de.instinct.eqlibgdxutils.rendering.ui.popup.Popup;
+import de.instinct.eqlibgdxutils.rendering.ui.popup.PopupRenderer;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 
 public class PostGameRenderer extends BaseModuleRenderer {
 	
@@ -27,12 +38,16 @@ public class PostGameRenderer extends BaseModuleRenderer {
 	
 	private List<PostGameElement> elements;
 	
+	private boolean halted;
+	
 	public PostGameRenderer() {
 		claimButton = DefaultButtonFactory.colorButton("Claim", new Action() {
 			
 			@Override
 			public void execute() {
 				PostGameModel.reward = null;
+				Menu.queue(LoadProfileMessage.builder().build());
+				Menu.queue(LoadResourcesMessage.builder().build());
 			}
 			
 		});
@@ -52,19 +67,25 @@ public class PostGameRenderer extends BaseModuleRenderer {
 
 	private void update() {
 		float thisFrameDelta = Gdx.graphics.getDeltaTime();
-		for (PostGameElement element : elements) {
-			if (element.getElapsed() < element.getDuration()) {
-				if (thisFrameDelta > element.getDuration() - element.getElapsed()) {
-					float difference = element.getDuration() - element.getElapsed();
-					element.setElapsed(element.getElapsed() + difference);
-					thisFrameDelta -= difference;
-				} else {
-					element.setElapsed(element.getElapsed() + thisFrameDelta);
-					thisFrameDelta = 0;
+		if (!halted) {
+			for (PostGameElement element : elements) {
+				if (element.getElapsed() < element.getDuration()) {
+					if (thisFrameDelta > element.getDuration() - element.getElapsed()) {
+						float difference = element.getDuration() - element.getElapsed();
+						element.setElapsed(element.getElapsed() + difference);
+						thisFrameDelta -= difference;
+					} else {
+						element.setElapsed(element.getElapsed() + thisFrameDelta);
+						thisFrameDelta = 0;
+					}
 				}
-			}
-			if (thisFrameDelta <= 0) {
-				break;
+				if (element.getAnimationAction() != null) {
+					float progression = element.getElapsed() / element.getDuration();
+					element.getAnimationAction().update(progression);
+				}
+				if (thisFrameDelta <= 0) {
+					break;
+				}
 			}
 		}
 	}
@@ -72,6 +93,7 @@ public class PostGameRenderer extends BaseModuleRenderer {
 	@Override
 	public void reload() {
 		if (PostGameModel.reward != null) {
+			halted = false;
 			elements = new ArrayList<>();
 			
 			elements.add(PostGameElement.builder()
@@ -89,6 +111,7 @@ public class PostGameRenderer extends BaseModuleRenderer {
 					.build());
 			
 			ExperienceSection experienceSection = new ExperienceSection();
+			experienceSection.setRankImagesEnabled(false);
 			experienceSection.init(50, Gdx.graphics.getHeight() / 2 + 50, Gdx.graphics.getWidth() - 100);
 			
 			ElementStack experienceLabels = DefaultLabelFactory.createLabelStack(
@@ -103,13 +126,60 @@ public class PostGameRenderer extends BaseModuleRenderer {
 					.build());
 			
 			elements.add(PostGameElement.builder()
-					.duration(PER_ITEM_DURATION_MS)
-					.uiElement(experienceSection)
-					.build());
-			
-			elements.add(PostGameElement.builder()
 					.duration(PER_ITEM_DURATION_MS * 3)
 					.uiElement(experienceSection)
+					.animationAction(new AnimationAction() {
+						
+						private long startExperience = ProfileModel.profile.getCurrentExp();
+						private long targetExperience = startExperience + PostGameModel.reward.getExperience();
+						
+						@Override
+						public void update(float progression) {
+							long currentExperience = (long)MathUtil.easeInOut(startExperience, targetExperience, progression);
+							ProfileModel.profile.setCurrentExp(currentExperience);
+							while (ProfileModel.profile.getRank().getNextRequiredExp() <= ProfileModel.profile.getCurrentExp()) {
+								ProfileModel.profile.setRank(ProfileModel.profile.getRank().getNextRank());
+								halted = true;
+								createRankUpPopup();
+							}
+						}
+
+						private void createRankUpPopup() {
+							ElementList rankUpElementList = new ElementList();
+							rankUpElementList.setMargin(20);
+							
+							Image newRankImage = new Image(TextureManager.getTexture("ui/image/rank", ProfileModel.profile.getRank().getFileName()));
+							newRankImage.setFixedWidth(100);
+							newRankImage.setFixedHeight(100);
+							rankUpElementList.getElements().add(newRankImage);
+							
+							Label newRankLabel = new Label(ProfileModel.profile.getRank().getLabel());
+							newRankLabel.setFixedHeight(30);
+							newRankLabel.setFixedWidth(100);
+							newRankLabel.setType(FontType.SMALL);
+							rankUpElementList.getElements().add(newRankLabel);
+							
+							ColorButton acceptButton = DefaultButtonFactory.colorButton("Accept", new Action() {
+								
+								@Override
+								public void execute() {
+									PopupRenderer.close();
+									halted = false;
+								}
+								
+							});
+							acceptButton.setFixedWidth(100);
+							acceptButton.setFixedHeight(30);
+							rankUpElementList.getElements().add(acceptButton);
+							
+							PopupRenderer.create(Popup.builder()
+									.title("Promotion")
+									.contentContainer(rankUpElementList)
+									.closeOnClickOutside(false)
+									.build());
+						}
+						
+					})
 					.build());
 			
 			int i = 0;

@@ -1,4 +1,4 @@
-package de.instinct.eqfleet.menu.module.starmap;
+package de.instinct.eqfleet.menu.module.starmap.model;
 
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.math.Vector2;
