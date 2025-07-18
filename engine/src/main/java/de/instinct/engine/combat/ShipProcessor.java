@@ -81,10 +81,10 @@ public class ShipProcessor {
 	
 	private void conquerPlanet(Planet planet, Player newOwner) {
 		planet.ownerId = newOwner.id;
-		planet.defense = newOwner.planetData.defense;
+		planet.defense = newOwner.planetData.defense.clone();
 		planet.defense.currentShield = 0;
 		planet.defense.currentArmor = newOwner.planetData.defense.armor * newOwner.planetData.percentOfArmorAfterCapture;
-		planet.weapon = newOwner.planetData.weapon;
+		planet.weapon = newOwner.planetData.weapon.clone();
 		planet.weapon.currentCooldown = planet.weapon.cooldown;
 		planet.resourceGenerationSpeed = newOwner.planetData.resourceGenerationSpeed;
 		planet.maxResourceCapacity = newOwner.planetData.maxResourceCapacity;

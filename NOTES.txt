@@ -1,4 +1,5 @@
 ALPHA RELEASE TODO:
+
 GENERAL:
  
 - externalize gamedata like ships, stats, gameloader, map etc.
@@ -26,7 +27,9 @@ GENERAL:
 - all planets reset shield on capture bug
 - support 2v2 3v3 on maps
 
-. shoprenderer 146 out of bounds
+- shoprenderer 146 out of bounds
+
+- random amazon requests crash gameserver and maybe others
 
 GAME:
 - try different cam angles
