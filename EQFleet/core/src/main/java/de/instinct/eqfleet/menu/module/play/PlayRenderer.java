@@ -147,7 +147,7 @@ public class PlayRenderer extends BaseModuleRenderer {
 			@Override
 			public void execute() {
 				Play.setType(GameType.builder()
-						.map("test")
+						.map("solar")
 						.gameMode(GameMode.KING_OF_THE_HILL)
 						.versusMode(selectedVersusMode)
 						.factionMode(selectedFactionMode)
@@ -368,7 +368,7 @@ public class PlayRenderer extends BaseModuleRenderer {
 	
 	private void renderLobbyOverview() {
 		GameType selectedGameType = PlayModel.lobbyStatus.getType();
-		Label gameTypeLabel = new Label(selectedGameType.gameMode + " - " + selectedGameType.getVersusMode() + " - " + selectedGameType.getFactionMode());
+		Label gameTypeLabel = new Label(selectedGameType.getGameMode() + " - " + selectedGameType.getVersusMode() + " - " + selectedGameType.getFactionMode());
 		gameTypeLabel.setBounds(new Rectangle(0, 550, Gdx.graphics.getWidth(), 30));
 		gameTypeLabel.render();
 		

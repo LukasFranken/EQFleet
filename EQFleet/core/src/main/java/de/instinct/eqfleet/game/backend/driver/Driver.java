@@ -53,7 +53,7 @@ public abstract class Driver {
 		scheduler.schedule(() -> {
 			
 			GameModel.activeGameState = null;
-			if (PlayModel.lobbyStatus.getType().gameMode == GameMode.CONQUEST) {
+			if (PlayModel.lobbyStatus.getType().getGameMode() == GameMode.CONQUEST) {
 				Play.leaveLobby();
 				Menu.openModule(MenuModule.STARMAP);
 			}

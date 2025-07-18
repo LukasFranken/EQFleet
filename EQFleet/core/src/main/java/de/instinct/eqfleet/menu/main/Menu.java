@@ -106,7 +106,7 @@ public class Menu {
 	}
 	
 	public static void loadPostGame() {
-		if (PlayModel.lobbyStatus.getType().gameMode == GameMode.CONQUEST) {
+		if (PlayModel.lobbyStatus.getType().getGameMode() == GameMode.CONQUEST) {
 			queue(ReloadStarmapMessage.builder().build());
 		}
 		WebManager.enqueue(

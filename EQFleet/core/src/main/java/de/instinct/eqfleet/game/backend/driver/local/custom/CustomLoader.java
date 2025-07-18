@@ -198,7 +198,7 @@ public class CustomLoader {
     	startPlanetPlayerTwo.startArmorPercent = 0.5f;
     	planets.add(startPlanetPlayerTwo);
     	
-    	if (gameType.factionMode.teamPlayerCount >= 2) {
+    	if (gameType.getFactionMode().teamPlayerCount >= 2) {
     		PlanetInitialization startPlanetPlayerThree = new PlanetInitialization();
     		startPlanetPlayerThree.ownerId = 2;
     		startPlanetPlayerThree.position = new Vector2(-200, (EngineUtility.MAP_BOUNDS.y / 2) + 300);
@@ -212,7 +212,7 @@ public class CustomLoader {
         	planets.add(startPlanetPlayerFour);
 		}
     	
-    	if (gameType.factionMode.teamPlayerCount >= 3) {
+    	if (gameType.getFactionMode().teamPlayerCount >= 3) {
     		PlanetInitialization startPlanetPlayerFive = new PlanetInitialization();
     		startPlanetPlayerFive.ownerId = 3;
     		startPlanetPlayerFive.position = new Vector2(200, -(EngineUtility.MAP_BOUNDS.y / 2) + 300);

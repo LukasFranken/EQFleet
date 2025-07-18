@@ -223,7 +223,7 @@ public class StarmapRenderer extends BaseModuleRenderer {
 		mapPreviewSection.setFixedWidth(popupWidth);
 		mapPreviewSection.setFixedHeight(popupWidth * 1.5f);
 		systemInfoElements.getElements().add(mapPreviewSection);
-		systemInfoElements.getElements().add(DefaultLabelFactory.createLabelStack("Req. AP", starsystem.getAncientPoints() + "", popupWidth));
+		systemInfoElements.getElements().add(DefaultLabelFactory.createLabelStack("Req. AP", (int)starsystem.getAncientPoints() + "", popupWidth));
 		systemInfoElements.getElements().add(DefaultLabelFactory.createLabelStack("Threat Level", starsystem.getThreatLevel() + "", popupWidth));
 		systemInfoElements.getElements().add(DefaultLabelFactory.createLabelStack("-------------", "-------------", popupWidth));
 		systemInfoElements.getElements().add(DefaultLabelFactory.createLabelStack("EXP", StringUtils.formatBigNumber(starsystem.getExperience()), popupWidth));

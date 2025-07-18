@@ -23,6 +23,11 @@ GENERAL:
 
 - make postgame seperate to menu
 
+- all planets reset shield on capture bug
+- support 2v2 3v3 on maps
+
+. shoprenderer 146 out of bounds
+
 GAME:
 - try different cam angles
  -> small cam panning anim on game start
@@ -77,7 +82,7 @@ META:
 - combat
  - conquest map
  -> available with higher rank
- -> conquering one star system after anotherj
+ -> conquering one star system after another
  -> split in sectors
  -> like gemcraft
  -> or any other conquest mode

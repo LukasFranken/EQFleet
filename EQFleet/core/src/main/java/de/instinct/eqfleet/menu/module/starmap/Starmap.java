@@ -64,7 +64,7 @@ public class Starmap extends BaseModule {
 			    	WebManager.enqueue(
 						    () -> API.matchmaking().settype(PlayModel.lobbyUUID, 
 						    		GameType.builder()
-						    		.map("conquest_" + galaxyId + "_" + starsystemId)
+						    		.map(galaxyId + "_" + starsystemId)
 						    		.factionMode(FactionMode.ONE_VS_ONE)
 						    		.gameMode(GameMode.CONQUEST)
 						    		.versusMode(VersusMode.AI)
