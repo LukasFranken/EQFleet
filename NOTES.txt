@@ -21,6 +21,8 @@ GENERAL:
 
 - client doesnt seem to close on mac sporadically
 
+- make postgame seperate to menu
+
 GAME:
 - try different cam angles
  -> small cam panning anim on game start

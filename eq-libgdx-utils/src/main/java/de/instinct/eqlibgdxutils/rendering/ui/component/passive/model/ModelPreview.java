@@ -29,6 +29,7 @@ public class ModelPreview extends Component {
     private ModelPreviewConfiguration config;
 
 	public ModelPreview(ModelPreviewConfiguration config) {
+		super();
 		this.config = config;
 
 		camera = new PerspectiveCamera(30, 1, 1);

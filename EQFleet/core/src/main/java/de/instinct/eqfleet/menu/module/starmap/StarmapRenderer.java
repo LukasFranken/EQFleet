@@ -17,6 +17,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 
+import de.instinct.api.meta.dto.ResourceAmount;
 import de.instinct.api.starmap.dto.GalaxyData;
 import de.instinct.api.starmap.dto.StarsystemData;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
@@ -24,9 +25,11 @@ import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
 import de.instinct.eqfleet.menu.common.components.DefaultLabelFactory;
 import de.instinct.eqfleet.menu.main.MenuModel;
 import de.instinct.eqfleet.menu.module.starmap.model.Galaxy;
+import de.instinct.eqfleet.menu.module.starmap.model.MapPreviewSection;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.InputUtil;
 import de.instinct.eqlibgdxutils.MathUtil;
+import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.ViewportUtil;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.grid.GridConfiguration;
@@ -214,16 +217,26 @@ public class StarmapRenderer extends BaseModuleRenderer {
 		});
 		travelButton.setFixedHeight(30);
 		travelButton.setFixedWidth(popupWidth);
-		ElementList galaxyInfoElements = new ElementList();
-		galaxyInfoElements.setMargin(10);
-		galaxyInfoElements.getElements().add(DefaultLabelFactory.createLabelStack("Threat Level:", starsystem.getThreatLevel() + "", popupWidth));
-		galaxyInfoElements.getElements().add(travelButton);
-		Popup galaxyInfoPopup = Popup.builder()
+		ElementList systemInfoElements = new ElementList();
+		systemInfoElements.setMargin(10);
+		MapPreviewSection mapPreviewSection = new MapPreviewSection(starsystem.getMapPreview());
+		mapPreviewSection.setFixedWidth(popupWidth);
+		mapPreviewSection.setFixedHeight(popupWidth * 1.5f);
+		systemInfoElements.getElements().add(mapPreviewSection);
+		systemInfoElements.getElements().add(DefaultLabelFactory.createLabelStack("Req. AP", starsystem.getAncientPoints() + "", popupWidth));
+		systemInfoElements.getElements().add(DefaultLabelFactory.createLabelStack("Threat Level", starsystem.getThreatLevel() + "", popupWidth));
+		systemInfoElements.getElements().add(DefaultLabelFactory.createLabelStack("-------------", "-------------", popupWidth));
+		systemInfoElements.getElements().add(DefaultLabelFactory.createLabelStack("EXP", StringUtils.formatBigNumber(starsystem.getExperience()), popupWidth));
+		for (ResourceAmount resource : starsystem.getResourceRewards()) {
+			systemInfoElements.getElements().add(DefaultLabelFactory.createLabelStack(resource.getType().toString(), StringUtils.formatBigNumber(resource.getAmount()), popupWidth));
+		}
+		systemInfoElements.getElements().add(travelButton);
+		Popup systemInfoPopup = Popup.builder()
 				.closeOnClickOutside(true)
 				.title(starsystem.getName())
-				.contentContainer(galaxyInfoElements)
+				.contentContainer(systemInfoElements)
 				.build();
-		PopupRenderer.create(galaxyInfoPopup);
+		PopupRenderer.create(systemInfoPopup);
 	}
 
 	private void renderGalaxyMap() {
