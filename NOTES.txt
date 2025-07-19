@@ -14,6 +14,8 @@ GENERAL:
  -> sound FX
  -> audio settings
  
+- on levelup show unlocked modules/features
+ 
 - externalize planet resource bar to circularloadingbar component
 
 - seperate sections for weapon and defense with different image
