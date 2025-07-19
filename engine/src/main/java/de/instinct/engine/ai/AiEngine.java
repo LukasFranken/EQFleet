@@ -12,11 +12,8 @@ import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.PlanetData;
 import de.instinct.engine.model.Player;
 import de.instinct.engine.model.planet.Planet;
-import de.instinct.engine.model.ship.Defense;
 import de.instinct.engine.model.ship.ShipData;
 import de.instinct.engine.model.ship.ShipType;
-import de.instinct.engine.model.ship.Weapon;
-import de.instinct.engine.model.ship.WeaponType;
 import de.instinct.engine.order.GameOrder;
 import de.instinct.engine.order.types.ShipMovementOrder;
 import de.instinct.engine.util.EngineUtility;
@@ -44,29 +41,16 @@ public class AiEngine {
 		aiShip.type = ShipType.FIGHTER;
 		
 		aiShip.weapon = AiStatManager.getShipWeapon(threatLevel);
-		Defense aiShipDefense = new Defense();
-		aiShipDefense.shield = 4;
-		aiShipDefense.armor = 4;
-		aiShipDefense.shieldRegenerationSpeed = 0.2f;
-		aiShip.defense = aiShipDefense;
+		aiShip.defense = AiStatManager.getShipDefense(threatLevel);
 		newAiPlayer.ships.add(aiShip);
 		
 		PlanetData aiPlanetData = new PlanetData();
 		aiPlanetData.resourceGenerationSpeed = 1;
 		aiPlanetData.maxResourceCapacity = 10;
 		aiPlanetData.percentOfArmorAfterCapture = 0.2f;
-		Weapon aiPlanetWeapon = new Weapon();
-		aiPlanetWeapon.type = WeaponType.LASER;
-		aiPlanetWeapon.damage = 3;
-		aiPlanetWeapon.range = 100f;
-		aiPlanetWeapon.cooldown = 1000;
-		aiPlanetWeapon.speed = 50f;
-		aiPlanetData.weapon = aiPlanetWeapon;
-		Defense aiPlanetDefense = new Defense();
-		aiPlanetDefense.shield = 15;
-		aiPlanetDefense.armor = 20;
-		aiPlanetDefense.shieldRegenerationSpeed = 0.5f;
-		aiPlanetData.defense = aiPlanetDefense;
+		
+		aiPlanetData.weapon = AiStatManager.getPlanetWeapon(threatLevel);
+		aiPlanetData.defense = AiStatManager.getPlanetDefense(threatLevel);
 		
 		newAiPlayer.planetData = aiPlanetData;
 		newAiPlayer.commandPointsGenerationSpeed = 0.1f;

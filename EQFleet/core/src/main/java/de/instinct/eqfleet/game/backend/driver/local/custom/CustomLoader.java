@@ -18,8 +18,8 @@ import de.instinct.api.meta.dto.LoadoutData;
 import de.instinct.api.shipyard.dto.ShipBlueprint;
 import de.instinct.api.shipyard.dto.ShipDefense;
 import de.instinct.api.shipyard.dto.ShipWeapon;
-import de.instinct.engine.ai.AiDifficulty;
 import de.instinct.engine.ai.AiEngine;
+import de.instinct.engine.ai.difficulty.AiDifficulty;
 import de.instinct.engine.initialization.GameStateInitialization;
 import de.instinct.engine.initialization.PlanetInitialization;
 import de.instinct.engine.map.GameMap;
@@ -83,7 +83,7 @@ public class CustomLoader {
 		userPlayer.teamId = 1;
 		players.add(userPlayer);
 		
-		AiPlayer aiPlayer = aiEngine.initialize(AiDifficulty.RETARDED);
+		AiPlayer aiPlayer = aiEngine.initialize(AiDifficulty.RETARDED, 1);
 		aiPlayer.id = 4;
 		aiPlayer.teamId = 2;
 		players.add(aiPlayer);

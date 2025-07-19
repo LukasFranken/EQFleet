@@ -8,8 +8,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.badlogic.gdx.math.Vector3;
 
-import de.instinct.engine.ai.AiDifficulty;
 import de.instinct.engine.ai.AiEngine;
+import de.instinct.engine.ai.difficulty.AiDifficulty;
 import de.instinct.engine.initialization.GameStateInitialization;
 import de.instinct.engine.map.GameMap;
 import de.instinct.engine.model.AiPlayer;
@@ -73,7 +73,7 @@ public class TutorialLoader {
 		player1.currentCommandPoints = player1.startCommandPoints;
 		players.add(player1);
 
-		AiPlayer aiPlayer = aiEngine.initialize(AiDifficulty.RETARDED);
+		AiPlayer aiPlayer = aiEngine.initialize(AiDifficulty.RETARDED, 1);
 		aiPlayer.id = 2;
 		aiPlayer.teamId = 2;
 		aiPlayer.ships = new ArrayList<>();
