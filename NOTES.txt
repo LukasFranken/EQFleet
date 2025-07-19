@@ -28,6 +28,8 @@ GENERAL:
 
 - random amazon requests crash gameserver and maybe others
 
+- only hand out rewards and unlock next system on victory
+
 GAME:
 - try different cam angles
  -> small cam panning anim on game start
@@ -47,6 +49,8 @@ GAME:
 - list all commands command
 
 - fix rare defense inactive after conquer bug
+
+- prevent bot from bypassing resource cost by doubleshipping
 
 META:
 - Intro rework

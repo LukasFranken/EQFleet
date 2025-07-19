@@ -55,7 +55,7 @@ public class AiStatManager {
 		float maxSpeed = 100;
 		float minSpeed = 40;
 		aiPlanetWeapon.speed = Math.min(minSpeed + minSpeed * (threatLevel/100), maxSpeed);
-		return null;
+		return aiPlanetWeapon;
 	}
 	
 	public static Defense getPlanetDefense(int threatLevel) {
