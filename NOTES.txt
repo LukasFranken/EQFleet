@@ -24,9 +24,6 @@ GENERAL:
 
 - make postgame seperate to menu
 
-- all planets reset shield on capture bug
-- support 2v2 3v3 on maps
-
 - shoprenderer 146 out of bounds
 
 - random amazon requests crash gameserver and maybe others
@@ -48,6 +45,8 @@ GAME:
 - multiple ship models
 
 - list all commands command
+
+- fix rare defense inactive after conquer bug
 
 META:
 - Intro rework

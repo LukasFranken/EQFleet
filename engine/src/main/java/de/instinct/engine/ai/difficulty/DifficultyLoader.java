@@ -1,6 +1,5 @@
 package de.instinct.engine.ai.difficulty;
 
-import de.instinct.engine.ai.AiDifficulty;
 import de.instinct.engine.model.AiPlayer;
 
 public class DifficultyLoader {
@@ -16,7 +15,5 @@ public class DifficultyLoader {
 		aiPlayer.difficulty = difficulty;
 		aiPlayer.behaviorParameters = behaviorParameters;
 	}
-	
-	
 
 }

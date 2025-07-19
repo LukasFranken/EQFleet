@@ -1,7 +1,7 @@
 package de.instinct.engine.model;
 
-import de.instinct.engine.ai.AiDifficulty;
 import de.instinct.engine.ai.difficulty.AiBehaviorParameters;
+import de.instinct.engine.ai.difficulty.AiDifficulty;
 import lombok.ToString;
 
 @ToString

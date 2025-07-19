@@ -7,8 +7,8 @@ import java.util.PriorityQueue;
 import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryo.Kryo;
 
-import de.instinct.engine.ai.AiDifficulty;
 import de.instinct.engine.ai.difficulty.AiBehaviorParameters;
+import de.instinct.engine.ai.difficulty.AiDifficulty;
 import de.instinct.engine.combat.Ship;
 import de.instinct.engine.combat.projectile.DirectionalProjectile;
 import de.instinct.engine.combat.projectile.HomingProjectile;

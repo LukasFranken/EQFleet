@@ -3,6 +3,8 @@ package de.instinct.engine.ai;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.instinct.engine.ai.difficulty.AiDifficulty;
+import de.instinct.engine.ai.difficulty.AiStatManager;
 import de.instinct.engine.ai.difficulty.DifficultyLoader;
 import de.instinct.engine.combat.Ship;
 import de.instinct.engine.model.AiPlayer;
@@ -27,7 +29,7 @@ public class AiEngine {
 		difficultyLoader = new DifficultyLoader();
 	}
 	
-	public AiPlayer initialize(AiDifficulty difficulty) {
+	public AiPlayer initialize(AiDifficulty difficulty, int threatLevel) {
 		AiPlayer newAiPlayer = new AiPlayer();
 		difficultyLoader.load(newAiPlayer, difficulty);
 		
@@ -37,15 +39,11 @@ public class AiEngine {
 		aiShip.cost = 5;
 		aiShip.commandPointsCost = 1;
 		aiShip.model = "hawk";
-		aiShip.movementSpeed = 50;
+		
+		aiShip.movementSpeed = AiStatManager.getMovementSpeed(threatLevel);
 		aiShip.type = ShipType.FIGHTER;
-		Weapon aiShipWeapon = new Weapon();
-		aiShipWeapon.type = WeaponType.LASER;
-		aiShipWeapon.damage = 4;
-		aiShipWeapon.range = 60f;
-		aiShipWeapon.cooldown = 500;
-		aiShipWeapon.speed = 100f;
-		aiShip.weapon = aiShipWeapon;
+		
+		aiShip.weapon = AiStatManager.getShipWeapon(threatLevel);
 		Defense aiShipDefense = new Defense();
 		aiShipDefense.shield = 4;
 		aiShipDefense.armor = 4;

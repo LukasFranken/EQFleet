@@ -1,4 +1,4 @@
-package de.instinct.engine.ai;
+package de.instinct.engine.ai.difficulty;
 
 public enum AiDifficulty {
 	
