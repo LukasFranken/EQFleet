@@ -41,6 +41,8 @@ import de.instinct.eqfleet.menu.module.shop.ShopRenderer;
 import de.instinct.eqfleet.menu.module.starmap.Starmap;
 import de.instinct.eqfleet.menu.module.starmap.StarmapRenderer;
 import de.instinct.eqfleet.menu.module.starmap.message.ReloadStarmapMessage;
+import de.instinct.eqfleet.menu.module.workshop.Workshop;
+import de.instinct.eqfleet.menu.module.workshop.WorkshopRenderer;
 import de.instinct.eqfleet.menu.postgame.PostGameModel;
 import de.instinct.eqfleet.menu.postgame.PostGameRenderer;
 import de.instinct.eqfleet.net.WebManager;
@@ -82,6 +84,8 @@ public class Menu {
 		renderers.put(MenuModule.SHIPYARD, new ShipyardRenderer());
 		modules.put(MenuModule.CONSTRUCTION, new Construction());
 		renderers.put(MenuModule.CONSTRUCTION, new ConstructionRenderer());
+		modules.put(MenuModule.WORKSHOP, new Workshop());
+		renderers.put(MenuModule.WORKSHOP, new WorkshopRenderer());
 		modules.put(MenuModule.SHOP, new Shop());
 		renderers.put(MenuModule.SHOP, new ShopRenderer());
 		modules.put(MenuModule.STARMAP, new Starmap());
