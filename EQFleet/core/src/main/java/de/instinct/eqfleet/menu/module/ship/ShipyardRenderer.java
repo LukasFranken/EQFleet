@@ -54,11 +54,6 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 				MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - 30,
 				MenuModel.moduleBounds.width - 40,
 				20);
-		Label hangarLabel = new Label("Hangar: " + ShipyardModel.shipyard.getOwnedShips().size() + "/" + ShipyardModel.shipyard.getSlots());
-		hangarLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
-		hangarLabel.setBounds(labelBounds);
-		hangarLabel.render();
-		
 		int active = 0;
 		for (ShipBlueprint ship : ShipyardModel.shipyard.getOwnedShips()) {
 			if (ship.isInUse()) {
@@ -66,7 +61,7 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 			}
 		}
 		Label activeLabel = new Label("Active: " + active + "/" + ShipyardModel.shipyard.getActiveShipSlots());
-		activeLabel.setHorizontalAlignment(HorizontalAlignment.RIGHT);
+		activeLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
 		activeLabel.setBounds(labelBounds);
 		activeLabel.render();
 	}
@@ -91,7 +86,7 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 		shipButtons = new ArrayList<>();
 		if (ShipyardModel.shipyard != null && ShipyardModel.shipyard.getOwnedShips() != null) {
 			for (ShipBlueprint ship : ShipyardModel.shipyard.getOwnedShips()) {
-				shipButtons.add(createShipButton(ship));
+				if (ship.isBuilt()) shipButtons.add(createShipButton(ship));
 			}
 		}
 	}
