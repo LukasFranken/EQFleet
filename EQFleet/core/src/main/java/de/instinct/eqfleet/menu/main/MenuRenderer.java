@@ -280,7 +280,7 @@ public class MenuRenderer extends BaseModuleRenderer {
 		for (Button moduleButton : tabButtons.values()) {
 			int column = i % elementsPerRow;
 			int row = 1 + ((int)i / elementsPerRow);
-			moduleButton.setPosition(menuBounds.x + margin + ((50 + margin) * column), menuBounds.y + menuBounds.height - (((moduleButton instanceof LabeledModelButton ? 70 : 60) + margin) * row));
+			moduleButton.setPosition(menuBounds.x + margin + ((50 + margin) * column), menuBounds.y + menuBounds.height - ((70 + margin) * row) + (moduleButton instanceof LabeledModelButton ? 0f : 20f));
 			moduleButton.setAlpha(alpha);
 			moduleButton.render();
 			i++;
