@@ -13,14 +13,16 @@ GENERAL:
  -> BG music
  -> sound FX
  -> audio settings
+
+- add blueprints to shop
+
+- add model preview to construction
  
 - on levelup show unlocked modules/features
  
 - externalize planet resource bar to circularloadingbar component
 
 - seperate sections for weapon and defense with different image
-
-- module icons with small name under icon
 
 - client doesnt seem to close on mac sporadically
 

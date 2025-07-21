@@ -182,18 +182,27 @@ public class PostGameRenderer extends BaseModuleRenderer {
 					})
 					.build());
 			
-			int i = 0;
-			for (ResourceAmount resource : PostGameModel.reward.getResources()) {
-				ElementStack resourceLabels = DefaultLabelFactory.createLabelStack(
-						resource.getType().toString(),
-						StringUtils.formatBigNumber(resource.getAmount()),
-						GraphicsUtil.screenBounds().width / 2);
-				resourceLabels.setPosition(GraphicsUtil.screenBounds().width / 4, (Gdx.graphics.getHeight() / 2) - 50 - (30 * i));
+			if (PostGameModel.reward.getResources().size() > 0) {
+				int i = 0;
+				for (ResourceAmount resource : PostGameModel.reward.getResources()) {
+					ElementStack resourceLabels = DefaultLabelFactory.createLabelStack(
+							resource.getType().toString(),
+							StringUtils.formatBigNumber(resource.getAmount()),
+							GraphicsUtil.screenBounds().width / 2);
+					resourceLabels.setPosition(GraphicsUtil.screenBounds().width / 4, (Gdx.graphics.getHeight() / 2) - 50 - (30 * i));
+					elements.add(PostGameElement.builder()
+							.duration(PER_ITEM_DURATION_MS)
+							.uiElement(resourceLabels)
+							.build());
+					i++;
+				}
+			} else {
+				Label noResourcesLabel = new Label("No resources gained");
+				noResourcesLabel.setPosition(GraphicsUtil.screenBounds().width / 4, (Gdx.graphics.getHeight() / 2) - 50);
 				elements.add(PostGameElement.builder()
 						.duration(PER_ITEM_DURATION_MS)
-						.uiElement(resourceLabels)
+						.uiElement(noResourcesLabel)
 						.build());
-				i++;
 			}
 			
 			claimButton.setPosition((GraphicsUtil.screenBounds().width / 2) - (claimButton.getFixedWidth() / 2), 50);

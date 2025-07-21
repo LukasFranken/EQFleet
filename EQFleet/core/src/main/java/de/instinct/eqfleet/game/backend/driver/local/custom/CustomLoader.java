@@ -6,18 +6,13 @@ import java.util.UUID;
 
 import com.badlogic.gdx.math.Vector2;
 
-import de.instinct.api.construction.dto.Infrastructure;
-import de.instinct.api.construction.dto.PlanetDefense;
-import de.instinct.api.construction.dto.PlanetTurretBlueprint;
-import de.instinct.api.construction.dto.PlanetWeapon;
+import de.instinct.api.core.API;
+import de.instinct.api.game.engine.EngineInterface;
 import de.instinct.api.matchmaking.model.FactionMode;
 import de.instinct.api.matchmaking.model.GameMode;
 import de.instinct.api.matchmaking.model.GameType;
 import de.instinct.api.matchmaking.model.VersusMode;
 import de.instinct.api.meta.dto.LoadoutData;
-import de.instinct.api.shipyard.dto.ShipBlueprint;
-import de.instinct.api.shipyard.dto.ShipDefense;
-import de.instinct.api.shipyard.dto.ShipWeapon;
 import de.instinct.engine.ai.AiEngine;
 import de.instinct.engine.ai.difficulty.AiDifficulty;
 import de.instinct.engine.initialization.GameStateInitialization;
@@ -27,8 +22,6 @@ import de.instinct.engine.model.AiPlayer;
 import de.instinct.engine.model.PlanetData;
 import de.instinct.engine.model.Player;
 import de.instinct.engine.model.ship.Defense;
-import de.instinct.engine.model.ship.ShipData;
-import de.instinct.engine.model.ship.ShipType;
 import de.instinct.engine.model.ship.Weapon;
 import de.instinct.engine.model.ship.WeaponType;
 import de.instinct.engine.util.EngineUtility;
@@ -96,83 +89,9 @@ public class CustomLoader {
 		newPlayer.commandPointsGenerationSpeed = loadout.getCommandPointsGenerationSpeed();
 		newPlayer.startCommandPoints = loadout.getStartCommandPoints();
 		newPlayer.maxCommandPoints = loadout.getMaxCommandPoints();
-		newPlayer.planetData = getPlanetData(loadout);
-		newPlayer.ships = getShips(loadout);
+		newPlayer.planetData = EngineInterface.getPlanetData(loadout.getInfrastructure());
+		newPlayer.ships = EngineInterface.getShips(loadout.getShips(), API.shipyard().shipyard());
 		return newPlayer;
-	}
-
-	private PlanetData getPlanetData(LoadoutData loadout) {
-		Infrastructure infrastructure = loadout.getInfrastructure();
-		if (loadout.getInfrastructure() != null) {
-			PlanetData planetData = new PlanetData();
-			planetData.maxResourceCapacity = infrastructure.getMaxResourceCapacity();
-			planetData.resourceGenerationSpeed = infrastructure.getResourceGenerationSpeed();
-			planetData.percentOfArmorAfterCapture = infrastructure.getPercentOfArmorAfterCapture();
-			
-			PlanetTurretBlueprint planetTurretBlueprint = null;
-			for (PlanetTurretBlueprint currentPlanetTurretBlueprint : infrastructure.getPlanetTurretBlueprints()) {
-				if (currentPlanetTurretBlueprint.isInUse()) {
-					planetTurretBlueprint = currentPlanetTurretBlueprint;
-					break;
-				}
-			}
-			planetData.defense = getDefense(planetTurretBlueprint.getPlanetDefense());
-			planetData.weapon = getWeapon(planetTurretBlueprint.getPlanetWeapon());
-			return planetData;
-		}
-		return null;
-	}
-
-	private List<ShipData> getShips(LoadoutData loadout) {
-		List<ShipData> ships = new ArrayList<>();
-		for (ShipBlueprint userShip : loadout.getShips()) {
-			ShipData shipData = new ShipData();
-			shipData.type = ShipType.valueOf(userShip.getType().toString());
-			shipData.cost = userShip.getCost();
-			shipData.model = userShip.getModel();
-			shipData.movementSpeed = userShip.getMovementSpeed();
-			shipData.commandPointsCost = userShip.getCommandPointsCost();
-			shipData.weapon = getWeapon(userShip.getWeapon());
-			shipData.defense = getDefense(userShip.getDefense());
-			ships.add(shipData);
-		}
-		return ships;
-	}
-	
-	private Defense getDefense(ShipDefense shipDefense) {
-		Defense defense = new Defense();
-		defense.armor = shipDefense.getArmor();
-		defense.shield = shipDefense.getShield();
-		defense.shieldRegenerationSpeed = shipDefense.getShieldRegenerationSpeed();
-		return defense;
-	}
-
-	private Weapon getWeapon(ShipWeapon shipWeapon) {
-		Weapon weapon = new Weapon();
-		weapon.type = WeaponType.valueOf(shipWeapon.getType().toString());
-		weapon.damage = shipWeapon.getDamage();
-		weapon.range = shipWeapon.getRange();
-		weapon.cooldown = shipWeapon.getCooldown();
-		weapon.speed = shipWeapon.getSpeed();
-		return weapon;
-	}
-
-	private Weapon getWeapon(PlanetWeapon planetWeapon) {
-		Weapon weapon = new Weapon();
-		weapon.type = WeaponType.valueOf(planetWeapon.getType().toString());
-		weapon.damage = planetWeapon.getDamage();
-		weapon.range = planetWeapon.getRange();
-		weapon.cooldown = planetWeapon.getCooldown();
-		weapon.speed = planetWeapon.getSpeed();
-		return weapon;
-	}
-
-	private Defense getDefense(PlanetDefense planetDefense) {
-		Defense defense = new Defense();
-		defense.armor = planetDefense.getArmor();
-		defense.shield = planetDefense.getShield();
-		defense.shieldRegenerationSpeed = planetDefense.getShieldRegenerationSpeed();
-		return defense;
 	}
 
 	private GameMap generateMap(GameType gameType) {

@@ -2,7 +2,7 @@ package de.instinct.eqfleet.menu.module.ship;
 
 import de.instinct.api.core.API;
 import de.instinct.api.core.modules.MenuModule;
-import de.instinct.api.shipyard.dto.ShipBlueprint;
+import de.instinct.api.shipyard.dto.PlayerShipData;
 import de.instinct.api.shipyard.dto.UnuseShipResponseCode;
 import de.instinct.api.shipyard.dto.UseShipResponseCode;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
@@ -45,6 +45,13 @@ public class Shipyard extends BaseModule {
 			WebManager.enqueue(
 					() -> API.shipyard().data(API.authKey),
 				    result -> {
+				    	ShipyardModel.playerShipyard = result;
+				    	super.requireUIReload();
+				    }
+			);
+			WebManager.enqueue(
+					() -> API.shipyard().shipyard(),
+				    result -> {
 				    	ShipyardModel.shipyard = result;
 				    	super.requireUIReload();
 				    }
@@ -80,7 +87,7 @@ public class Shipyard extends BaseModule {
 
 	public static boolean hasActiveShip() {
 		boolean hasActiveShip = false;
-		for (ShipBlueprint ship : ShipyardModel.shipyard.getOwnedShips()) {
+		for (PlayerShipData ship : ShipyardModel.playerShipyard.getShips()) {
 			if (ship.isInUse()) {
 				hasActiveShip = true;
 				break;

@@ -11,15 +11,21 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 
 import de.instinct.api.meta.dto.ResourceAmount;
+import de.instinct.api.shipyard.dto.PlayerShipData;
 import de.instinct.api.shipyard.dto.ShipBlueprint;
+import de.instinct.api.shipyard.dto.ShipBuildResponse;
+import de.instinct.api.shipyard.dto.ShipLevel;
+import de.instinct.api.shipyard.dto.ShipStatChange;
+import de.instinct.api.shipyard.dto.ShipUpgradeResponse;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
 import de.instinct.eqfleet.menu.common.components.DefaultLabelFactory;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.main.MenuModel;
 import de.instinct.eqfleet.menu.module.ship.ShipyardModel;
-import de.instinct.eqfleet.menu.module.ship.message.UnuseShipMessage;
-import de.instinct.eqfleet.menu.module.ship.message.UseShipMessage;
+import de.instinct.eqfleet.menu.module.workshop.message.BuildShipMessage;
+import de.instinct.eqfleet.menu.module.workshop.message.UpgradeShipMessage;
+import de.instinct.eqfleet.menu.module.workshop.model.BundledShipData;
 import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.model.ModelLoader;
@@ -38,7 +44,7 @@ public class WorkshopRenderer extends BaseModuleRenderer {
 	
 	private List<ColorButton> shipButtons;
 	
-	private final float popupWidth = 200f;
+	private final float popupWidth = 250f;
 
 	@Override
 	public void render() {
@@ -56,7 +62,7 @@ public class WorkshopRenderer extends BaseModuleRenderer {
 				MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - 30,
 				MenuModel.moduleBounds.width - 40,
 				20);
-		Label spaceLabel = new Label("Space: " + ShipyardModel.shipyard.getOwnedShips().size() + "/" + ShipyardModel.shipyard.getSlots());
+		Label spaceLabel = new Label("Space: " + ShipyardModel.playerShipyard.getShips().size() + "/" + ShipyardModel.playerShipyard.getSlots());
 		spaceLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
 		spaceLabel.setBounds(labelBounds);
 		spaceLabel.render();
@@ -76,27 +82,66 @@ public class WorkshopRenderer extends BaseModuleRenderer {
 			i++;
 		}
 	}
+
+	@Override
+	public void reload() {
+		createShipButtons();
+		checkForResponses();
+	}
 	
-	private ColorButton createShipButton(ShipBlueprint ship) {
-		ColorButton shipButton = DefaultButtonFactory.colorButton(ship.getModel().substring(0, 3), new Action() {
+	private void checkForResponses() {
+		if (WorkshopModel.shipBuildResponse != null) {
+			if (WorkshopModel.shipBuildResponse != ShipBuildResponse.SUCCESS) PopupRenderer.createMessageDialog("Ship build failed", WorkshopModel.shipBuildResponse.toString().replace("_", " "));
+			WorkshopModel.shipBuildResponse = null;
+		}
+		if (WorkshopModel.shipUpgradeResponse != null) {
+			if (WorkshopModel.shipUpgradeResponse != ShipUpgradeResponse.SUCCESS) PopupRenderer.createMessageDialog("Ship upgrade failed", WorkshopModel.shipUpgradeResponse.toString().replace("_", " "));
+			WorkshopModel.shipUpgradeResponse = null;
+		}
+	}
+
+	private void createShipButtons() {
+		shipButtons = new ArrayList<>();
+		if (ShipyardModel.shipyard != null && ShipyardModel.playerShipyard != null) {
+			for (PlayerShipData playerShip : ShipyardModel.playerShipyard.getShips()) {
+				BundledShipData bundledShipData = BundledShipData.builder()
+						.playerShipData(playerShip)
+						.blueprint(getBlueprint(playerShip.getShipId()))
+						.build();
+				if (bundledShipData.getBlueprint().getLevels().size() > playerShip.getLevel()) shipButtons.add(createShipButton(bundledShipData));
+			}
+		}
+	}
+	
+	private ShipBlueprint getBlueprint(int shipId) {
+		for (ShipBlueprint shipBlueprint : ShipyardModel.shipyard.getShipBlueprints()) {
+			if (shipBlueprint.getId() == shipId) {
+				return shipBlueprint;
+			}
+		}
+		return null;
+	}
+
+	private ColorButton createShipButton(BundledShipData bundledShipData) {
+		ColorButton shipButton = DefaultButtonFactory.colorButton(bundledShipData.getBlueprint().getModel().substring(0, 3), new Action() {
 			
 			@Override
 			public void execute() {
-				if (ship.isBuilt()) {
-					createShipUpgradePopup(ship);
+				if (bundledShipData.getPlayerShipData().isBuilt()) {
+					createShipUpgradePopup(bundledShipData);
 				} else {
-					createShipBuildPopup(ship);
+					createShipBuildPopup(bundledShipData);
 				}
 				
 			}
 			
 		});
 		shipButton.setFixedWidth(50);
-		shipButton.getBorder().setColor(ship.isInUse() ? Color.GREEN : SkinManager.skinColor);
+		shipButton.getBorder().setColor(bundledShipData.getPlayerShipData().isInUse() ? Color.GREEN : SkinManager.skinColor);
 		return shipButton;
 	}
 	
-	private void createShipUpgradePopup(ShipBlueprint ship) {
+	private void createShipUpgradePopup(BundledShipData bundledShipData) {
 		ModelInstance shipModel = ModelLoader.instanciate("ship");
         for (Material material : shipModel.materials) {
             material.set(ColorAttribute.createDiffuse(SkinManager.darkestSkinColor));
@@ -117,52 +162,46 @@ public class WorkshopRenderer extends BaseModuleRenderer {
 		ElementList popupContent = new ElementList();
 		popupContent.setMargin(10f);
 		popupContent.getElements().add(shipModelPreview);
-		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("TYPE", ship.getType().toString(), popupWidth));
-		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("COST", ship.getCost() + "", popupWidth));
-		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("CP COST", ship.getCommandPointsCost() + "", popupWidth));
-		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("SPEED", StringUtils.format(ship.getMovementSpeed(), 0) + "", popupWidth));
-		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("--------", "--------", popupWidth));
-		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("WEAPON", ship.getWeapon().getType().toString(), popupWidth));
-		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("DAMAGE", StringUtils.format(ship.getWeapon().getDamage(), 0), popupWidth));
-		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("RANGE", StringUtils.format(ship.getWeapon().getRange(), 0), popupWidth));
-		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("COOLDOWN", StringUtils.format(ship.getWeapon().getCooldown()/1000f, 1) + "s", popupWidth));
-		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("SPEED", StringUtils.format(ship.getWeapon().getSpeed(), 0), popupWidth));
-		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("--------", "--------", popupWidth));
-		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("DEFENSE", "", popupWidth));
-		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("ARMOR", StringUtils.format(ship.getDefense().getArmor(), 0), popupWidth));
-		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("SHIELD", StringUtils.format(ship.getDefense().getShield(), 0), popupWidth));
-		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("SHIELD/SEC", StringUtils.format(ship.getDefense().getShieldRegenerationSpeed(), 1), popupWidth));
 		
-		ColorButton useButton = DefaultButtonFactory.colorButton(ship.isInUse() ? "Unuse" : "Use", new Action() {
+		int currentLevel = bundledShipData.getPlayerShipData().getLevel();
+		ShipLevel level = bundledShipData.getBlueprint().getLevels().get(currentLevel);
+		if (level != null) {
+			popupContent.getElements().add(DefaultLabelFactory.createLabelStack("Lv. " + currentLevel, "->      Lv. " + (currentLevel + 1), popupWidth));
+			popupContent.getElements().add(DefaultLabelFactory.createLabelStack(" ", " ", popupWidth));
+			popupContent.getElements().add(DefaultLabelFactory.createLabelStack("EFFECTS", "----------", popupWidth));
+			for (ShipStatChange statChange : level.getStatEffects()) {
+				popupContent.getElements().add(DefaultLabelFactory.createLabelStack(statChange.getStat().getLabel(), (statChange.getValue() > 0 ? "+" : "") + statChange.getValue(), popupWidth));
+			}
+			popupContent.getElements().add(DefaultLabelFactory.createLabelStack(" ", " ", popupWidth));
+			popupContent.getElements().add(DefaultLabelFactory.createLabelStack("COST", "----------", popupWidth));
+			for (ResourceAmount cost : level.getCost()) {
+				popupContent.getElements().add(DefaultLabelFactory.createLabelStack(cost.getType().toString(), StringUtils.formatBigNumber(Math.abs(cost.getAmount())), popupWidth));
+			}
+		}
+		
+		ColorButton upgradeButton = DefaultButtonFactory.colorButton("Upgrade", new Action() {
 			
 			@Override
 			public void execute() {
-				if (ship.isInUse()) {
-					Menu.queue(UnuseShipMessage.builder()
-							.shipUUID(ship.getUuid())
-							.build());
-				} else {
-					Menu.queue(UseShipMessage.builder()
-							.shipUUID(ship.getUuid())
-							.build());
-				}
-				
+				Menu.queue(UpgradeShipMessage.builder()
+						.shipUUID(bundledShipData.getPlayerShipData().getUuid())
+						.build());
 				PopupRenderer.close();
 			}
 			
 		});
-		useButton.setFixedHeight(30);
-		useButton.setFixedWidth(popupWidth);
-		popupContent.getElements().add(useButton);
+		upgradeButton.setFixedHeight(30);
+		upgradeButton.setFixedWidth(popupWidth);
+		popupContent.getElements().add(upgradeButton);
 		
 		PopupRenderer.create(Popup.builder()
-				.title(ship.getModel())
+				.title(bundledShipData.getBlueprint().getModel())
 				.contentContainer(popupContent)
 				.closeOnClickOutside(true)
 				.build());
 	}
 	
-	private void createShipBuildPopup(ShipBlueprint ship) {
+	private void createShipBuildPopup(BundledShipData bundledShipData) {
 		ModelInstance shipModel = ModelLoader.instanciate("ship");
         for (Material material : shipModel.materials) {
             material.set(ColorAttribute.createDiffuse(SkinManager.darkestSkinColor));
@@ -183,42 +222,30 @@ public class WorkshopRenderer extends BaseModuleRenderer {
 		ElementList popupContent = new ElementList();
 		popupContent.setMargin(10f);
 		popupContent.getElements().add(shipModelPreview);
-		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("BUILD COST", "", popupWidth));
-		for (ResourceAmount cost : ship.getBuildCost()) {
-			popupContent.getElements().add(DefaultLabelFactory.createLabelStack(cost.getType().toString(), StringUtils.formatBigNumber(cost.getAmount()), popupWidth));
+		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("BUILD COST", "----------", popupWidth));
+		for (ResourceAmount cost : bundledShipData.getBlueprint().getBuildCost()) {
+			popupContent.getElements().add(DefaultLabelFactory.createLabelStack(cost.getType().toString(), StringUtils.formatBigNumber(Math.abs(cost.getAmount())), popupWidth));
 		}
-		ColorButton useButton = DefaultButtonFactory.colorButton("Build", new Action() {
+		ColorButton buildButton = DefaultButtonFactory.colorButton("Build", new Action() {
 			
 			@Override
 			public void execute() {
-				//Build
+				Menu.queue(BuildShipMessage.builder()
+						.shipUUID(bundledShipData.getPlayerShipData().getUuid())
+						.build());
 				PopupRenderer.close();
 			}
 			
 		});
-		useButton.setFixedHeight(30);
-		useButton.setFixedWidth(popupWidth);
-		popupContent.getElements().add(useButton);
+		buildButton.setFixedHeight(30);
+		buildButton.setFixedWidth(popupWidth);
+		popupContent.getElements().add(buildButton);
 		
 		PopupRenderer.create(Popup.builder()
-				.title(ship.getModel())
+				.title(bundledShipData.getBlueprint().getModel())
 				.contentContainer(popupContent)
 				.closeOnClickOutside(true)
 				.build());
-	}
-
-	@Override
-	public void reload() {
-		createShipButtons();
-	}
-
-	private void createShipButtons() {
-		shipButtons = new ArrayList<>();
-		if (ShipyardModel.shipyard != null && ShipyardModel.shipyard.getOwnedShips() != null) {
-			for (ShipBlueprint ship : ShipyardModel.shipyard.getOwnedShips()) {
-				shipButtons.add(createShipButton(ship));
-			}
-		}
 	}
 
 	@Override

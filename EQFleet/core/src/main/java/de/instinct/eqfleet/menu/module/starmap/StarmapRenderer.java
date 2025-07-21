@@ -24,6 +24,7 @@ import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
 import de.instinct.eqfleet.menu.common.components.DefaultLabelFactory;
 import de.instinct.eqfleet.menu.main.MenuModel;
+import de.instinct.eqfleet.menu.module.ship.Shipyard;
 import de.instinct.eqfleet.menu.module.starmap.model.Galaxy;
 import de.instinct.eqfleet.menu.module.starmap.model.MapPreviewSection;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
@@ -125,7 +126,11 @@ public class StarmapRenderer extends BaseModuleRenderer {
 				if (zoomIn) {
 					StarsystemData starsystemAtMouse = getClickedStarsystem();
 					if (starsystemAtMouse != null) {
-						createCombatInfoPopup(starsystemAtMouse);
+						if (Shipyard.hasActiveShip()) {
+							createCombatInfoPopup(starsystemAtMouse);
+						} else {
+							PopupRenderer.createMessageDialog("ERROR", "No active ship\nin Shipyard");
+						}
 					}
 				}
 			}

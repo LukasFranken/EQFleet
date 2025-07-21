@@ -64,41 +64,22 @@ public class ModelPreview extends Component {
 	@Override
 	protected void renderElement() {
 		Rectangle bounds = getBounds();
-		if (bounds.width <= 0 || bounds.height <= 0)
-			return;
+		if (bounds.width <= 0 || bounds.height <= 0) return;
 
 		ViewportUtil.apply(bounds);
-
 		currentRotation += config.getRotationSpeed() * Gdx.graphics.getDeltaTime();
-
-	    // 1. Create a model transform with base rotation and scaling
 	    Matrix4 modelTransform = new Matrix4();
-
-	    // Apply base rotation to properly orient model
 	    if (config.getBaseRotationAxis().len2() > 0) {
 	        modelTransform.rotate(config.getBaseRotationAxis(), config.getBaseRotationAngle());
 	    }
-
-	    // Apply scaling
 	    modelTransform.scale(config.getScale(), config.getScale(), config.getScale());
-
-	    // 2. Create world-space rotation matrix
 	    Matrix4 worldRotation = new Matrix4().rotate(Vector3.Y, currentRotation);
-
-	    // 3. Apply world rotation first, then model transform
-	    // This ensures rotation is around world Y-axis regardless of model orientation
 	    Matrix4 finalTransform = new Matrix4(worldRotation).mul(modelTransform);
-
-	    // Set the model's transform
 	    config.getModel().transform.set(finalTransform);
-
-	    // Render model and grid
 	    if (gridRenderer != null) {
 	        gridRenderer.drawGrid(camera);
 	    }
-
-	    ModelRenderer.render(camera, config.getModel());
-
+	    ModelRenderer.render(camera, config.getModel(), getAlpha());
 		ViewportUtil.restore();
 	}
 
