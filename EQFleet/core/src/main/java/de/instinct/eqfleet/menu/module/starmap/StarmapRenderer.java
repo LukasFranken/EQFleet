@@ -248,7 +248,7 @@ public class StarmapRenderer extends BaseModuleRenderer {
 		mapPreviewSection.setFixedHeight(popupWidth * 1.5f);
 		systemInfoElements.getElements().add(mapPreviewSection);
 		systemInfoElements.getElements().add(DefaultLabelFactory.createLabelStack("Req. AP", (int)starsystem.getAncientPoints() + "", popupWidth));
-		systemInfoElements.getElements().add(DefaultLabelFactory.createLabelStack("Threat Level", starsystem.getThreatLevel() + "", popupWidth));
+		systemInfoElements.getElements().add(DefaultLabelFactory.createLabelStack("Threat Level", StringUtils.formatBigNumber(starsystem.getThreatLevel(), 0), popupWidth));
 		systemInfoElements.getElements().add(DefaultLabelFactory.createLabelStack("-------------", "-------------", popupWidth));
 		systemInfoElements.getElements().add(DefaultLabelFactory.createLabelStack("EXP", StringUtils.formatBigNumber(starsystem.getExperience()), popupWidth));
 		for (ResourceAmount resource : starsystem.getResourceRewards()) {
@@ -272,6 +272,14 @@ public class StarmapRenderer extends BaseModuleRenderer {
 				Vector2 imagePos = getStarsystemScreenPosition(starsystem);
 				image.setPosition(imagePos.x - 10f, imagePos.y - 10f);
 				image.render();
+				Label threatLabel = new Label(StringUtils.formatBigNumber(starsystem.getThreatLevel(), 0));
+				threatLabel.setType(FontType.SMALL);
+				threatLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
+				threatLabel.setFixedWidth(50f);
+				threatLabel.setFixedHeight(20f);
+				threatLabel.setPosition(imagePos.x - 25f, imagePos.y - 30f);
+				threatLabel.setColor(Color.RED);
+				threatLabel.render();
 			}
 			backButton.render();
 		}

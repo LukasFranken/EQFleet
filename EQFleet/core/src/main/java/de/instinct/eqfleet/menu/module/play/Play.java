@@ -37,7 +37,12 @@ public class Play extends BaseModule {
 
 	@Override
 	public void open() {
-		
+		WebManager.enqueue(
+    			() -> API.matchmaking().get(),
+			    result -> {
+			    	PlayModel.lobbyUUID = result;
+			    }
+		);
 	}
 
 	@Override
@@ -152,12 +157,6 @@ public class Play extends BaseModule {
 		PlayModel.currentMatchmakingStatus = null;
 		scheduler.scheduleAtFixedRate(() -> {
 			if ((MenuModel.activeModule == MenuModule.PLAY || (PlayModel.lobbyStatus != null && PlayModel.lobbyStatus.getType().getGameMode() == GameMode.CONQUEST)) && MenuModel.active) {
-        		WebManager.enqueue(
-            			() -> API.matchmaking().get(),
-    				    result -> {
-    				    	PlayModel.lobbyUUID = result;
-    				    }
-    			);
         		if (PlayModel.lobbyUUID == null || PlayModel.lobbyUUID.contentEquals("")) {
             		WebManager.enqueue(
                 			() -> API.matchmaking().invites(),

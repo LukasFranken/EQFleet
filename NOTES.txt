@@ -14,11 +14,13 @@ GENERAL:
  -> sound FX
  -> audio settings
 
+- random error after starmap game doest reload
+ -> server saves empty postgameresult
+ -> probably left lobby?
 
-- make Play later available
-- label threat level above startsystem
+- draw planet armor and shield seperately
 
-- add model preview to construction
+- add model preview to construction popup
  
 - on levelup show unlocked modules/features
  

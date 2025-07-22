@@ -151,6 +151,7 @@ public class WorkshopRenderer extends BaseModuleRenderer {
 		});
 		shipButton.setFixedWidth(50f);
 		shipButton.setFixedHeight(70f);
+		shipButton.setNoteLabel("Lv " + bundledShipData.getPlayerShipData().getLevel(), Color.GRAY);
 		shipButton.getModelPreview().getBorder().setColor(bundledShipData.getPlayerShipData().isBuilt() ? SkinManager.skinColor : Color.BLUE);
 		return shipButton;
 	}
@@ -209,7 +210,7 @@ public class WorkshopRenderer extends BaseModuleRenderer {
 		popupContent.getElements().add(upgradeButton);
 		
 		PopupRenderer.create(Popup.builder()
-				.title(bundledShipData.getBlueprint().getModel())
+				.title(bundledShipData.getBlueprint().getModel() + " - Lv. " + bundledShipData.getPlayerShipData().getLevel())
 				.contentContainer(popupContent)
 				.closeOnClickOutside(true)
 				.build());

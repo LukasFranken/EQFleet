@@ -121,6 +121,7 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 		});
 		shipButton.setFixedWidth(50f);
 		shipButton.setFixedHeight(70f);
+		shipButton.setNoteLabel("Lv " + playerShip.getLevel(), Color.GRAY);
 		shipButton.getModelPreview().getBorder().setColor(playerShip.isInUse() ? Color.GREEN : SkinManager.skinColor);
 		return shipButton;
 	}
@@ -185,7 +186,7 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 		popupContent.getElements().add(useButton);
 		
 		PopupRenderer.create(Popup.builder()
-				.title(shipData.model)
+				.title(shipData.model + " - Lv. " + playerShip.getLevel())
 				.contentContainer(popupContent)
 				.closeOnClickOutside(true)
 				.build());

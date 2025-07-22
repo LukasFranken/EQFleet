@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.eqlibgdxutils.generic.Action;
+import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.HorizontalAlignment;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.model.ModelPreview;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.model.ModelPreviewConfiguration;
@@ -23,6 +24,7 @@ public class LabeledModelButton extends Button {
 	private Texture modelPreviewBackgroundTexture;
 	private ModelPreview modelPreview;
 	private Label label;
+	private Label noteLabel;
 	
 	private float labelHeight = 20f;
 	
@@ -52,6 +54,15 @@ public class LabeledModelButton extends Button {
 	protected float calculateHeight() {
 		return getBounds().height;
 	}
+	
+	public void setNoteLabel(String noteText, Color color) {
+		noteLabel = new Label(noteText);
+		noteLabel.setType(FontType.TINY);
+		noteLabel.setColor(color);
+		noteLabel.setFixedHeight(12f);
+		noteLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
+		noteLabel.setFixedWidth(getBounds().width);
+	}
 
 	@Override
 	protected void renderElement() {
@@ -64,6 +75,11 @@ public class LabeledModelButton extends Button {
 		label.setPosition(getBounds().x, getBounds().y);
 		label.setAlpha(getAlpha());
 		label.render();
+		if (noteLabel != null) {
+			noteLabel.setPosition(modelBounds.x + 4, modelBounds.y + 2);
+			noteLabel.setAlpha(getAlpha());
+			noteLabel.render();
+		}
 		if (isHovered() || isDown()) TextureManager.draw(hoverTexture, modelBounds, 0.3f);
 	}
 
