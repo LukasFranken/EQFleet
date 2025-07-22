@@ -14,7 +14,9 @@ GENERAL:
  -> sound FX
  -> audio settings
 
-- add blueprints to shop
+
+- make Play later available
+- label threat level above startsystem
 
 - add model preview to construction
  

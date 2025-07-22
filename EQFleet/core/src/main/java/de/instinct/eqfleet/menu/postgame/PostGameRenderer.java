@@ -5,12 +5,15 @@ import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 
+import de.instinct.api.matchmaking.model.GameMode;
 import de.instinct.api.meta.dto.ResourceAmount;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
 import de.instinct.eqfleet.menu.common.components.DefaultLabelFactory;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.module.inventory.message.LoadResourcesMessage;
+import de.instinct.eqfleet.menu.module.play.Play;
+import de.instinct.eqfleet.menu.module.play.PlayModel;
 import de.instinct.eqfleet.menu.module.profile.ProfileModel;
 import de.instinct.eqfleet.menu.module.profile.message.LoadProfileMessage;
 import de.instinct.eqfleet.menu.module.profile.model.ExperienceSection;
@@ -46,6 +49,7 @@ public class PostGameRenderer extends BaseModuleRenderer {
 			@Override
 			public void execute() {
 				PostGameModel.reward = null;
+				if (PlayModel.lobbyStatus.getType().getGameMode() == GameMode.CONQUEST) Play.leaveLobby();
 				Menu.queue(LoadProfileMessage.builder().build());
 				Menu.queue(LoadResourcesMessage.builder().build());
 			}

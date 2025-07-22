@@ -26,6 +26,7 @@ import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Horizontal
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
+import de.instinct.eqlibgdxutils.rendering.ui.popup.PopupRenderer;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 
 public class ShopRenderer extends BaseModuleRenderer {
@@ -44,6 +45,15 @@ public class ShopRenderer extends BaseModuleRenderer {
 			return;
 		}
 		renderElements();
+		if (ShopModel.buyResponse != null) {
+			createBuyResponsePopup();
+			ShopModel.buyResponse = null;
+		}
+	}
+
+	private void createBuyResponsePopup() {
+		PopupRenderer.createMessageDialog("Purchase Failed", 
+				ShopModel.buyResponse.getMessage() == null ? ShopModel.buyResponse.getCode().toString() : ShopModel.buyResponse.getMessage());
 	}
 
 	private void renderElements() {
@@ -99,7 +109,8 @@ public class ShopRenderer extends BaseModuleRenderer {
 		categoryElements = new ArrayList<>();
 		if (ShopModel.shopData != null && ShopModel.shopData.getCategories() != null) {
 			for (ShopCategory category : ShopModel.shopData.getCategories()) {
-				categoryElements.add(createCategoryElement(category));
+				ShopCategoryElement categoryElement = createCategoryElement(category);
+				if (categoryElement.getItemElements().size() > 0) categoryElements.add(categoryElement);
 			}
 		}
 	}
@@ -114,7 +125,8 @@ public class ShopRenderer extends BaseModuleRenderer {
 		List<ShopItemElement> itemElements = new ArrayList<>();
 		if (category.getItems() != null) {
 			for (ShopItem item : category.getItems()) {
-				itemElements.add(createItemElement(item));
+				ShopItemElement itemElement = createItemElement(item);
+				if (itemElement != null) itemElements.add(itemElement);
 			}
 		}
 		
@@ -126,6 +138,7 @@ public class ShopRenderer extends BaseModuleRenderer {
 
 	private ShopItemElement createItemElement(ShopItem item) {
 		ShopItemStage currentStage = getCurrentStage(item);
+		if (currentStage == null) return null;
 		return ShopItemElement.builder()
 				.item(item)
 				.nameLabel(createItemNameLabel(item.getName()))
@@ -143,6 +156,7 @@ public class ShopRenderer extends BaseModuleRenderer {
 				currentStageId++;
 			}
 		}
+		if (currentStageId >= item.getStages().size()) return null;
 		return item.getStages().get(currentStageId);
 	}
 

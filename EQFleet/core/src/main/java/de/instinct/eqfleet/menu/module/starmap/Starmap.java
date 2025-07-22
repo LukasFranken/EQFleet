@@ -9,6 +9,7 @@ import de.instinct.api.matchmaking.model.VersusMode;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.main.ModuleMessage;
+import de.instinct.eqfleet.menu.module.play.Play;
 import de.instinct.eqfleet.menu.module.play.PlayModel;
 import de.instinct.eqfleet.menu.module.starmap.message.ReloadStarmapMessage;
 import de.instinct.eqfleet.net.WebManager;
@@ -70,7 +71,7 @@ public class Starmap extends BaseModule {
 						    		.versusMode(VersusMode.AI)
 						    		.build()),
 						    result -> {
-						    	Menu.openModule(MenuModule.PLAY);
+						    	Play.startMatchmaking();
 						    }
 					);
 			    }

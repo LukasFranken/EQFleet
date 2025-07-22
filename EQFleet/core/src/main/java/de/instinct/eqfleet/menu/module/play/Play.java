@@ -10,6 +10,7 @@ import de.instinct.api.core.API;
 import de.instinct.api.core.modules.MenuModule;
 import de.instinct.api.matchmaking.dto.LobbyStatusCode;
 import de.instinct.api.matchmaking.dto.MatchmakingStatusResponseCode;
+import de.instinct.api.matchmaking.model.GameMode;
 import de.instinct.api.matchmaking.model.GameType;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
@@ -59,7 +60,9 @@ public class Play extends BaseModule {
 	public static void startMatchmaking() {
 		WebManager.enqueue(
 			    () -> API.matchmaking().start(PlayModel.lobbyUUID),
-			    result -> {}
+			    result -> {
+			    	updateLobby();
+			    }
 		);
 	}
 
@@ -77,6 +80,7 @@ public class Play extends BaseModule {
 			    () -> API.matchmaking().leave(),
 			    result -> {
 			    	PlayModel.lobbyUUID = null;
+			    	PlayModel.lobbyStatus = null;
 			    }
 		);
 	}
@@ -124,13 +128,30 @@ public class Play extends BaseModule {
 			    result -> {}
 		);
 	}
+	
+	public static void updateLobby() {
+		WebManager.enqueue(
+    			() -> API.matchmaking().get(),
+			    resultUUID -> {
+			    	PlayModel.lobbyUUID = resultUUID;
+			    	if (PlayModel.lobbyUUID != null) {
+			    		WebManager.enqueue(
+	                			() -> API.matchmaking().status(PlayModel.lobbyUUID),
+	    					    resultStatus -> {
+	    					    	PlayModel.lobbyStatus = resultStatus;
+	    					    }
+	    				);
+					}
+			    }
+		);
+	}
 
 	public static void startUpdateCycle() {
 		PlayModel.lobbyUUID = null;
 		PlayModel.lobbyStatus = null;
 		PlayModel.currentMatchmakingStatus = null;
 		scheduler.scheduleAtFixedRate(() -> {
-			if (MenuModel.activeModule == MenuModule.PLAY && MenuModel.active) {
+			if ((MenuModel.activeModule == MenuModule.PLAY || (PlayModel.lobbyStatus != null && PlayModel.lobbyStatus.getType().getGameMode() == GameMode.CONQUEST)) && MenuModel.active) {
         		WebManager.enqueue(
             			() -> API.matchmaking().get(),
     				    result -> {

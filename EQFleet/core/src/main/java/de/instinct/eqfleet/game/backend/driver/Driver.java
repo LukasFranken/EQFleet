@@ -9,7 +9,6 @@ import de.instinct.api.matchmaking.model.GameMode;
 import de.instinct.engine.FleetEngine;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.menu.main.Menu;
-import de.instinct.eqfleet.menu.module.play.Play;
 import de.instinct.eqfleet.menu.module.play.PlayModel;
 
 public abstract class Driver {
@@ -54,7 +53,6 @@ public abstract class Driver {
 			
 			GameModel.activeGameState = null;
 			if (PlayModel.lobbyStatus.getType().getGameMode() == GameMode.CONQUEST) {
-				Play.leaveLobby();
 				Menu.openModule(MenuModule.STARMAP);
 			}
 			Menu.open();

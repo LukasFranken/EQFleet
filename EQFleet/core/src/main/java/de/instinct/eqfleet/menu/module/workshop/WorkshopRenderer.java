@@ -30,6 +30,7 @@ import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.model.ModelLoader;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
+import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.LabeledModelButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.HorizontalAlignment;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.model.ModelPreview;
@@ -42,7 +43,7 @@ import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 
 public class WorkshopRenderer extends BaseModuleRenderer {
 	
-	private List<ColorButton> shipButtons;
+	private List<LabeledModelButton> shipButtons;
 	
 	private final float popupWidth = 250f;
 
@@ -73,11 +74,11 @@ public class WorkshopRenderer extends BaseModuleRenderer {
 		float margin = (((float)MenuModel.moduleBounds.width) - (50 * elementsPerRow)) / ((float)(elementsPerRow + 1));
 		
 		int i = 0;
-		for (ColorButton shipButton : shipButtons) {
+		for (LabeledModelButton shipButton : shipButtons) {
 			int column = i % elementsPerRow;
 			int row = 1 + ((int)i / elementsPerRow);
 			shipButton.setPosition(MenuModel.moduleBounds.x + margin + ((50 + margin) * column),
-					MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - 20 - ((50 + margin) * row));
+					MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - 20 - ((70 + margin) * row));
 			shipButton.render();
 			i++;
 		}
@@ -122,8 +123,21 @@ public class WorkshopRenderer extends BaseModuleRenderer {
 		return null;
 	}
 
-	private ColorButton createShipButton(BundledShipData bundledShipData) {
-		ColorButton shipButton = DefaultButtonFactory.colorButton(bundledShipData.getBlueprint().getModel().substring(0, 3), new Action() {
+	private LabeledModelButton createShipButton(BundledShipData bundledShipData) {
+		ModelInstance model = ModelLoader.instanciate("ship");
+        for (Material material : model.materials) {
+            material.set(ColorAttribute.createDiffuse(SkinManager.darkestSkinColor));
+        }
+        
+		ModelPreviewConfiguration shipModelPreviewConfig = ModelPreviewConfiguration.builder()
+				.model(model)
+				.baseRotationAngle(-90f)
+				.baseRotationAxis(new Vector3(1, 0, 0))
+				.scale(20f)
+				.grid(false)
+				.build();
+		
+		LabeledModelButton shipButton = new LabeledModelButton(shipModelPreviewConfig, bundledShipData.getBlueprint().getModel().toUpperCase(), new Action() {
 			
 			@Override
 			public void execute() {
@@ -132,12 +146,12 @@ public class WorkshopRenderer extends BaseModuleRenderer {
 				} else {
 					createShipBuildPopup(bundledShipData);
 				}
-				
 			}
 			
 		});
-		shipButton.setFixedWidth(50);
-		shipButton.getBorder().setColor(bundledShipData.getPlayerShipData().isInUse() ? Color.GREEN : SkinManager.skinColor);
+		shipButton.setFixedWidth(50f);
+		shipButton.setFixedHeight(70f);
+		shipButton.getModelPreview().getBorder().setColor(bundledShipData.getPlayerShipData().isBuilt() ? SkinManager.skinColor : Color.BLUE);
 		return shipButton;
 	}
 	
@@ -251,7 +265,7 @@ public class WorkshopRenderer extends BaseModuleRenderer {
 	@Override
 	public void dispose() {
 		if (shipButtons == null) return;
-		for (ColorButton shipButton : shipButtons) {
+		for (LabeledModelButton shipButton : shipButtons) {
 			shipButton.dispose();
 		}
 	}

@@ -2,7 +2,7 @@ package de.instinct.eqfleet.menu.module.shop;
 
 import de.instinct.api.core.API;
 import de.instinct.api.core.modules.MenuModule;
-import de.instinct.api.shop.dto.BuyResponse;
+import de.instinct.api.shop.dto.BuyResponseCode;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.main.ModuleMessage;
@@ -49,11 +49,11 @@ public class Shop extends BaseModule {
 			WebManager.enqueue(
 					() -> API.shop().buy(API.authKey, ((BuyMessage) message).getItemId()),
 				    result -> {
-				    	if (result == BuyResponse.SUCCESS) {
+				    	if (result.getCode() == BuyResponseCode.SUCCESS) {
 				    		Menu.queue(LoadResourcesMessage.builder().build());
 				    		Menu.queue(ReloadShopMessage.builder().build());
 				    	} else {
-				    		
+				    		ShopModel.buyResponse = result;
 				    	}
 				    }
 			);

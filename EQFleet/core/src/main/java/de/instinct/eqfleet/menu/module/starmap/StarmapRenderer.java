@@ -68,6 +68,8 @@ public class StarmapRenderer extends BaseModuleRenderer {
 	private DecalBatch decalBatch;
 	
 	private ColorButton backButton;
+	
+	private boolean isLoading;
 
 	@Override
 	public void render() {
@@ -81,7 +83,23 @@ public class StarmapRenderer extends BaseModuleRenderer {
 			if (StarmapModel.selectedGalaxyId != -1) {
 				renderGalaxyMap();
 			}
+			renderLoadingLabel();
 			handleInput();
+		}
+	}
+
+	private void renderLoadingLabel() {
+		if (isLoading) {
+			Label loadingLabel = new Label("Loading...");
+			loadingLabel.setType(FontType.LARGE);
+			loadingLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
+			loadingLabel.setFixedHeight(100f);
+			loadingLabel.setFixedWidth(MenuModel.moduleBounds.width);
+			loadingLabel.setPosition(
+					MenuModel.moduleBounds.x,
+					MenuModel.moduleBounds.y + (MenuModel.moduleBounds.height / 2) - (100 / 2));
+			loadingLabel.setColor(Color.WHITE);
+			loadingLabel.render();
 		}
 	}
 
@@ -217,6 +235,7 @@ public class StarmapRenderer extends BaseModuleRenderer {
 			public void execute() {
 				Starmap.createLobby(selectedGalaxy.getData().getId(), starsystem.getId());
 				PopupRenderer.close();
+				isLoading = true;
 			}
 
 		});
@@ -270,6 +289,7 @@ public class StarmapRenderer extends BaseModuleRenderer {
 
 	@Override
 	public void reload() {
+		isLoading = false;
 		backButton = DefaultButtonFactory.colorButton("Back", new Action() {
 
 			@Override
