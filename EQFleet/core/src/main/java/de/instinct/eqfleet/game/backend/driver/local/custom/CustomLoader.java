@@ -86,9 +86,9 @@ public class CustomLoader {
 	
 	private Player getPlayer(LoadoutData loadout) {
 		Player newPlayer = new Player();
-		newPlayer.commandPointsGenerationSpeed = loadout.getCommandPointsGenerationSpeed();
-		newPlayer.startCommandPoints = loadout.getStartCommandPoints();
-		newPlayer.maxCommandPoints = loadout.getMaxCommandPoints();
+		newPlayer.commandPointsGenerationSpeed = loadout.getCommander().getCommandPointsGenerationSpeed();
+		newPlayer.startCommandPoints = loadout.getCommander().getStartCommandPoints();
+		newPlayer.maxCommandPoints = loadout.getCommander().getMaxCommandPoints();
 		newPlayer.planetData = EngineInterface.getPlanetData(loadout.getInfrastructure());
 		newPlayer.ships = EngineInterface.getShips(loadout.getShips(), API.shipyard().shipyard());
 		return newPlayer;

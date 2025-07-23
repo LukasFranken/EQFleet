@@ -14,10 +14,6 @@ GENERAL:
  -> sound FX
  -> audio settings
 
-- random error after starmap game doest reload
- -> server saves empty postgameresult
- -> probably left lobby?
-
 - draw planet armor and shield seperately
 
 - add model preview to construction popup

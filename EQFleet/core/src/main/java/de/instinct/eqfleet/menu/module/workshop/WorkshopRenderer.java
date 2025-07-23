@@ -63,7 +63,7 @@ public class WorkshopRenderer extends BaseModuleRenderer {
 				MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - 30,
 				MenuModel.moduleBounds.width - 40,
 				20);
-		Label spaceLabel = new Label("Space: " + ShipyardModel.playerShipyard.getShips().size() + "/" + ShipyardModel.playerShipyard.getSlots());
+		Label spaceLabel = new Label("Hangar Space: " + ShipyardModel.playerShipyard.getShips().size() + "/" + ShipyardModel.playerShipyard.getSlots());
 		spaceLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
 		spaceLabel.setBounds(labelBounds);
 		spaceLabel.render();
