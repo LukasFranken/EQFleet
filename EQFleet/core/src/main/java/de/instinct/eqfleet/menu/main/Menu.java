@@ -199,10 +199,10 @@ public class Menu {
 			    				lockedModules.add(module);
 			    			}
 			    		}
+			    		ModuleInfoRequest moduleInfoRequest = new ModuleInfoRequest();
+			    		moduleInfoRequest.setRequestedModuleInfos(lockedModules);
 			    		WebManager.enqueue(
-			    			    () -> API.meta().moduleInfo(ModuleInfoRequest.builder()
-			    			    		.requestedModuleInfos(lockedModules)
-			    			    		.build()),
+			    			    () -> API.meta().moduleInfo(moduleInfoRequest),
 			    			    moduleInfoResult -> {
 			    			    	if (moduleInfoResult != null) {
 			    			    		MenuModel.lockedModules = moduleInfoResult;

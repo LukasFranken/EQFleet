@@ -22,6 +22,8 @@ GENERAL:
 - update resource/profile every time a module is closed
 - make rocket aoe
 
+- social module
+
 - draw planet armor and shield seperately
 
 - add model preview to construction popup
