@@ -282,6 +282,7 @@ public class MenuRenderer extends BaseModuleRenderer {
 			int row = 1 + ((int)i / elementsPerRow);
 			moduleButton.setPosition(menuBounds.x + margin + ((50 + margin) * column), menuBounds.y + menuBounds.height - ((70 + margin) * row) + (moduleButton instanceof LabeledModelButton ? 0f : 20f));
 			moduleButton.setAlpha(alpha);
+			moduleButton.setEnabled(alpha > 0.5f);
 			moduleButton.render();
 			i++;
 		}

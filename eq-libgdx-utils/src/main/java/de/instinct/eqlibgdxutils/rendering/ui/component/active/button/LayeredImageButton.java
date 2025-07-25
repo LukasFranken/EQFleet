@@ -12,6 +12,10 @@ import lombok.EqualsAndHashCode;
 public class LayeredImageButton extends Button {
 
 	private List<Texture> imageTextures;
+	
+	public LayeredImageButton() {
+		super();
+	}
 
 	@Override
 	protected float calculateWidth() {

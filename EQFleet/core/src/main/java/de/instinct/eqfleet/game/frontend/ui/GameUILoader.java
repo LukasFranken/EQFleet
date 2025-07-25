@@ -114,6 +114,7 @@ public class GameUILoader {
 			public void execute() {
 				PlayerData playerData = UIDataUtility.getPlayerData(ownCPElement.getCurrentGameState());
 				ownCPElement.setBounds(bounds.getOwnCPBar());
+				ownCPElement.getElement().setSegments((int)playerData.getSelf().maxCommandPoints);
 				ownCPElement.getElement().setMaxValue(playerData.getSelf().maxCommandPoints);
 				ownCPElement.getElement().setCurrentValue(playerData.getSelf().currentCommandPoints);
 			}
@@ -158,6 +159,7 @@ public class GameUILoader {
 			public void execute() {
 				PlayerData playerData = UIDataUtility.getPlayerData(teammate1CPElement.getCurrentGameState());
 				teammate1CPElement.setBounds(bounds.getTeammate1CPBar());
+				teammate1CPElement.getElement().setSegments((int)playerData.getTeammate1().maxCommandPoints);
 				teammate1CPElement.getElement().setMaxValue(playerData.getTeammate1().maxCommandPoints);
 				teammate1CPElement.getElement().setCurrentValue(playerData.getTeammate1().currentCommandPoints);
 			}
@@ -202,6 +204,7 @@ public class GameUILoader {
 			public void execute() {
 				PlayerData playerData = UIDataUtility.getPlayerData(teammate2CPElement.getCurrentGameState());
 				teammate2CPElement.setBounds(bounds.getTeammate2CPBar());
+				teammate2CPElement.getElement().setSegments((int)playerData.getTeammate2().maxCommandPoints);
 				teammate2CPElement.getElement().setMaxValue(playerData.getTeammate2().maxCommandPoints);
 				teammate2CPElement.getElement().setCurrentValue(playerData.getTeammate2().currentCommandPoints);
 			}
@@ -246,6 +249,7 @@ public class GameUILoader {
 			public void execute() {
 				PlayerData playerData = UIDataUtility.getPlayerData(enemy1CPElement.getCurrentGameState());
 				enemy1CPElement.setBounds(bounds.getEnemy1CPBar());
+				enemy1CPElement.getElement().setSegments((int)playerData.getEnemy1().maxCommandPoints);
 				enemy1CPElement.getElement().setMaxValue(playerData.getEnemy1().maxCommandPoints);
 				enemy1CPElement.getElement().setCurrentValue(playerData.getEnemy1().currentCommandPoints);
 			}
@@ -289,6 +293,7 @@ public class GameUILoader {
 			public void execute() {
 				PlayerData playerData = UIDataUtility.getPlayerData(enemy2CPElement.getCurrentGameState());
 				enemy2CPElement.setBounds(bounds.getEnemy2CPBar());
+				enemy2CPElement.getElement().setSegments((int)playerData.getEnemy2().maxCommandPoints);
 				enemy2CPElement.getElement().setMaxValue(playerData.getEnemy2().maxCommandPoints);
 				enemy2CPElement.getElement().setCurrentValue(playerData.getEnemy2().currentCommandPoints);
 			}
@@ -326,6 +331,7 @@ public class GameUILoader {
 			public void execute() {
 				PlayerData playerData = UIDataUtility.getPlayerData(enemy3CPElement.getCurrentGameState());
 				enemy3CPElement.setBounds(bounds.getEnemy3CPBar());
+				enemy3CPElement.getElement().setSegments((int)playerData.getEnemy3().maxCommandPoints);
 				enemy3CPElement.getElement().setMaxValue(playerData.getEnemy3().maxCommandPoints);
 				enemy3CPElement.getElement().setCurrentValue(playerData.getEnemy3().currentCommandPoints);
 			}

@@ -7,6 +7,7 @@ import de.instinct.api.shipyard.dto.ShipUpgradeResponse;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.main.ModuleMessage;
+import de.instinct.eqfleet.menu.module.inventory.message.LoadResourcesMessage;
 import de.instinct.eqfleet.menu.module.ship.ShipyardModel;
 import de.instinct.eqfleet.menu.module.workshop.message.BuildShipMessage;
 import de.instinct.eqfleet.menu.module.workshop.message.ReloadWorkshopMessage;
@@ -70,6 +71,7 @@ public class Workshop extends BaseModule {
 				    result -> {
 				    	WorkshopModel.shipBuildResponse = result;
 				    	if (result == ShipBuildResponse.SUCCESS) {
+				    		Menu.queue(LoadResourcesMessage.builder().build());
 				    		loadData();
 				    	} else {
 				    		super.requireUIReload();

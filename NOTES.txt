@@ -1,4 +1,4 @@
-ALPHA RELEASE TODO:
+- ALPHA RELEASE TODO:
 
 GENERAL:
  
@@ -14,13 +14,12 @@ GENERAL:
  -> sound FX
  -> audio settings
 
-- resource cost is treated as -20 for check
-- still crashes after game due to unloaded reward
-
 - show rank in lobby
 - invite is not accepted
-- update resource/profile every time a module is closed
 - make rocket aoe
+- ship upgrade/buy not enough message with resource name
+
+- render starmap according to menu alpha
 
 - social module
 

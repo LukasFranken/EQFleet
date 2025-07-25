@@ -28,6 +28,7 @@ import de.instinct.eqfleet.menu.module.inventory.message.LoadResourcesMessage;
 import de.instinct.eqfleet.menu.module.play.Play;
 import de.instinct.eqfleet.menu.module.play.PlayModel;
 import de.instinct.eqfleet.menu.module.play.PlayRenderer;
+import de.instinct.eqfleet.menu.module.play.message.UpdateLobbyStatusMessage;
 import de.instinct.eqfleet.menu.module.profile.Profile;
 import de.instinct.eqfleet.menu.module.profile.ProfileRenderer;
 import de.instinct.eqfleet.menu.module.profile.message.LoadProfileMessage;
@@ -127,10 +128,15 @@ public class Menu {
 	public static void open() {
 		Game.dispose();
 		MenuModel.active = true;
+		updateBaseInfo();
+	}
+
+	private static void updateBaseInfo() {
 		queue(ReloadShipyardMessage.builder().build());
 		if (PostGameModel.reward == null) {
 			queue(LoadProfileMessage.builder().build());
 			queue(LoadResourcesMessage.builder().build());
+			queue(UpdateLobbyStatusMessage.builder().build());
 		}
 	}
 
@@ -185,6 +191,7 @@ public class Menu {
 	
 	public static void closeModule() {
 		MenuModel.activeModule = null;
+		updateBaseInfo();
 	}
 	
 	public static void loadModules() {

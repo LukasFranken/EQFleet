@@ -25,10 +25,12 @@ import de.instinct.eqfleet.game.frontend.GameInputManager;
 import de.instinct.eqfleet.game.frontend.GameRenderer;
 import de.instinct.eqfleet.game.frontend.ui.model.GameUIElement;
 import de.instinct.eqfleet.game.frontend.ui.model.UIBounds;
+import de.instinct.eqlibgdxutils.InputUtil;
 import de.instinct.eqlibgdxutils.rendering.particle.ParticleRenderer;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
+import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.ComplexShapeRenderer;
 
 public class GameUIRenderer {
@@ -213,15 +215,25 @@ public class GameUIRenderer {
 		setDensityLineWidth();
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 		shapeRenderer.setColor(Color.LIGHT_GRAY);
-		
 		renderSelected();
 		renderHovered();
-		renderArrow();
-		
 		shapeRenderer.end();
-		Gdx.gl.glDisable(GL20.GL_BLEND);
+		renderArrow();
+		renderArrowLabel();
+		renderShipSelectionCircles();
 	}
-	
+
+	private void renderShipSelectionCircles() {
+		Integer selectedId = inputManager.getSelectedPlanetId();
+		Planet selected = (selectedId != null) ? EngineUtility.getPlanet(state.planets, selectedId) : null;
+		if (selected != null) {
+			Player owner = EngineUtility.getPlayer(state.players, selected.ownerId);
+			if (owner.ships.size() > 1 && inputManager.getSelectedShipId() == null) {
+				renderShipSelectionCircle(selected.position.x, selected.position.y, owner);
+			}
+		}
+	}
+
 	private void renderSelected() {
 		Integer selectedId = inputManager.getSelectedPlanetId();
 		Planet selected = (selectedId != null) ? EngineUtility.getPlanet(state.planets, selectedId) : null;
@@ -237,9 +249,6 @@ public class GameUIRenderer {
 				if (fleetCost > 0 && owner.planetData.maxResourceCapacity > 0) {
 					renderResourceCircle(selected.position.x, selected.position.y, fleetCost < selected.currentResources ? Color.GREEN : Color.RED, (float)(fleetCost / owner.planetData.maxResourceCapacity));
 				}
-			}
-			if (owner.ships.size() > 1 && inputManager.getSelectedShipId() == null) {
-				renderShipSelectionCircle(selected.position.x, selected.position.y, owner, inputManager.getSelectedShipId());
 			}
 		}
 	}
@@ -284,48 +293,64 @@ public class GameUIRenderer {
 		Planet selected = (selectedId != null) ? EngineUtility.getPlanet(state.planets, selectedId) : null;
 		if (selected != null && Gdx.input.isTouched()) {
 			Vector3 cursorWorld = inputManager.getCurrentTouchWorldPosition(camera);
-			
-			shapeRenderer.end();
+			Gdx.gl.glEnable(GL20.GL_BLEND);
+	    	Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 			shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 			shapeRenderer.setColor(Color.LIGHT_GRAY);
 			shapeRenderer.line(selected.position.x, selected.position.y, cursorWorld.x, cursorWorld.y);
-			
 			shapeRenderer.end();
+			
 			shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 			shapeRenderer.setColor(Color.LIGHT_GRAY);
 			drawArrow(cursorWorld, selected.position.x, selected.position.y);
 			shapeRenderer.end();
-			Gdx.gl.glLineWidth(1f);
+			Gdx.gl.glDisable(GL20.GL_BLEND);
+		}
+	}
+	
+	private void renderArrowLabel() {
+		if (inputManager.getSelectedPlanetId() != null && inputManager.getSelectedShipId() != null && Gdx.input.isTouched()) {
+			float arrowLabelYOffset = 40f;
+			Integer selectedId = inputManager.getSelectedPlanetId();
+			Planet selected = (selectedId != null) ? EngineUtility.getPlanet(state.planets, selectedId) : null;
+			Player owner = EngineUtility.getPlayer(state.players, selected.ownerId);
+			String shipName = owner.ships.get(inputManager.getSelectedShipId()).model;
+	        float labelWidth = FontUtil.getFontTextWidthPx(shipName, FontType.SMALL);
+	        Label shipLabel = new Label(shipName);
+	        shipLabel.setColor(new Color(SkinManager.skinColor));
+	        shipLabel.setBounds(new Rectangle(InputUtil.getMouseX() - (labelWidth / 2), InputUtil.getMouseY() - 10f + arrowLabelYOffset, labelWidth, 20f));
+	        shipLabel.setType(FontType.SMALL);
+	        shipLabel.render();
 		}
 	}
 
-	private void renderShipSelectionCircle(float x, float y, Player owner, Integer selectedShipId) {
+	private void renderShipSelectionCircle(float x, float y, Player owner) {
 	    int shipCount = owner.ships.size();
-	    float outerRadius = EngineUtility.PLANET_RADIUS + 30f;
+	    float outerRadius = EngineUtility.PLANET_RADIUS + 40f;
 	    float innerRadius = EngineUtility.PLANET_RADIUS + 10f;
 	    float sectionAngle = 360f / shipCount;
+	    float marginAngle = 30f / shipCount;
 	    
-	    shapeRenderer.end();
-	    Gdx.gl.glEnable(GL20.GL_BLEND);
-	    Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-	    
-	    shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-	    
-	    // Draw selection circle divided into sections
 	    for (int i = 0; i < shipCount; i++) {
-	        // Highlight selected ship
-	        boolean isSelected = (selectedShipId != null && selectedShipId == i);
+	    	Gdx.gl.glEnable(GL20.GL_BLEND);
+	    	Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		    shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+	        boolean isSelected = (inputManager.getHoveredShipId() != null && inputManager.getHoveredShipId() == i);
 	        if (isSelected) {
-	            shapeRenderer.setColor(1f, 1f, 0.5f, 0.7f); // Highlight color
+	            shapeRenderer.setColor(new Color(SkinManager.skinColor.r, SkinManager.skinColor.g, SkinManager.skinColor.b, 0.5f));
 	        } else {
-	            shapeRenderer.setColor(0.5f, 0.5f, 0.5f, 0.5f); // Normal color
+	            shapeRenderer.setColor(new Color(0.5f, 0.5f, 0.5f, 0.3f));
 	        }
 	        
-	        float startAngle = i * sectionAngle;
-	        float endAngle = (i + 1) * sectionAngle;
+	        float angleOffset = - 90;
+	        if (shipCount == 4) {
+	        	angleOffset = - 45;
+	        }
 	        
-	        // Draw wedge for this ship type
-	        for (float angle = startAngle; angle < endAngle; angle += 1f) {
+	        float startAngle = i * sectionAngle + angleOffset;
+	        float endAngle = (i + 1) * sectionAngle + angleOffset;
+	        
+	        for (float angle = startAngle + marginAngle; angle < endAngle - marginAngle; angle += 1f) {
 	            float rad1 = (float) Math.toRadians(angle);
 	            float rad2 = (float) Math.toRadians(angle + 1f);
 	            
@@ -341,19 +366,22 @@ public class GameUIRenderer {
 	            shapeRenderer.triangle(x1, y1, x2, y2, x3, y3);
 	            shapeRenderer.triangle(x1, y1, x3, y3, x4, y4);
 	        }
+	        shapeRenderer.end();
+	        Gdx.gl.glDisable(GL20.GL_BLEND);
 	        
-	        // Draw ship type indicator (could be improved with ship icons later)
 	        float midAngle = (float) Math.toRadians((startAngle + endAngle) / 2);
-	        float labelX = x + (innerRadius + outerRadius) / 2 * (float) Math.cos(midAngle);
-	        float labelY = y + (innerRadius + outerRadius) / 2 * (float) Math.sin(midAngle);
+	        float labelX = x + (50f + outerRadius) * (float) Math.cos(midAngle);
+	        float labelY = y + (50f + outerRadius) * (float) Math.sin(midAngle);
+	        Vector3 labelPos = camera.project(new Vector3(labelX, labelY, 0f));
 	        
-	        shapeRenderer.setColor(Color.WHITE);
-	        shapeRenderer.circle(labelX, labelY, 5f);
+	        String shipName = owner.ships.get(i).model;
+	        float labelWidth = FontUtil.getFontTextWidthPx(shipName, FontType.SMALL);
+	        Label shipLabel = new Label(shipName);
+	        shipLabel.setColor(new Color(SkinManager.skinColor));
+	        shipLabel.setBounds(new Rectangle(labelPos.x - (labelWidth / 2), labelPos.y - 10f, labelWidth, 20f));
+	        shipLabel.setType(FontType.SMALL);
+	        shipLabel.render();
 	    }
-	    
-	    shapeRenderer.end();
-	    Gdx.gl.glDisable(GL20.GL_BLEND);
-	    shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 	}
 
 	private void drawArrow(Vector3 to, float fromX, float fromY) {

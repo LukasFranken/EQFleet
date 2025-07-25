@@ -23,7 +23,7 @@ public class DefenseUIRenderer {
 	public DefenseUIRenderer() {
 		TextureManager.createShapeTexture("ui_defense_border_planet",
 			    ComplexShapeType.ROUNDED_RECTANGLE,
-			    new Rectangle(100, 100, 40, 6),
+			    new Rectangle(100, 100, 32, 6),
 			    new Color(0.5f, 0.5f, 0.5f, 1f), 
 			    0.3f);
 		TextureManager.createShapeTexture("ui_defense_border_ship",
@@ -39,23 +39,31 @@ public class DefenseUIRenderer {
 				Defense defense = planet.defense;
 				Vector3 screenPos = camera.project(new Vector3(planet.position.x, planet.position.y, 0f));
 				TextureManager.draw("ui_defense_border_planet", 
-						new Rectangle(screenPos.x - 20 - 100, 
-								screenPos.y - 3 - 100, 
+						new Rectangle(screenPos.x - 16 - 100, 
+								screenPos.y - 1 - 100, 
+								Gdx.graphics.getWidth(),
+								Gdx.graphics.getHeight()),
+						1f);
+				TextureManager.draw("ui_defense_border_planet", 
+						new Rectangle(screenPos.x - 16 - 100, 
+								screenPos.y - 5 - 100, 
 								Gdx.graphics.getWidth(),
 								Gdx.graphics.getHeight()),
 						1f);
 				
-				PlainRectangularLoadingBar armorBar = createBar(Color.ORANGE);
-				armorBar.setBounds(new Rectangle(screenPos.x - 19, screenPos.y - 2, 38, 4));
-				armorBar.setCurrentValue(defense.currentArmor);
-				armorBar.setMaxValue(defense.armor);
-				armorBar.render();
-				
-				PlainRectangularLoadingBar shieldBar = createBar(new Color(0, 0.8f, 0.8f, 1f));
-				shieldBar.setBounds(new Rectangle(screenPos.x - 19, screenPos.y - 2, 38, 4));
-				shieldBar.setCurrentValue(defense.currentShield);
-				shieldBar.setMaxValue(defense.shield);
-				shieldBar.render();
+				if (defense.currentArmor > 0) {
+					PlainRectangularLoadingBar armorBar = createBar(Color.ORANGE);
+					armorBar.setBounds(new Rectangle(screenPos.x - 15, screenPos.y - 4, 30, 4));
+					armorBar.setCurrentValue(defense.currentArmor);
+					armorBar.setMaxValue(defense.armor);
+					armorBar.render();
+					
+					PlainRectangularLoadingBar shieldBar = createBar(new Color(0, 0.8f, 0.8f, 1f));
+					shieldBar.setBounds(new Rectangle(screenPos.x - 15, screenPos.y, 30, 4));
+					shieldBar.setCurrentValue(defense.currentShield);
+					shieldBar.setMaxValue(defense.shield);
+					shieldBar.render();
+				}
 			}
 		}
 		
@@ -90,17 +98,19 @@ public class DefenseUIRenderer {
 	                            Gdx.graphics.getHeight()),
 	                    1f);
 
-	            PlainRectangularLoadingBar armorBar = createBar(Color.ORANGE);
-	            armorBar.setBounds(new Rectangle(screenPos.x - 9, screenPos.y - 16 + yOffset, 18, 2));
-	            armorBar.setCurrentValue(defense.currentArmor);
-	            armorBar.setMaxValue(defense.armor);
-	            armorBar.render();
+	            if (defense.currentArmor > 0) {
+	            	PlainRectangularLoadingBar armorBar = createBar(Color.ORANGE);
+		            armorBar.setBounds(new Rectangle(screenPos.x - 9, screenPos.y - 16 + yOffset, 18, 2));
+		            armorBar.setCurrentValue(defense.currentArmor);
+		            armorBar.setMaxValue(defense.armor);
+		            armorBar.render();
 
-	            PlainRectangularLoadingBar shieldBar = createBar(new Color(0, 0.8f, 0.8f, 1f));
-	            shieldBar.setBounds(new Rectangle(screenPos.x - 9, screenPos.y - 16 + yOffset, 18, 2));
-	            shieldBar.setCurrentValue(defense.currentShield);
-	            shieldBar.setMaxValue(defense.shield);
-	            shieldBar.render();
+		            PlainRectangularLoadingBar shieldBar = createBar(new Color(0, 0.8f, 0.8f, 1f));
+		            shieldBar.setBounds(new Rectangle(screenPos.x - 9, screenPos.y - 16 + yOffset, 18, 2));
+		            shieldBar.setCurrentValue(defense.currentShield);
+		            shieldBar.setMaxValue(defense.shield);
+		            shieldBar.render();
+	            }
 	        }
 	    }
 	}

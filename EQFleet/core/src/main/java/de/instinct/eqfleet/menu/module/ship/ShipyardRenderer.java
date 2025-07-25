@@ -148,7 +148,7 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 		popupContent.setMargin(10f);
 		popupContent.getElements().add(shipModelPreview);
 		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("TYPE", shipData.type.toString(), popupWidth));
-		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("COST", shipData.cost + "", popupWidth));
+		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("RES. COST", shipData.cost + "", popupWidth));
 		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("CP COST", shipData.commandPointsCost + "", popupWidth));
 		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("SPEED", StringUtils.format(shipData.movementSpeed, 0) + "", popupWidth));
 		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("----------", "----------", popupWidth));

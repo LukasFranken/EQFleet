@@ -22,6 +22,7 @@ import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
 import de.instinct.eqfleet.menu.common.components.DefaultLabelFactory;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.main.MenuModel;
+import de.instinct.eqfleet.menu.module.inventory.Inventory;
 import de.instinct.eqfleet.menu.module.ship.ShipyardModel;
 import de.instinct.eqfleet.menu.module.workshop.message.BuildShipMessage;
 import de.instinct.eqfleet.menu.module.workshop.message.UpgradeShipMessage;
@@ -190,7 +191,7 @@ public class WorkshopRenderer extends BaseModuleRenderer {
 			popupContent.getElements().add(DefaultLabelFactory.createLabelStack(" ", " ", popupWidth));
 			popupContent.getElements().add(DefaultLabelFactory.createLabelStack("COST", "----------", popupWidth));
 			for (ResourceAmount cost : level.getCost()) {
-				popupContent.getElements().add(DefaultLabelFactory.createLabelStack(cost.getType().toString(), StringUtils.formatBigNumber(Math.abs(cost.getAmount())), popupWidth));
+				popupContent.getElements().add(DefaultLabelFactory.createCostStack(cost, popupWidth));
 			}
 		}
 		
@@ -239,7 +240,7 @@ public class WorkshopRenderer extends BaseModuleRenderer {
 		popupContent.getElements().add(shipModelPreview);
 		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("BUILD COST", "----------", popupWidth));
 		for (ResourceAmount cost : bundledShipData.getBlueprint().getBuildCost()) {
-			popupContent.getElements().add(DefaultLabelFactory.createLabelStack(cost.getType().toString(), StringUtils.formatBigNumber(Math.abs(cost.getAmount())), popupWidth));
+			popupContent.getElements().add(DefaultLabelFactory.createCostStack(cost, popupWidth));
 		}
 		ColorButton buildButton = DefaultButtonFactory.colorButton("Build", new Action() {
 			

@@ -19,11 +19,12 @@ public class GameInputManager {
 	private float HITBOX_INCREASE = 50f;
 	
 	private Integer selectedPlanetId = null;
+	private Integer hoveredShipId = null;
     private Integer selectedShipId = null;
     
     private Vector3 dragStartPosition = new Vector3();
     private boolean isDragging = false;
-    private float shipSelectionThreshold = 10f;
+    private float shipSelectionThreshold = 40f;
     
     public void handleInput(PerspectiveCamera camera, GameState state) {
         if (!GameModel.inputEnabled) {
@@ -43,11 +44,9 @@ public class GameInputManager {
             }
         }
         
-        // Handle ship selection while dragging
         if (Gdx.input.isTouched() && selectedPlanetId != null && isDragging) {
             Player player = getPlayerForSelectedPlanet(state);
             if (player != null && player.ships.size() > 1 && selectedShipId == null) {
-                // Calculate which ship is selected based on drag direction
                 updateShipSelectionFromDrag(worldTouch, state);
             }
         }
@@ -79,20 +78,29 @@ public class GameInputManager {
         float dy = currentPosition.y - sourcePlanet.position.y;
         float distance = (float) Math.sqrt(dx * dx + dy * dy);
         
-        if (distance < EngineUtility.PLANET_RADIUS + shipSelectionThreshold) {
-            selectedShipId = null;
-            return;
-        }
-        
         float angle = (float) Math.toDegrees(Math.atan2(dy, dx));
         if (angle < 0) angle += 360;
         
         Player player = getPlayerForSelectedPlanet(state);
         int shipCount = player.ships.size();
+        if (shipCount == 3) {
+        	angle = angle + 30f; 
+        }
         
         float sectorSize = 360f / shipCount;
         int selectedShipIndex = (int)((angle + sectorSize/2) % 360 / sectorSize);
-        selectedShipId = selectedShipIndex;
+        
+        if (distance < EngineUtility.PLANET_RADIUS + shipSelectionThreshold) {
+            selectedShipId = null;
+            if (distance > EngineUtility.PLANET_RADIUS) {
+            	hoveredShipId = selectedShipIndex;
+            } else {
+            	hoveredShipId = null;
+            }
+        } else {
+            selectedShipId = selectedShipIndex;
+            hoveredShipId = null;
+        }
     }
     
     private Player getPlayerForSelectedPlanet(GameState state) {
@@ -122,6 +130,10 @@ public class GameInputManager {
     
     public Integer getSelectedShipId() {
 		return selectedShipId;
+	}
+    
+    public Integer getHoveredShipId() {
+		return hoveredShipId;
 	}
 
     public Planet getHoveredPlanet(PerspectiveCamera camera, GameState state) {

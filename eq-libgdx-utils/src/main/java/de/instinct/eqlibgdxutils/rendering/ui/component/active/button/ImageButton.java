@@ -17,6 +17,10 @@ public class ImageButton extends Button {
 	private Texture downTexture;
 	
 	private float margin;
+	
+	public ImageButton() {
+		super();
+	}
 
 	@Override
 	protected float calculateWidth() {

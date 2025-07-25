@@ -10,13 +10,13 @@ import de.instinct.api.core.API;
 import de.instinct.api.core.modules.MenuModule;
 import de.instinct.api.matchmaking.dto.LobbyStatusCode;
 import de.instinct.api.matchmaking.dto.MatchmakingStatusResponseCode;
-import de.instinct.api.matchmaking.model.GameMode;
 import de.instinct.api.matchmaking.model.GameType;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.main.MenuModel;
 import de.instinct.eqfleet.menu.main.ModuleMessage;
+import de.instinct.eqfleet.menu.module.play.message.UpdateLobbyStatusMessage;
 import de.instinct.eqfleet.net.WebManager;
 
 public class Play extends BaseModule {
@@ -52,6 +52,10 @@ public class Play extends BaseModule {
 
 	@Override
 	public boolean process(ModuleMessage message) {
+		if (message instanceof UpdateLobbyStatusMessage) {
+			updateLobby();
+			return true;
+		}
 		return false;
 	}
 	
@@ -138,8 +142,8 @@ public class Play extends BaseModule {
 		WebManager.enqueue(
     			() -> API.matchmaking().get(),
 			    resultUUID -> {
-			    	PlayModel.lobbyUUID = resultUUID;
-			    	if (PlayModel.lobbyUUID != null) {
+			    	if (resultUUID != null && !resultUUID.contentEquals("")) {
+			    		PlayModel.lobbyUUID = resultUUID;
 			    		WebManager.enqueue(
 	                			() -> API.matchmaking().status(PlayModel.lobbyUUID),
 	    					    resultStatus -> {
@@ -156,34 +160,34 @@ public class Play extends BaseModule {
 		PlayModel.lobbyStatus = null;
 		PlayModel.currentMatchmakingStatus = null;
 		scheduler.scheduleAtFixedRate(() -> {
-			if ((MenuModel.activeModule == MenuModule.PLAY || (PlayModel.lobbyStatus != null && PlayModel.lobbyStatus.getType().getGameMode() == GameMode.CONQUEST)) && MenuModel.active) {
-        		if (PlayModel.lobbyUUID == null || PlayModel.lobbyUUID.contentEquals("")) {
-            		WebManager.enqueue(
-                			() -> API.matchmaking().invites(),
-        				    result -> {
-        				    	PlayModel.inviteStatus = result;
-        				    }
-        			);
-        		} else {
-        			WebManager.enqueue(
-                			() -> API.matchmaking().status(PlayModel.lobbyUUID),
-    					    result -> {
-    					    	PlayModel.lobbyStatus = result;
-    					    }
-    				);
-        			if (PlayModel.lobbyStatus != null && (PlayModel.lobbyStatus.getCode() == LobbyStatusCode.MATCHING || PlayModel.lobbyStatus.getCode() == LobbyStatusCode.IN_GAME)) {
-        				WebManager.enqueue(
-        	        			() -> API.matchmaking().matchmaking(PlayModel.lobbyUUID),
-        					    result -> {
-        					    	PlayModel.currentMatchmakingStatus = result;
-        					    	if (result.getCode() == MatchmakingStatusResponseCode.READY) {
-        					    		connectToGameserver();
-        					    	}
-        					    }
-        				);
-        			}
-        		}
-        	}
+			try {
+				if (MenuModel.active) {
+					if (PlayModel.lobbyUUID == null) {
+		        		WebManager.enqueue(
+		            			() -> API.matchmaking().invites(),
+		    				    result -> {
+		    				    	PlayModel.inviteStatus = result;
+		    				    }
+		        		);
+		    		} else {
+		    			updateLobby();
+		    			if (PlayModel.lobbyStatus != null && (PlayModel.lobbyStatus.getCode() == LobbyStatusCode.MATCHING || PlayModel.lobbyStatus.getCode() == LobbyStatusCode.IN_GAME)) {
+		    				WebManager.enqueue(
+		    	        			() -> API.matchmaking().matchmaking(PlayModel.lobbyUUID),
+		    					    result -> {
+		    					    	PlayModel.currentMatchmakingStatus = result;
+		    					    	if (result.getCode() == MatchmakingStatusResponseCode.READY) {
+		    					    		connectToGameserver();
+		    					    	}
+		    					    }
+		    				);
+		    			}
+		    		}
+				}
+			} catch (Exception e) {
+				System.out.println("Play routine failed");
+				e.printStackTrace();
+			}
 		}, 0, QUEUE_UPDATE_CLOCK_MS, TimeUnit.MILLISECONDS);
 	}
 

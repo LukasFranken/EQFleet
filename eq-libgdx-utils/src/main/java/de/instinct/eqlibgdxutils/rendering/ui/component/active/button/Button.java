@@ -17,34 +17,42 @@ public abstract class Button extends Component {
 
 	private Action action;
 	private boolean active;
+	private boolean enabled;
 	private boolean down;
 	private boolean hovered;
 	private HoverInfo hoverInfo;
 	private boolean consoleBypass;
+	
+	public Button() {
+		super();
+		enabled = true;
+	}
 
 	@Override
 	public void updateElement() {
-		Vector3 touchPoint = new Vector3(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY(), 0);
-        if (getBounds().contains(touchPoint.x, touchPoint.y)) {
-        	if (consoleBypass ? InputUtil.isPressedConsole() : InputUtil.isPressed()) {
-    			if (!down) {
-    				down = true;
-            	}
-    			hovered = false;
-    		} else {
-    			if (down) {
-    				if (action != null) {
-    					action.execute();
-    				}
-    				down = false;
-    			} else {
-    				if (Gdx.app.getType() != Application.ApplicationType.Android && Gdx.app.getType() != Application.ApplicationType.iOS) hovered = true;
-    			}
-    		}
-        } else {
-        	down = false;
-        	hovered = false;
-        }
+		if (enabled) {
+			Vector3 touchPoint = new Vector3(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY(), 0);
+	        if (getBounds().contains(touchPoint.x, touchPoint.y)) {
+	        	if (consoleBypass ? InputUtil.isPressedConsole() : InputUtil.isPressed()) {
+	    			if (!down) {
+	    				down = true;
+	            	}
+	    			hovered = false;
+	    		} else {
+	    			if (down) {
+	    				if (action != null) {
+	    					action.execute();
+	    				}
+	    				down = false;
+	    			} else {
+	    				if (Gdx.app.getType() != Application.ApplicationType.Android && Gdx.app.getType() != Application.ApplicationType.iOS) hovered = true;
+	    			}
+	    		}
+	        } else {
+	        	down = false;
+	        	hovered = false;
+	        }
+		}
 	}
 
 }
