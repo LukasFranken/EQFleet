@@ -64,6 +64,13 @@ public class Profile extends BaseModule {
 			    	super.requireUIReload();
 			    }
 		);
+		WebManager.enqueue(
+			    () -> API.commander().data(API.authKey),
+			    result -> {
+			    	ProfileModel.commanderData = result;
+			    	super.requireUIReload();
+			    }
+		);
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -25,6 +26,7 @@ import de.instinct.eqfleet.game.frontend.GameInputManager;
 import de.instinct.eqfleet.game.frontend.GameRenderer;
 import de.instinct.eqfleet.game.frontend.ui.model.GameUIElement;
 import de.instinct.eqfleet.game.frontend.ui.model.UIBounds;
+import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.InputUtil;
 import de.instinct.eqlibgdxutils.rendering.particle.ParticleRenderer;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
@@ -210,17 +212,38 @@ public class GameUIRenderer {
 	}
 	
 	private void renderShipSelection() {
+		renderSelectionShapes();
+		renderArrowLabel();
+		renderCPCostRect();
+		renderShipSelectionCircles();
+	}
+
+	private void renderSelectionShapes() {
+		setDensityLineWidth();
 		shapeRenderer.setProjectionMatrix(camera.combined);
 		Gdx.gl.glEnable(GL20.GL_BLEND);
-		setDensityLineWidth();
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 		shapeRenderer.setColor(Color.LIGHT_GRAY);
 		renderSelected();
 		renderHovered();
 		shapeRenderer.end();
 		renderArrow();
-		renderArrowLabel();
-		renderShipSelectionCircles();
+	}
+
+	private void renderCPCostRect() {
+		if (inputManager.getSelectedPlanetId() != null && inputManager.getSelectedShipId() != null && Gdx.input.isTouched()) {
+			Planet selected = EngineUtility.getPlanet(state.planets, inputManager.getSelectedPlanetId());
+			Player owner = EngineUtility.getPlayer(state.players, selected.ownerId);
+			float shipCPCost = owner.ships.get(inputManager.getSelectedShipId()).commandPointsCost;
+			double maxCP = owner.maxCommandPoints;
+			double currentCP = owner.currentCommandPoints;
+			float thickness = 3f;
+			Rectangle cpCostRectBounds = new Rectangle(bounds.getOwnCPBar().x, bounds.getOwnCPBar().y, bounds.getOwnCPBar().width * (float)(shipCPCost / maxCP), bounds.getOwnCPBar().height);
+			Color rectColor = shipCPCost > currentCP ? new Color(0.5f, 0.5f, 0.5f, 1f) : new Color(0f, 1f, 0f, 1f);
+			complexShapeRenderer.setProjectionMatrix(new Matrix4().setToOrtho2D(0, 0, GraphicsUtil.screenBounds().getWidth(), GraphicsUtil.screenBounds().getHeight()));
+			complexShapeRenderer.setColor(rectColor);
+			complexShapeRenderer.roundRectangle(cpCostRectBounds, thickness);
+		}
 	}
 
 	private void renderShipSelectionCircles() {
@@ -273,7 +296,7 @@ public class GameUIRenderer {
 			if (isTargeting) {
 				Player owner = EngineUtility.getPlayer(state.players, selected.ownerId);
 				Player target = EngineUtility.getPlayer(state.players, hovered.ownerId);
-				int fleetCost = owner.ships.get(0).cost;
+				int fleetCost = owner.ships.get(inputManager.getSelectedShipId()).cost;
 				if (owner.teamId == target.teamId) {
 					renderResourceCircle(hovered.position.x, hovered.position.y, Color.GREEN, (float)(fleetCost / target.planetData.maxResourceCapacity));
 				}
@@ -331,6 +354,7 @@ public class GameUIRenderer {
 	    float sectionAngle = 360f / shipCount;
 	    float marginAngle = 30f / shipCount;
 	    
+	    shapeRenderer.setProjectionMatrix(camera.combined);
 	    for (int i = 0; i < shipCount; i++) {
 	    	Gdx.gl.glEnable(GL20.GL_BLEND);
 	    	Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);

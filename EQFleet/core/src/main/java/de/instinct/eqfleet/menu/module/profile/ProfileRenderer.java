@@ -8,6 +8,7 @@ import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.main.MenuModel;
 import de.instinct.eqfleet.menu.module.profile.message.RegisterMessage;
 import de.instinct.eqfleet.menu.module.profile.model.ExperienceSection;
+import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.LimitedInputField;
@@ -132,6 +133,26 @@ public class ProfileRenderer extends BaseModuleRenderer {
 		usernameLabel.render();
 		
 		experienceSection.render();
+		
+		if (ProfileModel.commanderData != null) {
+			Label maxCPLabel = new Label("Max CP: " + ProfileModel.commanderData.getMaxCommandPoints());
+			maxCPLabel.setPosition(MenuModel.moduleBounds.x, 300);
+			maxCPLabel.setFixedWidth(MenuModel.moduleBounds.width);
+			maxCPLabel.setFixedHeight(30f);
+			maxCPLabel.render();
+			
+			Label startCPLabel = new Label("Start CP: " + ProfileModel.commanderData.getStartCommandPoints());
+			startCPLabel.setPosition(MenuModel.moduleBounds.x, 250);
+			startCPLabel.setFixedWidth(MenuModel.moduleBounds.width);
+			startCPLabel.setFixedHeight(30f);
+			startCPLabel.render();
+			
+			Label cpPerSecLabel = new Label("CP / sec: " + StringUtils.format(ProfileModel.commanderData.getCommandPointsGenerationSpeed(), 2));
+			cpPerSecLabel.setPosition(MenuModel.moduleBounds.x, 200);
+			cpPerSecLabel.setFixedWidth(MenuModel.moduleBounds.width);
+			cpPerSecLabel.setFixedHeight(30f);
+			cpPerSecLabel.render();
+		}
 	}
 
 	@Override

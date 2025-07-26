@@ -18,12 +18,12 @@ GENERAL:
 - invite is not accepted
 - make rocket aoe
 - ship upgrade/buy not enough message with resource name
-
 - render starmap according to menu alpha
+- planet resource upgrades part of construction
+- commander stats under profile
+- maybe zoom further out on later stages and in on earlier ones?
 
 - social module
-
-- draw planet armor and shield seperately
 
 - add model preview to construction popup
  

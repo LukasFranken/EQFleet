@@ -46,8 +46,12 @@ public class GameInputManager {
         
         if (Gdx.input.isTouched() && selectedPlanetId != null && isDragging) {
             Player player = getPlayerForSelectedPlanet(state);
-            if (player != null && player.ships.size() > 1 && selectedShipId == null) {
-                updateShipSelectionFromDrag(worldTouch, state);
+            if (player != null && selectedShipId == null) {
+            	if (player.ships.size() > 1) {
+            		updateShipSelectionFromDrag(worldTouch, state);
+            	} else {
+            		selectedShipId = 0;
+            	}
             }
         }
 
