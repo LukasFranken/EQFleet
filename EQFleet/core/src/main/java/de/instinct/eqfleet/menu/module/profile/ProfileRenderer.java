@@ -1,9 +1,11 @@
 package de.instinct.eqfleet.menu.module.profile;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.api.meta.dto.NameRegisterResponseCode;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
+import de.instinct.eqfleet.menu.common.components.DefaultLabelFactory;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.main.MenuModel;
 import de.instinct.eqfleet.menu.module.profile.message.RegisterMessage;
@@ -16,7 +18,11 @@ import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.model.T
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.model.inputfilter.UsernameTexfieldInputFilter;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.HorizontalAlignment;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
+import de.instinct.eqlibgdxutils.rendering.ui.container.list.ElementStack;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
+import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.ComplexShapeType;
 
 public class ProfileRenderer extends BaseModuleRenderer {
 	
@@ -33,6 +39,7 @@ public class ProfileRenderer extends BaseModuleRenderer {
 	private Rectangle usernameTextFieldBounds;
 	private Rectangle registrationConfirmButtonBounds;
 	private Rectangle registrationResponseLabelBounds;
+	private Rectangle commanderSectionBounds;
 	
 	private Rectangle usernameLabelBounds;
 	
@@ -74,7 +81,7 @@ public class ProfileRenderer extends BaseModuleRenderer {
 		
 		usernameLabel = new Label("");
 		usernameLabel.setType(FontType.LARGE);
-		usernameLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
+		usernameLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
 		
 		experienceSection = new ExperienceSection();
 	}
@@ -104,7 +111,11 @@ public class ProfileRenderer extends BaseModuleRenderer {
 		registrationResponseLabelBounds = new Rectangle(MenuModel.moduleBounds.x, ((MenuModel.moduleBounds.y + MenuModel.moduleBounds.height) / 2) - 50, MenuModel.moduleBounds.width, 30);
 		
 		usernameLabelBounds = new Rectangle(MenuModel.moduleBounds.x + margin, MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - margin - 30, MenuModel.moduleBounds.width - (margin * 2), 30);
-		experienceSection.init(MenuModel.moduleBounds.x + margin, usernameLabelBounds.y - experienceSection.getActualHeight() - margin, MenuModel.moduleBounds.width - (margin * 2));
+		Rectangle experienceSectionBounds = new Rectangle(MenuModel.moduleBounds.x + margin, usernameLabelBounds.y - experienceSection.getActualHeight() - margin, MenuModel.moduleBounds.width - (margin * 2), experienceSection.getActualHeight());
+		experienceSection.init(experienceSectionBounds.x + 20, experienceSectionBounds.y - 10, experienceSectionBounds.width - 40);
+		TextureManager.createShapeTexture("profile_experiencesection", ComplexShapeType.ROUNDED_RECTANGLE, experienceSectionBounds, new Color(SkinManager.skinColor));
+		commanderSectionBounds = new Rectangle(MenuModel.moduleBounds.x + margin, experienceSection.getBounds().y - 110 - margin, MenuModel.moduleBounds.width - (margin * 2), 110);
+		TextureManager.createShapeTexture("profile_commandersection", ComplexShapeType.ROUNDED_RECTANGLE, commanderSectionBounds, new Color(SkinManager.skinColor));
 	}
 
 	private void renderRegistration() {
@@ -132,26 +143,26 @@ public class ProfileRenderer extends BaseModuleRenderer {
 		usernameLabel.setBounds(usernameLabelBounds);
 		usernameLabel.render();
 		
+		TextureManager.draw("profile_experiencesection");
 		experienceSection.render();
 		
 		if (ProfileModel.commanderData != null) {
-			Label maxCPLabel = new Label("Max CP: " + ProfileModel.commanderData.getMaxCommandPoints());
-			maxCPLabel.setPosition(MenuModel.moduleBounds.x, 300);
-			maxCPLabel.setFixedWidth(MenuModel.moduleBounds.width);
-			maxCPLabel.setFixedHeight(30f);
-			maxCPLabel.render();
+			TextureManager.draw("profile_commandersection");
+			float inModuleStackMargin = 20f;
+			ElementStack maxCPLabelStack = DefaultLabelFactory.createLabelStack("Max CP", StringUtils.format(ProfileModel.commanderData.getMaxCommandPoints(), 0), commanderSectionBounds.width - (inModuleStackMargin * 2));
+			maxCPLabelStack.setPosition(commanderSectionBounds.x + inModuleStackMargin, commanderSectionBounds.y + commanderSectionBounds.height - 30);
+			maxCPLabelStack.setFixedHeight(30f);
+			maxCPLabelStack.render();
 			
-			Label startCPLabel = new Label("Start CP: " + ProfileModel.commanderData.getStartCommandPoints());
-			startCPLabel.setPosition(MenuModel.moduleBounds.x, 250);
-			startCPLabel.setFixedWidth(MenuModel.moduleBounds.width);
-			startCPLabel.setFixedHeight(30f);
-			startCPLabel.render();
+			ElementStack startCPLabelStack = DefaultLabelFactory.createLabelStack("Start CP", StringUtils.format(ProfileModel.commanderData.getStartCommandPoints(), 0), commanderSectionBounds.width - (inModuleStackMargin * 2));
+			startCPLabelStack.setPosition(commanderSectionBounds.x + inModuleStackMargin, commanderSectionBounds.y + commanderSectionBounds.height - 60);
+			startCPLabelStack.setFixedHeight(30f);
+			startCPLabelStack.render();
 			
-			Label cpPerSecLabel = new Label("CP / sec: " + StringUtils.format(ProfileModel.commanderData.getCommandPointsGenerationSpeed(), 2));
-			cpPerSecLabel.setPosition(MenuModel.moduleBounds.x, 200);
-			cpPerSecLabel.setFixedWidth(MenuModel.moduleBounds.width);
-			cpPerSecLabel.setFixedHeight(30f);
-			cpPerSecLabel.render();
+			ElementStack cpPerSecLabelStack = DefaultLabelFactory.createLabelStack("CP / sec", StringUtils.format(ProfileModel.commanderData.getCommandPointsGenerationSpeed(), 2), commanderSectionBounds.width - (inModuleStackMargin * 2));
+			cpPerSecLabelStack.setPosition(commanderSectionBounds.x + inModuleStackMargin, commanderSectionBounds.y + commanderSectionBounds.height - 90);
+			cpPerSecLabelStack.setFixedHeight(30f);
+			cpPerSecLabelStack.render();
 		}
 	}
 

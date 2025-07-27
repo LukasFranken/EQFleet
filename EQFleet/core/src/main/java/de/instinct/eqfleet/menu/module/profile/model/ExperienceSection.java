@@ -37,10 +37,9 @@ public class ExperienceSection extends Component {
 	private boolean rankImagesEnabled;
 	
 	public ExperienceSection() {
+		super();
 		rankImagesEnabled = true;
-		
 		uuid = UUID.randomUUID().toString();
-		
 		currentRankNameLabel = new Label("");
 		currentRankNameLabel.setColor(Color.LIGHT_GRAY);
 		currentRankNameLabel.setType(FontType.SMALL);
