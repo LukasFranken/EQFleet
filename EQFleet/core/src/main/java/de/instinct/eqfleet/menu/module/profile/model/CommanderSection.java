@@ -1,6 +1,7 @@
 package de.instinct.eqfleet.menu.module.profile.model;
 
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
