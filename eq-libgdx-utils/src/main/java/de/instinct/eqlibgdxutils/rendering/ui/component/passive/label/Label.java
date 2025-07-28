@@ -60,7 +60,7 @@ public class Label extends Component {
 	@Override
 	protected void renderElement() {
 		if (backgroundColor != null) {
-			TextureManager.draw(TextureManager.createTexture(backgroundColor), getBounds());
+			TextureManager.draw(TextureManager.createTexture(backgroundColor), getBounds(), getAlpha());
 		}
 
 		String[] lines = text.split("\n");

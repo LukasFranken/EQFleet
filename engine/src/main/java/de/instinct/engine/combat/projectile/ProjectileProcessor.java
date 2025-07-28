@@ -73,7 +73,7 @@ public class ProjectileProcessor {
     	Player projectileOwner = EngineUtility.getPlayer(state.players, projectile.ownerId);
         for (Ship ship : state.ships) {
         	if (checkHit(projectile, projectileOwner, ship, state)) {
-        		dealDamage(projectile, ship);
+        		dealDamage(projectile, ship, state);
         		projectile.alive = false;
         		break;
         	}
@@ -81,7 +81,7 @@ public class ProjectileProcessor {
         if (projectile.alive) {
         	for (Planet planet : state.planets) {
         		if (checkHit(projectile, projectileOwner, planet, state)) {
-            		dealDamage(projectile, planet);
+            		dealDamage(projectile, planet, state);
             		projectile.alive = false;
             		break;
             	}
@@ -101,12 +101,44 @@ public class ProjectileProcessor {
     	return false;
 	}
 
-	private void dealDamage(Projectile projectile, Unit target) {
-        float remainingDamage = projectile.damage;
-        float shieldDamage = Math.min(target.defense.currentShield, remainingDamage);
-        target.defense.currentShield -= shieldDamage;
-        remainingDamage -= shieldDamage;
-        target.defense.currentArmor -= remainingDamage;
+	private void dealDamage(Projectile projectile, Unit target, GameState state) {
+        if (projectile.aoeRadius > 0) {
+        	Player projectileOwner = EngineUtility.getPlayer(state.players, projectile.ownerId);
+        	for (Ship pentencialTargetShip : state.ships) {
+        		float distanceToTarget = EntityManager.entityDistance(projectile, pentencialTargetShip);
+        		if (distanceToTarget < projectile.aoeRadius) {
+        			if (projectileOwner.teamId != EngineUtility.getPlayer(state.players, pentencialTargetShip.ownerId).teamId) {
+        				if (pentencialTargetShip.defense != null) {
+        					float remainingDamage = projectile.damage;
+    						float shieldDamage = Math.min(pentencialTargetShip.defense.currentShield, remainingDamage);
+    						pentencialTargetShip.defense.currentShield -= shieldDamage;
+    						remainingDamage -= shieldDamage;
+    						pentencialTargetShip.defense.currentArmor -= remainingDamage;
+        				}
+        			}
+        		}
+        	}
+        	for (Planet pentencialTargetPlanet : state.planets) {
+        		float distanceToTarget = EntityManager.entityDistance(projectile, pentencialTargetPlanet);
+        		if (distanceToTarget < projectile.aoeRadius) {
+        			if (projectileOwner.teamId != EngineUtility.getPlayer(state.players, pentencialTargetPlanet.ownerId).teamId) {
+        				if (pentencialTargetPlanet.defense != null) {
+        					float remainingDamage = projectile.damage;
+    						float shieldDamage = Math.min(pentencialTargetPlanet.defense.currentShield, remainingDamage);
+    						pentencialTargetPlanet.defense.currentShield -= shieldDamage;
+    						remainingDamage -= shieldDamage;
+    						pentencialTargetPlanet.defense.currentArmor -= remainingDamage;
+        				}
+        			}
+        		}
+        	}
+        } else {
+        	float remainingDamage = projectile.damage;
+            float shieldDamage = Math.min(target.defense.currentShield, remainingDamage);
+            target.defense.currentShield -= shieldDamage;
+            remainingDamage -= shieldDamage;
+            target.defense.currentArmor -= remainingDamage;
+        }
     }
 
     public Projectile createProjectile(Unit origin, Unit target, GameState state) {
@@ -132,6 +164,7 @@ public class ProjectileProcessor {
         projectile.weaponType = origin.weapon.type;
 		projectile.movementSpeed = origin.weapon.speed;
 		projectile.damage = origin.weapon.damage;
+		projectile.aoeRadius = origin.weapon.aoeRadius;
 		projectile.radius = 1f;
         projectile.alive = true;
         
@@ -140,6 +173,7 @@ public class ProjectileProcessor {
         	projectile.position = startPosition;
 			((HomingProjectile) projectile).targetId = target.id;
 			projectile.lifetimeMS = 3000;
+			((HomingProjectile) projectile).lastDirection = VectorUtil.getDirection(projectile.position, target.position);
 		}
         if (projectile instanceof DirectionalProjectile) {
         	projectile.lifetimeMS = (int)(origin.weapon.range / projectile.movementSpeed * 1000);

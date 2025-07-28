@@ -11,6 +11,7 @@ public abstract class Projectile extends Entity {
 	public WeaponType weaponType;
 	public float movementSpeed;
 	public float damage;
+	public float aoeRadius;
 	public float elapsedMS;
 	public int lifetimeMS;
 	public boolean alive;

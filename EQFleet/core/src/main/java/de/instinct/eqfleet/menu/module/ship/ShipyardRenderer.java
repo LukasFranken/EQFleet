@@ -153,6 +153,9 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("SPEED", StringUtils.format(shipData.movementSpeed, 0) + "", popupWidth));
 		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("----------", "----------", popupWidth));
 		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("WEAPON", shipData.weapon.type.toString(), popupWidth));
+		if (shipData.weapon.aoeRadius > 0) {
+			popupContent.getElements().add(DefaultLabelFactory.createLabelStack("AOE RADIUS", StringUtils.format(shipData.weapon.aoeRadius, 0), popupWidth));
+		}
 		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("DAMAGE", StringUtils.format(shipData.weapon.damage, 0), popupWidth));
 		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("RANGE", StringUtils.format(shipData.weapon.range, 0), popupWidth));
 		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("COOLDOWN", StringUtils.format(shipData.weapon.cooldown/1000f, 1) + "s", popupWidth));

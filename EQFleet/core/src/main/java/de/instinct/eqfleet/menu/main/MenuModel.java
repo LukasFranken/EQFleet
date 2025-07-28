@@ -14,5 +14,6 @@ public class MenuModel {
 	public static volatile ModuleData unlockedModules;
 	public static volatile ModuleInfoResponse lockedModules;
 	public static volatile boolean loaded;
+	public static volatile float alpha;
 
 }

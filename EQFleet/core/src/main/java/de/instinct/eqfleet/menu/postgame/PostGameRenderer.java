@@ -5,6 +5,10 @@ import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 
+import de.instinct.api.commander.dto.CommanderStat;
+import de.instinct.api.commander.dto.CommanderUpgrade;
+import de.instinct.api.commander.dto.RankUpCommanderUpgrade;
+import de.instinct.api.core.API;
 import de.instinct.api.matchmaking.model.GameMode;
 import de.instinct.api.meta.dto.ResourceAmount;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
@@ -149,19 +153,24 @@ public class PostGameRenderer extends BaseModuleRenderer {
 						}
 
 						private void createRankUpPopup() {
+							RankUpCommanderUpgrade rankUpCommanderUpgrade = API.commander().upgrade(ProfileModel.profile.getRank());
 							ElementList rankUpElementList = new ElementList();
 							rankUpElementList.setMargin(20);
 							
 							Image newRankImage = new Image(TextureManager.getTexture("ui/image/rank", ProfileModel.profile.getRank().getFileName()));
-							newRankImage.setFixedWidth(100);
+							newRankImage.setFixedWidth(120);
 							newRankImage.setFixedHeight(100);
 							rankUpElementList.getElements().add(newRankImage);
 							
 							Label newRankLabel = new Label(ProfileModel.profile.getRank().getLabel());
 							newRankLabel.setFixedHeight(30);
-							newRankLabel.setFixedWidth(100);
+							newRankLabel.setFixedWidth(120);
 							newRankLabel.setType(FontType.SMALL);
 							rankUpElementList.getElements().add(newRankLabel);
+							
+							for (CommanderUpgrade upgrade : rankUpCommanderUpgrade.getUpgrades()) {
+								rankUpElementList.getElements().add(DefaultLabelFactory.createLabelStack(upgrade.getStat().getLabel(), "+" + (upgrade.getStat() == CommanderStat.CP_PER_SECOND ? StringUtils.format(upgrade.getValue(), 2) : StringUtils.format(upgrade.getValue(), 0)), 120));
+							}
 							
 							ColorButton acceptButton = DefaultButtonFactory.colorButton("Accept", new Action() {
 								

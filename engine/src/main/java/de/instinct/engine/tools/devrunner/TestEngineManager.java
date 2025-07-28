@@ -196,6 +196,27 @@ public class TestEngineManager {
 		playerShipDefenseTurtle.shieldRegenerationSpeed = 0.1f;
 		playerShipTurtle.defense = playerShipDefenseTurtle;
 		player.ships.add(playerShipTurtle);
+		
+		ShipData playerShipShark = new ShipData();
+		playerShipShark.model = "shark";
+		playerShipShark.type = ShipType.FIGHTER;
+		playerShipShark.movementSpeed = 100;
+		playerShipShark.cost = 3;
+		playerShipShark.commandPointsCost = 1;
+		Weapon playerShipWeaponShark = new Weapon();
+		playerShipWeaponShark.type = WeaponType.MISSILE;
+		playerShipWeaponShark.damage = 5;
+		playerShipWeaponShark.aoeRadius = 1000f;
+		playerShipWeaponShark.range = 100f;
+		playerShipWeaponShark.cooldown = 2000;
+		playerShipWeaponShark.speed = 80f;
+		playerShipShark.weapon = playerShipWeaponShark;
+		Defense playerShipDefenseShark = new Defense();
+		playerShipDefenseShark.shield = 6;
+		playerShipDefenseShark.armor = 15;
+		playerShipDefenseShark.shieldRegenerationSpeed = 0.1f;
+		playerShipShark.defense = playerShipDefenseShark;
+		player.ships.add(playerShipShark);
 		return player;
 	}
 

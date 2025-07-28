@@ -50,8 +50,6 @@ public class MenuRenderer extends BaseModuleRenderer {
 	private Label title;
 	private float titleHeight = 40f;
 	
-	private float alpha;
-	
 	private Rectangle menuBounds;
 	
 	private ColorButton closeModuleButton;
@@ -124,7 +122,7 @@ public class MenuRenderer extends BaseModuleRenderer {
 	}
 	
 	public void close() {
-		alpha = 0f;
+		MenuModel.alpha = 0f;
 		elapsed = 0f;
 		menuBounds = null;
 	}
@@ -172,7 +170,7 @@ public class MenuRenderer extends BaseModuleRenderer {
 		if (menuBounds != null) {
 			renderIntro();
 			renderHeader();
-			TextureManager.draw("main_menuOutline", alpha);
+			TextureManager.draw("main_menuOutline", MenuModel.alpha);
 			if (MenuModel.activeModule == null) {
 				renderModuleButtons();
 			} else {
@@ -193,7 +191,7 @@ public class MenuRenderer extends BaseModuleRenderer {
 		closeModuleButton.setFixedWidth(titleHeight);
 		closeModuleButton.setPosition(titleBounds.x + titleBounds.width - titleHeight, titleBounds.y);
 		closeModuleButton.render();
-		TextureManager.draw("main_titleOutline", alpha);
+		TextureManager.draw("main_titleOutline", MenuModel.alpha);
 	}
 
 	private void renderIntro() {
@@ -210,33 +208,33 @@ public class MenuRenderer extends BaseModuleRenderer {
 		} else {
 			menuBackground.setBounds(menuBounds);
 			if (elapsed < OPEN_ANIMATION_DURATION) {
-				alpha = (elapsed - (OPEN_ANIMATION_DURATION / 2)) / (OPEN_ANIMATION_DURATION / 2);
+				MenuModel.alpha = (elapsed - (OPEN_ANIMATION_DURATION / 2)) / (OPEN_ANIMATION_DURATION / 2);
 			} else {
-				alpha = 1f;
+				MenuModel.alpha = 1f;
 			}
 		}
 		menuBackground.render();
 	}
 
 	private void renderHeader() {
-		if (ProfileModel.profile != null) {
+		if (ProfileModel.profile != null && MenuModel.unlockedModules.getEnabledModules().contains(MenuModule.PROFILE)) {
 			if (MenuModel.activeModule != MenuModule.PROFILE) {
-				TextureManager.draw(TextureManager.getTexture("ui/image/rank", ProfileModel.profile.getRank().getFileName()), new Rectangle(menuBounds.x + 5, menuBounds.y + menuBounds.height + 15, 25, 25), alpha);
+				TextureManager.draw(TextureManager.getTexture("ui/image/rank", ProfileModel.profile.getRank().getFileName()), new Rectangle(menuBounds.x + 5, menuBounds.y + menuBounds.height + 15, 25, 25), MenuModel.alpha);
 				
 				if (ProfileModel.profile.getUsername() != null) usernameLabel.setText(ProfileModel.profile.getUsername());
 				usernameLabel.setBounds(new Rectangle(menuBounds.x + 50, menuBounds.y + menuBounds.height + 20, 100, 25));
-				usernameLabel.setAlpha(alpha);
+				usernameLabel.setAlpha(MenuModel.alpha);
 				usernameLabel.render();
 				expBar.setBounds(new Rectangle(menuBounds.x + 65, menuBounds.y + menuBounds.height + 10, 100, 7));
 				Label expLabel = new Label("EXP");
 				expLabel.setColor(Color.BLUE);
 				expLabel.setType(FontType.TINY);
 				expLabel.setBounds(new Rectangle(menuBounds.x + 45, menuBounds.y + menuBounds.height + 10, 20, 7));
-				expLabel.setAlpha(alpha);
+				expLabel.setAlpha(MenuModel.alpha);
 				expLabel.render();
 				expBar.setMaxValue(ProfileModel.profile.getRank().getNextRequiredExp() - ProfileModel.profile.getRank().getRequiredExp());
 				expBar.setCurrentValue(ProfileModel.profile.getCurrentExp() - ProfileModel.profile.getRank().getRequiredExp());
-				expBar.setAlpha(alpha);
+				expBar.setAlpha(MenuModel.alpha);
 				expBar.render();
 				
 				Rectangle profileBounds = new Rectangle(0, menuBounds.y + menuBounds.height + 10, 185, 200);
@@ -247,9 +245,9 @@ public class MenuRenderer extends BaseModuleRenderer {
 		        	}
 		        }
 		        
-		        TextureManager.draw("main_rankOutline", alpha);
-				TextureManager.draw("main_nameOutline", alpha);
-				TextureManager.draw("main_expOutline", alpha);
+		        TextureManager.draw("main_rankOutline", MenuModel.alpha);
+				TextureManager.draw("main_nameOutline", MenuModel.alpha);
+				TextureManager.draw("main_expOutline", MenuModel.alpha);
 			}
 		}
 		if (InventoryModel.resources != null && MenuModel.unlockedModules.getEnabledModules().contains(MenuModule.INVENTORY)) {
@@ -264,10 +262,10 @@ public class MenuRenderer extends BaseModuleRenderer {
 		        
 				creditsLabel.setBounds(new Rectangle(menuBounds.x + menuBounds.width - 95, menuBounds.y + menuBounds.height + 10, 75, 20));
 				creditsLabel.setText(StringUtils.formatBigNumber(Inventory.getResource(Resource.CREDITS)));
-				creditsLabel.setAlpha(alpha);
+				creditsLabel.setAlpha(MenuModel.alpha);
 		        creditsLabel.render();
-		        TextureManager.draw(TextureManager.getTexture("ui/image", "credits"), new Rectangle(menuBounds.x + menuBounds.width - 16, menuBounds.y + menuBounds.height + 12, 16, 16), alpha);
-				TextureManager.draw("main_creditsOutline", alpha);
+		        TextureManager.draw(TextureManager.getTexture("ui/image", "credits"), new Rectangle(menuBounds.x + menuBounds.width - 16, menuBounds.y + menuBounds.height + 12, 16, 16), MenuModel.alpha);
+				TextureManager.draw("main_creditsOutline", MenuModel.alpha);
 			}
 		}
 	}
@@ -281,8 +279,8 @@ public class MenuRenderer extends BaseModuleRenderer {
 			int column = i % elementsPerRow;
 			int row = 1 + ((int)i / elementsPerRow);
 			moduleButton.setPosition(menuBounds.x + margin + ((50 + margin) * column), menuBounds.y + menuBounds.height - ((70 + margin) * row) + (moduleButton instanceof LabeledModelButton ? 0f : 20f));
-			moduleButton.setAlpha(alpha);
-			moduleButton.setEnabled(alpha > 0.5f);
+			moduleButton.setAlpha(MenuModel.alpha);
+			moduleButton.setEnabled(MenuModel.alpha > 0.5f);
 			moduleButton.render();
 			i++;
 		}

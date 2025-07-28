@@ -40,9 +40,12 @@ import de.instinct.eqlibgdxutils.rendering.ui.component.passive.image.Image;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.HorizontalAlignment;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.container.list.ElementList;
+import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
+import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.popup.Popup;
 import de.instinct.eqlibgdxutils.rendering.ui.popup.PopupRenderer;
+import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 
 public class StarmapRenderer extends BaseModuleRenderer {
@@ -75,6 +78,7 @@ public class StarmapRenderer extends BaseModuleRenderer {
 	public void render() {
 		if (StarmapModel.starmapData != null) {
 			ViewportUtil.apply(MenuModel.moduleBounds);
+			gridRenderer.setAlpha(MenuModel.alpha);
 			gridRenderer.drawGrid(camera);
 			updateZoom();
 			renderSectorMap();
@@ -170,6 +174,8 @@ public class StarmapRenderer extends BaseModuleRenderer {
 
 	private void renderGalaxy(Galaxy galaxy) {
 		Decal decal = galaxy.getDecal();
+		Color currentColor = decal.getColor();
+	    decal.setColor(currentColor.r, currentColor.g, currentColor.b, MenuModel.alpha);
 		decal.lookAt(camera.position, camera.up);
 		decalBatch.add(decal);
 		Vector3 renderingViewportScreenPos = camera.project(new Vector3(
@@ -185,13 +191,27 @@ public class StarmapRenderer extends BaseModuleRenderer {
 	
 	private void renderGalaxyUI() {
 		if (galaxyZoomFactor < 0.05f) {
-			for (Galaxy galaxy : galaxies) {;
+			String campaignLabelString = "SOLO CONQUEST";
+			Label campaignLabel = new Label(campaignLabelString);
+			Border campaignBorder = new Border();
+			campaignBorder.setColor(new Color(SkinManager.skinColor));
+			campaignBorder.setSize(2f);
+			campaignLabel.setType(FontType.LARGE);
+			campaignLabel.setFixedWidth(FontUtil.getFontTextWidthPx(campaignLabelString, FontType.LARGE) + 20f);
+			campaignLabel.setFixedHeight(40f);
+			campaignLabel.setPosition(MenuModel.moduleBounds.x + (MenuModel.moduleBounds.width / 2) - (campaignLabel.getFixedWidth() / 2), MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - 70f);
+			campaignLabel.setBorder(campaignBorder);
+			campaignLabel.setBackgroundColor(Color.BLACK);
+			campaignLabel.setAlpha(MenuModel.alpha);
+			campaignLabel.render();
+			for (Galaxy galaxy : galaxies) {
 				Label galaxyNameLabel = new Label(galaxy.getData().getName().toUpperCase());
 				galaxyNameLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
 				galaxyNameLabel.setType(FontType.SMALL);
 				galaxyNameLabel.setFixedWidth(200f);
 				galaxyNameLabel.setFixedHeight(20f);
 				galaxyNameLabel.setColor(Color.GRAY);
+				galaxyNameLabel.setAlpha(MenuModel.alpha);
 				galaxyNameLabel.setPosition(galaxy.getScreenPos().x - (galaxyNameLabel.getFixedWidth() / 2), galaxy.getScreenPos().y + 30f);
 				galaxyNameLabel.render();
 				
@@ -201,6 +221,7 @@ public class StarmapRenderer extends BaseModuleRenderer {
 				galaxyLevelLabel.setFixedWidth(200f);
 				galaxyLevelLabel.setFixedHeight(20f);
 				galaxyLevelLabel.setColor(Color.GRAY);
+				galaxyLevelLabel.setAlpha(MenuModel.alpha);
 				galaxyLevelLabel.setPosition(galaxy.getScreenPos().x - (galaxyNameLabel.getFixedWidth() / 2), galaxy.getScreenPos().y - 50f);
 				galaxyLevelLabel.render();
 			}
@@ -251,6 +272,7 @@ public class StarmapRenderer extends BaseModuleRenderer {
 		systemInfoElements.getElements().add(DefaultLabelFactory.createLabelStack("Threat Level", StringUtils.formatBigNumber(starsystem.getThreatLevel(), 0), popupWidth));
 		systemInfoElements.getElements().add(DefaultLabelFactory.createLabelStack("-------------", "-------------", popupWidth));
 		systemInfoElements.getElements().add(DefaultLabelFactory.createLabelStack("EXP", StringUtils.formatBigNumber(starsystem.getExperience()), popupWidth));
+		systemInfoElements.getElements().add(DefaultLabelFactory.createLabelStack("-------------", "-------------", popupWidth));
 		for (ResourceAmount resource : starsystem.getResourceRewards()) {
 			systemInfoElements.getElements().add(DefaultLabelFactory.createLabelStack(resource.getType().toString(), StringUtils.formatBigNumber(resource.getAmount()), popupWidth));
 		}

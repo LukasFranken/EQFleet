@@ -16,14 +16,13 @@ GENERAL:
 
 - show rank in lobby
 - invite is not accepted
-- make rocket aoe
-- ship upgrade/buy not enough message with resource name
-- render starmap according to menu alpha
 - planet resource upgrades part of construction
-- commander stats under profile
-- maybe zoom further out on later stages and in on earlier ones?
-
-- social module
+- explosion animation
+- zoom factor and game time per conq map
+- duo, trio campaign via social group
+- social module, squad and aliance with vault
+- stats in profile like gametime, furthest in each campaign
+- void run = coop dungeoncrawler
 
 - add model preview to construction popup
  

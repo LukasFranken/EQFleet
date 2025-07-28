@@ -87,6 +87,7 @@ public class Workshop extends BaseModule {
 				    result -> {
 				    	WorkshopModel.shipUpgradeResponse = result;
 				    	if (result == ShipUpgradeResponse.SUCCESS) {
+				    		Menu.queue(LoadResourcesMessage.builder().build());
 				    		loadData();
 				    	} else {
 				    		super.requireUIReload();
