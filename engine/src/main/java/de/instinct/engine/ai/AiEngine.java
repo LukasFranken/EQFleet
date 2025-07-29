@@ -26,11 +26,8 @@ public class AiEngine {
 		difficultyLoader = new DifficultyLoader();
 	}
 	
-	public AiPlayer initialize(AiDifficulty difficulty, int threatLevel) {
+	public AiPlayer initialize(int threatLevel) {
 		AiPlayer newAiPlayer = new AiPlayer();
-		difficultyLoader.load(newAiPlayer, difficulty);
-		
-		newAiPlayer.name = "AI (" + difficulty.toString() + ")";
 		newAiPlayer.ships = new ArrayList<>();
 		ShipData aiShip = new ShipData();
 		aiShip.cost = 5;
@@ -57,6 +54,9 @@ public class AiEngine {
 		newAiPlayer.startCommandPoints = 3;
 		newAiPlayer.maxCommandPoints = 10;
 		newAiPlayer.currentCommandPoints = newAiPlayer.startCommandPoints;
+		
+		difficultyLoader.load(newAiPlayer, threatLevel);
+		newAiPlayer.name = "AI (" + newAiPlayer.difficulty.toString() + ")";
 		return newAiPlayer;
 	}
 	
@@ -97,10 +97,22 @@ public class AiEngine {
 		}
 		if (closestNeutralPlanet != null && closestOwnPlanet != null) {
 			if (closestOwnPlanet.currentResources >= aiPlayer.ships.get(0).cost) {
-				if (aiPlayer.currentCommandPoints >= 3) {
+				if (aiPlayer.currentCommandPoints >= 3 || state.maxGameTimeMS - state.gameTimeMS < 12000) {
 					ShipMovementOrder newShipMovementOrder = new ShipMovementOrder();
 					newShipMovementOrder.fromPlanetId = closestOwnPlanet.id;
 					newShipMovementOrder.toPlanetId = closestNeutralPlanet.id;
+					newShipMovementOrder.playerId = aiPlayer.id;
+					newShipMovementOrder.playerShipId = 0;
+					return newShipMovementOrder;
+				}
+			}
+		}
+		if (state.maxGameTimeMS - state.gameTimeMS < 10000 && state.teamATPs.get(aiPlayer.teamId == 2 ? 1 : 2) == 0) {
+			for (Planet planet : state.planets) {
+				if (planet.ancient) {
+					ShipMovementOrder newShipMovementOrder = new ShipMovementOrder();
+					newShipMovementOrder.fromPlanetId = closestOwnPlanet.id;
+					newShipMovementOrder.toPlanetId = planet.id;
 					newShipMovementOrder.playerId = aiPlayer.id;
 					newShipMovementOrder.playerShipId = 0;
 					return newShipMovementOrder;

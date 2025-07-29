@@ -10,6 +10,7 @@ import de.instinct.engine.combat.CombatProcessor;
 import de.instinct.engine.combat.unit.UnitManager;
 import de.instinct.engine.initialization.GameStateInitialization;
 import de.instinct.engine.initialization.PlanetInitialization;
+import de.instinct.engine.meta.MetaProcessor;
 import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.Player;
 import de.instinct.engine.model.PlayerConnectionStatus;
@@ -28,6 +29,7 @@ public class FleetEngine {
 	
 	private ResourceProcessor resourceProcessor;
 	private CombatProcessor combatProcessor;
+	private MetaProcessor metaProcessor;
 	
 	private long orderIdCounter;
 	
@@ -38,6 +40,7 @@ public class FleetEngine {
 		unprocessedOrders = new ConcurrentLinkedQueue<>();
 		resourceProcessor = new ResourceProcessor();
 		combatProcessor = new CombatProcessor();
+		metaProcessor = new MetaProcessor();
 		orderIdCounter = 0;
 	}
 	
@@ -60,6 +63,17 @@ public class FleetEngine {
 		state.teamATPs.put(2, 0D);
 		state.ancientPlanetResourceDegradationFactor = initialization.ancientPlanetResourceDegradationFactor;
 		state.started = false;
+		state.maxPauseMS = initialization.pauseTimeLimitMS;
+		state.minPauseMS = 1000L;
+		state.resumeCountdownMS = 3000L;
+		state.teamPausesMS = new HashMap<>();
+		state.teamPausesMS.put(0, 0L);
+		state.teamPausesMS.put(1, 0L);
+		state.teamPausesMS.put(2, 0L);
+		state.teamPausesCount = new HashMap<>();
+		state.teamPausesCount.put(0, 0);
+		state.teamPausesCount.put(1, initialization.pauseCountLimit);
+		state.teamPausesCount.put(2, initialization.pauseCountLimit);
 		return state;
 	}
 	
@@ -101,10 +115,7 @@ public class FleetEngine {
 	public void update(GameState state, long progressionMS) {
 		try {
 			if (state.started) {
-				long targetTime = state.gameTimeMS + progressionMS;
 				advanceTime(state, progressionMS);
-			    state.gameTimeMS = targetTime;
-			    
 			    workOnOrderQueue(state);
 			    integrateNewOrders(state);
 			}
@@ -115,16 +126,20 @@ public class FleetEngine {
 	
 	private void integrateNewOrders(GameState state) {
 		combatProcessor.integrateNewOrders(state);
+		metaProcessor.integrateNewOrders(state);
 	}
 
-	private void advanceTime(GameState state, long deltaMS) {
-		long remainingTime = deltaMS;
+	private void advanceTime(GameState state, long progressionMS) {
+		long remainingTime = progressionMS;
 		while (remainingTime > 0) {
 			long deltaTime = Math.min(UPDATE_INTERVAL_MS, remainingTime);
 			remainingTime -= deltaTime;
-			combatProcessor.update(state, deltaTime);
-		    resourceProcessor.update(state, deltaTime);
-		    state.gameTimeMS += deltaTime;
+			metaProcessor.update(state, deltaTime);
+			if (state.teamPause == 0 && state.resumeCountdownMS <= 0) {
+				combatProcessor.update(state, deltaTime);
+			    resourceProcessor.update(state, deltaTime);
+			    state.gameTimeMS += deltaTime;
+			}
 		}
 	}
 	

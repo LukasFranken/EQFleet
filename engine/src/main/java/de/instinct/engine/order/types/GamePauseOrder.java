@@ -5,16 +5,15 @@ import de.instinct.engine.order.OrderType;
 import lombok.ToString;
 
 @ToString(callSuper = true)
-public class ShipMovementOrder extends GameOrder {
+public class GamePauseOrder extends GameOrder {
 	
 	@Override
 	protected OrderType getOrderType() {
-		return OrderType.COMBAT;
+		return OrderType.META;
 	}
 	
 	public int playerId;
-	public int playerShipId;
-	public int fromPlanetId;
-	public int toPlanetId;
-
+	public boolean pause;
+	public String reason;
+	
 }

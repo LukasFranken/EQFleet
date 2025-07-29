@@ -44,15 +44,59 @@ public class EngineUtility {
 	
 	public static void checkVictory(GameState state) {
 	    if (state.winner != 0) return;
+	    checkMapATPVictory(state);
+	    checkEliminationVictory(state);
+	    if (state.gameTimeMS >= state.maxGameTimeMS) {
+	    	calculatePlanetCountVictory(state);
+	    	if (state.winner == 0) {
+	    		calculateATPVictory(state);
+	    	}
+	    }
+	}
+	
+	private static void calculateATPVictory(GameState state) {
+		int highestTeamId = 1;
+	    double highestValue = 0;
+        for (int teamid : state.teamATPs.keySet()) {
+			if (state.teamATPs.get(teamid) > highestValue) {
+				highestValue = state.teamATPs.get(teamid);
+				highestTeamId = teamid;
+			}
+        }
+        state.winner = highestTeamId;
+	}
 
-	    for (Player player : state.players) {
+	private static void calculatePlanetCountVictory(GameState state) {
+		int team1Planets = 0;
+    	int team2Planets = 0;
+    	for (Planet planet : state.planets) {
+    		if (planet.ownerId != 0) {
+    			if (getPlayer(state.players, planet.ownerId).teamId == 1) {
+    				team1Planets++;
+    			} else {
+    				team2Planets++;
+    			}
+    		}
+    	}
+    	if (team1Planets > team2Planets) {
+    		state.winner = 1;
+    	} 
+    	if (team1Planets < team2Planets) {
+    		state.winner = 2;
+    	}
+	}
+
+	private static void checkMapATPVictory(GameState state) {
+		for (Player player : state.players) {
 	        if (state.teamATPs.get(player.teamId) >= state.atpToWin) {
 	            state.winner = player.teamId;
 	            return;
 	        }
 	    }
-	    
-	    boolean team1HasUnit = false;
+	}
+
+	private static void checkEliminationVictory(GameState state) {
+		boolean team1HasUnit = false;
 	    boolean team2HasUnit = false;
 	    for (Planet planet : state.planets) {
 	        if (getPlayer(state.players, planet.ownerId).teamId == 1) {
@@ -76,18 +120,6 @@ public class EngineUtility {
 		if (!team2HasUnit) {
 			state.winner = 1;
 		}
-
-	    if (state.gameTimeMS >= state.maxGameTimeMS) {
-	    	int highestTeamId = 1;
-		    double highestValue = 0;
-	        for (int teamid : state.teamATPs.keySet()) {
-				if (state.teamATPs.get(teamid) > highestValue) {
-					highestValue = state.teamATPs.get(teamid);
-					highestTeamId = teamid;
-				}
-	        }
-	        state.winner = highestTeamId;
-	    }
 	}
 
 }

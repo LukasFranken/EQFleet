@@ -23,10 +23,20 @@ public class GameState {
 	public long gameTimeMS;
 	public long maxGameTimeMS;
 	public int winner;
+	public boolean surrendered;
 	public double atpToWin;
 	public float ancientPlanetResourceDegradationFactor;
 	public Map<Integer, Double> teamATPs;
 	public boolean started;
+	
+	public long resumeCountdownMS;
+	public long maxPauseMS;
+	public long minPauseMS;
+	public long currentPauseElapsedMS;
+	public Map<Integer, Long> teamPausesMS;
+	public Map<Integer, Integer> teamPausesCount;
+	public int teamPause;
+	public String currentPauseReason;
 	
 	public GameState clone() {
 		GameState clone = new GameState();
@@ -57,11 +67,20 @@ public class GameState {
 		}
 		clone.gameTimeMS = this.gameTimeMS;
 		clone.maxGameTimeMS = this.maxGameTimeMS;
+		clone.surrendered = this.surrendered;
 		clone.winner = this.winner;
 		clone.atpToWin = this.atpToWin;
 		clone.ancientPlanetResourceDegradationFactor = this.ancientPlanetResourceDegradationFactor;
 		clone.teamATPs = new HashMap<>(this.teamATPs);
 		clone.started = this.started;
+		clone.resumeCountdownMS = this.resumeCountdownMS;
+		clone.maxPauseMS = this.maxPauseMS;
+		clone.minPauseMS = this.minPauseMS;
+		clone.currentPauseElapsedMS = this.currentPauseElapsedMS;
+		clone.teamPausesMS = new HashMap<>(this.teamPausesMS);
+		clone.teamPausesCount = new HashMap<>(this.teamPausesCount);
+		clone.teamPause = this.teamPause;
+		clone.currentPauseReason = this.currentPauseReason;
 		return clone;
 	}
 

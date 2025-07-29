@@ -44,8 +44,13 @@ public class WebManager {
 				.tag(PING_METRIC_TAG)
 				.build());
 		scheduler.scheduleAtFixedRate(() -> {
-			if (API.isInitialized()) {
-				Console.updateMetric(PING_METRIC_TAG, API.discovery().ping());
+			try {
+				if (API.isInitialized()) {
+					Console.updateMetric(PING_METRIC_TAG, API.discovery().ping());
+				}
+			} catch (Exception e2) {
+				e2.printStackTrace();
+				Logger.log(LOGTAG, "Error during network update: " + e2.getMessage(), ConsoleColor.RED);
 			}
 		}, 0, PING_UPDATE_CLOCK_MS, TimeUnit.MILLISECONDS);
     }

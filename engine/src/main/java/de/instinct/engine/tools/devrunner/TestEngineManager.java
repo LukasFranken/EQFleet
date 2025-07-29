@@ -8,7 +8,6 @@ import com.badlogic.gdx.math.Vector2;
 
 import de.instinct.engine.FleetEngine;
 import de.instinct.engine.ai.AiEngine;
-import de.instinct.engine.ai.difficulty.AiDifficulty;
 import de.instinct.engine.initialization.GameStateInitialization;
 import de.instinct.engine.initialization.PlanetInitialization;
 import de.instinct.engine.map.GameMap;
@@ -39,6 +38,7 @@ public class TestEngineManager {
 	
 	public static void update(long deltaTime) {
 		engine.update(state, deltaTime);
+		System.out.println(state.teamPausesMS + " - " + state.teamPausesCount + " - " + state.currentPauseReason);
 		for (Player player : state.players) {
 			if (player instanceof AiPlayer) {
 				List<GameOrder> aiOrders = aiEngine.act((AiPlayer)player, state);
@@ -61,6 +61,8 @@ public class TestEngineManager {
 		init.ancientPlanetResourceDegradationFactor = 0.5f;
 		init.gameTimeLimitMS = 180_000;
 		init.atpToWin = 50;
+		init.pauseTimeLimitMS = 30_000;
+		init.pauseCountLimit = 3;
 		return init;
 	}
 
@@ -100,7 +102,7 @@ public class TestEngineManager {
 		players.add(player);
 		
 		AiEngine aiEngine = new AiEngine();
-		Player aiPlayer = aiEngine.initialize(AiDifficulty.RETARDED, 1);
+		Player aiPlayer = aiEngine.initialize(1);
 		aiPlayer.id = 4;
 		aiPlayer.teamId = 2;
 		players.add(aiPlayer);
@@ -112,7 +114,7 @@ public class TestEngineManager {
 			player2.name = "Player 2";
 			players.add(player2);
 			
-			Player aiPlayer2 = aiEngine.initialize(AiDifficulty.RETARDED, 1);
+			Player aiPlayer2 = aiEngine.initialize(1);
 			aiPlayer2.id = 5;
 			aiPlayer2.teamId = 2;
 			players.add(aiPlayer2);
@@ -125,7 +127,7 @@ public class TestEngineManager {
 			player3.name = "Player 3";
 			players.add(player3);
 			
-			Player aiPlayer3 = aiEngine.initialize(AiDifficulty.RETARDED, 1);
+			Player aiPlayer3 = aiEngine.initialize(1);
 			aiPlayer3.id = 6;
 			aiPlayer3.teamId = 2;
 			players.add(aiPlayer3);

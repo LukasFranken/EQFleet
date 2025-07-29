@@ -16,6 +16,7 @@ import de.instinct.api.core.API;
 import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.Player;
 import de.instinct.engine.model.planet.Planet;
+import de.instinct.engine.model.ship.ShipData;
 import de.instinct.engine.net.message.types.LoadedMessage;
 import de.instinct.engine.util.EngineUtility;
 import de.instinct.eqfleet.ApplicationMode;
@@ -106,7 +107,7 @@ public class GameUIRenderer {
 	}
 	
 	public void render() {
-		if (GameModel.activeGameState != null) {
+		if (state != null) {
 			if (initialized && state.winner == 0) {
 				inputManager.handleInput(camera, state);
 				updateStaticUI();
@@ -337,10 +338,12 @@ public class GameUIRenderer {
 			Integer selectedId = inputManager.getSelectedPlanetId();
 			Planet selected = (selectedId != null) ? EngineUtility.getPlanet(state.planets, selectedId) : null;
 			Player owner = EngineUtility.getPlayer(state.players, selected.ownerId);
-			String shipName = owner.ships.get(inputManager.getSelectedShipId()).model;
+			ShipData ship = owner.ships.get(inputManager.getSelectedShipId());
+			String shipName = ship.model;
 	        float labelWidth = FontUtil.getFontTextWidthPx(shipName, FontType.SMALL);
+	        Color labelColor = new Color(selected.currentResources >= ship.cost && owner.currentCommandPoints >= ship.commandPointsCost ? Color.GREEN : Color.RED);
 	        Label shipLabel = new Label(shipName);
-	        shipLabel.setColor(new Color(SkinManager.skinColor));
+	        shipLabel.setColor(labelColor);
 	        shipLabel.setBounds(new Rectangle(InputUtil.getMouseX() - (labelWidth / 2), InputUtil.getMouseY() - 10f + arrowLabelYOffset, labelWidth, 20f));
 	        shipLabel.setType(FontType.SMALL);
 	        shipLabel.render();

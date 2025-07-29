@@ -32,7 +32,7 @@ import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 
 public class App extends ApplicationAdapter {
 	
-    public static final String VERSION = "0.0.48";
+    public static final String VERSION = "0.0.49";
     private static final String LOGTAG = "APP";
     
     private static boolean halted;
@@ -65,6 +65,11 @@ public class App extends ApplicationAdapter {
 
 	private void loadFonts() {
 		List<FontTypeConfiguration> fontTypes = new ArrayList<>();
+		fontTypes.add(FontTypeConfiguration.builder()
+				.type(FontType.GIANT)
+				.name("larabie")
+				.size(36)
+				.build());
 		fontTypes.add(FontTypeConfiguration.builder()
 				.type(FontType.LARGE)
 				.name("larabie")

@@ -15,5 +15,7 @@ public class GameStateInitialization {
 	public float ancientPlanetResourceDegradationFactor;
 	public int gameTimeLimitMS;
 	public int atpToWin;
+	public long pauseTimeLimitMS;
+	public int pauseCountLimit;
 
 }

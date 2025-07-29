@@ -1,11 +1,6 @@
 - ALPHA RELEASE TODO:
 
 GENERAL:
- 
-- externalize gamedata like ships, stats, gameloader, map etc.
-- probably databases already
-- increase all HP so that battles last longer
-
 - appicon, ios loadscreen etc.
 - check android
 
@@ -23,20 +18,17 @@ GENERAL:
 - social module, squad and aliance with vault
 - stats in profile like gametime, furthest in each campaign
 - void run = coop dungeoncrawler
+- settings via meta module (show grid, show fleet lines)
+- planet defense not since start
+- defeated/victory reason
 
 - add model preview to construction popup
- 
-- on levelup show unlocked modules/features
  
 - externalize planet resource bar to circularloadingbar component
 
 - seperate sections for weapon and defense with different image
 
-- client doesnt seem to close on mac sporadically
-
 - make postgame seperate to menu
-
-- shoprenderer 146 out of bounds
 
 - random amazon requests crash gameserver and maybe others
 
@@ -45,14 +37,9 @@ GENERAL:
 GAME:
 - try different cam angles
  -> small cam panning anim on game start
- -> with countdown to start
-
-- pause game for up to 30 sec total per team on DC
- 
-- Damage types effect implementation
 
 - ingame menu
- -> pause + surrender button, sound settings
+ -> surrender button, sound settings
 
 -> multiple ships better ui
 

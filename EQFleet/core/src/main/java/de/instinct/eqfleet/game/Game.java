@@ -53,9 +53,9 @@ public class Game {
     }
 
     public static void stop() {
+    	currentDriver.stop();
     	Menu.load();
     	GameModel.inputEnabled = false;
-    	currentDriver.stop();
 	}
 
     public static void render() {

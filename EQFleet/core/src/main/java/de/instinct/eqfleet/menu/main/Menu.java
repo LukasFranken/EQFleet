@@ -101,7 +101,11 @@ public class Menu {
 		MenuModel.loaded = false;
 		scheduler = Executors.newSingleThreadScheduledExecutor();
 		scheduler.scheduleAtFixedRate(() -> {
-			update();
+			try {
+				update();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}, 0, UPDATE_CLOCK_MS, TimeUnit.MILLISECONDS);
 	}
 	

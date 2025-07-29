@@ -2,6 +2,7 @@ package de.instinct.eqfleet.game.frontend;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 
@@ -10,6 +11,8 @@ import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.Player;
 import de.instinct.engine.model.planet.Planet;
 import de.instinct.engine.net.message.types.FleetMovementMessage;
+import de.instinct.engine.net.message.types.GamePauseMessage;
+import de.instinct.engine.net.message.types.SurrenderMessage;
 import de.instinct.engine.util.EngineUtility;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqlibgdxutils.InputUtil;
@@ -32,15 +35,44 @@ public class GameInputManager {
         }
         Vector3 worldTouch = getTouchWorldPosition(camera);
 
-        if (InputUtil.isClicked()) {
+        if (InputUtil.isClicked() && state.winner == 0) {
             for (Planet planet : state.planets) {
                 if (planet.ownerId == GameModel.playerId && isClickInsidePlanet(worldTouch, planet)) {
                     selectedPlanetId = planet.id;
                     dragStartPosition.set(worldTouch);
                     isDragging = true;
-                    selectedShipId = null; // Reset ship selection
+                    selectedShipId = null;
                     break;
                 }
+            }
+            
+            Rectangle timerBounds = new Rectangle(Gdx.graphics.getWidth() - 80, Gdx.graphics.getHeight() - 70, 80, 70);
+            if (state.teamPause == 0 && timerBounds.contains(InputUtil.getMousePosition())) {
+            	GamePauseMessage order = new GamePauseMessage();
+            	order.gameUUID = state.gameUUID;
+            	order.userUUID = API.authKey;
+            	order.reason = "Manual Pause";
+            	order.pause = true;
+            	GameModel.outputMessageQueue.add(order);
+            }
+            
+            Rectangle surrenderBounds = new Rectangle((Gdx.graphics.getWidth() / 2) - 50, 200, 100, 40);
+            Rectangle resumeBounds = new Rectangle((Gdx.graphics.getWidth() / 2) - 50, 100, 100, 40);
+            Player player = EngineUtility.getPlayer(state.players, GameModel.playerId);
+            if (player.teamId == state.teamPause) {
+            	if (surrenderBounds.contains(InputUtil.getMousePosition())) {
+            		SurrenderMessage order = new SurrenderMessage();
+            		order.gameUUID = state.gameUUID;
+            		order.userUUID = API.authKey;
+            		GameModel.outputMessageQueue.add(order);
+            	}
+            	if (resumeBounds.contains(InputUtil.getMousePosition())) {
+            		GamePauseMessage order = new GamePauseMessage();
+                	order.gameUUID = state.gameUUID;
+                	order.userUUID = API.authKey;
+                	order.pause = false;
+                	GameModel.outputMessageQueue.add(order);
+            	}
             }
         }
         

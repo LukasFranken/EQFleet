@@ -43,10 +43,14 @@ public class GameClient {
             
             scheduler = Executors.newSingleThreadScheduledExecutor();
     		scheduler.scheduleAtFixedRate(() -> {
-    			if (client.isConnected()) {
-    				client.updateReturnTripTime();
-    				Console.updateMetric("gameserver_ping_MS", client.getReturnTripTime());
-    			}
+    			try {
+    				if (client.isConnected()) {
+        				client.updateReturnTripTime();
+        				Console.updateMetric("gameserver_ping_MS", client.getReturnTripTime());
+        			}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
     		}, 0, PING_UPDATE_CLOCK_MS, TimeUnit.MILLISECONDS);
         } catch (IOException e) {
             Logger.log("GameClient", "Failed to connect to server + " + e.getMessage(), ConsoleColor.RED);

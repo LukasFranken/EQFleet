@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import de.instinct.engine.model.Player;
 import de.instinct.engine.model.planet.Planet;
 import de.instinct.engine.model.ship.ShipData;
+import de.instinct.engine.order.types.GamePauseOrder;
 import de.instinct.engine.order.types.ShipMovementOrder;
 import de.instinct.engine.tools.devrunner.TestEngineManager;
 
@@ -30,6 +31,7 @@ public class ActionPanel extends JPanel {
     private JComboBox<String> targetDropdown;
     private JComboBox<String> shipDropdown;
     private JButton sendButton;
+    private JButton pauseButton;
     private JButton startButton;
     
     public ActionPanel() {
@@ -80,6 +82,27 @@ public class ActionPanel extends JPanel {
         	
         });
         add(sendButton);
+        
+        pauseButton = new JButton("pause");
+        pauseButton.setBounds(10, 745, 180, 20);
+        pauseButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				GamePauseOrder order = new GamePauseOrder();
+				order.playerId = 1;
+				order.reason = "Manual pause";
+				if (TestEngineManager.state.teamPause == 0) {
+					order.pause = true;
+					pauseButton.setText("resume");
+				} else {
+					pauseButton.setText("pause");
+				}
+				TestEngineManager.queue(order);
+			}
+        	
+        });
+        add(pauseButton);
         
         startButton = new JButton("start");
         startButton.setBounds(10, 775, 180, 20);

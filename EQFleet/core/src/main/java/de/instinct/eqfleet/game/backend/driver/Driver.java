@@ -51,13 +51,16 @@ public abstract class Driver {
 		finish();
 		scheduler.schedule(() -> {
 			
-			GameModel.activeGameState = null;
-			if (PlayModel.lobbyStatus.getType().getGameMode() == GameMode.CONQUEST) {
-				Menu.openModule(MenuModule.STARMAP);
+			try {
+				GameModel.activeGameState = null;
+				if (PlayModel.lobbyStatus != null && PlayModel.lobbyStatus.getType() != null && PlayModel.lobbyStatus.getType().getGameMode() == GameMode.CONQUEST) {
+					Menu.openModule(MenuModule.STARMAP);
+				}
+				Menu.open();
+				GameModel.active = false;
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-			Menu.open();
-			GameModel.active = false;
-			
 			
 		}, 3000, TimeUnit.MILLISECONDS);
 	}

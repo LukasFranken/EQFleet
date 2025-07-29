@@ -1,6 +1,7 @@
 package de.instinct.eqfleet.game.frontend;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
@@ -15,9 +16,15 @@ import de.instinct.eqfleet.game.frontend.planet.PlanetRenderer;
 import de.instinct.eqfleet.game.frontend.projectile.ProjectileRenderer;
 import de.instinct.eqfleet.game.frontend.ships.ShipRenderer;
 import de.instinct.eqfleet.game.frontend.ui.GameUIRenderer;
+import de.instinct.eqlibgdxutils.GraphicsUtil;
+import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.rendering.grid.GridConfiguration;
 import de.instinct.eqlibgdxutils.rendering.grid.GridRenderer;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
+import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
+import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
+import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 
 public class GameRenderer {
 
@@ -37,6 +44,7 @@ public class GameRenderer {
 	public boolean visible;
 	
 	public static boolean isFlipped;
+	public static Color bluroutColor;
 
 	public void init() {
 		isFlipped = false;
@@ -57,6 +65,8 @@ public class GameRenderer {
 		
 		guideRenderer = new GuideRenderer();
 		visible = true;
+		
+		bluroutColor = new Color(0f, 0f, 0f, 0.5f);
 	}
 
 	public void render(GameState state) {
@@ -81,6 +91,62 @@ public class GameRenderer {
 			}
 			uiRenderer.render();
 			guideRenderer.renderEvents(camera);
+			if (state != null && state.winner == 0) {
+				renderCountdownScreen(state);
+				renderPauseScreen(state);
+			}
+		}
+	}
+
+	private void renderCountdownScreen(GameState state) {
+		if (state.resumeCountdownMS > 0) {
+			TextureManager.draw(TextureManager.createTexture(bluroutColor), GraphicsUtil.screenBounds());
+			Label pauseLabel = new Label(StringUtils.format(Math.min((state.resumeCountdownMS / 1000) + 1, 3), 0));
+			pauseLabel.setType(FontType.GIANT);
+			pauseLabel.setBounds(new Rectangle(100, (Gdx.graphics.getHeight() / 2), Gdx.graphics.getWidth() - 200, 60));
+			pauseLabel.render();
+		}
+	}
+
+	private void renderPauseScreen(GameState state) {
+		if (state.teamPause != 0) {
+			TextureManager.draw(TextureManager.createTexture(bluroutColor), GraphicsUtil.screenBounds());
+			Player self = EngineUtility.getPlayer(state.players, GameModel.playerId);
+			String teamName = self.teamId == state.teamPause ? "OWN" : "ENEMY";
+			Label pauseLabel = new Label("PAUSED - " + teamName + " TEAM");
+			pauseLabel.setType(FontType.LARGE);
+			pauseLabel.setBounds(new Rectangle(50, (Gdx.graphics.getHeight() / 2) + 200, Gdx.graphics.getWidth() - 100, 60));
+			pauseLabel.setBackgroundColor(Color.BLACK);
+			pauseLabel.render();
+			
+			long teamPauseMS = state.teamPausesMS.get(state.teamPause);
+			Label remainingTimeLabel = new Label("Remaining Time: " + StringUtils.format(((float)(state.maxPauseMS - teamPauseMS) / 1000f), 0) + "s");
+			remainingTimeLabel.setType(FontType.NORMAL);
+			remainingTimeLabel.setBounds(new Rectangle(100, (Gdx.graphics.getHeight() / 2) + 100, Gdx.graphics.getWidth() - 200, 30));
+			remainingTimeLabel.setBackgroundColor(Color.BLACK);
+			remainingTimeLabel.render();
+			
+			if (self.teamId == state.teamPause && state.currentPauseElapsedMS > state.minPauseMS) {
+				Border buttonBorder = new Border();
+				buttonBorder.setColor(new Color(SkinManager.skinColor));
+				buttonBorder.setSize(2f);
+				
+				Rectangle surrenderBounds = new Rectangle((Gdx.graphics.getWidth() / 2) - 50, 200, 100, 40);
+				Label surrenderLabel = new Label("Surrender");
+				surrenderLabel.setType(FontType.NORMAL);
+				surrenderLabel.setBounds(surrenderBounds);
+				surrenderLabel.setBackgroundColor(Color.BLACK);
+				surrenderLabel.setBorder(buttonBorder);
+				surrenderLabel.render();
+				
+				Rectangle resumeBounds = new Rectangle((Gdx.graphics.getWidth() / 2) - 50, 100, 100, 40);
+				Label resumeLabel = new Label("Resume");
+				resumeLabel.setType(FontType.NORMAL);
+				resumeLabel.setBounds(resumeBounds);
+				resumeLabel.setBackgroundColor(Color.BLACK);
+				resumeLabel.setBorder(buttonBorder);
+				resumeLabel.render();
+			}
 		}
 	}
 

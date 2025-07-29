@@ -26,12 +26,16 @@ import de.instinct.engine.model.ship.Weapon;
 import de.instinct.engine.model.ship.WeaponType;
 import de.instinct.engine.net.message.NetworkMessage;
 import de.instinct.engine.net.message.types.FleetMovementMessage;
+import de.instinct.engine.net.message.types.GamePauseMessage;
 import de.instinct.engine.net.message.types.JoinMessage;
 import de.instinct.engine.net.message.types.LoadedMessage;
 import de.instinct.engine.net.message.types.PlayerAssigned;
+import de.instinct.engine.net.message.types.SurrenderMessage;
 import de.instinct.engine.order.GameOrder;
 import de.instinct.engine.order.OrderType;
+import de.instinct.engine.order.types.GamePauseOrder;
 import de.instinct.engine.order.types.ShipMovementOrder;
+import de.instinct.engine.order.types.SurrenderOrder;
 
 public class KryoRegistrator {
 	
@@ -66,6 +70,10 @@ public class KryoRegistrator {
 		kryo.register(OrderType.class);
 		kryo.register(GameOrder.class);
 		kryo.register(AiBehaviorParameters.class);
+		kryo.register(GamePauseMessage.class);
+		kryo.register(GamePauseOrder.class);
+		kryo.register(SurrenderMessage.class);
+		kryo.register(SurrenderOrder.class);
 	}
 
 }
