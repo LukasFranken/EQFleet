@@ -334,7 +334,7 @@ public class GameUIRenderer {
 	
 	private void renderArrowLabel() {
 		if (inputManager.getSelectedPlanetId() != null && inputManager.getSelectedShipId() != null && Gdx.input.isTouched()) {
-			float arrowLabelYOffset = 40f;
+			float arrowLabelYOffset = 40f + (40 * (Gdx.graphics.getDensity() / 5f));
 			Integer selectedId = inputManager.getSelectedPlanetId();
 			Planet selected = (selectedId != null) ? EngineUtility.getPlanet(state.planets, selectedId) : null;
 			Player owner = EngineUtility.getPlayer(state.players, selected.ownerId);

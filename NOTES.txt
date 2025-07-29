@@ -21,6 +21,7 @@ GENERAL:
 - settings via meta module (show grid, show fleet lines)
 - planet defense not since start
 - defeated/victory reason
+- fix victory condition at time end
 
 - add model preview to construction popup
  
