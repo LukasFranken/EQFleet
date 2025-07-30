@@ -101,7 +101,7 @@ public class FleetEngine {
 			Planet initialPlanet = UnitManager.createPlanet(planetOwner.planetData);
 			initialPlanet.ownerId = init.ownerId;
 			initialPlanet.position = init.position;
-			initialPlanet.defense.currentArmor = initialPlanet.defense.armor * init.startArmorPercent;
+			if (initialPlanet.defense != null) initialPlanet.defense.currentArmor = initialPlanet.defense.armor * init.startArmorPercent;
 			if (init.ancient) {
 				initialPlanet.ancient = true;
 				initialPlanet.weapon = null;

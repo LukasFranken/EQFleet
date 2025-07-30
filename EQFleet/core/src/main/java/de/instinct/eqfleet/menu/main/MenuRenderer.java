@@ -95,6 +95,7 @@ public class MenuRenderer extends BaseModuleRenderer {
 		closeModuleButton.setColor(Color.CLEAR);
 		Color downColor = new Color(SkinManager.skinColor);
 		downColor.a = 0.4f;
+		closeModuleButton.getLabel().setType(FontType.LARGE);
 		closeModuleButton.setDownColor(downColor);
 		closeModuleButton.setHoverColor(downColor);
 	}

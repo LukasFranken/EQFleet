@@ -73,7 +73,7 @@ public class App extends ApplicationAdapter {
 		fontTypes.add(FontTypeConfiguration.builder()
 				.type(FontType.LARGE)
 				.name("larabie")
-				.size(26)
+				.size(24)
 				.build());
 		fontTypes.add(FontTypeConfiguration.builder()
 				.type(FontType.NORMAL)

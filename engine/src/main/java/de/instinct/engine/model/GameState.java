@@ -23,7 +23,7 @@ public class GameState {
 	public long gameTimeMS;
 	public long maxGameTimeMS;
 	public int winner;
-	public boolean surrendered;
+	public int surrendered;
 	public double atpToWin;
 	public float ancientPlanetResourceDegradationFactor;
 	public Map<Integer, Double> teamATPs;

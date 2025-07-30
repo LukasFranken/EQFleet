@@ -38,7 +38,7 @@ public abstract class Driver {
 	protected abstract void preEngineUpdate();
 	
 	protected void updateEngine() {
-		if (GameModel.activeGameState != null && GameModel.activeGameState.started) {
+		if (GameModel.activeGameState != null && GameModel.activeGameState.started && !GameModel.paused) {
     		long currentTime = System.currentTimeMillis();
         	engine.update(GameModel.activeGameState, currentTime - GameModel.lastUpdateTimestampMS);
         	GameModel.lastUpdateTimestampMS = currentTime;
@@ -72,6 +72,7 @@ public abstract class Driver {
 			scheduler.shutdownNow();
 		}
 		cleanup();
+		GameModel.activeGameState = null;
 	}
 	
 	public abstract void cleanup();

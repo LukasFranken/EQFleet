@@ -44,8 +44,7 @@ public class MetaProcessor {
                 if (order instanceof SurrenderOrder) {
                 	SurrenderOrder surrenderOrder = (SurrenderOrder)order;
                 	Player player = EngineUtility.getPlayer(state.players, surrenderOrder.playerId);
-                	state.winner = player.teamId == 1 ? 2 : 1;
-                	state.surrendered = true;
+                	state.surrendered = player.teamId;
                 }
             }
         }

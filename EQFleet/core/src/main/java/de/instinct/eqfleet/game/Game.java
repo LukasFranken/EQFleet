@@ -2,6 +2,8 @@ package de.instinct.eqfleet.game;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import com.badlogic.gdx.Gdx;
+
 import de.instinct.engine.model.GameState;
 import de.instinct.engine.net.message.types.PlayerAssigned;
 import de.instinct.eqfleet.game.backend.driver.Driver;
@@ -38,7 +40,9 @@ public class Game {
     
     public static void startTutorial(TutorialMode mode) {
     	currentDriver = new TutorialDriver();
-		renderer.init();
+		Gdx.app.postRunnable(() -> {
+			renderer.init();
+		});
 		GameModel.active = true;
 		((TutorialDriver)currentDriver).setMode(mode);
 		currentDriver.start();

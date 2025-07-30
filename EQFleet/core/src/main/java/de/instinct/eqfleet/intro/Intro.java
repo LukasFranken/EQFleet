@@ -45,7 +45,7 @@ public class Intro {
 		initializeSlideshow();
 		loadWelcomeSlides();
 		active = true;
-		String authKey = PreferenceUtil.load("authkey");
+		String authKey = "";//PreferenceUtil.load("authkey");
 		if (!authKey.contentEquals("")) {
 			verifyAuthKey(authKey, true);
 		} else {
@@ -158,32 +158,6 @@ public class Intro {
 							MultiChoiceDialog tutorialSelectionDialog = new MultiChoiceDialog("Choose your prefered tutorial:");
 							List<SlideButton> choices = new ArrayList<>();
 							
-							SlideButton slideButtonFullStory = new SlideButton();
-							slideButtonFullStory.setLabelText("Full with story (~5 min)");
-							slideButtonFullStory.setAction(new SlideAction() {
-								boolean triggered = false;
-								
-								@Override
-								public void execute() {
-									WebManager.enqueue(
-										    () -> API.authentication().register(),
-										    result -> {
-										    	API.authKey = result;
-												PreferenceUtil.save("authkey", result);
-												Game.startTutorial(TutorialMode.STORY_FULL);
-												triggered = true;
-										    }
-									);
-								}
-								
-								@Override
-								public boolean executed() {
-									return triggered;
-								}
-								
-							});
-							choices.add(slideButtonFullStory);
-							
 							SlideButton slideButtonFull = new SlideButton();
 							slideButtonFull.setLabelText("Full (~4 min)");
 							slideButtonFull.setAction(new SlideAction() {
@@ -198,6 +172,7 @@ public class Intro {
 												PreferenceUtil.save("authkey", result);
 												Game.startTutorial(TutorialMode.FULL);
 												triggered = true;
+												active = false;
 										    }
 									);
 								}
@@ -224,6 +199,7 @@ public class Intro {
 												PreferenceUtil.save("authkey", result);
 												Game.startTutorial(TutorialMode.SHORT);
 												triggered = true;
+												active = false;
 										    }
 									);
 								}

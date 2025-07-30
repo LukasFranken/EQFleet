@@ -46,7 +46,7 @@ public class CustomDriver extends LocalDriver {
 	
 	@Override
 	protected void preEngineUpdate() {
-		if (!GameModel.paused && GameModel.activeGameState != null) {
+		if (GameModel.activeGameState != null) {
 			NetworkMessage newMessage = GameModel.outputMessageQueue.next();
 			if (newMessage != null) {
 				if (newMessage instanceof FleetMovementMessage) {

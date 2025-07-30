@@ -39,10 +39,12 @@ public class UnitManager {
 	
 	public static void initializeUnit(Unit unit, Weapon weapon, Defense defense) {
 		EntityManager.initializeEntity(unit);
-		unit.weapon = weapon.clone();
-		unit.defense = defense.clone();
-		unit.defense.currentShield = defense.shield;
-		unit.defense.currentArmor = defense.armor;
+		if (weapon != null) unit.weapon = weapon.clone();
+		if (defense != null) {
+			unit.defense = defense.clone();
+			unit.defense.currentShield = defense.shield;
+			unit.defense.currentArmor = defense.armor;
+		}
 	}
 	
 	public static Unit getClosestInRangeTarget(Entity origin, float range, GameState state) {

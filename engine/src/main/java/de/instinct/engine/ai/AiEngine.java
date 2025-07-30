@@ -97,7 +97,7 @@ public class AiEngine {
 		}
 		if (closestNeutralPlanet != null && closestOwnPlanet != null) {
 			if (closestOwnPlanet.currentResources >= aiPlayer.ships.get(0).cost) {
-				if (aiPlayer.currentCommandPoints >= 3 || state.maxGameTimeMS - state.gameTimeMS < 12000) {
+				if (aiPlayer.currentCommandPoints >= 3 || state.maxGameTimeMS - state.gameTimeMS < 15000 && aiPlayer.currentCommandPoints >= 2) {
 					ShipMovementOrder newShipMovementOrder = new ShipMovementOrder();
 					newShipMovementOrder.fromPlanetId = closestOwnPlanet.id;
 					newShipMovementOrder.toPlanetId = closestNeutralPlanet.id;

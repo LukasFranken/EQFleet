@@ -44,6 +44,7 @@ public class EngineUtility {
 	
 	public static void checkVictory(GameState state) {
 	    if (state.winner != 0) return;
+	    checkSurrenderVictory(state);
 	    checkMapATPVictory(state);
 	    checkEliminationVictory(state);
 	    if (state.gameTimeMS >= state.maxGameTimeMS) {
@@ -54,8 +55,14 @@ public class EngineUtility {
 	    }
 	}
 	
+	private static void checkSurrenderVictory(GameState state) {
+		if (state.surrendered != 0) {
+			state.winner = state.surrendered == 1 ? 2 : 1;
+		}
+	}
+
 	private static void calculateATPVictory(GameState state) {
-		int highestTeamId = 1;
+		int highestTeamId = 0;
 	    double highestValue = 0;
         for (int teamid : state.teamATPs.keySet()) {
 			if (state.teamATPs.get(teamid) > highestValue) {

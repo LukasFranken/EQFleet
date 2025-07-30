@@ -21,7 +21,8 @@ GENERAL:
 - settings via meta module (show grid, show fleet lines)
 - planet defense not since start
 - defeated/victory reason
-- fix victory condition at time end
+- short info popup on first module open
+- boss battles where 1 giant ship jumps from planet to planet
 
 - add model preview to construction popup
  

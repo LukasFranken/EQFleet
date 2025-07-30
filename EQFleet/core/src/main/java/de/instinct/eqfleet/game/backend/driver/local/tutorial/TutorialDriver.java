@@ -14,7 +14,7 @@ import de.instinct.eqfleet.game.backend.driver.local.LocalDriver;
 public class TutorialDriver extends LocalDriver {
 
 	private TutorialLoader tutorialLoader;
-	
+	private boolean finished;
     private TutorialMode mode;
     
     public TutorialDriver() {
@@ -35,25 +35,8 @@ public class TutorialDriver extends LocalDriver {
 		GameModel.playerId = 1;
 		GameStateInitialization initialGameState = tutorialLoader.generateInitialGameState();
 		GameModel.activeGameState = engine.initializeGameState(initialGameState);
+		GameModel.activeGameState.resumeCountdownMS = 0;
 		GameModel.lastUpdateTimestampMS = System.currentTimeMillis();
-		new Runnable() {
-
-			@Override
-			public void run() {
-				if (!GameModel.paused) {
-					NetworkMessage newMessage = GameModel.outputMessageQueue.next();
-					if (newMessage != null) {
-						if (newMessage instanceof FleetMovementMessage) {
-							engine.queue(GameModel.activeGameState, getOrder((FleetMovementMessage)newMessage));
-						}
-						if (newMessage instanceof LoadedMessage) {
-							GameModel.activeGameState.started = true;
-						}
-					}
-				}
-			}
-			
-		};
 	}
 	
 	private GameOrder getOrder(FleetMovementMessage message) {
@@ -66,15 +49,22 @@ public class TutorialDriver extends LocalDriver {
 	
 	@Override
 	protected void preEngineUpdate() {
-		// TODO Auto-generated method stub
-		
+		NetworkMessage newMessage = GameModel.outputMessageQueue.next();
+		if (newMessage != null) {
+			if (newMessage instanceof FleetMovementMessage) {
+				engine.queue(GameModel.activeGameState, getOrder((FleetMovementMessage)newMessage));
+			}
+			if (newMessage instanceof LoadedMessage) {
+				GameModel.activeGameState.started = true;
+			}
+		}
 	}
 
 	@Override
 	protected void postEngineUpdate() {
-		if (GameModel.activeGameState != null && GameModel.activeGameState.started) {
+		if (GameModel.activeGameState != null && GameModel.activeGameState.started && !finished) {
         	EngineUtility.checkVictory(GameModel.activeGameState);
-        	if (GameModel.guidedEvents.isEmpty()) {
+        	if (GameModel.guidedEvents == null || GameModel.guidedEvents.isEmpty()) {
         		if (GameModel.activeGameState.winner != 0) {
         			GameModel.guidedEvents = null;
         			Game.stop();
@@ -88,6 +78,7 @@ public class TutorialDriver extends LocalDriver {
 		GameModel.activeGameState.winner = 1;
 		GameModel.guidedEvents = null;
 		mode = null;
+		finished = true;
 	}
 
 	@Override

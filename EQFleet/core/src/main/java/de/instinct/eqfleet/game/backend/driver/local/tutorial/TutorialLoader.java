@@ -6,16 +6,22 @@ import java.util.Queue;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import de.instinct.engine.ai.AiEngine;
+import de.instinct.engine.combat.Ship;
 import de.instinct.engine.initialization.GameStateInitialization;
+import de.instinct.engine.initialization.PlanetInitialization;
 import de.instinct.engine.map.GameMap;
 import de.instinct.engine.model.AiPlayer;
+import de.instinct.engine.model.PlanetData;
 import de.instinct.engine.model.Player;
-import de.instinct.engine.model.planet.Planet;
+import de.instinct.engine.model.ship.Defense;
 import de.instinct.engine.model.ship.ShipData;
 import de.instinct.engine.model.ship.ShipType;
+import de.instinct.engine.model.ship.Weapon;
+import de.instinct.engine.model.ship.WeaponType;
 import de.instinct.engine.net.message.types.FleetMovementMessage;
 import de.instinct.engine.util.EngineUtility;
 import de.instinct.eqfleet.game.Game;
@@ -41,9 +47,12 @@ public class TutorialLoader {
 		GameStateInitialization initialGameState = new GameStateInitialization();
 		initialGameState.gameUUID = UUID.randomUUID().toString();
 		initialGameState.players = loadPlayers();
-		initialGameState.map = new GameMap();
-		initialGameState.map.planets = new ArrayList<>();
+		initialGameState.map = generateMap();
+		initialGameState.gameTimeLimitMS = 300_000;
+		initialGameState.ancientPlanetResourceDegradationFactor = 0.5f;
 		initialGameState.atpToWin = 30;
+		initialGameState.pauseTimeLimitMS = 20_000;
+		initialGameState.pauseCountLimit = 0;
 		return initialGameState;
 	}
 
@@ -53,6 +62,9 @@ public class TutorialLoader {
 		Player neutralPlayer = new Player();
 		neutralPlayer.id = 0;
 		neutralPlayer.teamId = 0;
+		neutralPlayer.name = "Neutral Player";
+		PlanetData neutralPlanetData = new PlanetData();
+		neutralPlayer.planetData = neutralPlanetData;
 		players.add(neutralPlayer);
 		
 		Player player1 = new Player();
@@ -65,74 +77,80 @@ public class TutorialLoader {
 		tutorialShip.model = "hawk";
 		tutorialShip.movementSpeed = 100f;
 		tutorialShip.cost = 3;
+		tutorialShip.commandPointsCost = 1;
+		Weapon tutorialShipWeapon = new Weapon();
+		tutorialShipWeapon.type = WeaponType.PROJECTILE;
+		tutorialShipWeapon.damage = 1;
+		tutorialShipWeapon.range = 80f;
+		tutorialShipWeapon.cooldown = 500;
+		tutorialShipWeapon.speed = 120f;
+		tutorialShip.weapon = tutorialShipWeapon;
+		Defense tutorialShipDefense = new Defense();
+		tutorialShipDefense.armor = 9;
+		tutorialShipDefense.shield = 3;
+		tutorialShipDefense.shieldRegenerationSpeed = 0.1f;
+		tutorialShip.defense = tutorialShipDefense;
 		player1.ships.add(tutorialShip);
 		player1.maxCommandPoints = 10;
 		player1.startCommandPoints = 1;
 		player1.commandPointsGenerationSpeed = 0.2;
 		player1.currentCommandPoints = player1.startCommandPoints;
+		PlanetData tutorialPlanetData = new PlanetData();
+		tutorialPlanetData.percentOfArmorAfterCapture = 0.2f;
+		tutorialPlanetData.resourceGenerationSpeed = 1;
+		tutorialPlanetData.maxResourceCapacity = 10;
+		player1.planetData = tutorialPlanetData;
 		players.add(player1);
 
 		AiPlayer aiPlayer = aiEngine.initialize(1);
 		aiPlayer.id = 2;
 		aiPlayer.teamId = 2;
-		aiPlayer.ships = new ArrayList<>();
-		ShipData aiTutorialShip = new ShipData();
-		aiTutorialShip.type = ShipType.FIGHTER;
-		aiTutorialShip.model = "hawk";
-		aiTutorialShip.movementSpeed = 100f;
-		aiTutorialShip.cost = 3;
-		aiPlayer.ships.add(aiTutorialShip);
-		aiPlayer.currentCommandPoints = aiPlayer.startCommandPoints;
+		aiPlayer.planetData.defense = null;
+		aiPlayer.planetData.weapon = null;
+		aiPlayer.ships.get(0).weapon.damage = 1;
+		aiPlayer.ships.get(0).defense.armor = 3;
+		aiPlayer.ships.get(0).defense.shield = 2;
+		aiPlayer.ships.get(0).movementSpeed = 100f;
 		players.add(aiPlayer);
 
 		return players;
 	}
 
-	private List<Planet> generateMap() {
-		List<Planet> planets = new ArrayList<>();
-
-		/*Planet startPlanetPlayerOne = new Planet();
-		startPlanetPlayerOne.id = 0;
-		startPlanetPlayerOne.ownerId = 1;
-		startPlanetPlayerOne.value = 15;
-		startPlanetPlayerOne.xPos = 0;
-		startPlanetPlayerOne.yPos = -(EngineUtility.MAP_BOUNDS.y / 2) + EngineUtility.PLANET_RADIUS + 150;
-		planets.add(startPlanetPlayerOne);
-
-		Planet startPlanetPlayerTwo = new Planet();
-		startPlanetPlayerTwo.id = 1;
-		startPlanetPlayerTwo.ownerId = 2;
-		startPlanetPlayerTwo.value = 20;
-		startPlanetPlayerTwo.xPos = 350;
-		startPlanetPlayerTwo.yPos = -(EngineUtility.MAP_BOUNDS.y / 2) + EngineUtility.PLANET_RADIUS + 150;
-		planets.add(startPlanetPlayerTwo);
-
-		Planet ancientPlanet = new Planet();
-		ancientPlanet.id = 2;
-		ancientPlanet.ownerId = 0;
-		ancientPlanet.value = 0;
-		ancientPlanet.xPos = 0;
-		ancientPlanet.yPos = 200;
-		ancientPlanet.ancient = true;
-		planets.add(ancientPlanet);
-
-		Planet neutralPlanet6 = new Planet();
-		neutralPlanet6.id = 7;
-		neutralPlanet6.ownerId = 0;
-		neutralPlanet6.value = 10;
-		neutralPlanet6.xPos = 400;
-		neutralPlanet6.yPos = -400;
-		planets.add(neutralPlanet6);
-
-		Planet neutralPlanet7 = new Planet();
-		neutralPlanet7.id = 8;
-		neutralPlanet7.ownerId = 0;
-		neutralPlanet7.value = 10;
-		neutralPlanet7.xPos = -150;
-		neutralPlanet7.yPos = -500;
-		planets.add(neutralPlanet7);*/
-
-		return planets;
+	private GameMap generateMap() {
+		GameMap map = new GameMap();
+		List<PlanetInitialization> planets = new ArrayList<>();
+		PlanetInitialization startPlanetPlayerOne = new PlanetInitialization();
+    	startPlanetPlayerOne.ownerId = 1;
+    	startPlanetPlayerOne.position = new Vector2(0, -(EngineUtility.MAP_BOUNDS.y / 2) + EngineUtility.PLANET_RADIUS + 150);
+    	startPlanetPlayerOne.startArmorPercent = 0f;
+    	planets.add(startPlanetPlayerOne);
+    	
+    	PlanetInitialization startPlanetPlayerTwo = new PlanetInitialization();
+    	startPlanetPlayerTwo.ownerId = 2;
+    	startPlanetPlayerTwo.position = new Vector2(350, -(EngineUtility.MAP_BOUNDS.y / 2) + EngineUtility.PLANET_RADIUS + 150);
+    	startPlanetPlayerTwo.startArmorPercent = 0f;
+    	planets.add(startPlanetPlayerTwo);
+    	
+    	PlanetInitialization ancientPlanet = new PlanetInitialization();
+    	ancientPlanet.ownerId = 0;
+    	ancientPlanet.position = new Vector2(0, 200);
+    	ancientPlanet.startArmorPercent = 0f;
+    	ancientPlanet.ancient = true;
+    	planets.add(ancientPlanet);
+    	
+    	PlanetInitialization neutralPlanet1 = new PlanetInitialization();
+    	neutralPlanet1.ownerId = 0;
+    	neutralPlanet1.position = new Vector2(400, -400);
+    	neutralPlanet1.startArmorPercent = 0f;
+    	planets.add(neutralPlanet1);
+    	
+    	PlanetInitialization neutralPlanet2 = new PlanetInitialization();
+    	neutralPlanet2.ownerId = 0;
+    	neutralPlanet2.position = new Vector2(-150, -500);
+    	neutralPlanet2.startArmorPercent = 0f;
+    	planets.add(neutralPlanet2);
+		map.planets = planets;
+		return map;
 	}
 
 	public Queue<GuideEvent> load(TutorialMode mode) {
@@ -179,7 +197,7 @@ public class TutorialLoader {
 		});
 		guideQueue.add(firstMessageGuideEvent);
 
-		if (mode == TutorialMode.STORY_FULL) {
+		if (mode == TutorialMode.FULL) {
 			DialogGuideEvent secondMessageGuideEvent = new DialogGuideEvent();
 			secondMessageGuideEvent.setDuration(4f);
 			secondMessageGuideEvent.setMessage(new MessageBehavior() {
@@ -191,28 +209,11 @@ public class TutorialLoader {
 				
 				@Override
 				public String getText() {
-					return "The talent algorithm has\nevaluated your data.";
+					return "Your brainwave metrics\nhave been evaluated";
 				}
 				
 			});
 			guideQueue.add(secondMessageGuideEvent);
-
-			DialogGuideEvent thirdMessageGuideEvent = new DialogGuideEvent();
-			thirdMessageGuideEvent.setDuration(4f);
-			thirdMessageGuideEvent.setMessage(new MessageBehavior() {
-				
-				@Override
-				public VerticalAlignment getVerticalAlignment() {
-					return VerticalAlignment.CENTER;
-				}
-				
-				@Override
-				public String getText() {
-					return "You score highest on\n'Strategic Computation'.";
-				}
-				
-			});
-			guideQueue.add(thirdMessageGuideEvent);
 
 			DialogGuideEvent fourthMessageGuideEvent = new DialogGuideEvent();
 			fourthMessageGuideEvent.setDuration(4f);
@@ -225,43 +226,43 @@ public class TutorialLoader {
 				
 				@Override
 				public String getText() {
-					return "Therefor you have been assigned\nthe career of a Commander.";
+					return "You have been assigned\nthe career of a Commander";
 				}
 				
 			});
 			guideQueue.add(fourthMessageGuideEvent);
+			
+			DialogGuideEvent fifthMessageGuideEvent = new DialogGuideEvent();
+			fifthMessageGuideEvent.setDuration(3f);
+			fifthMessageGuideEvent.setMessage(new MessageBehavior() {
+				
+				@Override
+				public VerticalAlignment getVerticalAlignment() {
+					return VerticalAlignment.TOP;
+				}
+				
+				@Override
+				public String getText() {
+					return "I'll guide you through the basics";
+				}
+				
+			});
+			fifthMessageGuideEvent.setAction(new ActionBehavior() {
+				
+				@Override
+				public void executeAtStart() {
+					
+				}
+				
+				@Override
+				public void executeAtEnd() {
+					
+				}
+			});
+			guideQueue.add(fifthMessageGuideEvent);
 		}
 		
-		DialogGuideEvent fifthMessageGuideEvent = new DialogGuideEvent();
-		fifthMessageGuideEvent.setDuration(3f);
-		fifthMessageGuideEvent.setMessage(new MessageBehavior() {
-			
-			@Override
-			public VerticalAlignment getVerticalAlignment() {
-				return VerticalAlignment.TOP;
-			}
-			
-			@Override
-			public String getText() {
-				return "I'll guide you through the basics.";
-			}
-			
-		});
-		fifthMessageGuideEvent.setAction(new ActionBehavior() {
-			
-			@Override
-			public void executeAtStart() {
-				
-			}
-			
-			@Override
-			public void executeAtEnd() {
-				
-			}
-		});
-		guideQueue.add(fifthMessageGuideEvent);
-		
-		if (mode == TutorialMode.STORY_FULL || mode == TutorialMode.FULL) {
+		if (mode == TutorialMode.FULL) {
 			DialogGuideEvent sixthsMessageGuideEvent = new DialogGuideEvent();
 			sixthsMessageGuideEvent.setDuration(3f);
 			sixthsMessageGuideEvent.setMessage(new MessageBehavior() {
@@ -273,7 +274,7 @@ public class TutorialLoader {
 				
 				@Override
 				public String getText() {
-					return "This is a simple combat simulation.";
+					return "This is a simple combat simulation";
 				}
 				
 			});
@@ -291,7 +292,7 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "In the top right corner you can\nsee the remaining time.";
+				return "In the top right corner you can\nsee the remaining time";
 			}
 			
 		});
@@ -309,7 +310,7 @@ public class TutorialLoader {
 		guideQueue.add(timeMessageGuideEvent);
 
 
-		if (mode == TutorialMode.STORY_FULL || mode == TutorialMode.FULL) {
+		if (mode == TutorialMode.FULL) {
 			CameraMoveGuideEvent initialGuideEvent = new CameraMoveGuideEvent();
 			initialGuideEvent.setDuration(2f);
 			initialGuideEvent.setTargetCameraPos(new Vector3(0f, -800f, 2000f));
@@ -326,14 +327,14 @@ public class TutorialLoader {
 				
 				@Override
 				public String getText() {
-					return "The green planet is yours.";
+					return "The blue planet is yours";
 				}
 				
 			});
 			guideQueue.add(seventhMessageGuideEvent);
 			
 			DialogGuideEvent eigthMessageGuideEvent = new DialogGuideEvent();
-			eigthMessageGuideEvent.setDuration(4f);
+			eigthMessageGuideEvent.setDuration(5f);
 			eigthMessageGuideEvent.setMessage(new MessageBehavior() {
 				
 				@Override
@@ -343,7 +344,7 @@ public class TutorialLoader {
 				
 				@Override
 				public String getText() {
-					return "It generates military resources,\nas quantified by the number.";
+					return "It generates resources,\nrepresented by the\nblue circle around it";
 				}
 				
 			});
@@ -355,7 +356,7 @@ public class TutorialLoader {
 		moveToNeutralGuideEvent.setTargetCameraPos(new Vector3(-50f, -700f, 2000f));
 		guideQueue.add(moveToNeutralGuideEvent);
 
-		if (mode == TutorialMode.STORY_FULL || mode == TutorialMode.FULL) {
+		if (mode == TutorialMode.FULL) {
 			DialogGuideEvent tenthMessageGuideEvent = new DialogGuideEvent();
 			tenthMessageGuideEvent.setDuration(3f);
 			tenthMessageGuideEvent.setMessage(new MessageBehavior() {
@@ -367,28 +368,11 @@ public class TutorialLoader {
 				
 				@Override
 				public String getText() {
-					return "The gray planet is uninhabited.";
+					return "The gray planet is uninhabited";
 				}
 				
 			});
 			guideQueue.add(tenthMessageGuideEvent);
-
-			DialogGuideEvent eleventhMessageGuideEvent = new DialogGuideEvent();
-			eleventhMessageGuideEvent.setDuration(3f);
-			eleventhMessageGuideEvent.setMessage(new MessageBehavior() {
-				
-				@Override
-				public VerticalAlignment getVerticalAlignment() {
-					return VerticalAlignment.TOP;
-				}
-				
-				@Override
-				public String getText() {
-					return "The number on it shows the\nresources needed to claim it.";
-				}
-				
-			});
-			guideQueue.add(eleventhMessageGuideEvent);
 		}
 
 		DialogGuideEvent firstFleetMoveGuideEvent = new DialogGuideEvent();
@@ -401,13 +385,11 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "Drag from your planet\nto the neutral one.";
+				return "Drag from your planet\nto the neutral one";
 			}
 			
 		});
-		/*firstFleetMoveGuideEvent.setCondition(new ConditionalBehavior() {
-			
-			private FleetMovementEvent initiatedEvent;
+		firstFleetMoveGuideEvent.setCondition(new ConditionalBehavior() {
 
 			@Override
 			public boolean isStartConditionMet() {
@@ -416,20 +398,15 @@ public class TutorialLoader {
 
 			@Override
 			public boolean isEndConditionMet() {
-				GameEvent event = GameModel.activeGameState.activeEvents.peek();
-				if (initiatedEvent == null) {
-					if (event != null) {
-						if (event instanceof FleetMovementEvent) {
-							if (((FleetMovementEvent) event).playerId == 1) {
-								return true;
-							}
-						}
+				for (Ship ship : GameModel.activeGameState.ships) {
+					if (ship.ownerId == 1) {
+						return true;
 					}
 				}
 				return false;
 			}
 			
-		});*/
+		});
 		firstFleetMoveGuideEvent.setAction(new ActionBehavior() {
 			
 			@Override
@@ -440,31 +417,45 @@ public class TutorialLoader {
 			
 			@Override
 			public void executeAtEnd() {
-				Game.pause();
 				GameModel.inputEnabled = false;
 			}
 			
 		});
 		guideQueue.add(firstFleetMoveGuideEvent);
 		
-		if (mode == TutorialMode.STORY_FULL || mode == TutorialMode.FULL) {
-			DialogGuideEvent addedMidMessageGuideEvent = new DialogGuideEvent();
-			addedMidMessageGuideEvent.setDuration(5f);
-			addedMidMessageGuideEvent.setMessage(new MessageBehavior() {
+		DialogGuideEvent ownShipSendPauseMessageGuideEvent = new DialogGuideEvent();
+		ownShipSendPauseMessageGuideEvent.setDuration(0.5f);
+		guideQueue.add(ownShipSendPauseMessageGuideEvent);
+		
+		DialogGuideEvent resourceCostMessageGuideEvent = new DialogGuideEvent();
+		resourceCostMessageGuideEvent.setDuration(5f);
+		resourceCostMessageGuideEvent.setMessage(new MessageBehavior() {
+			
+			@Override
+			public VerticalAlignment getVerticalAlignment() {
+				return VerticalAlignment.TOP;
+			}
+			
+			@Override
+			public String getText() {
+				return "Every ship costs\nplanetary resources and\nCommand Points (CP).";
+			}
+			
+		});
+		resourceCostMessageGuideEvent.setAction(new ActionBehavior() {
+			
+			@Override
+			public void executeAtStart() {
+				Game.pause();
+			}
+			
+			@Override
+			public void executeAtEnd() {
 				
-				@Override
-				public VerticalAlignment getVerticalAlignment() {
-					return VerticalAlignment.TOP;
-				}
-				
-				@Override
-				public String getText() {
-					return "You have now sent\nships to the neutral planet.";
-				}
-				
-			});
-			guideQueue.add(addedMidMessageGuideEvent);
-		}
+			}
+			
+		});
+		guideQueue.add(resourceCostMessageGuideEvent);
 
 		DialogGuideEvent thirteenthMessageGuideEvent = new DialogGuideEvent();
 		thirteenthMessageGuideEvent.setDuration(5f);
@@ -477,28 +468,11 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "The bar below represents\nyour Command Points (CP).";
+				return "The bar below\nrepresents your CP.";
 			}
 			
 		});
 		guideQueue.add(thirteenthMessageGuideEvent);
-
-		DialogGuideEvent fourteenthMessageGuideEvent = new DialogGuideEvent();
-		fourteenthMessageGuideEvent.setDuration(3f);
-		fourteenthMessageGuideEvent.setMessage(new MessageBehavior() {
-			
-			@Override
-			public VerticalAlignment getVerticalAlignment() {
-				return VerticalAlignment.TOP;
-			}
-			
-			@Override
-			public String getText() {
-				return "Every action consumes a CP.";
-			}
-			
-		});
-		guideQueue.add(fourteenthMessageGuideEvent);
 
 		DialogGuideEvent fifteenthMessageGuideEvent = new DialogGuideEvent();
 		fifteenthMessageGuideEvent.setDuration(3f);
@@ -511,7 +485,7 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "CP regenerates passively over time.";
+				return "CP also regenerates\npassively over time.";
 			}
 			
 		});
@@ -529,9 +503,7 @@ public class TutorialLoader {
 		guideQueue.add(fifteenthMessageGuideEvent);
 
 		DialogGuideEvent firstFleetMoveGuideFinishEvent = new DialogGuideEvent();
-		/*firstFleetMoveGuideFinishEvent.setCondition(new ConditionalBehavior() {
-			
-			private FleetMovementEvent initiatedEvent;
+		firstFleetMoveGuideFinishEvent.setCondition(new ConditionalBehavior() {
 			
 			@Override
 			public boolean isStartConditionMet() {
@@ -540,27 +512,18 @@ public class TutorialLoader {
 			
 			@Override
 			public boolean isEndConditionMet() {
-				GameEvent event = GameModel.activeGameState.activeEvents.peek();
-				if (initiatedEvent == null) {
-					if (event != null) {
-						if (event instanceof FleetMovementEvent) {
-							if (((FleetMovementEvent) event).playerId == 1) {
-								initiatedEvent = (FleetMovementEvent) event;
-							}
-						}
-					}
-				} else {
-					if (event == null) {
-						return true;
+				for (Ship ship : GameModel.activeGameState.ships) {
+					if (ship.ownerId == 1) {
+						return false;
 					}
 				}
-				return false;
+				return true;
 			}
 			
-		});*/
+		});
 		guideQueue.add(firstFleetMoveGuideFinishEvent);
 
-		if (mode == TutorialMode.STORY_FULL || mode == TutorialMode.FULL) {
+		if (mode == TutorialMode.FULL) {
 			DialogGuideEvent sixteenthMessageGuideEvent = new DialogGuideEvent();
 			sixteenthMessageGuideEvent.setDuration(3f);
 			sixteenthMessageGuideEvent.setMessage(new MessageBehavior() {
@@ -572,7 +535,7 @@ public class TutorialLoader {
 				
 				@Override
 				public String getText() {
-					return "You gained control of\nthe previously neutral planet.";
+					return "You gained control of\nthe previously neutral planet";
 				}
 				
 			});
@@ -589,7 +552,7 @@ public class TutorialLoader {
 				
 				@Override
 				public String getText() {
-					return "It now produces resources for you.";
+					return "It now produces\nresources needed for ships";
 				}
 				
 			});
@@ -607,145 +570,11 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "You can also send ships\nbetween your planets.";
+				return "You can also send ships\nbetween your planets\nto transfer resources";
 			}
 			
 		});
 		guideQueue.add(eighteenthMessageGuideEvent);
-
-		if (mode == TutorialMode.STORY_FULL || mode == TutorialMode.FULL) {
-			DialogGuideEvent secondFleetMoveGuideStartEvent = new DialogGuideEvent();
-			secondFleetMoveGuideStartEvent.setMessage(new MessageBehavior() {
-				
-				@Override
-				public VerticalAlignment getVerticalAlignment() {
-					return VerticalAlignment.TOP;
-				}
-				
-				@Override
-				public String getText() {
-					return "Drag between your planets.";
-				}
-				
-			});
-			/*secondFleetMoveGuideStartEvent.setCondition(new ConditionalBehavior() {
-				
-				private FleetMovementEvent initiatedEvent;
-				
-				@Override
-				public boolean isStartConditionMet() {
-					return true;
-				}
-				
-				@Override
-				public boolean isEndConditionMet() {
-					GameEvent event = GameModel.activeGameState.activeEvents.peek();
-					if (initiatedEvent == null) {
-						if (event != null) {
-							if (event instanceof FleetMovementEvent) {
-								if (((FleetMovementEvent) event).playerId == 1) {
-									return true;
-								}
-							}
-						}
-					}
-					return false;
-				}
-				
-			});*/
-			secondFleetMoveGuideStartEvent.setAction(new ActionBehavior() {
-				
-				@Override
-				public void executeAtStart() {
-					GameModel.inputEnabled = true;
-				}
-				
-				@Override
-				public void executeAtEnd() {
-					Game.pause();
-					GameModel.inputEnabled = false;
-				}
-				
-			});
-			guideQueue.add(secondFleetMoveGuideStartEvent);
-			
-			DialogGuideEvent twenteethMessageGuideEvent = new DialogGuideEvent();
-			twenteethMessageGuideEvent.setDuration(6f);
-			twenteethMessageGuideEvent.setMessage(new MessageBehavior() {
-				
-				@Override
-				public VerticalAlignment getVerticalAlignment() {
-					return VerticalAlignment.TOP;
-				}
-				
-				@Override
-				public String getText() {
-					return "When sent out, the\nresources between the fleet\nand planet are split in half.";
-				}
-				
-			});
-			guideQueue.add(twenteethMessageGuideEvent);
-			
-			DialogGuideEvent twentyfirstMessageGuideEvent = new DialogGuideEvent();
-			twentyfirstMessageGuideEvent.setDuration(5f);
-			twentyfirstMessageGuideEvent.setMessage(new MessageBehavior() {
-				
-				@Override
-				public VerticalAlignment getVerticalAlignment() {
-					return VerticalAlignment.TOP;
-				}
-				
-				@Override
-				public String getText() {
-					return "Rounded down, so a planet\nwith 7 resources creates 3 Ships.";
-				}
-				
-			});
-			guideQueue.add(twentyfirstMessageGuideEvent);
-			
-			DialogGuideEvent secondFleetMoveGuideFinishEvent = new DialogGuideEvent();
-			/*secondFleetMoveGuideFinishEvent.setCondition(new ConditionalBehavior() {
-				
-				private FleetMovementEvent initiatedEvent;
-				
-				@Override
-				public boolean isStartConditionMet() {
-					return true;
-				}
-				
-				@Override
-				public boolean isEndConditionMet() {
-					GameEvent event = GameModel.activeGameState.activeEvents.peek();
-					if (initiatedEvent == null) {
-						if (event != null) {
-							if (event instanceof FleetMovementEvent) {
-								if (((FleetMovementEvent) event).playerId == 1) {
-									initiatedEvent = (FleetMovementEvent) event;
-								}
-							}
-						}
-					} else {
-						if (event == null) {
-							return true;
-						}
-					}
-					return false;
-				}
-				
-			});*/
-			secondFleetMoveGuideFinishEvent.setAction(new ActionBehavior() {
-				
-				@Override
-				public void executeAtStart() {
-					Game.unpause();
-				}
-				
-				@Override
-				public void executeAtEnd() {}
-				
-			});
-			guideQueue.add(secondFleetMoveGuideFinishEvent);
-		}
 
 		CameraMoveGuideEvent panAwayToEnemyGuideEvent = new CameraMoveGuideEvent();
 		panAwayToEnemyGuideEvent.setDuration(2f);
@@ -757,7 +586,7 @@ public class TutorialLoader {
 		panCloseToEnemyGuideEvent.setTargetCameraPos(new Vector3(320f, -700f, 2300f));
 		guideQueue.add(panCloseToEnemyGuideEvent);
 		
-		if (mode == TutorialMode.STORY_FULL || mode == TutorialMode.FULL) {
+		if (mode == TutorialMode.FULL) {
 			DialogGuideEvent twentysecondMessageGuideEvent = new DialogGuideEvent();
 			twentysecondMessageGuideEvent.setDuration(3f);
 			twentysecondMessageGuideEvent.setMessage(new MessageBehavior() {
@@ -769,7 +598,7 @@ public class TutorialLoader {
 				
 				@Override
 				public String getText() {
-					return "Hostile planets are red.";
+					return "Hostile planets are red";
 				}
 				
 			});
@@ -799,7 +628,7 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "Your opponent's CP are\nshown in the top left corner.";
+				return "Your opponent's CP are\nshown in the top left corner";
 			}
 			
 		});
@@ -807,7 +636,7 @@ public class TutorialLoader {
 			
 			@Override
 			public void executeAtStart() {
-				Game.setUIElementVisible("enemyCP", true);
+				Game.setUIElementVisible("enemy1CP", true);
 			}
 			
 			@Override
@@ -815,16 +644,20 @@ public class TutorialLoader {
 				FleetMovementMessage aiFleetMoveMessage = new FleetMovementMessage();
 				aiFleetMoveMessage.userUUID = "2";
 				aiFleetMoveMessage.fromPlanetId = 1;
-				aiFleetMoveMessage.toPlanetId = 7;
+				aiFleetMoveMessage.toPlanetId = 3;
 				GameModel.outputMessageQueue.add(aiFleetMoveMessage);
 			}
 			
 		});
 		guideQueue.add(enemyCPMessageGuideEvent);
 		
-		DialogGuideEvent twentythirdMessageGuideEvent = new DialogGuideEvent();
-		twentythirdMessageGuideEvent.setDuration(4f);
-		twentythirdMessageGuideEvent.setMessage(new MessageBehavior() {
+		CameraMoveGuideEvent panAwayToMapGuideEvent = new CameraMoveGuideEvent();
+		panAwayToMapGuideEvent.setDuration(3f);
+		panAwayToMapGuideEvent.setTargetCameraPos(new Vector3(130f, -700f, 3000f));
+		guideQueue.add(panAwayToMapGuideEvent);
+		
+		DialogGuideEvent twentyfourthMessageGuideEvent = new DialogGuideEvent();
+		twentyfourthMessageGuideEvent.setMessage(new MessageBehavior() {
 			
 			@Override
 			public VerticalAlignment getVerticalAlignment() {
@@ -833,92 +666,153 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "Reducing another planet's resources\nto 0 is not enough to capture it.";
+				return "Attack the now hostile planet";
 			}
 			
 		});
-		/*twentythirdMessageGuideEvent.setCondition(new ConditionalBehavior() {
-			
-			private FleetMovementEvent initiatedEvent;
+		twentyfourthMessageGuideEvent.setCondition(new ConditionalBehavior() {
 			
 			@Override
 			public boolean isStartConditionMet() {
-				GameEvent event = GameModel.activeGameState.activeEvents.peek();
-				if (initiatedEvent == null) {
-					if (event != null) {
-						if (event instanceof FleetMovementEvent) {
-							if (((FleetMovementEvent) event).playerId == 2) {
-								initiatedEvent = (FleetMovementEvent) event;
-							}
-						}
-					}
-				} else {
-					if (event == null) {
-						return true;
-					}
-				}
-				return false;
+				return true;
 			}
 			
 			@Override
 			public boolean isEndConditionMet() {
-				return twentythirdMessageGuideEvent.getElapsed() > twentythirdMessageGuideEvent.getDuration();
+				for (Ship ship : GameModel.activeGameState.ships) {
+					if (ship.ownerId == 1) {
+						return true;
+					}
+				}
+				return false;
+				//return EngineUtility.getPlanet(GameModel.activeGameState.planets, 3).ownerId == 1;
 			}
 			
-		});*/
-		guideQueue.add(twentythirdMessageGuideEvent);
+		});
+		twentyfourthMessageGuideEvent.setAction(new ActionBehavior() {
+			
+			@Override
+			public void executeAtStart() {
+				GameModel.inputEnabled = true;
+			}
+			
+			@Override
+			public void executeAtEnd() {
+				GameModel.inputEnabled = false;
+				int originId = 1;
+				int targetId = 3;
+				for (Ship ship : GameModel.activeGameState.ships) {
+					if (ship.ownerId == 1) {
+						originId = ship.originPlanetId;
+						targetId = ship.targetPlanetId;
+					}
+				}
+				FleetMovementMessage aiFleetMoveMessage = new FleetMovementMessage();
+				aiFleetMoveMessage.userUUID = "2";
+				aiFleetMoveMessage.fromPlanetId = targetId;
+				aiFleetMoveMessage.toPlanetId = originId;
+				GameModel.outputMessageQueue.add(aiFleetMoveMessage);
+			}
+			
+		});
+		guideQueue.add(twentyfourthMessageGuideEvent);
 		
-		CameraMoveGuideEvent panAwayToMapGuideEvent = new CameraMoveGuideEvent();
-		panAwayToMapGuideEvent.setDuration(2f);
-		panAwayToMapGuideEvent.setTargetCameraPos(new Vector3(130f, -700f, 3000f));
-		guideQueue.add(panAwayToMapGuideEvent);
+		DialogGuideEvent enemyShipSendPauseMessageGuideEvent = new DialogGuideEvent();
+		enemyShipSendPauseMessageGuideEvent.setDuration(0.5f);
+		guideQueue.add(enemyShipSendPauseMessageGuideEvent);
 		
-		if (mode == TutorialMode.STORY_FULL || mode == TutorialMode.FULL) {
-			DialogGuideEvent twentyfourthMessageGuideEvent = new DialogGuideEvent();
-			twentyfourthMessageGuideEvent.setMessage(new MessageBehavior() {
+		DialogGuideEvent enemyShipSendMessageGuideEvent = new DialogGuideEvent();
+		enemyShipSendMessageGuideEvent.setDuration(3f);
+		enemyShipSendMessageGuideEvent.setMessage(new MessageBehavior() {
+			
+			@Override
+			public VerticalAlignment getVerticalAlignment() {
+				return VerticalAlignment.TOP;
+			}
+			
+			@Override
+			public String getText() {
+				return "Your opponent has sent a\nship to defend his planet";
+			}
+			
+		});
+		enemyShipSendMessageGuideEvent.setAction(new ActionBehavior() {
+			
+			@Override
+			public void executeAtStart() {
+				Game.pause();
+			}
+			
+			@Override
+			public void executeAtEnd() {
 				
-				@Override
-				public VerticalAlignment getVerticalAlignment() {
-					return VerticalAlignment.TOP;
-				}
+			}
+			
+		});
+		guideQueue.add(enemyShipSendMessageGuideEvent);
+		
+		DialogGuideEvent enemyShipSend2MessageGuideEvent = new DialogGuideEvent();
+		enemyShipSend2MessageGuideEvent.setDuration(5f);
+		enemyShipSend2MessageGuideEvent.setMessage(new MessageBehavior() {
+			
+			@Override
+			public VerticalAlignment getVerticalAlignment() {
+				return VerticalAlignment.TOP;
+			}
+			
+			@Override
+			public String getText() {
+				return "When in range,\nships will automatically\nattack each other";
+			}
+			
+		});
+		guideQueue.add(enemyShipSend2MessageGuideEvent);
+		
+		DialogGuideEvent enemyShipSend3MessageGuideEvent = new DialogGuideEvent();
+		enemyShipSend3MessageGuideEvent.setDuration(5f);
+		enemyShipSend3MessageGuideEvent.setMessage(new MessageBehavior() {
+			
+			@Override
+			public VerticalAlignment getVerticalAlignment() {
+				return VerticalAlignment.TOP;
+			}
+			
+			@Override
+			public String getText() {
+				return "The bar below the ships\nshows their shield and armor";
+			}
+			
+		});
+		enemyShipSend3MessageGuideEvent.setCondition(new ConditionalBehavior() {
+			
+			@Override
+			public boolean isStartConditionMet() {
+				return true;
+			}
+			
+			@Override
+			public boolean isEndConditionMet() {
+				return EngineUtility.getPlanet(GameModel.activeGameState.planets, 3).ownerId == 1 || EngineUtility.getPlanet(GameModel.activeGameState.planets, 1).ownerId == 1;
+			}
+			
+		});
+		enemyShipSend3MessageGuideEvent.setAction(new ActionBehavior() {
+			
+			@Override
+			public void executeAtStart() {
+				Game.unpause();
+			}
+			
+			@Override
+			public void executeAtEnd() {
 				
-				@Override
-				public String getText() {
-					return "Steal control of\nthe neutral planet.";
-				}
-				
-			});
-			twentyfourthMessageGuideEvent.setCondition(new ConditionalBehavior() {
-				
-				@Override
-				public boolean isStartConditionMet() {
-					return true;
-				}
-				
-				@Override
-				public boolean isEndConditionMet() {
-					return EngineUtility.getPlanet(GameModel.activeGameState.planets, 7).ownerId == 1;
-				}
-				
-			});
-			twentyfourthMessageGuideEvent.setAction(new ActionBehavior() {
-				
-				@Override
-				public void executeAtStart() {
-					GameModel.inputEnabled = true;
-				}
-				
-				@Override
-				public void executeAtEnd() {
-					GameModel.inputEnabled = false;
-				}
-				
-			});
-			guideQueue.add(twentyfourthMessageGuideEvent);
-		}
+			}
+			
+		});
+		guideQueue.add(enemyShipSend3MessageGuideEvent);
 		
 		DialogGuideEvent twentyfifthMessageGuideEvent = new DialogGuideEvent();
-		twentyfifthMessageGuideEvent.setDuration(3f);
+		twentyfifthMessageGuideEvent.setDuration(5f);
 		twentyfifthMessageGuideEvent.setMessage(new MessageBehavior() {
 			
 			@Override
@@ -928,7 +822,7 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "Eliminating all hostile planets\nand ships is one way to\nachieve Victory.";
+				return "Eliminating all hostile planets\nand ships is one way to\nachieve victory";
 			}
 			
 		});
@@ -939,9 +833,9 @@ public class TutorialLoader {
 		panToAncientCloseGuideEvent.setTargetCameraPos(new Vector3(0f, 0f, 2000f));
 		guideQueue.add(panToAncientCloseGuideEvent);
 		
-		if (mode == TutorialMode.STORY_FULL || mode == TutorialMode.FULL) {
+		if (mode == TutorialMode.FULL) {
 			DialogGuideEvent ancientIntroMessageGuideEvent = new DialogGuideEvent();
-			ancientIntroMessageGuideEvent.setDuration(3f);
+			ancientIntroMessageGuideEvent.setDuration(4f);
 			ancientIntroMessageGuideEvent.setMessage(new MessageBehavior() {
 				
 				@Override
@@ -951,17 +845,16 @@ public class TutorialLoader {
 				
 				@Override
 				public String getText() {
-					return "This is a planet where\nunknown, ancient technology\nhas been detected.";
+					return "This is a star where\nunknown, ancient technology\nhas been detected";
 				}
 				
 			});
 			guideQueue.add(ancientIntroMessageGuideEvent);
 		}
 		
-		
 		CameraMoveGuideEvent panAwayToMapFromAncientGuideEvent = new CameraMoveGuideEvent();
 		panAwayToMapFromAncientGuideEvent.setDuration(2f);
-		panAwayToMapFromAncientGuideEvent.setTargetCameraPos(new Vector3(130f, -200f, 3200f));
+		panAwayToMapFromAncientGuideEvent.setTargetCameraPos(new Vector3(130f, -200f, 3800f));
 		guideQueue.add(panAwayToMapFromAncientGuideEvent);
 		
 		DialogGuideEvent ancientCaptureMessageGuideEvent = new DialogGuideEvent();
@@ -975,7 +868,7 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "Send some ships to\nthe ancient (yellow) planet.";
+				return "Send some ships to\nthe ancient (yellow) planet";
 			}
 			
 		});
@@ -1017,14 +910,14 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "When captured,\nyour resources decrease,\nnot increase over time.";
+				return "When captured,\nyour resources decrease,\nnot increase over time";
 			}
 			
 		});
 		guideQueue.add(ancientDecreaseInfoMessageGuideEvent);
 		
 		DialogGuideEvent ancientUIMessageGuideEvent = new DialogGuideEvent();
-		ancientUIMessageGuideEvent.setDuration(4f);
+		ancientUIMessageGuideEvent.setDuration(6f);
 		ancientUIMessageGuideEvent.setMessage(new MessageBehavior() {
 			
 			@Override
@@ -1034,7 +927,7 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "While under control, you generate\nAncient Technology Points (AP),\nas shown on the left side.";
+				return "While under control, you generate\nAncient Technology Points (AP),\nas shown on the left side";
 			}
 			
 		});
@@ -1063,13 +956,13 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "If your AP-bar is full,\nyou win the game.";
+				return "If your AP-bar is full,\nyou also win the game";
 			}
 			
 		});
 		guideQueue.add(ancientWinConditionInfoMessageGuideEvent);
 		
-		if (mode == TutorialMode.STORY_FULL || mode == TutorialMode.FULL) {
+		if (mode == TutorialMode.FULL) {
 			DialogGuideEvent ancientOwnLossInfoMessageGuideEvent = new DialogGuideEvent();
 			ancientOwnLossInfoMessageGuideEvent.setDuration(4f);
 			ancientOwnLossInfoMessageGuideEvent.setMessage(new MessageBehavior() {
@@ -1081,7 +974,7 @@ public class TutorialLoader {
 				
 				@Override
 				public String getText() {
-					return "When the ancient planet reaches 0,\nthe previous owner loses control.";
+					return "When the ancient planet reaches 0,\nthe previous owner loses control";
 				}
 				
 			});
@@ -1098,7 +991,7 @@ public class TutorialLoader {
 				
 				@Override
 				public String getText() {
-					return "If the time runs out,\nthe team with the most AP wins.";
+					return "If the time runs out,\nthe team with the most planet wins";
 				}
 				
 			});
