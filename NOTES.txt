@@ -10,14 +10,13 @@ GENERAL:
  -> audio settings
 
 - show rank in lobby
-- invite is not accepted
+- invite is not accepted bug
 - planet resource upgrades part of construction
 - explosion animation
-- zoom factor and game time per conq map
+- zoom factor per conq map
 - duo, trio campaign via social group
 - social module, squad and aliance with vault
 - stats in profile like gametime, furthest in each campaign
-- void run = coop dungeoncrawler
 - settings via meta module (show grid, show fleet lines)
 - planet defense not since start
 - defeated/victory reason
@@ -34,72 +33,33 @@ GENERAL:
 
 - random amazon requests crash gameserver and maybe others
 
-- only hand out rewards and unlock next system on victory
-
 GAME:
-- try different cam angles
- -> small cam panning anim on game start
-
-- ingame menu
- -> surrender button, sound settings
-
--> multiple ships better ui
-
-- multiple ship models
+- models
 
 - list all commands command
-
-- fix rare defense inactive after conquer bug
 
 - prevent bot from bypassing resource cost by doubleshipping
 
 META:
-- Intro rework
- -> add back button for intro
- -> click tutorial screen to skip timed event?
- 
+- into back button
+
 - playtab logic finished refactoring
 
 - shop
- -> ship blueprints
  -> turret blueprints
  
 - proper inventory
- 
-- Cluster map
- -> galaxy selection
- -> star system selection
- -> selecting galaxy zooms in and makes galaxy image transparent background
- -> ancient planet = sun
- -> star system connected with lines for progression
-  -> comparable to gemcraft
- - galaxies show up after finishing the previous one
 
 ---------------------------------------------------------------------
 FUTURE RELEASES TODO:
 GENERAL:
+- void run = coop dungeoncrawler
 
 GAME:
--> variable ship slots radial menu above planet
- -> variable building slots below
  
 - improved ai
 
 META:
-- combat
- - conquest map
- -> available with higher rank
- -> conquering one star system after another
- -> split in sectors
- -> like gemcraft
- -> or any other conquest mode
- -> proper exp and resource rewards
- - match
- -> like now with custom and pvp/ai
- -> available to beginners, especially vs AI
- -> pvp has clash royale like ladder for 1v1,2v2,3v3
- - each mode grants unique resources (pvp/ai , conquest)
-
 - social features (friends teams messages etc.)
 
 - Technology module to unlock abilities and stuff like range and defensebar
