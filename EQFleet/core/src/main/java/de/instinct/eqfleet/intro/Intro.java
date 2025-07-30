@@ -45,7 +45,7 @@ public class Intro {
 		initializeSlideshow();
 		loadWelcomeSlides();
 		active = true;
-		String authKey = "";//PreferenceUtil.load("authkey");
+		String authKey = PreferenceUtil.load("authkey");
 		if (!authKey.contentEquals("")) {
 			verifyAuthKey(authKey, true);
 		} else {
