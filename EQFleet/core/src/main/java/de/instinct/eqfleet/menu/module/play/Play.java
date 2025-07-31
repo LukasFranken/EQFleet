@@ -97,7 +97,9 @@ public class Play extends BaseModule {
 	public static void accept(String value) {
 		WebManager.enqueue(
 			    () -> API.matchmaking().accept(value),
-			    result -> {}
+			    result -> {
+			    	
+			    }
 		);
 	}
 	
@@ -162,7 +164,8 @@ public class Play extends BaseModule {
 		scheduler.scheduleAtFixedRate(() -> {
 			try {
 				if (MenuModel.active) {
-					if (PlayModel.lobbyUUID == null) {
+					updateLobby();
+					if (PlayModel.lobbyUUID == null || PlayModel.lobbyUUID.isEmpty()) {
 		        		WebManager.enqueue(
 		            			() -> API.matchmaking().invites(),
 		    				    result -> {
@@ -170,7 +173,6 @@ public class Play extends BaseModule {
 		    				    }
 		        		);
 		    		} else {
-		    			updateLobby();
 		    			if (PlayModel.lobbyStatus != null && (PlayModel.lobbyStatus.getCode() == LobbyStatusCode.MATCHING || PlayModel.lobbyStatus.getCode() == LobbyStatusCode.IN_GAME)) {
 		    				WebManager.enqueue(
 		    	        			() -> API.matchmaking().matchmaking(PlayModel.lobbyUUID),

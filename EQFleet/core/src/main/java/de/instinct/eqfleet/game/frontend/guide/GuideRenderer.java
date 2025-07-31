@@ -7,9 +7,9 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 
 import de.instinct.eqfleet.game.GameModel;
-import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.GuideEvent;
-import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.subtypes.CameraMoveGuideEvent;
-import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.subtypes.DialogGuideEvent;
+import de.instinct.eqfleet.game.backend.driver.local.tutorial.guide.GuideEvent;
+import de.instinct.eqfleet.game.backend.driver.local.tutorial.guide.subtypes.CameraMoveGuideEvent;
+import de.instinct.eqfleet.game.backend.driver.local.tutorial.guide.subtypes.DialogGuideEvent;
 import de.instinct.eqlibgdxutils.MathUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;

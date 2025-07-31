@@ -18,6 +18,7 @@ import de.instinct.engine.entity.Entity;
 import de.instinct.engine.entity.EntityManager;
 import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.ship.WeaponType;
+import de.instinct.eqfleet.game.frontend.projectile.explosion.ExplosionRenderer;
 import de.instinct.eqlibgdxutils.rendering.model.ModelLoader;
 import de.instinct.eqlibgdxutils.rendering.model.ModelRenderer;
 import de.instinct.eqlibgdxutils.rendering.particle.ParticleRenderer;
@@ -25,12 +26,15 @@ import de.instinct.eqlibgdxutils.rendering.particle.ParticleRenderer;
 public class ProjectileRenderer {
 	
 	private List<ProjectileInstance> projectileInstances;
+	private ExplosionRenderer explosionRenderer;
 	
 	public ProjectileRenderer() {
 		projectileInstances = new ArrayList<>();
+		explosionRenderer = new ExplosionRenderer();
 	}
 
 	public void render(GameState state, PerspectiveCamera camera) {
+		explosionRenderer.renderExplosions(camera);
 		for (ProjectileInstance projectileInstance : projectileInstances) {
 			projectileInstance.setActive(false);
 		}
@@ -100,6 +104,7 @@ public class ProjectileRenderer {
 		List<ProjectileInstance> toRemove = new ArrayList<>();
 		for (ProjectileInstance instance : projectileInstances) {
 			if (!instance.isActive()) {
+				if (instance.getData().aoeRadius > 0) explosionRenderer.addExplosion(instance.getData().position, instance.getData().aoeRadius);
 				toRemove.add(instance);
 			}
 		}

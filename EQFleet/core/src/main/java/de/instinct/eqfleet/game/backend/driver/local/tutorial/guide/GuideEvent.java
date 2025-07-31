@@ -1,4 +1,4 @@
-package de.instinct.eqfleet.game.backend.engine.local.tutorial.guide;
+package de.instinct.eqfleet.game.backend.driver.local.tutorial.guide;
 
 import lombok.Data;
 

@@ -9,8 +9,8 @@ GENERAL:
  -> sound FX
  -> audio settings
 
+- match found accept screen
 - show rank in lobby
-- invite is not accepted bug
 - planet resource upgrades part of construction
 - explosion animation
 - zoom factor per conq map
@@ -21,7 +21,8 @@ GENERAL:
 - planet defense not since start
 - defeated/victory reason
 - short info popup on first module open
-- boss battles where 1 giant ship jumps from planet to planet
+- temporary console resource cheat admin
+- freggy seite offline nehmen
 
 - add model preview to construction popup
  
@@ -60,6 +61,8 @@ GAME:
 - improved ai
 
 META:
+- boss battles where 1 giant ship jumps from planet to planet
+
 - social features (friends teams messages etc.)
 
 - Technology module to unlock abilities and stuff like range and defensebar

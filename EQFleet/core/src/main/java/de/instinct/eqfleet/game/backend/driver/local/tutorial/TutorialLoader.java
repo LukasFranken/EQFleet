@@ -26,13 +26,13 @@ import de.instinct.engine.net.message.types.FleetMovementMessage;
 import de.instinct.engine.util.EngineUtility;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.GameModel;
-import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.GuideEvent;
-import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.behavior.ActionBehavior;
-import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.behavior.ConditionalBehavior;
-import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.behavior.MessageBehavior;
-import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.subtypes.CameraMoveGuideEvent;
-import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.subtypes.DialogGuideEvent;
-import de.instinct.eqfleet.game.backend.engine.local.tutorial.guide.subtypes.PauseGuideEvent;
+import de.instinct.eqfleet.game.backend.driver.local.tutorial.guide.GuideEvent;
+import de.instinct.eqfleet.game.backend.driver.local.tutorial.guide.behavior.ActionBehavior;
+import de.instinct.eqfleet.game.backend.driver.local.tutorial.guide.behavior.ConditionalBehavior;
+import de.instinct.eqfleet.game.backend.driver.local.tutorial.guide.behavior.MessageBehavior;
+import de.instinct.eqfleet.game.backend.driver.local.tutorial.guide.subtypes.CameraMoveGuideEvent;
+import de.instinct.eqfleet.game.backend.driver.local.tutorial.guide.subtypes.DialogGuideEvent;
+import de.instinct.eqfleet.game.backend.driver.local.tutorial.guide.subtypes.PauseGuideEvent;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.VerticalAlignment;
 
 public class TutorialLoader {
@@ -438,7 +438,7 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "Every ship costs\nplanetary resources and\nCommand Points (CP).";
+				return "Every ship costs\nplanetary resources and\nCommand Points (CP)";
 			}
 			
 		});
@@ -468,7 +468,7 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "The bar below\nrepresents your CP.";
+				return "The bar below\nrepresents your CP";
 			}
 			
 		});
@@ -485,7 +485,7 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "CP also regenerates\npassively over time.";
+				return "CP also regenerates\npassively over time";
 			}
 			
 		});
@@ -685,7 +685,6 @@ public class TutorialLoader {
 					}
 				}
 				return false;
-				//return EngineUtility.getPlanet(GameModel.activeGameState.planets, 3).ownerId == 1;
 			}
 			
 		});
@@ -779,7 +778,7 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "The bar below the ships\nshows their shield and armor";
+				return "The bar below the ships\nshows their shield(blue)\nand armor(orange)";
 			}
 			
 		});

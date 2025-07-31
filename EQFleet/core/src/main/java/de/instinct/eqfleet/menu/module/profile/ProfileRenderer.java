@@ -175,9 +175,11 @@ public class ProfileRenderer extends BaseModuleRenderer {
 		switch (nameRegisterReponseCode) {
 		case BAD_TOKEN:
 			registrationResponseLabel.setText("Invalid authkey. Please restart the app.");
+			usernameTextField.setContent("");
 			break;
 		case USERNAME_TAKEN:
 			registrationResponseLabel.setText("Username already taken...");
+			usernameTextField.setContent("");
 			break;
 		default:
 			break;
