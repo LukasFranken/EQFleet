@@ -1,5 +1,7 @@
 package de.instinct.eqlibgdxutils.rendering.ui.texture.shape;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
@@ -7,6 +9,8 @@ import com.badlogic.gdx.math.Rectangle;
 public class ComplexShapeRenderer extends ShapeRenderer {
 
 	public void roundRectangle(Rectangle rect, float thickness) {
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+    	Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		begin(ShapeRenderer.ShapeType.Filled);
         
 		float x = rect.x;
@@ -31,6 +35,17 @@ public class ComplexShapeRenderer extends ShapeRenderer {
 		super.rect(x + r, y + h - r, w - (r * 2), r);
 		
 		end();
+		Gdx.gl.glDisable(GL20.GL_BLEND);
+	}
+	
+	public void filledRoundRectangle(Rectangle rect) {
+		roundRectangle(rect, 2f);
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+    	Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		begin(ShapeRenderer.ShapeType.Filled);
+		super.rect(rect.x + 2, rect.y + 2, rect.width - 4, rect.height - 4);
+		end();
+		Gdx.gl.glDisable(GL20.GL_BLEND);
 	}
 	
 	public void cleanArc(float x, float y, float innerRadius, float outerRadius, float startAngle, float degrees) {

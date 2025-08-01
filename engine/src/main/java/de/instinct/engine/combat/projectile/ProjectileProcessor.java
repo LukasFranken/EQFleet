@@ -158,7 +158,7 @@ public class ProjectileProcessor {
 			break;
 		}
         
-        EntityManager.initializeEntity(projectile);
+        EntityManager.initializeEntity(projectile, state);
         projectile.ownerId = origin.ownerId;
         projectile.originId = origin.id;
         projectile.weaponType = origin.weapon.type;

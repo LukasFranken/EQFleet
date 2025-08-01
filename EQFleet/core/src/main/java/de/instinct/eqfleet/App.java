@@ -43,6 +43,7 @@ public class App extends ApplicationAdapter {
     	PreferenceUtil.init("EQFleet");
     	SkinManager.init();
     	TextureManager.init();
+    	TextureManager.setDefaultGlowRadius(1);
     	Console.init();
     	Console.setCommands(new EQFleetCommandLoader());
     	AudioManager.init();

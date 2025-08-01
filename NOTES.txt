@@ -9,10 +9,10 @@ GENERAL:
  -> sound FX
  -> audio settings
 
+- find cpu bottleneck
 - match found accept screen
 - show rank in lobby
 - planet resource upgrades part of construction
-- explosion animation
 - zoom factor per conq map
 - duo, trio campaign via social group
 - social module, squad and aliance with vault
@@ -22,7 +22,11 @@ GENERAL:
 - defeated/victory reason
 - short info popup on first module open
 - temporary console resource cheat admin
+- delete authkey console command, away from settings
 - freggy seite offline nehmen
+- ai mod: send last resort ancient planet so that ship arrives a few seconds before end
+- hangar space needed for build blueprint, not buy blueprint
+- planet is grey sometimes after capture
 
 - add model preview to construction popup
  

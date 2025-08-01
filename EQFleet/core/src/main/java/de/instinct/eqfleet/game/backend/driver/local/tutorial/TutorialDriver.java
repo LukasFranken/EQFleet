@@ -64,12 +64,10 @@ public class TutorialDriver extends LocalDriver {
 	protected void postEngineUpdate() {
 		if (GameModel.activeGameState != null && GameModel.activeGameState.started && !finished) {
         	EngineUtility.checkVictory(GameModel.activeGameState);
-        	if (GameModel.guidedEvents == null || GameModel.guidedEvents.isEmpty()) {
-        		if (GameModel.activeGameState.winner != 0) {
-        			GameModel.guidedEvents = null;
-        			Game.stop();
-        		}
-        	}
+        	if (GameModel.activeGameState.winner != 0) {
+    			GameModel.guidedEvents = null;
+    			Game.stop();
+    		}
     	}
 	}
 

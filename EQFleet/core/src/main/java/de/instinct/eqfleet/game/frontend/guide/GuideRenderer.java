@@ -87,7 +87,7 @@ public class GuideRenderer {
 				Label messageLabel = new Label(currentDialogGuideEvent.getMessage().getText());
 				switch (currentDialogGuideEvent.getMessage().getVerticalAlignment()) {
 				case TOP:
-					messageLabel.setBounds(new Rectangle(20, Gdx.graphics.getHeight() - 150, Gdx.graphics.getWidth() - 40, 70));
+					messageLabel.setBounds(new Rectangle(20, Gdx.graphics.getHeight() - 180, Gdx.graphics.getWidth() - 40, 70));
 					break;
 				case CENTER:
 					messageLabel.setBounds(new Rectangle(20, (Gdx.graphics.getHeight() / 2) - 35, Gdx.graphics.getWidth() - 40, 70));

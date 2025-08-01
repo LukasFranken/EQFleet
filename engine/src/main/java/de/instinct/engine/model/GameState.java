@@ -28,6 +28,7 @@ public class GameState {
 	public float ancientPlanetResourceDegradationFactor;
 	public Map<Integer, Double> teamATPs;
 	public boolean started;
+	public int entityCounter;
 	
 	public long resumeCountdownMS;
 	public long maxPauseMS;
@@ -73,6 +74,7 @@ public class GameState {
 		clone.ancientPlanetResourceDegradationFactor = this.ancientPlanetResourceDegradationFactor;
 		clone.teamATPs = new HashMap<>(this.teamATPs);
 		clone.started = this.started;
+		clone.entityCounter = this.entityCounter;
 		clone.resumeCountdownMS = this.resumeCountdownMS;
 		clone.maxPauseMS = this.maxPauseMS;
 		clone.minPauseMS = this.minPauseMS;

@@ -1,8 +1,8 @@
 package de.instinct.eqfleet.game.frontend.projectile;
 
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.math.Vector2;
 
-import de.instinct.engine.combat.projectile.Projectile;
 import lombok.Builder;
 import lombok.Data;
 
@@ -10,7 +10,9 @@ import lombok.Data;
 @Builder
 public class ProjectileInstance {
 	
-	private Projectile data;
+	private int projectileId;
+	private Vector2 lastPosition;
+	private float aoeRadius;
 	private ModelInstance model;
 	private String particlesTag;
 	private boolean active;

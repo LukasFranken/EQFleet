@@ -28,7 +28,7 @@ import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 
 public class GameRenderer {
 
-	private final Vector3 BASE_CAM_POS = new Vector3(0f, 0f, 4400f);
+	public static final Vector3 BASE_CAM_POS = new Vector3(0f, 0f, 4400f);
 	//private final Vector3 BASE_CAM_POS = new Vector3(0f, -2200f, 2500f);
 	private PerspectiveCamera camera;
 	

@@ -8,14 +8,9 @@ import de.instinct.engine.util.VectorUtil;
 
 public class EntityManager {
 	
-	private static int entityId;
-	
-	public static void init() {
-		entityId = 0;
-	}
-	
-	public static void initializeEntity(Entity newEntity) {
-		newEntity.id = entityId++;
+	public static void initializeEntity(Entity newEntity, GameState state) {
+		newEntity.id = state.entityCounter;
+		state.entityCounter++;
 	}
 	
 	public static float entityDistance(Entity origin, Entity target) {

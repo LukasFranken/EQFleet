@@ -49,7 +49,7 @@ public class ShipProcessor {
 		Planet fromPlanet = EngineUtility.getPlanet(state.planets, movement.fromPlanetId);
 		Planet toPlanet = EngineUtility.getPlanet(state.planets, movement.toPlanetId);
 		Player player = EngineUtility.getPlayer(state.players, movement.playerId);
-		Ship newShip = UnitManager.createShip(player.ships.get(movement.playerShipId));
+		Ship newShip = UnitManager.createShip(player.ships.get(movement.playerShipId), state);
 		player.currentCommandPoints -= player.ships.get(movement.playerShipId).commandPointsCost;
 		newShip.ownerId = movement.playerId;
 		newShip.position = VectorUtil.getTargetPosition(fromPlanet.position, toPlanet.position, EngineUtility.PLANET_RADIUS);

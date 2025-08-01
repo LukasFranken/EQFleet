@@ -45,7 +45,7 @@ public class ProjectileRenderer {
             	projectileInstance = instanciateProjectileInstance(projectile, state);
             	projectileInstances.add(projectileInstance);
             }
-            
+            projectileInstance.setLastPosition(projectile.position);
             Entity from = EntityManager.getEntity(state, projectile.id);
     		if (from != null) {
     			Vector2 to = new Vector2();
@@ -104,7 +104,10 @@ public class ProjectileRenderer {
 		List<ProjectileInstance> toRemove = new ArrayList<>();
 		for (ProjectileInstance instance : projectileInstances) {
 			if (!instance.isActive()) {
-				if (instance.getData().aoeRadius > 0) explosionRenderer.addExplosion(instance.getData().position, instance.getData().aoeRadius);
+				Projectile projectileData = getProjectileData(instance, state);
+				if (projectileData == null && instance.getAoeRadius() > 0) {
+					explosionRenderer.addExplosion(instance.getLastPosition(), instance.getAoeRadius());
+				}
 				toRemove.add(instance);
 			}
 		}
@@ -113,8 +116,17 @@ public class ProjectileRenderer {
 
 	private ProjectileInstance getProjectileInstance(Projectile projectile) {
 		for (ProjectileInstance instance : projectileInstances) {
-			if (instance.getData().id == projectile.id) {
+			if (instance.getProjectileId() == projectile.id) {
 				return instance;
+			}
+		}
+		return null;
+	}
+	
+	private Projectile getProjectileData(ProjectileInstance projectileInstance, GameState state) {
+		for (Projectile projectile : state.projectiles) {
+			if (projectile.id == projectileInstance.getProjectileId()) {
+				return projectile;
 			}
 		}
 		return null;
@@ -126,7 +138,8 @@ public class ProjectileRenderer {
 		String particlesTag = particleType + "_" + projectile.id;
 		ParticleRenderer.loadParticles(particlesTag, particleType);
 		return ProjectileInstance.builder()
-				.data(projectile)
+				.projectileId(projectile.id)
+				.aoeRadius(projectile.aoeRadius)
 				.model(projectileModel)
 				.particlesTag(particlesTag)
 				.build();

@@ -47,10 +47,11 @@ public class FleetEngine {
 	public GameState initializeGameState(GameStateInitialization initialization) {
 		GameState state = new GameState();
 		state.orders = new ArrayList<>();
+		state.entityCounter = 0;
 		state.gameUUID = initialization.gameUUID;
 		state.players = initializePlayers(initialization.players);
 		state.connectionStati = generateConnectionStati(initialization.players);
-		state.planets = generateInitialPlanets(initialization);
+		state.planets = generateInitialPlanets(initialization, state);
 		state.ships = new ArrayList<>();
 		state.projectiles = new ArrayList<>();
 		state.gameTimeMS = 0;
@@ -94,11 +95,11 @@ public class FleetEngine {
 		return connectionStati;
 	}
 
-	private List<Planet> generateInitialPlanets(GameStateInitialization initialization) {
+	private List<Planet> generateInitialPlanets(GameStateInitialization initialization, GameState state) {
 		List<Planet> initialPlanets = new ArrayList<>();
 		for (PlanetInitialization init : initialization.map.planets) {
 			Player planetOwner = EngineUtility.getPlayer(initialization.players, init.ownerId);
-			Planet initialPlanet = UnitManager.createPlanet(planetOwner.planetData);
+			Planet initialPlanet = UnitManager.createPlanet(planetOwner.planetData, state);
 			initialPlanet.ownerId = init.ownerId;
 			initialPlanet.position = init.position;
 			if (initialPlanet.defense != null) initialPlanet.defense.currentArmor = initialPlanet.defense.armor * init.startArmorPercent;

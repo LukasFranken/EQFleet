@@ -17,18 +17,18 @@ import de.instinct.engine.util.EngineUtility;
 
 public class UnitManager {
 	
-	public static Planet createPlanet(PlanetData planetData) {
+	public static Planet createPlanet(PlanetData planetData, GameState state) {
 		Planet planet = new Planet();
-		initializeUnit(planet, planetData.weapon, planetData.defense);
+		initializeUnit(planet, planetData.weapon, planetData.defense, state);
 		planet.resourceGenerationSpeed = planetData.resourceGenerationSpeed;
 		planet.maxResourceCapacity = planetData.maxResourceCapacity;
 		planet.radius = EngineUtility.PLANET_RADIUS;
 		return planet;
 	}
 	
-	public static Ship createShip(ShipData shipData) {
+	public static Ship createShip(ShipData shipData, GameState state) {
 		Ship ship = new Ship();
-		initializeUnit(ship, shipData.weapon, shipData.defense);
+		initializeUnit(ship, shipData.weapon, shipData.defense, state);
 		ship.model = shipData.model;
 		ship.type = shipData.type;
 		ship.movementSpeed = shipData.movementSpeed;
@@ -37,8 +37,8 @@ public class UnitManager {
 		return ship;
 	}
 	
-	public static void initializeUnit(Unit unit, Weapon weapon, Defense defense) {
-		EntityManager.initializeEntity(unit);
+	public static void initializeUnit(Unit unit, Weapon weapon, Defense defense, GameState state) {
+		EntityManager.initializeEntity(unit, state);
 		if (weapon != null) unit.weapon = weapon.clone();
 		if (defense != null) {
 			unit.defense = defense.clone();

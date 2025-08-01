@@ -292,7 +292,7 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "In the top right corner you can\nsee the remaining time";
+				return "In the top right corner you can\nsee the remaining mission time";
 			}
 			
 		});
@@ -468,7 +468,7 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "The bar below\nrepresents your CP";
+				return "The bar at the bottom\nrepresents your CP";
 			}
 			
 		});
@@ -560,7 +560,7 @@ public class TutorialLoader {
 		}
 
 		DialogGuideEvent eighteenthMessageGuideEvent = new DialogGuideEvent();
-		eighteenthMessageGuideEvent.setDuration(4f);
+		eighteenthMessageGuideEvent.setDuration(5f);
 		eighteenthMessageGuideEvent.setMessage(new MessageBehavior() {
 			
 			@Override
@@ -652,7 +652,7 @@ public class TutorialLoader {
 		guideQueue.add(enemyCPMessageGuideEvent);
 		
 		CameraMoveGuideEvent panAwayToMapGuideEvent = new CameraMoveGuideEvent();
-		panAwayToMapGuideEvent.setDuration(3f);
+		panAwayToMapGuideEvent.setDuration(3.5f);
 		panAwayToMapGuideEvent.setTargetCameraPos(new Vector3(130f, -700f, 3000f));
 		guideQueue.add(panAwayToMapGuideEvent);
 		
@@ -751,7 +751,7 @@ public class TutorialLoader {
 		guideQueue.add(enemyShipSendMessageGuideEvent);
 		
 		DialogGuideEvent enemyShipSend2MessageGuideEvent = new DialogGuideEvent();
-		enemyShipSend2MessageGuideEvent.setDuration(5f);
+		enemyShipSend2MessageGuideEvent.setDuration(4f);
 		enemyShipSend2MessageGuideEvent.setMessage(new MessageBehavior() {
 			
 			@Override
@@ -767,6 +767,11 @@ public class TutorialLoader {
 		});
 		guideQueue.add(enemyShipSend2MessageGuideEvent);
 		
+		CameraMoveGuideEvent panToShipGuideEvent = new CameraMoveGuideEvent();
+		panToShipGuideEvent.setDuration(2f);
+		panToShipGuideEvent.setTargetCameraPos(new Vector3(300f, -450f, 1300f));
+		guideQueue.add(panToShipGuideEvent);
+		
 		DialogGuideEvent enemyShipSend3MessageGuideEvent = new DialogGuideEvent();
 		enemyShipSend3MessageGuideEvent.setDuration(5f);
 		enemyShipSend3MessageGuideEvent.setMessage(new MessageBehavior() {
@@ -778,20 +783,7 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "The bar below the ships\nshows their shield(blue)\nand armor(orange)";
-			}
-			
-		});
-		enemyShipSend3MessageGuideEvent.setCondition(new ConditionalBehavior() {
-			
-			@Override
-			public boolean isStartConditionMet() {
-				return true;
-			}
-			
-			@Override
-			public boolean isEndConditionMet() {
-				return EngineUtility.getPlanet(GameModel.activeGameState.planets, 3).ownerId == 1 || EngineUtility.getPlanet(GameModel.activeGameState.planets, 1).ownerId == 1;
+				return "Below the ships you can\nsee their shield(blue) and\nunderneath their armor(brown)";
 			}
 			
 		});
@@ -799,16 +791,21 @@ public class TutorialLoader {
 			
 			@Override
 			public void executeAtStart() {
-				Game.unpause();
+				
 			}
 			
 			@Override
 			public void executeAtEnd() {
-				
+				Game.unpause();
 			}
 			
 		});
 		guideQueue.add(enemyShipSend3MessageGuideEvent);
+		
+		CameraMoveGuideEvent panAgainAwayToMapGuideEvent = new CameraMoveGuideEvent();
+		panAgainAwayToMapGuideEvent.setDuration(3f);
+		panAgainAwayToMapGuideEvent.setTargetCameraPos(new Vector3(200f, -600f, 1800f));
+		guideQueue.add(panAgainAwayToMapGuideEvent);
 		
 		DialogGuideEvent twentyfifthMessageGuideEvent = new DialogGuideEvent();
 		twentyfifthMessageGuideEvent.setDuration(5f);
@@ -824,6 +821,18 @@ public class TutorialLoader {
 				return "Eliminating all hostile planets\nand ships is one way to\nachieve victory";
 			}
 			
+		});
+		twentyfifthMessageGuideEvent.setCondition(new ConditionalBehavior() {
+			
+			@Override
+			public boolean isStartConditionMet() {
+				return EngineUtility.getPlanet(GameModel.activeGameState.planets, 3).ownerId == 1 || EngineUtility.getPlanet(GameModel.activeGameState.planets, 1).ownerId == 1;
+			}
+			
+			@Override
+			public boolean isEndConditionMet() {
+				return true;
+			}
 		});
 		guideQueue.add(twentyfifthMessageGuideEvent);
 		
