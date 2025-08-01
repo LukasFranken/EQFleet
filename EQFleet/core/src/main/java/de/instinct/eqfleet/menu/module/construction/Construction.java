@@ -4,8 +4,8 @@ import de.instinct.api.construction.dto.UseTurretResponseCode;
 import de.instinct.api.core.API;
 import de.instinct.api.core.modules.MenuModule;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
-import de.instinct.eqfleet.menu.main.ModuleMessage;
 import de.instinct.eqfleet.menu.module.construction.message.UseTurretMessage;
+import de.instinct.eqfleet.menu.module.core.ModuleMessage;
 import de.instinct.eqfleet.net.WebManager;
 
 public class Construction extends BaseModule {

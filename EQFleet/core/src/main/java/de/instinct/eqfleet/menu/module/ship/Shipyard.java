@@ -7,7 +7,7 @@ import de.instinct.api.shipyard.dto.UnuseShipResponseCode;
 import de.instinct.api.shipyard.dto.UseShipResponseCode;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
 import de.instinct.eqfleet.menu.main.Menu;
-import de.instinct.eqfleet.menu.main.ModuleMessage;
+import de.instinct.eqfleet.menu.module.core.ModuleMessage;
 import de.instinct.eqfleet.menu.module.ship.message.ReloadShipyardMessage;
 import de.instinct.eqfleet.menu.module.ship.message.UnuseShipMessage;
 import de.instinct.eqfleet.menu.module.ship.message.UseShipMessage;

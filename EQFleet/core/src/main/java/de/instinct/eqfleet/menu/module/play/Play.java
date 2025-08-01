@@ -15,7 +15,7 @@ import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.main.MenuModel;
-import de.instinct.eqfleet.menu.main.ModuleMessage;
+import de.instinct.eqfleet.menu.module.core.ModuleMessage;
 import de.instinct.eqfleet.menu.module.play.message.UpdateLobbyStatusMessage;
 import de.instinct.eqfleet.net.WebManager;
 

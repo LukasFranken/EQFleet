@@ -22,6 +22,8 @@ import de.instinct.eqfleet.menu.common.architecture.BaseModule;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.module.construction.Construction;
 import de.instinct.eqfleet.menu.module.construction.ConstructionRenderer;
+import de.instinct.eqfleet.menu.module.core.ModuleManager;
+import de.instinct.eqfleet.menu.module.core.ModuleMessage;
 import de.instinct.eqfleet.menu.module.inventory.Inventory;
 import de.instinct.eqfleet.menu.module.inventory.InventoryRenderer;
 import de.instinct.eqfleet.menu.module.inventory.message.LoadResourcesMessage;
@@ -64,6 +66,7 @@ public class Menu {
 	private static Queue<MenuModule> reloadRequired;
 	
 	public static void init() {
+		ModuleManager.init();
 		postGameRenderer = new PostGameRenderer();
 		menuRenderer = new MenuRenderer();
 		reloadRequired = new ConcurrentLinkedQueue<>();
@@ -191,6 +194,7 @@ public class Menu {
 		}
 		module.open();
 		MenuModel.activeModule = menuModule;
+		ModuleManager.openModule(menuModule);
 	}
 	
 	public static void closeModule() {

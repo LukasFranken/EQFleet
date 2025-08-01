@@ -8,7 +8,7 @@ import de.instinct.api.matchmaking.model.GameType;
 import de.instinct.api.matchmaking.model.VersusMode;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
 import de.instinct.eqfleet.menu.main.Menu;
-import de.instinct.eqfleet.menu.main.ModuleMessage;
+import de.instinct.eqfleet.menu.module.core.ModuleMessage;
 import de.instinct.eqfleet.menu.module.play.Play;
 import de.instinct.eqfleet.menu.module.play.PlayModel;
 import de.instinct.eqfleet.menu.module.starmap.message.ReloadStarmapMessage;

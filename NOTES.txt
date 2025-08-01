@@ -20,7 +20,6 @@ GENERAL:
 - settings via meta module (show grid, show fleet lines)
 - planet defense not since start
 - defeated/victory reason
-- short info popup on first module open
 - temporary console resource cheat admin
 - delete authkey console command, away from settings
 - freggy seite offline nehmen

@@ -2,7 +2,7 @@ package de.instinct.eqfleet.menu.common.architecture;
 
 import de.instinct.api.core.modules.MenuModule;
 import de.instinct.eqfleet.menu.main.Menu;
-import de.instinct.eqfleet.menu.main.ModuleMessage;
+import de.instinct.eqfleet.menu.module.core.ModuleMessage;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
 
 public abstract class BaseModule {

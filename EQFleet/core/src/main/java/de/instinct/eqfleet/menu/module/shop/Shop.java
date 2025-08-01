@@ -5,7 +5,7 @@ import de.instinct.api.core.modules.MenuModule;
 import de.instinct.api.shop.dto.BuyResponseCode;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
 import de.instinct.eqfleet.menu.main.Menu;
-import de.instinct.eqfleet.menu.main.ModuleMessage;
+import de.instinct.eqfleet.menu.module.core.ModuleMessage;
 import de.instinct.eqfleet.menu.module.inventory.message.LoadResourcesMessage;
 import de.instinct.eqfleet.menu.module.shop.message.BuyMessage;
 import de.instinct.eqfleet.menu.module.shop.message.ReloadShopMessage;

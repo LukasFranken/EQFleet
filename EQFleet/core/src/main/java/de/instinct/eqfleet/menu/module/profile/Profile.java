@@ -4,7 +4,7 @@ import de.instinct.api.core.API;
 import de.instinct.api.core.modules.MenuModule;
 import de.instinct.api.meta.dto.NameRegisterResponseCode;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
-import de.instinct.eqfleet.menu.main.ModuleMessage;
+import de.instinct.eqfleet.menu.module.core.ModuleMessage;
 import de.instinct.eqfleet.menu.module.profile.message.LoadProfileMessage;
 import de.instinct.eqfleet.menu.module.profile.message.RegisterMessage;
 import de.instinct.eqfleet.net.WebManager;
