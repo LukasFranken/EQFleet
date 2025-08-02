@@ -17,6 +17,7 @@ public class GameModel {
     public static volatile boolean paused;
     public static volatile boolean inputEnabled;
     public static volatile boolean active;
+    public static volatile boolean visible;
 	
 	public static volatile String playerUUID = UUID.randomUUID().toString();
     public static volatile int playerId;

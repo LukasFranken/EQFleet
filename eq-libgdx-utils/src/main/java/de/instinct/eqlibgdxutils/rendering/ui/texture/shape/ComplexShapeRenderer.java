@@ -40,12 +40,14 @@ public class ComplexShapeRenderer extends ShapeRenderer {
 	
 	public void filledRoundRectangle(Rectangle rect) {
 		roundRectangle(rect, 2f);
-		Gdx.gl.glEnable(GL20.GL_BLEND);
-    	Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		begin(ShapeRenderer.ShapeType.Filled);
-		super.rect(rect.x + 2, rect.y + 2, rect.width - 4, rect.height - 4);
-		end();
-		Gdx.gl.glDisable(GL20.GL_BLEND);
+		if (rect.width > 4) {
+			Gdx.gl.glEnable(GL20.GL_BLEND);
+	    	Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+			begin(ShapeRenderer.ShapeType.Filled);
+			super.rect(rect.x + 2, rect.y + 2, rect.width - 4, rect.height - 4);
+			end();
+			Gdx.gl.glDisable(GL20.GL_BLEND);
+		}
 	}
 	
 	public void cleanArc(float x, float y, float innerRadius, float outerRadius, float startAngle, float degrees) {

@@ -148,7 +148,8 @@ public class PlayRenderer extends BaseModuleRenderer {
 			public void execute() {
 				Play.setType(GameType.builder()
 						.map("solar")
-						.threatLevel(20)
+						.threatLevel(300)
+						.duration(180000)
 						.gameMode(GameMode.KING_OF_THE_HILL)
 						.versusMode(selectedVersusMode)
 						.factionMode(selectedFactionMode)

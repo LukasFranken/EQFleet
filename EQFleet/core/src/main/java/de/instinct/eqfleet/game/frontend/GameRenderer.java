@@ -1,5 +1,6 @@
 package de.instinct.eqfleet.game.frontend;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
@@ -41,8 +42,6 @@ public class GameRenderer {
 	
 	private GuideRenderer guideRenderer;
 	
-	public boolean visible;
-	
 	public static boolean isFlipped;
 	public static Color bluroutColor;
 
@@ -64,7 +63,6 @@ public class GameRenderer {
 		shipRenderer = new ShipRenderer();
 		
 		guideRenderer = new GuideRenderer();
-		visible = true;
 		
 		bluroutColor = new Color(0f, 0f, 0f, 0.5f);
 	}
@@ -73,8 +71,8 @@ public class GameRenderer {
 		if (state != null && !uiRenderer.initialized) {
 			uiRenderer.init();
 		}
-		if (visible) {
-			camera.update();
+		camera.update();
+		if (GameModel.visible) {
 			uiRenderer.setCamera(camera);
 			uiRenderer.setState(state);
 			if (state != null && state.winner == 0) {
@@ -90,12 +88,12 @@ public class GameRenderer {
 				}
 			}
 			uiRenderer.render();
-			guideRenderer.renderEvents(camera);
 			if (state != null && state.winner == 0) {
 				renderCountdownScreen(state);
 				renderPauseScreen(state);
 			}
 		}
+		guideRenderer.renderEvents(camera);
 	}
 
 	private void renderCountdownScreen(GameState state) {

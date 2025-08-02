@@ -36,6 +36,7 @@ public class Game {
     	GameModel.active = true;
     	currentDriver.start();
     	GameModel.inputEnabled = true;
+    	GameModel.visible = true;
     }
     
     public static void startTutorial(TutorialMode mode) {
@@ -46,6 +47,7 @@ public class Game {
 		GameModel.active = true;
 		((TutorialDriver)currentDriver).setMode(mode);
 		currentDriver.start();
+		GameModel.visible = false;
 	}
     
     public static void startCustom() {
@@ -54,6 +56,7 @@ public class Game {
     	GameModel.active = true;
     	currentDriver.start();
 		GameModel.inputEnabled = true;
+		GameModel.visible = true;
     }
 
     public static void stop() {
@@ -96,10 +99,6 @@ public class Game {
 	public static void unpause() {
 		GameModel.paused = false;
 		GameModel.lastUpdateTimestampMS = System.currentTimeMillis();
-	}
-
-	public static void setVisible(boolean visible) {
-		renderer.visible = visible;
 	}
 
 	public static void setUIElementVisible(String tag, boolean visible) {

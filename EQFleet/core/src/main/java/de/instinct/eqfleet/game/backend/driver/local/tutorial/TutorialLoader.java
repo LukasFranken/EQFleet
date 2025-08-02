@@ -48,7 +48,7 @@ public class TutorialLoader {
 		initialGameState.gameUUID = UUID.randomUUID().toString();
 		initialGameState.players = loadPlayers();
 		initialGameState.map = generateMap();
-		initialGameState.gameTimeLimitMS = 300_000;
+		initialGameState.gameTimeLimitMS = 600_000;
 		initialGameState.ancientPlanetResourceDegradationFactor = 0.5f;
 		initialGameState.atpToWin = 30;
 		initialGameState.pauseTimeLimitMS = 20_000;
@@ -191,95 +191,124 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "Attention, Cadet!";
+				return "Attention!";
 			}
 			
 		});
 		guideQueue.add(firstMessageGuideEvent);
 
-		if (mode == TutorialMode.FULL) {
-			DialogGuideEvent secondMessageGuideEvent = new DialogGuideEvent();
-			secondMessageGuideEvent.setDuration(4f);
-			secondMessageGuideEvent.setMessage(new MessageBehavior() {
-				
-				@Override
-				public VerticalAlignment getVerticalAlignment() {
-					return VerticalAlignment.CENTER;
-				}
-				
-				@Override
-				public String getText() {
-					return "Your brainwave metrics\nhave been evaluated";
-				}
-				
-			});
-			guideQueue.add(secondMessageGuideEvent);
-
-			DialogGuideEvent fourthMessageGuideEvent = new DialogGuideEvent();
-			fourthMessageGuideEvent.setDuration(4f);
-			fourthMessageGuideEvent.setMessage(new MessageBehavior() {
-				
-				@Override
-				public VerticalAlignment getVerticalAlignment() {
-					return VerticalAlignment.CENTER;
-				}
-				
-				@Override
-				public String getText() {
-					return "You have been assigned\nthe career of a Commander";
-				}
-				
-			});
-			guideQueue.add(fourthMessageGuideEvent);
+		DialogGuideEvent secondMessageGuideEvent = new DialogGuideEvent();
+		secondMessageGuideEvent.setDuration(4f);
+		secondMessageGuideEvent.setMessage(new MessageBehavior() {
 			
-			DialogGuideEvent fifthMessageGuideEvent = new DialogGuideEvent();
-			fifthMessageGuideEvent.setDuration(3f);
-			fifthMessageGuideEvent.setMessage(new MessageBehavior() {
-				
-				@Override
-				public VerticalAlignment getVerticalAlignment() {
-					return VerticalAlignment.TOP;
-				}
-				
-				@Override
-				public String getText() {
-					return "I'll guide you through the basics";
-				}
-				
-			});
-			fifthMessageGuideEvent.setAction(new ActionBehavior() {
-				
-				@Override
-				public void executeAtStart() {
-					
-				}
-				
-				@Override
-				public void executeAtEnd() {
-					
-				}
-			});
-			guideQueue.add(fifthMessageGuideEvent);
-		}
+			@Override
+			public VerticalAlignment getVerticalAlignment() {
+				return VerticalAlignment.CENTER;
+			}
+			
+			@Override
+			public String getText() {
+				return "The metrics from your brainwave analysis indicate\na significant complexity in strategic computation";
+			}
+			
+		});
+		guideQueue.add(secondMessageGuideEvent);
+
+		DialogGuideEvent fourthMessageGuideEvent = new DialogGuideEvent();
+		fourthMessageGuideEvent.setDuration(4f);
+		fourthMessageGuideEvent.setMessage(new MessageBehavior() {
+			
+			@Override
+			public VerticalAlignment getVerticalAlignment() {
+				return VerticalAlignment.CENTER;
+			}
+			
+			@Override
+			public String getText() {
+				return "By martial law of the terran aristrocracy,\nyou have been assigned the career of a commander";
+			}
+			
+		});
+		guideQueue.add(fourthMessageGuideEvent);
 		
-		if (mode == TutorialMode.FULL) {
-			DialogGuideEvent sixthsMessageGuideEvent = new DialogGuideEvent();
-			sixthsMessageGuideEvent.setDuration(3f);
-			sixthsMessageGuideEvent.setMessage(new MessageBehavior() {
-				
-				@Override
-				public VerticalAlignment getVerticalAlignment() {
-					return VerticalAlignment.TOP;
-				}
-				
-				@Override
-				public String getText() {
-					return "This is a simple combat simulation";
-				}
-				
-			});
-			guideQueue.add(sixthsMessageGuideEvent);
-		}
+		DialogGuideEvent fifthMessageGuideEvent = new DialogGuideEvent();
+		fifthMessageGuideEvent.setDuration(3f);
+		fifthMessageGuideEvent.setMessage(new MessageBehavior() {
+			
+			@Override
+			public VerticalAlignment getVerticalAlignment() {
+				return VerticalAlignment.CENTER;
+			}
+			
+			@Override
+			public String getText() {
+				return "I'll guide you through the basics";
+			}
+			
+		});
+		guideQueue.add(fifthMessageGuideEvent);
+		
+		DialogGuideEvent sateliteMessageGuideEvent = new DialogGuideEvent();
+		sateliteMessageGuideEvent.setDuration(4f);
+		sateliteMessageGuideEvent.setMessage(new MessageBehavior() {
+			
+			@Override
+			public VerticalAlignment getVerticalAlignment() {
+				return VerticalAlignment.CENTER;
+			}
+			
+			@Override
+			public String getText() {
+				return "We have updated your personal digital interface\nwith the communication software for our\nquantum tunnel projector satelite";
+			}
+			
+		});
+		guideQueue.add(sateliteMessageGuideEvent);
+		
+		DialogGuideEvent fleetMessageGuideEvent = new DialogGuideEvent();
+		fleetMessageGuideEvent.setDuration(4f);
+		fleetMessageGuideEvent.setMessage(new MessageBehavior() {
+			
+			@Override
+			public VerticalAlignment getVerticalAlignment() {
+				return VerticalAlignment.CENTER;
+			}
+			
+			@Override
+			public String getText() {
+				return "giving you realtime access to commands\nand information of your fleet\nall across the universe";
+			}
+			
+		});
+		guideQueue.add(fleetMessageGuideEvent);
+		
+		DialogGuideEvent sixthsMessageGuideEvent = new DialogGuideEvent();
+		sixthsMessageGuideEvent.setDuration(3f);
+		sixthsMessageGuideEvent.setMessage(new MessageBehavior() {
+			
+			@Override
+			public VerticalAlignment getVerticalAlignment() {
+				return VerticalAlignment.TOP;
+			}
+			
+			@Override
+			public String getText() {
+				return "Initializing training combat simulation";
+			}
+			
+		});
+		sixthsMessageGuideEvent.setAction(new ActionBehavior() {
+			
+			@Override
+			public void executeAtStart() {
+				GameModel.visible = true;
+			}
+			
+			@Override
+			public void executeAtEnd() {}
+			
+		});
+		guideQueue.add(sixthsMessageGuideEvent);
 		
 		DialogGuideEvent timeMessageGuideEvent = new DialogGuideEvent();
 		timeMessageGuideEvent.setDuration(5f);
@@ -292,7 +321,7 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "In the top right corner you can\nsee the remaining mission time";
+				return "In the top right corner, you can see the\nremaining mission time. When expired, an\nalgorithm will decide over your net performance";
 			}
 			
 		});
@@ -327,7 +356,7 @@ public class TutorialLoader {
 				
 				@Override
 				public String getText() {
-					return "The blue planet is yours";
+					return "The blue planet is under your control";
 				}
 				
 			});
@@ -344,7 +373,7 @@ public class TutorialLoader {
 				
 				@Override
 				public String getText() {
-					return "It generates resources,\nrepresented by the\nblue circle around it";
+					return "It generates resources, represented by\nthe blue circle around it";
 				}
 				
 			});
@@ -385,7 +414,7 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "Drag from your planet\nto the neutral one";
+				return "Drag from your planet to the neutral one";
 			}
 			
 		});
@@ -438,7 +467,7 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "Every ship costs\nplanetary resources and\nCommand Points (CP)";
+				return "Every ship costs planetary resources,\nas well as a varying amount of Command Points (CP)";
 			}
 			
 		});
@@ -468,7 +497,7 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "The bar at the bottom\nrepresents your CP";
+				return "You can see your CP meter at the bottom";
 			}
 			
 		});
@@ -485,7 +514,7 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "CP also regenerates\npassively over time";
+				return "Both CP and planetary resources regenerate\ngradually over time";
 			}
 			
 		});
@@ -535,7 +564,7 @@ public class TutorialLoader {
 				
 				@Override
 				public String getText() {
-					return "You gained control of\nthe previously neutral planet";
+					return "You gained control over the previously\nneutral planet and its resource production";
 				}
 				
 			});
@@ -552,29 +581,12 @@ public class TutorialLoader {
 				
 				@Override
 				public String getText() {
-					return "It now produces\nresources needed for ships";
+					return "You can also send ships between\nyour own planets to transfer resources";
 				}
 				
 			});
 			guideQueue.add(seventeenthMessageGuideEvent);
 		}
-
-		DialogGuideEvent eighteenthMessageGuideEvent = new DialogGuideEvent();
-		eighteenthMessageGuideEvent.setDuration(5f);
-		eighteenthMessageGuideEvent.setMessage(new MessageBehavior() {
-			
-			@Override
-			public VerticalAlignment getVerticalAlignment() {
-				return VerticalAlignment.TOP;
-			}
-			
-			@Override
-			public String getText() {
-				return "You can also send ships\nbetween your planets\nto transfer resources";
-			}
-			
-		});
-		guideQueue.add(eighteenthMessageGuideEvent);
 
 		CameraMoveGuideEvent panAwayToEnemyGuideEvent = new CameraMoveGuideEvent();
 		panAwayToEnemyGuideEvent.setDuration(2f);
@@ -586,36 +598,56 @@ public class TutorialLoader {
 		panCloseToEnemyGuideEvent.setTargetCameraPos(new Vector3(320f, -700f, 2300f));
 		guideQueue.add(panCloseToEnemyGuideEvent);
 		
-		if (mode == TutorialMode.FULL) {
-			DialogGuideEvent twentysecondMessageGuideEvent = new DialogGuideEvent();
-			twentysecondMessageGuideEvent.setDuration(3f);
-			twentysecondMessageGuideEvent.setMessage(new MessageBehavior() {
-				
-				@Override
-				public VerticalAlignment getVerticalAlignment() {
-					return VerticalAlignment.TOP;
-				}
-				
-				@Override
-				public String getText() {
-					return "Hostile planets are red";
-				}
-				
-			});
+		DialogGuideEvent twentysecondMessageGuideEvent = new DialogGuideEvent();
+		twentysecondMessageGuideEvent.setDuration(3f);
+		twentysecondMessageGuideEvent.setMessage(new MessageBehavior() {
 			
-			twentysecondMessageGuideEvent.setAction(new ActionBehavior() {
-				
-				@Override
-				public void executeAtStart() {
-					
-				}
-				
-				@Override
-				public void executeAtEnd() {}
-				
-			});
-			guideQueue.add(twentysecondMessageGuideEvent);
-		}
+			@Override
+			public VerticalAlignment getVerticalAlignment() {
+				return VerticalAlignment.TOP;
+			}
+			
+			@Override
+			public String getText() {
+				return "The red planet indicates, that it\nis controlled by 'the Turbulence'";
+			}
+			
+		});
+		guideQueue.add(twentysecondMessageGuideEvent);
+		
+		DialogGuideEvent secondTurbulenceMessageGuideEvent = new DialogGuideEvent();
+		secondTurbulenceMessageGuideEvent.setDuration(3f);
+		secondTurbulenceMessageGuideEvent.setMessage(new MessageBehavior() {
+			
+			@Override
+			public VerticalAlignment getVerticalAlignment() {
+				return VerticalAlignment.TOP;
+			}
+			
+			@Override
+			public String getText() {
+				return "The Turbulence is a scarcely researched,\nhighly intelligent, silicon based, collective\nlife form";
+			}
+			
+		});
+		guideQueue.add(secondTurbulenceMessageGuideEvent);
+		
+		DialogGuideEvent thirdTurbulenceMessageGuideEvent = new DialogGuideEvent();
+		thirdTurbulenceMessageGuideEvent.setDuration(3f);
+		thirdTurbulenceMessageGuideEvent.setMessage(new MessageBehavior() {
+			
+			@Override
+			public VerticalAlignment getVerticalAlignment() {
+				return VerticalAlignment.TOP;
+			}
+			
+			@Override
+			public String getText() {
+				return "Most of all, it is extremely hostile\ntowards other lifeforms";
+			}
+			
+		});
+		guideQueue.add(thirdTurbulenceMessageGuideEvent);
 		
 		DialogGuideEvent enemyCPMessageGuideEvent = new DialogGuideEvent();
 		enemyCPMessageGuideEvent.setDuration(3f);
@@ -628,7 +660,7 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "Your opponent's CP are\nshown in the top left corner";
+				return "Our scanners have been trained to\ncalculate the Turbulence collectives CP,\nas indicated by the red meter at the top left";
 			}
 			
 		});
@@ -731,7 +763,7 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "Your opponent has sent a\nship to defend his planet";
+				return "The Turbulence has sent a ship\nto defend its planet";
 			}
 			
 		});
@@ -761,7 +793,7 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "When in range,\nships will automatically\nattack each other";
+				return "When in range, ships will automatically\nattack each other, regardless of\ntheir route";
 			}
 			
 		});
@@ -783,7 +815,7 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "Below the ships you can\nsee their shield(blue) and\nunderneath their armor(brown)";
+				return "Below the ships you can see their blue\nshield bar and underneath it their\narmor in brown";
 			}
 			
 		});
@@ -818,7 +850,7 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "Eliminating all hostile planets\nand ships is one way to\nachieve victory";
+				return "Eliminating all hostile planets and ships\nis one way to achieve definitive mission success";
 			}
 			
 		});
@@ -853,7 +885,7 @@ public class TutorialLoader {
 				
 				@Override
 				public String getText() {
-					return "This is a star where\nunknown, ancient technology\nhas been detected";
+					return "The yellow planet is a star where unknown,\nancient technology has been detected";
 				}
 				
 			});
@@ -864,6 +896,57 @@ public class TutorialLoader {
 		panAwayToMapFromAncientGuideEvent.setDuration(2f);
 		panAwayToMapFromAncientGuideEvent.setTargetCameraPos(new Vector3(130f, -200f, 3800f));
 		guideQueue.add(panAwayToMapFromAncientGuideEvent);
+		
+		DialogGuideEvent ancientShipInfoMessageGuideEvent = new DialogGuideEvent();
+		ancientShipInfoMessageGuideEvent.setDuration(4f);
+		ancientShipInfoMessageGuideEvent.setMessage(new MessageBehavior() {
+			
+			@Override
+			public VerticalAlignment getVerticalAlignment() {
+				return VerticalAlignment.TOP;
+			}
+			
+			@Override
+			public String getText() {
+				return "We have equipped our fleet with a magnetic\nheat and radiation shield to withstand the extreme\ncondition of stars to allow our ships to\nextract this ancient technology";
+			}
+			
+		});
+		guideQueue.add(ancientShipInfoMessageGuideEvent);
+		
+		DialogGuideEvent secondAncientDecreaseInfoMessageGuideEvent = new DialogGuideEvent();
+		secondAncientDecreaseInfoMessageGuideEvent.setDuration(4f);
+		secondAncientDecreaseInfoMessageGuideEvent.setMessage(new MessageBehavior() {
+			
+			@Override
+			public VerticalAlignment getVerticalAlignment() {
+				return VerticalAlignment.TOP;
+			}
+			
+			@Override
+			public String getText() {
+				return "Unfortunately, this procedure requires extreme\namounts of dark matter, which our ships\ncan only safely store so much of";
+			}
+			
+		});
+		guideQueue.add(secondAncientDecreaseInfoMessageGuideEvent);
+		
+		DialogGuideEvent ancientDecreaseInfoMessageGuideEvent = new DialogGuideEvent();
+		ancientDecreaseInfoMessageGuideEvent.setDuration(4f);
+		ancientDecreaseInfoMessageGuideEvent.setMessage(new MessageBehavior() {
+			
+			@Override
+			public VerticalAlignment getVerticalAlignment() {
+				return VerticalAlignment.TOP;
+			}
+			
+			@Override
+			public String getText() {
+				return "So when captured, your planetary resources\non the star decrease, not increase over time";
+			}
+			
+		});
+		guideQueue.add(ancientDecreaseInfoMessageGuideEvent);
 		
 		DialogGuideEvent ancientCaptureMessageGuideEvent = new DialogGuideEvent();
 		ancientCaptureMessageGuideEvent.setDuration(3f);
@@ -876,7 +959,7 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "Send some ships to\nthe ancient (yellow) planet";
+				return "Send a ship to the yellow planet";
 			}
 			
 		});
@@ -907,23 +990,6 @@ public class TutorialLoader {
 		});
 		guideQueue.add(ancientCaptureMessageGuideEvent);
 		
-		DialogGuideEvent ancientDecreaseInfoMessageGuideEvent = new DialogGuideEvent();
-		ancientDecreaseInfoMessageGuideEvent.setDuration(4f);
-		ancientDecreaseInfoMessageGuideEvent.setMessage(new MessageBehavior() {
-			
-			@Override
-			public VerticalAlignment getVerticalAlignment() {
-				return VerticalAlignment.TOP;
-			}
-			
-			@Override
-			public String getText() {
-				return "When captured,\nyour resources decrease,\nnot increase over time";
-			}
-			
-		});
-		guideQueue.add(ancientDecreaseInfoMessageGuideEvent);
-		
 		DialogGuideEvent ancientUIMessageGuideEvent = new DialogGuideEvent();
 		ancientUIMessageGuideEvent.setDuration(6f);
 		ancientUIMessageGuideEvent.setMessage(new MessageBehavior() {
@@ -935,7 +1001,7 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "While under control, you generate\nAncient Technology Points (AP),\nas shown on the left side";
+				return "While under control, you generate\nAncient Technology Points (AP), as shown in\nthe yellow bar on the left side";
 			}
 			
 		});
@@ -964,47 +1030,45 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "If your AP-bar is full,\nyou also win the game";
+				return "If your AP-bar is full, the mission is\nalso immediately considered successful,\nregardless of planetary control status";
 			}
 			
 		});
 		guideQueue.add(ancientWinConditionInfoMessageGuideEvent);
 		
-		if (mode == TutorialMode.FULL) {
-			DialogGuideEvent ancientOwnLossInfoMessageGuideEvent = new DialogGuideEvent();
-			ancientOwnLossInfoMessageGuideEvent.setDuration(4f);
-			ancientOwnLossInfoMessageGuideEvent.setMessage(new MessageBehavior() {
-				
-				@Override
-				public VerticalAlignment getVerticalAlignment() {
-					return VerticalAlignment.TOP;
-				}
-				
-				@Override
-				public String getText() {
-					return "When the ancient planet reaches 0,\nthe previous owner loses control";
-				}
-				
-			});
-			guideQueue.add(ancientOwnLossInfoMessageGuideEvent);
+		DialogGuideEvent ancientOwnLossInfoMessageGuideEvent = new DialogGuideEvent();
+		ancientOwnLossInfoMessageGuideEvent.setDuration(4f);
+		ancientOwnLossInfoMessageGuideEvent.setMessage(new MessageBehavior() {
 			
-			DialogGuideEvent timeoutConditionInfoMessageGuideEvent = new DialogGuideEvent();
-			timeoutConditionInfoMessageGuideEvent.setDuration(4f);
-			timeoutConditionInfoMessageGuideEvent.setMessage(new MessageBehavior() {
-				
-				@Override
-				public VerticalAlignment getVerticalAlignment() {
-					return VerticalAlignment.TOP;
-				}
-				
-				@Override
-				public String getText() {
-					return "If the time runs out,\nthe team with the most planet wins";
-				}
-				
-			});
-			guideQueue.add(timeoutConditionInfoMessageGuideEvent);
-		}
+			@Override
+			public VerticalAlignment getVerticalAlignment() {
+				return VerticalAlignment.TOP;
+			}
+			
+			@Override
+			public String getText() {
+				return "When the ancient planet resources are\nempty, you lose control over it";
+			}
+			
+		});
+		guideQueue.add(ancientOwnLossInfoMessageGuideEvent);
+		
+		DialogGuideEvent timeoutConditionInfoMessageGuideEvent = new DialogGuideEvent();
+		timeoutConditionInfoMessageGuideEvent.setDuration(4f);
+		timeoutConditionInfoMessageGuideEvent.setMessage(new MessageBehavior() {
+			
+			@Override
+			public VerticalAlignment getVerticalAlignment() {
+				return VerticalAlignment.TOP;
+			}
+			
+			@Override
+			public String getText() {
+				return "If the time runs out, the faction with\nthe most planets under control is\nconsidered victorious over the system";
+			}
+			
+		});
+		guideQueue.add(timeoutConditionInfoMessageGuideEvent);
 
 		DialogGuideEvent finishGuideEvent = new DialogGuideEvent();
 		finishGuideEvent.setMessage(new MessageBehavior() {
@@ -1016,7 +1080,7 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "Win the game in any way!";
+				return "Complete the mission in any way!";
 			}
 			
 		});

@@ -13,6 +13,7 @@ import de.instinct.eqfleet.game.backend.driver.local.tutorial.guide.subtypes.Dia
 import de.instinct.eqlibgdxutils.MathUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
+import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
 import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 
 public class GuideRenderer {
@@ -98,6 +99,7 @@ public class GuideRenderer {
 					
 				}
 				messageLabel.setBackgroundColor(Color.BLACK);
+				messageLabel.setType(FontType.SMALL);
 				Border labelBorder = new Border();
 				labelBorder.setColor(SkinManager.skinColor);
 				labelBorder.setSize(2);
