@@ -7,6 +7,7 @@ import de.instinct.engine.net.message.types.LoadedMessage;
 import de.instinct.engine.order.GameOrder;
 import de.instinct.engine.order.types.ShipMovementOrder;
 import de.instinct.engine.util.EngineUtility;
+import de.instinct.eqfleet.audio.AudioManager;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.backend.driver.local.LocalDriver;
@@ -67,6 +68,8 @@ public class TutorialDriver extends LocalDriver {
         	if (GameModel.activeGameState.winner != 0) {
     			GameModel.guidedEvents = null;
     			Game.stop();
+    			AudioManager.playVoice("tutorial_voiceline_37");
+				AudioManager.playMusic("eqspace4", true);
     		}
     	}
 	}

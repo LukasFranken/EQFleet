@@ -8,8 +8,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import de.instinct.eqfleet.audio.AudioManager;
 import de.instinct.eqfleet.game.Game;
-import de.instinct.eqfleet.game.backend.audio.AudioManager;
 import de.instinct.eqfleet.intro.Intro;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.net.WebManager;

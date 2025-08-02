@@ -1,4 +1,4 @@
-package de.instinct.eqfleet.game.backend.audio;
+package de.instinct.eqfleet.audio;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
@@ -13,7 +13,7 @@ public class AudioManager {
 	private static Music queuedInMusic;
 	private static Cache<Music> voices;
 	
-	private static float targetMusicVolume = 0.5f;
+	private static float targetMusicVolume = 0.1f;
 	private static final float swapDuration = 3f;
 	private static float currentSwapElapsed = 0f;
 	
@@ -28,7 +28,7 @@ public class AudioManager {
 		});
 	}
 	
-	public static void play(String tag, boolean loop) {
+	public static void playMusic(String tag, boolean loop) {
 		if (currentMusic == null) {
 			currentMusic = Gdx.audio.newMusic(Gdx.files.internal("audio/music/" + tag + ".mp3"));
 			currentMusic.setVolume(targetMusicVolume);
@@ -66,7 +66,7 @@ public class AudioManager {
 	public static void playVoice(String tag) {
 		Music voice  = voices.get(tag);
 		if (voice != null) {
-			voice.setVolume(0.2f);
+			voice.setVolume(1);
 			voice.setLooping(false);
 			voice.play();
 		}
