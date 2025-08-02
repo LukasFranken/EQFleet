@@ -14,6 +14,7 @@ import de.instinct.eqfleet.intro.Intro;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.net.WebManager;
 import de.instinct.eqlibgdxutils.CursorUtil;
+import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.InputUtil;
 import de.instinct.eqlibgdxutils.PreferenceUtil;
 import de.instinct.eqlibgdxutils.debug.console.Console;
@@ -31,15 +32,16 @@ import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 
 public class App extends ApplicationAdapter {
-	
+
     public static final String VERSION = "0.0.51";
     private static final String LOGTAG = "APP";
-    
+
     private static boolean halted;
 
     @Override
     public void create() {
     	Logger.log(LOGTAG, "Welcome to EQFLEET v" + VERSION, ConsoleColor.YELLOW);
+    	Logger.log(LOGTAG, "Running on display size: " + GraphicsUtil.screenBounds(), ConsoleColor.YELLOW);
     	PreferenceUtil.init("EQFleet");
     	SkinManager.init();
     	TextureManager.init();
@@ -56,7 +58,7 @@ public class App extends ApplicationAdapter {
         Game.init();
         ParticleRenderer.init();
         ModelRenderer.init();
-        
+
         Console.registerMetric(NumberMetric.builder()
         		.decimals(2)
         		.tag("this_frame_time_MS")
@@ -96,7 +98,7 @@ public class App extends ApplicationAdapter {
 				.name("source_bold")
 				.size(10)
 				.build());
-		
+
 		FontUtil.init(FontConfiguration.builder()
 				.fontTypes(fontTypes)
 				.build());
@@ -105,7 +107,7 @@ public class App extends ApplicationAdapter {
 	@Override
     public void render() {
 		long startNanoTime = System.nanoTime();
-		
+
 		try {
 			InputUtil.update();
 			if (!halted) {
@@ -123,7 +125,7 @@ public class App extends ApplicationAdapter {
 			e.printStackTrace();
 			halted = true;
 		}
-        
+
         long endNanoTime = System.nanoTime();
         double deltaTime = (endNanoTime - startNanoTime) / 1_000_000.0;
         Console.updateMetric("this_frame_time_MS", deltaTime);
@@ -141,5 +143,5 @@ public class App extends ApplicationAdapter {
         Console.dispose();
         Logger.log(LOGTAG, "EQFLEET TERMINATED", ConsoleColor.YELLOW);
     }
-    
+
 }
