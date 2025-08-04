@@ -1,5 +1,6 @@
 package de.instinct.eqlibgdxutils.generic.cache;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +26,10 @@ public class Cache<E> {
 		E loadedElement = loadSequence.execute(tag);
 		if (loadedElement != null) loadedElements.put(tag, loadedElement);
 		return loadedElement;
+	}
+	
+	public Collection<E> getAllLoadedElements() {
+		return loadedElements.values();
 	}
 	
 }

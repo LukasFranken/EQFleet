@@ -69,7 +69,6 @@ public class TutorialDriver extends LocalDriver {
     			GameModel.guidedEvents = null;
     			Game.stop();
     			AudioManager.playVoice("tutorial_voiceline_37");
-				AudioManager.playMusic("eqspace4", true);
     		}
     	}
 	}

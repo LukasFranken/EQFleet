@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
+import de.instinct.eqfleet.audio.AudioManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.ComplexShapeRenderer;
 
 public class ExplosionRenderer {
@@ -57,6 +58,7 @@ public class ExplosionRenderer {
 				.position(position)
 				.radius(radius)
 				.build());
+		AudioManager.playSfx("explosion");
 	}
 
 }

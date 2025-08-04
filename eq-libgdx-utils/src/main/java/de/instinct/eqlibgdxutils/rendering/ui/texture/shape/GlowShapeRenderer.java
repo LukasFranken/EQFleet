@@ -23,7 +23,6 @@ public class GlowShapeRenderer {
     public float defaultGlow = 0.8f;
     public float radius = 20f;
     public float dropoff = 0.5f;
-    public int shapeUpscale = 4;
     public float thickness = 2;
 
     public GlowShapeRenderer() {
@@ -44,7 +43,7 @@ public class GlowShapeRenderer {
         float texelX = 1f / Gdx.graphics.getWidth();
         float texelY = 1f / Gdx.graphics.getHeight();
         blurShader.setUniformf("u_texelSize", texelX, texelY);
-        fboA = new FrameBuffer(Pixmap.Format.RGBA8888, w * shapeUpscale, h * shapeUpscale, false);
+        fboA = new FrameBuffer(Pixmap.Format.RGBA8888, w, h, false);
         fboB = new FrameBuffer(Pixmap.Format.RGBA8888, w, h, false);
         
         for (FrameBuffer f : new FrameBuffer[]{fboA, fboB}) {
@@ -100,12 +99,12 @@ public class GlowShapeRenderer {
                                      fboA.getWidth(),
                                      fboA.getHeight())
         );
-        Rectangle upscaledBounds = new Rectangle(bounds.x * shapeUpscale, bounds.y * shapeUpscale, bounds.width * shapeUpscale, bounds.height * shapeUpscale);
+        Rectangle upscaledBounds = new Rectangle(bounds.x, bounds.y, bounds.width, bounds.height);
     	fboA.begin();
         Gdx.gl.glClearColor(0, 0, 0, 0f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
         shapes.setColor(color);
-        shapes.roundRectangle(upscaledBounds, shapeUpscale * thickness);
+        shapes.roundRectangle(upscaledBounds, thickness);
         fboA.end();
         
         shapes.setProjectionMatrix(oldProj);

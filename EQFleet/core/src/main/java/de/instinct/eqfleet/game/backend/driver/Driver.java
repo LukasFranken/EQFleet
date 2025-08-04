@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 import de.instinct.api.core.modules.MenuModule;
 import de.instinct.api.matchmaking.model.GameMode;
 import de.instinct.engine.FleetEngine;
+import de.instinct.eqfleet.audio.AudioManager;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.module.play.PlayModel;
@@ -49,6 +50,8 @@ public abstract class Driver {
 	
 	public void stop() {
 		finish();
+		AudioManager.stopAllSfx();
+		AudioManager.stopAllVoices();
 		scheduler.schedule(() -> {
 			
 			try {

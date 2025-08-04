@@ -18,6 +18,7 @@ import de.instinct.engine.entity.Entity;
 import de.instinct.engine.entity.EntityManager;
 import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.ship.WeaponType;
+import de.instinct.eqfleet.audio.AudioManager;
 import de.instinct.eqfleet.game.frontend.projectile.explosion.ExplosionRenderer;
 import de.instinct.eqlibgdxutils.rendering.model.ModelLoader;
 import de.instinct.eqlibgdxutils.rendering.model.ModelRenderer;
@@ -44,6 +45,7 @@ public class ProjectileRenderer {
             if (projectileInstance == null) {
             	projectileInstance = instanciateProjectileInstance(projectile, state);
             	projectileInstances.add(projectileInstance);
+            	AudioManager.playSfx(projectile.weaponType.toString().toLowerCase());
             }
             projectileInstance.setLastPosition(projectile.position);
             Entity from = EntityManager.getEntity(state, projectile.id);
