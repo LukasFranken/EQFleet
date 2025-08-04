@@ -3,7 +3,6 @@ package de.instinct.engine.ai;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.instinct.engine.ai.difficulty.AiDifficulty;
 import de.instinct.engine.ai.difficulty.AiStatManager;
 import de.instinct.engine.ai.difficulty.DifficultyLoader;
 import de.instinct.engine.combat.Ship;

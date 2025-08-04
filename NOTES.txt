@@ -5,7 +5,6 @@ GENERAL:
 - check android
 
 - Audio
- -> BG music
  -> sound FX
  -> audio settings
 
@@ -26,6 +25,7 @@ GENERAL:
 - ai mod: send last resort ancient planet so that ship arrives a few seconds before end
 - hangar space needed for build blueprint, not buy blueprint
 - planet is grey sometimes after capture
+- radio music looping randomly through tracks
 - neutral planets less damage but more hp
 
 - add model preview to construction popup
