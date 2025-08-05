@@ -53,7 +53,13 @@ public class MenuRenderer extends BaseModuleRenderer {
 	private Image creditsImage;
 
 	public MenuRenderer() {
+		titleHeight = 40f;
 		tabButtons = new LinkedHashMap<>();
+	}
+
+	public void reload() {
+		close();
+		createCloseModuleButton();
 		
 		expBar = new PlainRectangularLoadingBar();
 		expBar.setBar(TextureManager.createTexture(Color.BLUE));
@@ -73,13 +79,6 @@ public class MenuRenderer extends BaseModuleRenderer {
 		backgroundBorder.setColor(SkinManager.skinColor);
 		backgroundBorder.setSize(2f);
 		menuBackground.setBorder(backgroundBorder);
-		
-		titleHeight = 40f;
-	}
-
-	public void reload() {
-		close();
-		createCloseModuleButton();
 		
 		title = new Label("");
 		title.setHorizontalAlignment(HorizontalAlignment.LEFT);

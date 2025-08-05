@@ -79,7 +79,7 @@ public class EQFleetCommandLoader implements CommandLoader {
 					
 					@Override
 					public void execute(String message) {
-						Menu.reload();
+						Menu.loadModules();
 						log("Menu reloaded");
 					}
 					
@@ -285,8 +285,8 @@ public class EQFleetCommandLoader implements CommandLoader {
 	}
 	
 	private List<Command> getGameCommands() {
-		List<Command> menuCommands = new ArrayList<>();
-		menuCommands.add(Command.builder()
+		List<Command> gameCommands = new ArrayList<>();
+		gameCommands.add(Command.builder()
 				.method("resourcehelp")
 				.description("get help for resource commands")
 				.action(new CommandAction() {
@@ -299,7 +299,7 @@ public class EQFleetCommandLoader implements CommandLoader {
 					
 				})
 				.build());
-		menuCommands.add(Command.builder()
+		gameCommands.add(Command.builder()
 				.method("addresource=")
 				.description("adds an amount of a resource (see resourcehelp)")
 				.action(new CommandAction() {
@@ -331,7 +331,7 @@ public class EQFleetCommandLoader implements CommandLoader {
 					
 				})
 				.build());
-		menuCommands.add(Command.builder()
+		gameCommands.add(Command.builder()
 				.method("addexperience=")
 				.description("adds an amount of experience")
 				.action(new CommandAction() {
@@ -357,7 +357,7 @@ public class EQFleetCommandLoader implements CommandLoader {
 					
 				})
 				.build());
-		return menuCommands;
+		return gameCommands;
 	}
 
 	private void log(String message) {

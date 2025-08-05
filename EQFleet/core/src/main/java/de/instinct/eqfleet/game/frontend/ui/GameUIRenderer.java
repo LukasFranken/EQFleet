@@ -2,6 +2,7 @@ package de.instinct.eqfleet.game.frontend.ui;
 
 import java.util.List;
 
+import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -422,7 +423,7 @@ public class GameUIRenderer {
 	
 	private void renderArrowLabel() {
 		if (inputManager.getSelectedPlanetId() != null && inputManager.getSelectedShipId() != null && Gdx.input.isTouched()) {
-			float arrowLabelYOffset = 40f + (40 * (Gdx.graphics.getDensity() / 5f));
+			float arrowLabelYOffset = Gdx.app.getType() == ApplicationType.Android || Gdx.app.getType() == ApplicationType.Android ? 80f : 40f;
 			Integer selectedId = inputManager.getSelectedPlanetId();
 			Planet selected = (selectedId != null) ? EngineUtility.getPlanet(state.planets, selectedId) : null;
 			Player owner = EngineUtility.getPlayer(state.players, selected.ownerId);

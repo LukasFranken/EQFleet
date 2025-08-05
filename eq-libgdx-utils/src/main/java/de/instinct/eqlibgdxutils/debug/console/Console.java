@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.InputUtil;
+import de.instinct.eqlibgdxutils.PreferenceUtil;
 import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.debug.Metric;
 import de.instinct.eqlibgdxutils.debug.MetricUtil;
@@ -79,7 +80,28 @@ public class Console {
 			}
 			
 		});
+		loadFilter();
+	}
+	
+	public static void loadFilter() {
 		tagFilter = new ArrayList<>();
+		String filterString = PreferenceUtil.load("console_tag_filter");
+		for (String tag : filterString.split(";")) {
+			if (!tag.isEmpty()) {
+				Console.getTagFilter().add(tag);
+			}
+		}
+	}
+	
+	public static void saveFilter() {
+		String filterString = "";
+		for (String tag : Console.getTagFilter()) {
+			if (!filterString.isEmpty()) {
+				filterString += ";";
+			}
+			filterString += tag;
+		}
+		PreferenceUtil.save("console_tag_filter", filterString);
 	}
 	
 	public static List<String> getTagFilter() {

@@ -1,44 +1,32 @@
-- ALPHA RELEASE TODO:
-bf9bb9c1-2733-4beb-8afd-e8dae9cc2747
+ALPHA RELEASE TODO:
+
 GENERAL:
 - appicon, ios loadscreen etc.
 - check android
+- build apk
 
-- Audio
- -> audio settings
- -> music glitches/crashes on transition
-
-- find cpu bottleneck
-- show rank in lobby
+- settings via meta module (show grid, show fleet lines)
+- audio settings
+- more sfx (maybe avoid voices)
+ 
+- planet defense not since start
 - planet resource upgrades part of construction
+
 - zoom factor per conq map
 - duo, trio campaign via social group
 - social module, squad and aliance with vault
 - stats in profile like gametime, furthest in each campaign
-- settings via meta module (show grid, show fleet lines)
-- planet defense not since start
 - defeated/victory reason
 - freggy seite offline nehmen
 - ai mod: send last resort ancient planet so that ship arrives a few seconds before end
 - hangar space needed for build blueprint, not buy blueprint
-- planet is grey sometimes after capture
 - radio music looping randomly through tracks
 - neutral planets less damage but more hp
  -> scaling neutral player
-- make resource bar around planet colorscale?
-
-- add model preview to construction popup
- 
 - externalize planet resource bar to circularloadingbar component
-
-- seperate sections for weapon and defense with different image
-
-- make postgame seperate to menu
-
-- random amazon requests crash gameserver and maybe others
+- replace money label with other squad player names
 
 GAME:
-- prevent bot from bypassing resource cost by doubleshipping
 
 META:
 - intro back button
@@ -49,6 +37,14 @@ META:
  -> turret blueprints
  
 - proper inventory
+
+BUGS:
+- prevent bot from bypassing resource cost by doubleshipping
+- random amazon requests crash gameserver and maybe others
+- random nullpointer before tutorial on ios
+- music randomly glitches/crashes on transition
+- gameserver rubberbanding
+- planet is grey sometimes after capture
 
 ---------------------------------------------------------------------
 FUTURE RELEASES TODO:
@@ -62,12 +58,10 @@ GAME:
 META:
 - boss battles where 1 giant ship jumps from planet to planet
 
-- social features (friends teams messages etc.)
-
 - Technology module to unlock abilities and stuff like range and defensebar
 
 - abilities 
- -> need to be ressearched over time with techtree
+ -> need to be researched over time with techtree
  -> techtree advances with ability usage exp gain
    -> usage depends on ability effect e.g. damage dealt / units slowed etc.
 

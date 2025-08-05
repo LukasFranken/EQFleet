@@ -5,13 +5,13 @@ import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.api.meta.dto.NameRegisterResponseCode;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
+import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
 import de.instinct.eqfleet.menu.common.components.DefaultLabelFactory;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.main.MenuModel;
 import de.instinct.eqfleet.menu.module.profile.message.RegisterMessage;
 import de.instinct.eqfleet.menu.module.profile.model.ExperienceSection;
 import de.instinct.eqlibgdxutils.StringUtils;
-import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.LimitedInputField;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.model.TextfieldActionHandler;
@@ -48,15 +48,10 @@ public class ProfileRenderer extends BaseModuleRenderer {
 	public ProfileRenderer() {
 		registrationLabel = new Label("Choose a unique name");
 		registrationResponseLabel = new Label("");
-		registrationConfirmButton = new ColorButton("->");
-		registrationConfirmButton.setAction(new Action() {
-			
-			@Override
-			public void execute() {
-				register(usernameTextField.getContent());
-			}
-			
+		registrationConfirmButton = DefaultButtonFactory.colorButton("->", () -> {
+			register(usernameTextField.getContent());
 		});
+		
 		usernameTextField = new LimitedInputField();
 		usernameTextField.setMaxChars(12);
 		usernameTextField.setInputFilter(new UsernameTexfieldInputFilter());
@@ -87,7 +82,7 @@ public class ProfileRenderer extends BaseModuleRenderer {
 	}
 	
 	private void register(String content) {
-		Menu.queue(RegisterMessage.builder()
+		if (!content.isEmpty()) Menu.queue(RegisterMessage.builder()
 				.username(content)
 				.build());
 	}
@@ -107,7 +102,7 @@ public class ProfileRenderer extends BaseModuleRenderer {
 	public void reload() {
 		registrationLabelBounds = new Rectangle(MenuModel.moduleBounds.x, ((MenuModel.moduleBounds.y + MenuModel.moduleBounds.height) / 2) + 50, MenuModel.moduleBounds.width, 30);
 		usernameTextFieldBounds = new Rectangle(MenuModel.moduleBounds.x + (MenuModel.moduleBounds.width / 2) - 88 - 15, (MenuModel.moduleBounds.y + MenuModel.moduleBounds.height) / 2, 176, 30);
-		registrationConfirmButtonBounds = new Rectangle(MenuModel.moduleBounds.x + (MenuModel.moduleBounds.width / 2) + 88 - 15, (MenuModel.moduleBounds.y + MenuModel.moduleBounds.height) / 2, 30, 30);
+		registrationConfirmButtonBounds = new Rectangle(MenuModel.moduleBounds.x + (MenuModel.moduleBounds.width / 2) + 92 - 15, (MenuModel.moduleBounds.y + MenuModel.moduleBounds.height) / 2, 30, 30);
 		registrationResponseLabelBounds = new Rectangle(MenuModel.moduleBounds.x, ((MenuModel.moduleBounds.y + MenuModel.moduleBounds.height) / 2) - 50, MenuModel.moduleBounds.width, 30);
 		
 		usernameLabelBounds = new Rectangle(MenuModel.moduleBounds.x + margin, MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - margin - 30, MenuModel.moduleBounds.width - (margin * 2), 30);

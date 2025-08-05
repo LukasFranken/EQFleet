@@ -22,9 +22,11 @@ import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButto
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.LabeledModelButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.HorizontalAlignment;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
+import de.instinct.eqlibgdxutils.rendering.ui.component.passive.model.ModelPreview;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.model.ModelPreviewConfiguration;
 import de.instinct.eqlibgdxutils.rendering.ui.container.list.ElementList;
 import de.instinct.eqlibgdxutils.rendering.ui.container.list.ElementStack;
+import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
 import de.instinct.eqlibgdxutils.rendering.ui.popup.Popup;
 import de.instinct.eqlibgdxutils.rendering.ui.popup.PopupRenderer;
@@ -97,8 +99,26 @@ private List<LabeledModelButton> turretButtons;
 	}
 	
 	private void createTurretPopup(PlanetTurretBlueprint blueprint) {
+		ModelInstance turretModel = ModelLoader.instanciate("ship");
+        for (Material material : turretModel.materials) {
+            material.set(ColorAttribute.createDiffuse(SkinManager.darkestSkinColor));
+        }
+		ModelPreviewConfiguration turretModelPreviewConfig = ModelPreviewConfiguration.builder()
+				.model(turretModel)
+				.baseRotationAngle(-90f)
+				.baseRotationAxis(new Vector3(1, 0, 0))
+				.scale(10f)
+				.build();
+		ModelPreview turretModelPreview = new ModelPreview(turretModelPreviewConfig);
+		Border turretModelPreviewBorder = new Border();
+		turretModelPreviewBorder.setSize(2f);
+		turretModelPreviewBorder.setColor(Color.GRAY);
+		turretModelPreview.setBorder(turretModelPreviewBorder);
+		turretModelPreview.setFixedWidth(popupWidth);
+		turretModelPreview.setFixedHeight(popupWidth);
 		ElementList popupContent = new ElementList();
 		popupContent.setMargin(10f);
+		popupContent.getElements().add(turretModelPreview);
 		popupContent.getElements().add(createLabelStack("WEAPON", blueprint.getPlanetWeapon().getType().toString()));
 		popupContent.getElements().add(createLabelStack("DAMAGE", StringUtils.format(blueprint.getPlanetWeapon().getDamage(), 0)));
 		popupContent.getElements().add(createLabelStack("RANGE", StringUtils.format(blueprint.getPlanetWeapon().getRange(), 0)));

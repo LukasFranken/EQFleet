@@ -63,9 +63,8 @@ public class ShipRenderer {
 	private void renderShipRoute(Ship ship, Planet target, PerspectiveCamera camera) {
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 		shapeRenderer.setProjectionMatrix(camera.combined);
-		float baseLineWidth = 2f * GraphicsUtil.getHorizontalDisplayScaleFactor();
-		float dynamicLineWidth = baseLineWidth * (Gdx.graphics.getDensity() > 1 ? Gdx.graphics.getDensity() : 1f);
-		Gdx.gl.glLineWidth(dynamicLineWidth);
+		float lineWidth = 2f * GraphicsUtil.getHorizontalDisplayScaleFactor();
+		Gdx.gl.glLineWidth(lineWidth);
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 		Color faded = new Color(GameConfig.getPlayerColor(ship.ownerId));
 		faded.a = 0.25f;
