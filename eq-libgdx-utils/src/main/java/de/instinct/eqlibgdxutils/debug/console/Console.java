@@ -148,10 +148,10 @@ public class Console {
 		for (int i = 0; i < logLines.size(); i++) {
 			LogLine logLine = logLines.get(logLines.size() - 1 - i);
 			String logMessage = "[" + StringUtils.getTime(logLine.getTimestamp()) + "] " + logLine.getTag() + " - " + logLine.getMessage();
-			String labelText = StringUtils.limitWithDotDotDot(logMessage, (int)((logsBounds.width - (logLineHorizontalMargin * 2)) / FontUtil.getNormalizedFontTextWidthPx(1, FontType.TINY)));
+			String labelText = StringUtils.limitWithDotDotDot(logMessage, (int)((logsBounds.width - (logLineHorizontalMargin * 2)) / FontUtil.getNormalizedFontTextWidthPx(1, FontType.MICRO)));
 			Label logLineLabel = new Label(labelText);
 			logLineLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
-			logLineLabel.setType(FontType.TINY);
+			logLineLabel.setType(FontType.MICRO);
 			logLineLabel.setColor(logLine.getColor().getGameColor());
 			logLineLabel.setBounds(new Rectangle(
 					logsBounds.x + logLineHorizontalMargin,

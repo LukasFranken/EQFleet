@@ -12,8 +12,11 @@ import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
-public class ParticleRenderer {
+import de.instinct.eqlibgdxutils.GraphicsUtil;
+import de.instinct.eqlibgdxutils.debug.logging.Logger;
 
+public class ParticleRenderer {
+	
 	private static ParticleLoader particleLoader;
 	private static SpriteBatch particleBatch;
 	private static Map<String, ParticleAnimation> particleAnimations;
@@ -35,7 +38,7 @@ public class ParticleRenderer {
 	}
 
 	private static void loadDefaultStarEffect() {
-		loadParticles("stars", "Star", 0.02f);
+		loadParticles("stars", "Star", 0.005f / GraphicsUtil.getHorizontalDisplayScaleFactor());
 	}
 
 	public static void loadParticles(String tag, String effectFileName, float particlePerPixel) {
@@ -43,6 +46,7 @@ public class ParticleRenderer {
 				.effectFileName(effectFileName)
 				.totalParticles((int)(currentPixels * particlePerPixel))
 				.build();
+		Logger.log("PARTICLE", "loading: " + tag + " - total particles: " + particleAnimation.getTotalParticles());
 		List<ParticleEffect> particleEffects = particleLoader.loadParticles(particleAnimation);
 		particleAnimation.setParticleEffects(particleEffects);
 		particleAnimations.put(tag, particleAnimation);

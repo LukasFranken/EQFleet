@@ -4,12 +4,20 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
+import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
+import de.instinct.eqlibgdxutils.debug.logging.Logger;
+
 public class GraphicsUtil {
 	
+	private static String LOGTAG = "GRAPHICS";
 	private static Vector2 baseWindowSize;
 	
 	public static void init(Vector2 windowSize) {
 		baseWindowSize = windowSize;
+    	Logger.log(LOGTAG, "Running on display size: " + screenBounds(), ConsoleColor.YELLOW);
+    	Logger.log(LOGTAG, "Base window size: " + baseWindowSize, ConsoleColor.YELLOW);
+    	Logger.log(LOGTAG, "Horizontal display scale factor: " + getHorizontalDisplayScaleFactor(), ConsoleColor.YELLOW);
+    	Logger.log(LOGTAG, "Vertical display scale factor: " + getVerticalDisplayScaleFactor(), ConsoleColor.YELLOW);
 	}
 	
 	public static float getHorizontalDisplayScaleFactor() {

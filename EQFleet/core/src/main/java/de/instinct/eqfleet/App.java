@@ -42,7 +42,6 @@ public class App extends ApplicationAdapter {
     @Override
     public void create() {
     	Logger.log(LOGTAG, "Welcome to EQFLEET v" + VERSION, ConsoleColor.YELLOW);
-    	Logger.log(LOGTAG, "Running on display size: " + GraphicsUtil.screenBounds(), ConsoleColor.YELLOW);
     	GraphicsUtil.init(new Vector2(400, 900));
     	PreferenceUtil.init("EQFleet");
     	SkinManager.init();
@@ -99,6 +98,11 @@ public class App extends ApplicationAdapter {
 				.type(FontType.TINY)
 				.name("source_bold")
 				.size(10)
+				.build());
+		fontTypes.add(FontTypeConfiguration.builder()
+				.type(FontType.MICRO)
+				.name("source")
+				.size(6)
 				.build());
 
 		FontUtil.init(FontConfiguration.builder()
