@@ -2,6 +2,7 @@ package de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.interactiv
 
 import com.badlogic.gdx.math.Rectangle;
 
+import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.MathUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.LimitedInputField;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
@@ -16,9 +17,9 @@ import lombok.Getter;
 @EqualsAndHashCode(callSuper = false)
 public class InputFieldDialog extends Slide {
 
-	private final float LABEL_MOVE_DURATION = 0.5f;
-	private final float LABEL_MAX_OFFSET = 20f;
-	private final float DIALOG_FADE_IN_DELAY = 2f;
+	private float LABEL_MOVE_DURATION = 0.5f;
+	private float LABEL_MAX_OFFSET = 20f;
+	private float DIALOG_FADE_IN_DELAY = 2f;
 	
 	private Label mainLabel;
 	private Label subLabel;
@@ -39,14 +40,15 @@ public class InputFieldDialog extends Slide {
 
 		});
 		inputField = new LimitedInputField();
+		LABEL_MAX_OFFSET *= GraphicsUtil.getHorizontalDisplayScaleFactor();
 	}
 
 	public void build() {
 		inputField.focus();
 	}
-
+	
 	@Override
-	public void renderContent(float slideAlpha) {
+	protected void updateSlide(float slideAlpha) {
 		float labelYOffset = 0f;
 		float buttonAlpha = 0f;
 		if (getStage() == SlideLifeCycleStage.FADE_OUT) {
@@ -64,12 +66,18 @@ public class InputFieldDialog extends Slide {
 		inputField.setBounds(new Rectangle((getBounds().width / 2) - (inputField.getBounds().width / 2), (getBounds().height / 2) - inputField.getBounds().height, inputField.getBounds().width, inputField.getBounds().height));
 		inputField.setAlpha(buttonAlpha);
 		inputField.update();
-		inputField.render();
+		
 		mainLabel.setBounds(new Rectangle(0, labelYOffset, getBounds().width, getBounds().height));
 		mainLabel.setAlpha(slideAlpha);
-		mainLabel.render();
-		subLabel.setBounds(new Rectangle(0, inputField.getBounds().y - 40, getBounds().width, 30));
+		
+		subLabel.setBounds(new Rectangle(0, inputField.getBounds().y - 40, getBounds().width, 30 * GraphicsUtil.getHorizontalDisplayScaleFactor()));
 		subLabel.setAlpha(slideAlpha);
+	}
+
+	@Override
+	public void renderContent() {
+		inputField.render();
+		mainLabel.render();
 		subLabel.render();
 	}
 

@@ -11,6 +11,7 @@ import de.instinct.eqfleet.audio.AudioManager;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.backend.driver.local.LocalDriver;
+import de.instinct.eqfleet.menu.main.Menu;
 
 public class TutorialDriver extends LocalDriver {
 
@@ -79,6 +80,7 @@ public class TutorialDriver extends LocalDriver {
 		GameModel.guidedEvents = null;
 		mode = null;
 		finished = true;
+		Menu.load();
 	}
 
 	@Override

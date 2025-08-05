@@ -15,9 +15,12 @@ import com.badlogic.gdx.math.Vector3;
 import de.instinct.api.core.API;
 import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.Player;
+import de.instinct.engine.model.PlayerConnectionStatus;
 import de.instinct.engine.model.planet.Planet;
 import de.instinct.engine.model.ship.ShipData;
+import de.instinct.engine.net.message.types.GamePauseMessage;
 import de.instinct.engine.net.message.types.LoadedMessage;
+import de.instinct.engine.net.message.types.SurrenderMessage;
 import de.instinct.engine.util.EngineUtility;
 import de.instinct.eqfleet.ApplicationMode;
 import de.instinct.eqfleet.GlobalStaticData;
@@ -27,13 +30,17 @@ import de.instinct.eqfleet.game.frontend.GameInputManager;
 import de.instinct.eqfleet.game.frontend.GameRenderer;
 import de.instinct.eqfleet.game.frontend.ui.model.GameUIElement;
 import de.instinct.eqfleet.game.frontend.ui.model.UIBounds;
+import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.InputUtil;
+import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.rendering.particle.ParticleRenderer;
+import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.ComplexShapeRenderer;
 
 public class GameUIRenderer {
@@ -53,6 +60,11 @@ public class GameUIRenderer {
 	private PerspectiveCamera camera;
 	private GameState state;
 	
+	private ColorButton surrenderButton;
+    private ColorButton resumeButton;
+    
+    public static Color bluroutColor;
+	
 	public GameUIRenderer() {
 		uiLoader = new GameUILoader();
 		ParticleRenderer.loadParticles("ancient", "ancient");
@@ -61,6 +73,7 @@ public class GameUIRenderer {
 		complexShapeRenderer = new ComplexShapeRenderer();
 		inputManager = new GameInputManager();
 		defenseUIRenderer = new DefenseUIRenderer();
+		bluroutColor = new Color(0f, 0f, 0f, 0.5f);
 	}
 	
 	public void init() {
@@ -72,6 +85,24 @@ public class GameUIRenderer {
 		loadedMessage.playerUUID = API.authKey;
 		GameModel.outputMessageQueue.add(loadedMessage);
 		initialized = true;
+		
+		surrenderButton = DefaultButtonFactory.colorButton("Surrender", () -> {
+    		SurrenderMessage order = new SurrenderMessage();
+    		order.gameUUID = state.gameUUID;
+    		order.userUUID = API.authKey;
+    		GameModel.outputMessageQueue.add(order);
+		});
+    	resumeButton = DefaultButtonFactory.colorButton("Resume", () -> {
+    		GamePauseMessage order = new GamePauseMessage();
+        	order.gameUUID = state.gameUUID;
+        	order.userUUID = API.authKey;
+        	order.pause = false;
+        	GameModel.outputMessageQueue.add(order);
+    	});
+    	Rectangle surrenderBounds = new Rectangle((GraphicsUtil.baseScreenBounds().width / 2) - 50, 200, 100, 40);
+    	surrenderButton.setBounds(surrenderBounds);
+        Rectangle resumeBounds = new Rectangle((GraphicsUtil.baseScreenBounds().width / 2) - 50, 100, 100, 40);
+        resumeButton.setBounds(resumeBounds);
 	}
 
 	private void initializeElements() {
@@ -84,26 +115,23 @@ public class GameUIRenderer {
 	}
 
 	private void loadBounds() {
-		float scaleX = Gdx.graphics.getWidth() / 400f;
-		float scaleY = Gdx.graphics.getHeight() / 900f;
-		
 		bounds = UIBounds.builder()
-		.time(new Rectangle(330 * scaleX, 830 * scaleY, 65 * scaleX, 25 * scaleY))
-		.ownCPBar(new Rectangle(47 * scaleX, 23 * scaleY, 330 * scaleX, 27 * scaleY))
-		.ownCPBarLabel(new Rectangle(20 * scaleX, 23 * scaleY, 27 * scaleX, 27 * scaleY))
-		.teammate1CPBar(new Rectangle(75 * scaleX, (23 + 27 + 3) * scaleY, 135 * scaleX, 20 * scaleY))
-		.teammate1CPBarLabel(new Rectangle(50 * scaleX, (23 + 27 + 3) * scaleY, 25 * scaleX, 20 * scaleY))
-		.teammate2CPBar(new Rectangle((75 + 155 + 10) * scaleX, (23 + 27 + 3) * scaleY, 135 * scaleX, 20 * scaleY))
-		.teammate2CPBarLabel(new Rectangle((50 + 155 + 10) * scaleX, (23 + 27 + 3) * scaleY, 25 * scaleX, 20 * scaleY))
-		.enemy1CPBarLabel(new Rectangle((51 + 10) * scaleX, 800 * scaleY, 27 * scaleX, 27 * scaleY))
-		.enemy1CPBar(new Rectangle((51 + 27 + 10) * scaleX, 800 * scaleY, 82 * scaleX, 27 * scaleY))
-		.enemy2CPBar(new Rectangle((51 + 27 + 10 + 82 + 5) * scaleX, 800 * scaleY, 82 * scaleX, 27 * scaleY))
-		.enemy3CPBar(new Rectangle((51 + 27 + 10 + 82 + 5 + 82 + 5) * scaleX, 800 * scaleY, 82 * scaleX, 27 * scaleY))
-		.teamAPBar(new Rectangle(20 * scaleX, 174 * scaleY, 27 * scaleX, 207 * scaleY))
-		.teamAPBarLabel(new Rectangle(20 * scaleX, 147 * scaleY, 27 * scaleX, 27 * scaleY))
-		.enemyAPBar(new Rectangle(20 * scaleX, 492 * scaleY, 27 * scaleX, 207 * scaleY))
-		.enemyAPBarLabel(new Rectangle(20 * scaleX, (492 + 207) * scaleY, 27 * scaleX, 27 * scaleY))
-		.build();
+				.time(new Rectangle(330, 830, 65, 25))
+				.ownCPBar(new Rectangle(47, 23, 330, 27))
+				.ownCPBarLabel(new Rectangle(20, 23, 27, 27))
+				.teammate1CPBar(new Rectangle(75, (23 + 27 + 3), 135, 20))
+				.teammate1CPBarLabel(new Rectangle(50, (23 + 27 + 3), 25, 20))
+				.teammate2CPBar(new Rectangle((75 + 155 + 10), (23 + 27 + 3), 135, 20))
+				.teammate2CPBarLabel(new Rectangle((50 + 155 + 10), (23 + 27 + 3), 25, 20))
+				.enemy1CPBarLabel(new Rectangle((51 + 10), 800, 27, 27))
+				.enemy1CPBar(new Rectangle((51 + 27 + 10), 800, 82, 27))
+				.enemy2CPBar(new Rectangle((51 + 27 + 10 + 82 + 5), 800, 82, 27))
+				.enemy3CPBar(new Rectangle((51 + 27 + 10 + 82 + 5 + 82 + 5), 800, 82, 27))
+				.teamAPBar(new Rectangle(20, 174, 27, 207))
+				.teamAPBarLabel(new Rectangle(20, 147, 27, 27))
+				.enemyAPBar(new Rectangle(20, 492, 27, 207))
+				.enemyAPBarLabel(new Rectangle(20, (492 + 207), 27, 27))
+				.build();
 	}
 	
 	public void render() {
@@ -111,13 +139,73 @@ public class GameUIRenderer {
 			if (initialized && state.winner == 0) {
 				inputManager.handleInput(camera, state);
 				updateStaticUI();
-				renderStaticUI();
 				renderResourceCircles();
 				defenseUIRenderer.render(state, camera);
 				renderShipSelection();
+				renderStaticUI();
+				renderPauseScreen(state);
+				renderCountdownScreen(state);
+				renderPauseScreen(state);
+				if (!state.started) {
+					renderLoadingScreen(state);
+				}
 			}
 		}
 		renderMessageText();
+	}
+	
+	private void renderCountdownScreen(GameState state) {
+		if (state.resumeCountdownMS > 0) {
+			TextureManager.draw(TextureManager.createTexture(bluroutColor), GraphicsUtil.screenBounds());
+			Label pauseLabel = new Label(StringUtils.format(Math.min((state.resumeCountdownMS / 1000) + 1, 3), 0));
+			pauseLabel.setType(FontType.GIANT);
+			pauseLabel.setBounds(new Rectangle(100, (GraphicsUtil.baseScreenBounds().getHeight() / 2), GraphicsUtil.baseScreenBounds().getWidth() - 200, 60));
+			pauseLabel.render();
+		}
+	}
+
+	private void renderPauseScreen(GameState state) {
+		if (state.teamPause != 0) {
+			TextureManager.draw(TextureManager.createTexture(bluroutColor), GraphicsUtil.screenBounds());
+			Player self = EngineUtility.getPlayer(state.players, GameModel.playerId);
+			String teamName = self.teamId == state.teamPause ? "OWN" : "ENEMY";
+			Label pauseLabel = new Label("PAUSED - " + teamName + " TEAM");
+			pauseLabel.setType(FontType.LARGE);
+			pauseLabel.setBounds(new Rectangle(50, (GraphicsUtil.baseScreenBounds().getHeight() / 2) + 200, GraphicsUtil.baseScreenBounds().getWidth() - 100, 60));
+			pauseLabel.setBackgroundColor(Color.BLACK);
+			pauseLabel.render();
+			
+			long teamPauseMS = state.teamPausesMS.get(state.teamPause);
+			Label remainingTimeLabel = new Label("Remaining Time: " + StringUtils.format(((float)(state.maxPauseMS - teamPauseMS) / 1000f), 0) + "s");
+			remainingTimeLabel.setType(FontType.NORMAL);
+			remainingTimeLabel.setBounds(new Rectangle(100, (GraphicsUtil.baseScreenBounds().getHeight() / 2) + 100, GraphicsUtil.baseScreenBounds().getWidth() - 200, 30));
+			remainingTimeLabel.setBackgroundColor(Color.BLACK);
+			remainingTimeLabel.render();
+			
+			if (self.teamId == state.teamPause && state.currentPauseElapsedMS > state.minPauseMS) {
+				surrenderButton.render();
+	        	resumeButton.render();
+			}
+		}
+	}
+
+	private void renderLoadingScreen(GameState state) {
+		int i = 1;
+		float labelHeight = 30;
+		Label header = new Label("NAME - CONNECTED - LOADED");
+		header.setBounds(new Rectangle(0, 500, GraphicsUtil.baseScreenBounds().getWidth(), labelHeight));
+		header.render();
+		for (Player player : state.players) {
+			if (player.teamId == 0) continue;
+			for (PlayerConnectionStatus status : state.connectionStati) {
+				if (status.playerId == player.id) {
+					Label row = new Label(player.name + " - " + status.connected + " - " + status.loaded);
+					row.setBounds(new Rectangle(0, 500 - (i * labelHeight), GraphicsUtil.baseScreenBounds().getWidth(), labelHeight));
+					row.render();
+					i++;
+				}
+			}
+		}
 	}
 
 	private void renderResourceCircles() {
@@ -239,7 +327,7 @@ public class GameUIRenderer {
 			double maxCP = owner.maxCommandPoints;
 			double currentCP = owner.currentCommandPoints;
 			float thickness = 3f;
-			Rectangle cpCostRectBounds = new Rectangle(bounds.getOwnCPBar().x, bounds.getOwnCPBar().y, bounds.getOwnCPBar().width * (float)(shipCPCost / maxCP), bounds.getOwnCPBar().height);
+			Rectangle cpCostRectBounds = GraphicsUtil.scaleFactorAdjusted(new Rectangle(bounds.getOwnCPBar().x, bounds.getOwnCPBar().y, bounds.getOwnCPBar().width * (float)(shipCPCost / maxCP), bounds.getOwnCPBar().height));
 			Color rectColor = shipCPCost > currentCP ? new Color(0.5f, 0.5f, 0.5f, 1f) : new Color(0f, 1f, 0f, 1f);
 			complexShapeRenderer.setProjectionMatrix(new Matrix4().setToOrtho2D(0, 0, GraphicsUtil.screenBounds().getWidth(), GraphicsUtil.screenBounds().getHeight()));
 			complexShapeRenderer.setColor(rectColor);
@@ -344,16 +432,20 @@ public class GameUIRenderer {
 	        Color labelColor = new Color(selected.currentResources >= ship.cost && owner.currentCommandPoints >= ship.commandPointsCost ? Color.GREEN : Color.RED);
 	        Label shipLabel = new Label(shipName);
 	        shipLabel.setColor(labelColor);
-	        shipLabel.setBounds(new Rectangle(InputUtil.getMouseX() - (labelWidth / 2), InputUtil.getMouseY() - 10f + arrowLabelYOffset, labelWidth, 20f));
+	        shipLabel.setBounds(GraphicsUtil.scaleFactorDeducted(new Rectangle(InputUtil.getMouseX() - (labelWidth / 2), InputUtil.getMouseY() - 10f + arrowLabelYOffset, labelWidth, 20f)));
 	        shipLabel.setType(FontType.SMALL);
 	        shipLabel.render();
 		}
 	}
 
 	private void renderShipSelectionCircle(float x, float y, Player owner) {
+		Color unselectedColor = new Color(0.5f, 0.5f, 0.5f, 0.2f);
+		Color unselectedColorLabel = new Color(0.7f, 0.7f, 0.7f, 0.5f);
+		Color selectedColor = new Color(SkinManager.skinColor.r, SkinManager.skinColor.g, SkinManager.skinColor.b, 0.5f);
+		
 	    int shipCount = owner.ships.size();
-	    float outerRadius = EngineUtility.PLANET_RADIUS + 40f;
-	    float innerRadius = EngineUtility.PLANET_RADIUS + 10f;
+	    float outerRadius = EngineUtility.PLANET_RADIUS + 80f;
+	    float innerRadius = EngineUtility.PLANET_RADIUS + 20f;
 	    float sectionAngle = 360f / shipCount;
 	    float marginAngle = 30f / shipCount;
 	    
@@ -364,9 +456,9 @@ public class GameUIRenderer {
 		    shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 	        boolean isSelected = (inputManager.getHoveredShipId() != null && inputManager.getHoveredShipId() == i);
 	        if (isSelected) {
-	            shapeRenderer.setColor(new Color(SkinManager.skinColor.r, SkinManager.skinColor.g, SkinManager.skinColor.b, 0.5f));
+	            shapeRenderer.setColor(selectedColor);
 	        } else {
-	            shapeRenderer.setColor(new Color(0.5f, 0.5f, 0.5f, 0.3f));
+	            shapeRenderer.setColor(unselectedColor);
 	        }
 	        
 	        float angleOffset = - 90;
@@ -404,8 +496,8 @@ public class GameUIRenderer {
 	        String shipName = owner.ships.get(i).model;
 	        float labelWidth = FontUtil.getFontTextWidthPx(shipName, FontType.SMALL);
 	        Label shipLabel = new Label(shipName);
-	        shipLabel.setColor(new Color(SkinManager.skinColor));
-	        shipLabel.setBounds(new Rectangle(labelPos.x - (labelWidth / 2), labelPos.y - 10f, labelWidth, 20f));
+	        shipLabel.setColor(isSelected ? selectedColor : unselectedColorLabel);
+	        shipLabel.setBounds(GraphicsUtil.scaleFactorDeducted(new Rectangle(labelPos.x - (labelWidth / 2), labelPos.y - 10f, labelWidth, 20f)));
 	        shipLabel.setType(FontType.SMALL);
 	        shipLabel.render();
 	    }
@@ -458,7 +550,7 @@ public class GameUIRenderer {
 		Label messageLabel = new Label(message);
 		messageLabel.setColor(Color.WHITE);
 		messageLabel.setType(FontType.LARGE);
-		messageLabel.setBounds(new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		messageLabel.setBounds(GraphicsUtil.baseScreenBounds());
 		messageLabel.render();
 	}
 

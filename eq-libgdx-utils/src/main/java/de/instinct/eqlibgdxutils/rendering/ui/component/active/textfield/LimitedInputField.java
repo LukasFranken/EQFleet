@@ -11,6 +11,8 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
+import de.instinct.eqlibgdxutils.GraphicsUtil;
+import de.instinct.eqlibgdxutils.InputUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.model.EnableConditionHandler;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.model.InputFieldProcessor;
@@ -117,37 +119,40 @@ public class LimitedInputField extends Component {
 
 	@Override
 	protected float calculateHeight() {
-		return 40;
+		return 40 * GraphicsUtil.getHorizontalDisplayScaleFactor();
 	}
 	
 	@Override
-	protected void updateElement() {
+	protected void updateComponent() {
+		contentLabel.setBounds(new Rectangle(getBounds().x + 10, getBounds().y, getBounds().width - 20 - maxCharsLabelWidth, getBounds().height));
+		contentLabel.setColor(getFontColor());
+		contentLabel.setText(getRenderText());
 		
-	}
-
-	@Override
-	protected void renderElement() {
-		TextureManager.draw(TextureManager.createTexture(Color.BLACK), new Rectangle(getBounds().getX(), getBounds().getY(), getBounds().getWidth(), getBounds().getHeight()), getAlpha());
-
-	    if (enableConditionHandler != null) {
+		if (enableConditionHandler != null) {
 	    	enabled = enableConditionHandler.enabled();
 	    	if (!enabled) {
 	    		focused = false;
 	    	}
 	    }
-	    contentLabel.setBounds(new Rectangle(getBounds().x + 10, getBounds().y, getBounds().width - 20 - maxCharsLabelWidth, getBounds().height));
-	    contentLabel.setColor(getFontColor());
-	    contentLabel.setText(getRenderText());
-	    contentLabel.render();
+		updateBorderColor();
+		if (enabled) {
+			handleInputFocus();
+			handleTextInput();
+	    }
+		
+		String remainingChars = (maxChars - content.length()) + "";
+		limitLabel.setBounds(new Rectangle(getBounds().x + getBounds().width - maxCharsLabelWidth, getBounds().y, maxCharsLabelWidth, getBounds().height));
+		limitLabel.setColor(getBorder().getColor());
+		limitLabel.setText(remainingChars);
+	}
 
-	    updateBorderColor();
+	@Override
+	protected void renderComponent() {
+		TextureManager.draw(TextureManager.createTexture(Color.BLACK), getScreenScaleAdjustedBounds(), getAlpha());
+	    contentLabel.render();
 	    if (renderMaxCharsLabel) {
 	    	drawLimit();
 	    }
-	    if (enabled) {
-	    	handleInputFocus();
-		    handleTextInput();
-    	}
 	}
 
 	public void focus() {
@@ -197,19 +202,14 @@ public class LimitedInputField extends Component {
 	}
 
 	private void drawLimit() {
-		String remainingChars = (maxChars - content.length()) + "";
-		TextureManager.draw(TextureManager.createTexture(getBorder().getColor()), new Rectangle(getBounds().x + getBounds().width - maxCharsLabelWidth, getBounds().y, 2,getBounds().height), getAlpha());
-		limitLabel.setBounds(new Rectangle(getBounds().x + getBounds().width - maxCharsLabelWidth, getBounds().y, maxCharsLabelWidth, getBounds().height));
-		limitLabel.setColor(getBorder().getColor());
-	    limitLabel.setText(remainingChars);
+		Rectangle screenAdjustedLabelBounds = GraphicsUtil.scaleFactorAdjusted(new Rectangle(getBounds().x + getBounds().width - maxCharsLabelWidth, getBounds().y, 2, getBounds().height));
+		TextureManager.draw(TextureManager.createTexture(getBorder().getColor()), screenAdjustedLabelBounds, getAlpha());
 	    limitLabel.render();
 	}
 
 	private void handleInputFocus() {
 	    if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-	        float mouseX = Gdx.input.getX();
-	        float mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
-	        if (getBounds().contains(mouseX, mouseY)) {
+	        if (getScreenScaleAdjustedBounds().contains(InputUtil.getMousePosition())) {
 	        	focus();
 	        } else {
 	        	unfocus();

@@ -23,21 +23,20 @@ public class CommanderSection extends Component {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	
+	@Override
+	protected void updateComponent() {
+		
+	}
+	
+	@Override
+	protected void renderComponent() {
+		// TODO Auto-generated method stub
+		
+	}
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	protected void renderElement() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	protected void updateElement() {
 		// TODO Auto-generated method stub
 		
 	}

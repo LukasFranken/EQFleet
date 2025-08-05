@@ -39,7 +39,11 @@ public class ComplexShapeRenderer extends ShapeRenderer {
 	}
 	
 	public void filledRoundRectangle(Rectangle rect) {
-		roundRectangle(rect, 2f);
+		if (rect.width > 2) {
+			roundRectangle(rect, 2f);
+		} else {
+			roundRectangle(rect, 1f);
+		}
 		if (rect.width > 4) {
 			Gdx.gl.glEnable(GL20.GL_BLEND);
 	    	Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);

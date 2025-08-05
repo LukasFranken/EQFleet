@@ -111,8 +111,8 @@ public class PostGameRenderer extends BaseModuleRenderer {
 			Label header = new Label("Results");
 			header.setType(FontType.LARGE);
 			header.setFixedHeight(50);
-			header.setFixedWidth(GraphicsUtil.screenBounds().width);
-			header.setPosition(0, Gdx.graphics.getHeight() - 100);
+			header.setFixedWidth(GraphicsUtil.baseScreenBounds().width);
+			header.setPosition(0, GraphicsUtil.baseScreenBounds().getHeight() - 100);
 			elements.add(PostGameElement.builder()
 					.duration(PER_ITEM_DURATION_MS / 2)
 					.uiElement(header)
@@ -120,13 +120,13 @@ public class PostGameRenderer extends BaseModuleRenderer {
 			
 			ExperienceSection experienceSection = new ExperienceSection();
 			experienceSection.setRankImagesEnabled(false);
-			experienceSection.init(50, Gdx.graphics.getHeight() / 2 + 50, Gdx.graphics.getWidth() - 100);
+			experienceSection.init(50, GraphicsUtil.baseScreenBounds().getHeight() / 2 + 50, GraphicsUtil.baseScreenBounds().getWidth() - 100);
 			
 			ElementStack experienceLabels = DefaultLabelFactory.createLabelStack(
 					"EXP",
 					StringUtils.formatBigNumber(PostGameModel.reward.getExperience()),
-					GraphicsUtil.screenBounds().width / 2);
-			experienceLabels.setPosition(GraphicsUtil.screenBounds().width / 4, experienceSection.getBounds().y + experienceSection.getActualHeight() + 20);
+					GraphicsUtil.baseScreenBounds().width / 2);
+			experienceLabels.setPosition(GraphicsUtil.baseScreenBounds().width / 4, experienceSection.getBounds().y + experienceSection.getActualHeight() + 20);
 			
 			elements.add(PostGameElement.builder()
 					.duration(PER_ITEM_DURATION_MS)
@@ -201,8 +201,8 @@ public class PostGameRenderer extends BaseModuleRenderer {
 					ElementStack resourceLabels = DefaultLabelFactory.createLabelStack(
 							resource.getType().toString(),
 							StringUtils.formatBigNumber(resource.getAmount()),
-							GraphicsUtil.screenBounds().width / 2);
-					resourceLabels.setPosition(GraphicsUtil.screenBounds().width / 4, (Gdx.graphics.getHeight() / 2) - 50 - (30 * i));
+							GraphicsUtil.baseScreenBounds().width / 2);
+					resourceLabels.setPosition(GraphicsUtil.baseScreenBounds().width / 4, (GraphicsUtil.baseScreenBounds().getHeight() / 2) - 50 - (30 * i));
 					elements.add(PostGameElement.builder()
 							.duration(PER_ITEM_DURATION_MS)
 							.uiElement(resourceLabels)
@@ -211,14 +211,14 @@ public class PostGameRenderer extends BaseModuleRenderer {
 				}
 			} else {
 				Label noResourcesLabel = new Label("No resources gained");
-				noResourcesLabel.setPosition(GraphicsUtil.screenBounds().width / 4, (Gdx.graphics.getHeight() / 2) - 50);
+				noResourcesLabel.setPosition(GraphicsUtil.baseScreenBounds().width / 4, (GraphicsUtil.baseScreenBounds().getHeight() / 2) - 50);
 				elements.add(PostGameElement.builder()
 						.duration(PER_ITEM_DURATION_MS)
 						.uiElement(noResourcesLabel)
 						.build());
 			}
 			
-			claimButton.setPosition((GraphicsUtil.screenBounds().width / 2) - (claimButton.getFixedWidth() / 2), 50);
+			claimButton.setPosition((GraphicsUtil.baseScreenBounds().width / 2) - (claimButton.getFixedWidth() / 2), 50);
 			elements.add(PostGameElement.builder()
 					.duration(PER_ITEM_DURATION_MS)
 					.uiElement(claimButton)

@@ -58,6 +58,32 @@ public class Logger {
 	    }
 	}
 	
+	public static List<LogLine> getLogs(int lastN, List<String> tagBlacklist) {
+		ArrayList<LogLine> tagSortedLogs = new ArrayList<>();
+		synchronized(logsLock) {
+	        for (LogLine log : logs) {
+	            if (!tagBlacklist.contains(log.getTag())) {
+	                tagSortedLogs.add(log);
+	            }
+	        }
+	    }
+	    synchronized(logsLock) {
+	        return Collections.unmodifiableList(new ArrayList<>(tagSortedLogs).subList(tagSortedLogs.size() > lastN ? tagSortedLogs.size() - lastN : 0, tagSortedLogs.size()));
+	    }
+	}
+	
+	public static List<String> getTags() {
+	    synchronized(logsLock) {
+	        List<String> tags = new ArrayList<>();
+	        for (LogLine log : logs) {
+	            if (!tags.contains(log.getTag())) {
+	                tags.add(log.getTag());
+	            }
+	        }
+	        return Collections.unmodifiableList(tags);
+	    }
+	}
+	
 	public static int logCount() {
 	    synchronized(logsLock) {
 	        return logs.size();

@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
+import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.HorizontalAlignment;
@@ -34,7 +34,7 @@ public class MetricUtil {
 
 	private static final float elementMargin = 4f;
 	private static Texture backgroundColorTexture;
-	private static float topsidePanelOffset = 30f;
+	private static float topsidePanelOffset = 20f;
 	private static float horizontalPanelOffset = 20f;
 	
 	private static boolean spanHorizontal;
@@ -55,7 +55,7 @@ public class MetricUtil {
 		metricsRemoveQueue = new ConcurrentLinkedQueue<>();
 		backgroundColorTexture = createBackgroundColorTexture();
 		spanHorizontal = true;
-		fixedHeight = Gdx.graphics.getHeight();
+		fixedHeight = (int)GraphicsUtil.baseScreenBounds().getHeight();
 		scrollButtonButtonHeight = 20;
 		itemOffset = 0;
 		panelFontType = FontType.SMALL;
@@ -105,15 +105,15 @@ public class MetricUtil {
 		if (active) {
 			batch.begin();
 			float panelWidth = calculatePanelWidth();
-			float panelHeight = fixedHeight == 0 ? elementMargin + (metrics.size() * (FontUtil.getFontHeightPx() + elementMargin)) : fixedHeight;
-			Rectangle panelBounds = new Rectangle(0, Gdx.graphics.getHeight() - panelHeight, panelWidth, panelHeight);
+			float panelHeight = fixedHeight == 0 ? elementMargin + (metrics.size() * (FontUtil.getNormalizedFontHeightPx(panelFontType) + elementMargin)) : fixedHeight;
+			Rectangle panelBounds = new Rectangle(0, GraphicsUtil.baseScreenBounds().getHeight() - panelHeight, panelWidth, panelHeight);
 			batch.setColor(1f, 1f, 1f, 0.5f);
 			batch.draw(backgroundColorTexture, panelBounds.x, panelBounds.y, panelBounds.width, panelBounds.height);
 			batch.end();
 			for (int i = 0; i < metrics.size(); i++) {
 				if (i + itemOffset < metrics.size()) {
-					float labelHeight = FontUtil.getFontHeightPx(panelFontType) + elementMargin;
-					Rectangle metricBounds = new Rectangle(horizontalPanelOffset, Gdx.graphics.getHeight() - topsidePanelOffset - ((i + 1) * (labelHeight + elementMargin)), calculatePanelWidth() - (horizontalPanelOffset * 2), labelHeight);
+					float labelHeight = FontUtil.getNormalizedFontHeightPx(panelFontType) + elementMargin;
+					Rectangle metricBounds = new Rectangle(horizontalPanelOffset, GraphicsUtil.baseScreenBounds().getHeight() - topsidePanelOffset - ((i + 1) * (labelHeight + elementMargin)), calculatePanelWidth() - (horizontalPanelOffset * 2), labelHeight);
 					if (metricBounds.y > panelBounds.y) {
 						render(metrics.get(i + itemOffset), metricBounds, i + itemOffset);
 					}
@@ -158,17 +158,13 @@ public class MetricUtil {
 		return active;
 	}
 
-	public static void setTopsidePanelOffset(float offset) {
-		topsidePanelOffset = offset;
-	}
-
 	private static float calculatePanelWidth() {
 		if (spanHorizontal) {
-			return Gdx.graphics.getWidth();
+			return GraphicsUtil.baseScreenBounds().getWidth();
 		} else {
 			float panelWidth = 0;
 			for (Metric metric : metrics) {
-				panelWidth = Math.max(panelWidth, FontUtil.getFontTextWidthPx(metric.getTag() + ": " + metric.getValueString()));
+				panelWidth = Math.max(panelWidth, FontUtil.getNormalizedFontTextWidthPx(metric.getTag() + ": " + metric.getValueString(), FontType.SMALL));
 			}
 			return panelWidth + (elementMargin * 2);
 		}

@@ -1,5 +1,6 @@
 package de.instinct.eqlibgdxutils.debug.console;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
@@ -15,13 +16,34 @@ public class CommandProcessor {
 			Logger.log("Console", "No commands registered");
 			return;
 		}
-		for (Command command : commands) {
-			if (command.getMethod().equalsIgnoreCase(message)) {
-				command.getAction().execute();
-				return;
+		if (message.startsWith("help")) {
+			for (Command command : commands) {
+				if (command.getMethod().equalsIgnoreCase(message.replace("help", "").trim())) {
+					Logger.log("Console", command.getMethod());
+					return;
+				}
+			}
+			printBaseHelp();
+			return;
+		} else {
+			for (Command command : commands) {
+				if (message.toLowerCase().startsWith(command.getMethod())) {
+					command.getAction().execute(message);
+					return;
+				}
 			}
 		}
 		Logger.log("Console", "Command not found: " + message);
+	}
+
+	private void printBaseHelp() {
+		Logger.log("Console", "-------Console Help--------");
+		Logger.log("Console", "Use 'help <command>' to get more information about a specific command.");
+		Logger.log("Console", "---------------------------");
+		Logger.log("Console", "Available commands:");
+		for (Command command : commands) {
+			Logger.log("Console", command.getMethod() + " - " + command.getDescription());
+		}
 	}
 
 	public String autocomplete(String message) {
@@ -35,6 +57,11 @@ public class CommandProcessor {
 			}
 		}
 		return message;
+	}
+	
+	public void addCommands(List<Command> newCommands) {
+		if (commands == null) commands = new ArrayList<>();
+		this.commands.addAll(newCommands);
 	}
 
 }

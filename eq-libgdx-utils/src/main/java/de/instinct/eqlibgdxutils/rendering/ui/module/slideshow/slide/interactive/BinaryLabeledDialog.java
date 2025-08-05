@@ -20,9 +20,9 @@ import lombok.Getter;
 @EqualsAndHashCode(callSuper = false)
 public class BinaryLabeledDialog extends Slide {
 
-	private final float LABEL_MOVE_DURATION = 0.5f;
-	private final float LABEL_MAX_OFFSET = 20f;
-	private final float DIALOG_FADE_IN_DELAY = 2f;
+	private float LABEL_MOVE_DURATION = 0.5f;
+	private float LABEL_MAX_OFFSET = 20f;
+	private float DIALOG_FADE_IN_DELAY = 2f;
 
 	private Label messageLabel;
 	
@@ -81,9 +81,9 @@ public class BinaryLabeledDialog extends Slide {
 		slideButton.setDownColor(new Color(SkinManager.lighterSkinColor));
 		return slideButton;
 	}
-
+	
 	@Override
-	public void renderContent(float slideAlpha) {
+	protected void updateSlide(float slideAlpha) {
 		float labelYOffset = 0f;
 		float buttonAlpha = 0f;
 		if (getStage() == SlideLifeCycleStage.FADE_OUT) {
@@ -102,12 +102,15 @@ public class BinaryLabeledDialog extends Slide {
 		denyButton.setBounds(new Rectangle((getBounds().width / 2) + 10, (getBounds().height / 2) - denyButton.getBounds().height, denyButton.getBounds().width, denyButton.getBounds().height));
 		acceptButton.setAlpha(buttonAlpha);
 		denyButton.setAlpha(buttonAlpha);
-		acceptButton.update();
-		acceptButton.render();
-		denyButton.update();
-		denyButton.render();
+		
 		messageLabel.setBounds(new Rectangle(0, labelYOffset, getBounds().width, getBounds().height));
 		messageLabel.setAlpha(slideAlpha);
+	}
+
+	@Override
+	public void renderContent() {
+		acceptButton.render();
+		denyButton.render();
 		messageLabel.render();
 	}
 

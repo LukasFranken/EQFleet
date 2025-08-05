@@ -50,12 +50,12 @@ public class Description extends Component {
 	}
 	
 	@Override
-	protected void updateElement() {
+	protected void updateComponent() {
 		
 	}
 
 	@Override
-	public void renderElement() {
+	public void renderComponent() {
 		int lineId = 0;
 	    for (DescriptionLine line : lines) {
 	        if (line.getModifiers().size() > 0) {
@@ -69,7 +69,7 @@ public class Description extends Component {
 
 	private void drawLine(DescriptionLine hoverInfoLine, int lineId) {
 	    FontUtil.draw(hoverInfoLine.getTextColor(), hoverInfoLine.getContent(),
-	            super.getBounds().x, calculateLineYPosition(lineId), hoverInfoLine.isBold() ? FontType.BOLD : FontType.NORMAL);
+	            super.getScreenScaleAdjustedBounds().x, calculateLineYPosition(lineId), hoverInfoLine.isBold() ? FontType.BOLD : FontType.NORMAL);
 	}
 
 	private void drawLineWithModifiers(DescriptionLine hoverInfoLine, int lineId) {
@@ -81,16 +81,16 @@ public class Description extends Component {
 
 	        if (nextSegment == null) {
 	            String remainingText = content.substring(currentIndex);
-	            super.getBounds().x = drawSegment(remainingText, hoverInfoLine.getTextColor(), hoverInfoLine.isBold(), lineId, super.getBounds().x);
+	            super.getScreenScaleAdjustedBounds().x = drawSegment(remainingText, hoverInfoLine.getTextColor(), hoverInfoLine.isBold(), lineId, super.getScreenScaleAdjustedBounds().x);
 	            break;
 	        }
 
 	        if (nextSegment.getStartIndex() > currentIndex) {
 	            String segment = content.substring(currentIndex, nextSegment.getStartIndex());
-	            super.getBounds().x = drawSegment(segment, hoverInfoLine.getTextColor(), hoverInfoLine.isBold(), lineId, super.getBounds().x);
+	            super.getScreenScaleAdjustedBounds().x = drawSegment(segment, hoverInfoLine.getTextColor(), hoverInfoLine.isBold(), lineId, super.getScreenScaleAdjustedBounds().x);
 	        }
 
-	        super.getBounds().x = drawSegment(nextSegment.getReplacement(), nextSegment.getColor(), hoverInfoLine.isBold(), lineId, super.getBounds().x);
+	        super.getScreenScaleAdjustedBounds().x = drawSegment(nextSegment.getReplacement(), nextSegment.getColor(), hoverInfoLine.isBold(), lineId, super.getScreenScaleAdjustedBounds().x);
 	        currentIndex = nextSegment.getEndIndex();
 	    }
 	}
@@ -120,7 +120,7 @@ public class Description extends Component {
 	}
 
 	private float calculateLineYPosition(int lineId) {
-		float yPos = super.getBounds().y + super.getBounds().height - (FontUtil.getFontHeightPx() * lineId) - (lineId * lineSpacing);
+		float yPos = super.getScreenScaleAdjustedBounds().y + super.getScreenScaleAdjustedBounds().height - (FontUtil.getFontHeightPx() * lineId) - (lineId * lineSpacing);
 	    return yPos;
 	}
 

@@ -17,6 +17,7 @@ public class ImageButton extends Button {
 	private Texture downTexture;
 	
 	private float margin;
+	private Rectangle imageBounds;
 	
 	public ImageButton() {
 		super();
@@ -33,12 +34,16 @@ public class ImageButton extends Button {
 	}
 
 	@Override
-	public void renderElement() {
-		Rectangle imageBounds = new Rectangle(getBounds());
+	protected void updateButton() {
+		imageBounds = new Rectangle(getScreenScaleAdjustedBounds());
 		imageBounds.x += margin;
 		imageBounds.y += margin;
 		imageBounds.width -= 2 * margin;
 		imageBounds.height -= 2 * margin;
+	}
+	
+	@Override
+	public void renderComponent() {
 		TextureManager.draw(getButtonTexture(), imageBounds, getAlpha());
 	}
 

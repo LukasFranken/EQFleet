@@ -12,6 +12,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.api.core.API;
 import de.instinct.api.core.modules.MenuModule;
@@ -51,6 +52,7 @@ import de.instinct.eqfleet.menu.module.workshop.WorkshopRenderer;
 import de.instinct.eqfleet.menu.postgame.PostGameModel;
 import de.instinct.eqfleet.menu.postgame.PostGameRenderer;
 import de.instinct.eqfleet.net.WebManager;
+import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
 
 public class Menu {
@@ -116,8 +118,16 @@ public class Menu {
 	
 	public static void load() {
 		MenuModel.loaded = false;
+		calculateMenuBounds();
+		updateBaseInfo();
 		loadModules();
 	}
+	
+	private static void calculateMenuBounds() {
+		float margin = 20f;
+		MenuModel.moduleBounds = new Rectangle(margin, margin + 20, GraphicsUtil.baseScreenBounds().width - (margin * 2), GraphicsUtil.baseScreenBounds().height - 150 - 40f);
+	}
+
 	
 	public static void loadPostGame() {
 		if (PlayModel.lobbyStatus.getType().getGameMode() == GameMode.CONQUEST) {
@@ -129,6 +139,7 @@ public class Menu {
 			    	PostGameModel.reward = result;
 			    	Gdx.app.postRunnable(() -> {
 			    		postGameRenderer.reload();
+			    		Menu.load();
 			    	});
 			    }
 		);
@@ -137,7 +148,6 @@ public class Menu {
 	public static void open() {
 		Game.dispose();
 		MenuModel.active = true;
-		updateBaseInfo();
 		AudioManager.playMusic("eqspace" + (new Random().nextInt(4) + 1), true);
 	}
 

@@ -3,10 +3,10 @@ package de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.interactiv
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
+import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.MathUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
@@ -24,11 +24,11 @@ import lombok.Getter;
 @EqualsAndHashCode(callSuper = false)
 public class MultiChoiceDialog extends Slide {
 	
-	private final float LABEL_MOVE_DURATION = 0.5f;
-	private final float LABEL_MAX_OFFSET = 20f;
-	private final float DIALOG_FADE_IN_DELAY = 2f;
-	private final float BUTTON_SPACING = 20f;
-	private final float BUTTON_MARGIN = 40f;
+	private float LABEL_MOVE_DURATION = 0.5f;
+	private float LABEL_MAX_OFFSET = 20f;
+	private float DIALOG_FADE_IN_DELAY = 2f;
+	private float BUTTON_SPACING = 20f;
+	private float BUTTON_MARGIN = 40f;
 	
 	private Label label;
 	private List<SlideButton> choices;
@@ -72,7 +72,7 @@ public class MultiChoiceDialog extends Slide {
 		ColorButton slideButton = new ColorButton(label);
 		slideButton.setBorder(buttonBorder);
 		slideButton.setColor(Color.BLACK);
-		slideButton.setFixedWidth(Gdx.graphics.getWidth() - (BUTTON_MARGIN * 2));
+		slideButton.setFixedWidth(GraphicsUtil.baseScreenBounds().width - (BUTTON_MARGIN * 2));
 		slideButton.setFixedHeight(40);
 		slideButton.setLabelColor(new Color(SkinManager.skinColor));
 		slideButton.setHoverColor(new Color(SkinManager.darkerSkinColor));
@@ -81,7 +81,7 @@ public class MultiChoiceDialog extends Slide {
 	}
 	
 	@Override
-	public void renderContent(float slideAlpha) {
+	protected void updateSlide(float slideAlpha) {
 		float labelYOffset = 0f;
 		float buttonAlpha = 0f;
 		if (getStage() == SlideLifeCycleStage.FADE_OUT) {
@@ -98,14 +98,20 @@ public class MultiChoiceDialog extends Slide {
 		}
 		label.setBounds(new Rectangle(0, labelYOffset, getBounds().width, getBounds().height));
 		label.setAlpha(slideAlpha);
-		label.render();
 		
 		int i = 0;
 		for (ColorButton button : buttons) {
-			button.setPosition(BUTTON_MARGIN, Gdx.graphics.getHeight() / 2 - button.getFixedHeight() - (i * (button.getFixedHeight() + BUTTON_SPACING)));
+			button.setPosition(BUTTON_MARGIN, GraphicsUtil.baseScreenBounds().height / 2 - button.getFixedHeight() - (i * (button.getFixedHeight() + BUTTON_SPACING)));
 			button.setAlpha(buttonAlpha);
-			button.render();
 			i++;
+		}
+	}
+	
+	@Override
+	public void renderContent() {
+		label.render();
+		for (ColorButton button : buttons) {
+			button.render();
 		}
 	}
 

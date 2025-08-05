@@ -29,13 +29,18 @@ public class Macro extends Slide {
 		});
 		setFade(false);
 	}
-
+	
 	@Override
-	public void renderContent(float slideAlpha) {
+	protected void updateSlide(float slideAlpha) {
 		for (Action action : actions) {
 			action.execute();
 		}
 		executed = true;
+	}
+
+	@Override
+	public void renderContent() {
+		
 	}
 
 	public void setAction(Action action) {

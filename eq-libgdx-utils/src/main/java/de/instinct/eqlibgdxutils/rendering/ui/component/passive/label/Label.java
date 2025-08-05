@@ -38,7 +38,7 @@ public class Label extends Component {
 		String[] lines = text.split("\n");
 		float maxWidth = 0;
 		for (String line : lines) {
-			float width = FontUtil.getFontTextWidthPx(line);
+			float width = FontUtil.getNormalizedFontTextWidthPx(line, type);
 			if (width > maxWidth) {
 				maxWidth = width;
 			}
@@ -49,18 +49,17 @@ public class Label extends Component {
 	@Override
 	protected float calculateHeight() {
 		String[] lines = text.split("\n");
-		return lines.length * FontUtil.getFontHeightPx(type) + (lines.length - 1) * lineSpacing;
+		return lines.length * FontUtil.getNormalizedFontHeightPx(type) + (lines.length - 1) * lineSpacing;
 	}
 	
 	@Override
-	protected void updateElement() {
-		
-	}
+	protected void updateComponent() {}
 
 	@Override
-	protected void renderElement() {
+	protected void renderComponent() {
+		Rectangle displayAdjustedBounds = getScreenScaleAdjustedBounds();
 		if (backgroundColor != null) {
-			TextureManager.draw(TextureManager.createTexture(backgroundColor), getBounds(), getAlpha());
+			TextureManager.draw(TextureManager.createTexture(backgroundColor), displayAdjustedBounds, getAlpha());
 		}
 
 		String[] lines = text.split("\n");
@@ -70,13 +69,13 @@ public class Label extends Component {
 
 		switch (verticalAlignment) {
 		case TOP:
-			startY = getBounds().y + getBounds().height;
+			startY = displayAdjustedBounds.y + displayAdjustedBounds.height;
 			break;
 		case CENTER:
-			startY = getBounds().y + (getBounds().height + totalTextHeight) / 2;
+			startY = displayAdjustedBounds.y + (displayAdjustedBounds.height + totalTextHeight) / 2;
 			break;
 		case BOTTOM:
-			startY = (getBounds().y + lineHeight) + (lines.length - 1) * (lineHeight + lineSpacing);
+			startY = (displayAdjustedBounds.y + lineHeight) + (lines.length - 1) * (lineHeight + lineSpacing);
 			break;
 		}
 
@@ -86,13 +85,13 @@ public class Label extends Component {
 			float lineX = 0f;
 			switch (horizontalAlignment) {
 			case LEFT:
-				lineX = getBounds().x;
+				lineX = displayAdjustedBounds.x;
 				break;
 			case CENTER:
-				lineX = getBounds().x + (getBounds().width - lineWidth) / 2;
+				lineX = displayAdjustedBounds.x + (displayAdjustedBounds.width - lineWidth) / 2;
 				break;
 			case RIGHT:
-				lineX = getBounds().x + getBounds().width - lineWidth;
+				lineX = displayAdjustedBounds.x + displayAdjustedBounds.width - lineWidth;
 				break;
 			}
 			float lineY = startY - i * (lineHeight + lineSpacing);
@@ -101,18 +100,8 @@ public class Label extends Component {
 			FontUtil.draw(finalColor, line, lineX, lineY, type);
 		}
 	}
-	
-	public static void drawUnderConstruction(Rectangle bounds) {
-		String text = "(under construction)";
-		FontUtil.draw(Color.WHITE,
-				text,
-				(bounds.x + (bounds.width / 2)) - (FontUtil.getFontTextWidthPx(text.length()) / 2),
-				(bounds.y + (bounds.height / 2)) - (FontUtil.getFontHeightPx() / 2),
-				FontType.NORMAL);
-	}
 
 	@Override
-	public void dispose() {
-	}
+	public void dispose() {}
 	
 }

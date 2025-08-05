@@ -39,39 +39,39 @@ public class PlainRectangularLoadingBar extends RectangularLoadingBar {
 	}
 	
 	@Override
-	protected void updateElement() {
+	protected void updateComponent() {
 		
 	}
 
 	@Override
 	protected void renderContent() {
 		float barLengthFactor = (float)(getCurrentValue() / getMaxValue());
-		float horizontalBarLength = barLengthFactor * (getBounds().width - (getBorder().getSize() * 2));
-		float verticalBarLength = barLengthFactor * (getBounds().height - (getBorder().getSize() * 2));
+		float horizontalBarLength = barLengthFactor * (getScreenScaleAdjustedBounds().width - (getBorder().getSize() * 2));
+		float verticalBarLength = barLengthFactor * (getScreenScaleAdjustedBounds().height - (getBorder().getSize() * 2));
 		switch (direction) {
 		case NORTH:
-			TextureManager.draw(bar, new Rectangle(getBounds().x + getBorder().getSize(),
-					getBounds().y + getBorder().getSize(),
-					getBounds().width - (getBorder().getSize()) * 2,
+			TextureManager.draw(bar, new Rectangle(getScreenScaleAdjustedBounds().x + getBorder().getSize(),
+					getScreenScaleAdjustedBounds().y + getBorder().getSize(),
+					getScreenScaleAdjustedBounds().width - (getBorder().getSize()) * 2,
 					verticalBarLength), getAlpha());
 			break;
 		case EAST:
-			TextureManager.draw(bar, new Rectangle(getBounds().x + getBorder().getSize(),
-					getBounds().y + getBorder().getSize(),
+			TextureManager.draw(bar, new Rectangle(getScreenScaleAdjustedBounds().x + getBorder().getSize(),
+					getScreenScaleAdjustedBounds().y + getBorder().getSize(),
 					horizontalBarLength,
-					getBounds().height - (getBorder().getSize()) * 2), getAlpha());
+					getScreenScaleAdjustedBounds().height - (getBorder().getSize()) * 2), getAlpha());
 			break;
 		case SOUTH:
-			TextureManager.draw(bar, new Rectangle(getBounds().x + getBorder().getSize(),
-					getBounds().y + + getBounds().height - getBorder().getSize() - verticalBarLength,
-					getBounds().width - (getBorder().getSize()) * 2,
+			TextureManager.draw(bar, new Rectangle(getScreenScaleAdjustedBounds().x + getBorder().getSize(),
+					getScreenScaleAdjustedBounds().y + + getBounds().height - getBorder().getSize() - verticalBarLength,
+					getScreenScaleAdjustedBounds().width - (getBorder().getSize()) * 2,
 					verticalBarLength), getAlpha());
 			break;
 		case WEST:
-			TextureManager.draw(bar, new Rectangle(getBounds().x + getBounds().width - getBorder().getSize() - horizontalBarLength,
-					getBounds().y + getBorder().getSize(),
+			TextureManager.draw(bar, new Rectangle(getScreenScaleAdjustedBounds().x + getScreenScaleAdjustedBounds().width - getBorder().getSize() - horizontalBarLength,
+					getScreenScaleAdjustedBounds().y + getBorder().getSize(),
 					horizontalBarLength,
-					getBounds().height - (getBorder().getSize()) * 2), getAlpha());
+					getScreenScaleAdjustedBounds().height - (getBorder().getSize()) * 2), getAlpha());
 			break;
 		}
 	}

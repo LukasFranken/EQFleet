@@ -6,6 +6,7 @@ import java.util.List;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 
+import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.MathUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.model.SlideCondition;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.model.SlideLifeCycleStage;
@@ -30,13 +31,13 @@ public abstract class Slide {
 	public Slide() {
 		stage = SlideLifeCycleStage.CREATED;
 		conditions = new ArrayList<>();
-		bounds = new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		bounds = GraphicsUtil.baseScreenBounds();
 		fade = true;
 	}
 
 	public void render() {
 		update();
-		renderContent(alpha);
+		renderContent();
 	}
 
 	private void update() {
@@ -79,14 +80,16 @@ public abstract class Slide {
 		case FINISHED:
 			break;
 		}
-
+		updateSlide(alpha);
 	}
+
+	protected abstract void updateSlide(float slideAlpha);
 
 	private void setStage(SlideLifeCycleStage stage) {
 		stageElapsed = 0;
 		this.stage = stage;
 	}
 
-	public abstract void renderContent(float slideAlpha);
+	public abstract void renderContent();
 
 }

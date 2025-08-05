@@ -12,8 +12,11 @@ public class Pause extends TimedSlide {
 		super();
 		setFade(false);
 	}
+	
+	@Override
+	protected void updateSlide(float slideAlpha) {}
 
 	@Override
-	public void renderContent(float slideAlpha) {}
+	public void renderContent() {}
 
 }

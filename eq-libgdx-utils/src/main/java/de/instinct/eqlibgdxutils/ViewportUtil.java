@@ -12,19 +12,11 @@ public class ViewportUtil {
 	private static final IntBuffer previousViewport = BufferUtils.newIntBuffer(16);
 	
 	public static void apply(Rectangle bounds) {
-		float displayScaleFactor = GraphicsUtil.getDisplayScaleFactor();
-
 		previousViewport.clear();
 		Gdx.gl.glGetIntegerv(GL20.GL_VIEWPORT, previousViewport);
-
-		float scaledX = bounds.x * displayScaleFactor;
-		float scaledY = bounds.y * displayScaleFactor;
-		float scaledWidth = bounds.width * displayScaleFactor;
-		float scaledHeight = bounds.height * displayScaleFactor;
-
-		Gdx.gl.glViewport((int) scaledX, (int) scaledY, (int) scaledWidth, (int) scaledHeight);
+		Gdx.gl.glViewport((int) bounds.x, (int) bounds.y, (int) bounds.width, (int) bounds.height);
 		Gdx.gl.glEnable(GL20.GL_SCISSOR_TEST);
-		Gdx.gl.glScissor((int) scaledX, (int) scaledY, (int) scaledWidth, (int) scaledHeight);
+		Gdx.gl.glScissor((int) bounds.x, (int) bounds.y, (int) bounds.width, (int) bounds.height);
 	}
 
 	public static void restore() {

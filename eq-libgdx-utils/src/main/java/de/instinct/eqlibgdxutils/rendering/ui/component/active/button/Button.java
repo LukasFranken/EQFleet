@@ -29,10 +29,10 @@ public abstract class Button extends Component {
 	}
 
 	@Override
-	public void updateElement() {
+	public void updateComponent() {
 		if (enabled) {
 			Vector3 touchPoint = new Vector3(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY(), 0);
-	        if (getBounds().contains(touchPoint.x, touchPoint.y)) {
+	        if (getScreenScaleAdjustedBounds().contains(touchPoint.x, touchPoint.y)) {
 	        	if (consoleBypass ? InputUtil.isPressedConsole() : InputUtil.isPressed()) {
 	    			if (!down) {
 	    				down = true;
@@ -53,6 +53,9 @@ public abstract class Button extends Component {
 	        	hovered = false;
 	        }
 		}
+		updateButton();
 	}
+	
+	protected abstract void updateButton();
 
 }

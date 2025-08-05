@@ -11,6 +11,7 @@ import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
+import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.Slide;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.model.SlideCondition;
@@ -65,15 +66,15 @@ public class ClipboardDialog extends Slide {
 		useButton = new ColorButton("Use");
 		useButton.setBorder(buttonBorder);
 		useButton.setColor(Color.BLACK);
-		useButton.setFixedWidth(50);
-		useButton.setFixedHeight(30);
+		useButton.setFixedWidth(60);
+		useButton.setFixedHeight(40);
 		useButton.setLabelColor(new Color(SkinManager.skinColor));
 		useButton.setHoverColor(new Color(SkinManager.darkerSkinColor));
 		useButton.setDownColor(new Color(SkinManager.lighterSkinColor));
 	}
 
 	@Override
-	public void renderContent(float slideAlpha) {
+	protected void updateSlide(float slideAlpha) {
 		loadClipboardContent();
 
 		float labelYOffset = 0f;
@@ -91,25 +92,36 @@ public class ClipboardDialog extends Slide {
 
 		messageLabel.setBounds(new Rectangle(0, labelYOffset, getBounds().width, getBounds().height));
 		messageLabel.setAlpha(slideAlpha);
-		messageLabel.render();
+		
 		if (authKey != null) {
-			useButton.setPosition((getBounds().width / 2) - (useButton.getBounds().width / 2), (getBounds().height / 2) - useButton.getBounds().height - FontUtil.getFontHeightPx() - 25);
+			useButton.setPosition((getBounds().width / 2) - (useButton.getBounds().width / 2), (getBounds().height / 2) - useButton.getBounds().height - FontUtil.getFontHeightPx() - 35);
 			useButton.setAlpha(Math.min(clipboardLabelAlpha, slideAlpha));
 			useButton.update();
-			useButton.render();
 			Color fontColor = new Color(SkinManager.lighterSkinColor);
 			fontColor.a = clipboardLabelAlpha;
-			String authKeyLabel = StringUtils.elide(authKey, 6);
+			String authKeyLabel = StringUtils.elide(authKey, 8);
 			keyLabel.setText(authKeyLabel);
-			keyLabel.setBounds(new Rectangle(0, (getBounds().height / 2) - 20, getBounds().width, 30));
+			keyLabel.setBounds(new Rectangle(0, (getBounds().height / 2) - 30, getBounds().width, 30));
 			keyLabel.setAlpha(slideAlpha);
+			keyLabel.setType(FontType.SMALL);
 			keyLabel.setColor(fontColor);
-			keyLabel.render();
 		}
+		
 		if (response != null) {
 			messageLabel.setText(response);
 			messageLabel.setBounds(new Rectangle(0, 50, getBounds().width, 30));
 			messageLabel.setAlpha(slideAlpha);
+		}
+	}
+	
+	@Override
+	public void renderContent() {
+		messageLabel.render();
+		if (authKey != null) {
+			useButton.render();
+			keyLabel.render();
+		}
+		if (response != null) {
 			messageLabel.render();
 		}
 	}

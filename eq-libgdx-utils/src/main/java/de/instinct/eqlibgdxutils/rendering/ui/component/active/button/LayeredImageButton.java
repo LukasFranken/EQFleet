@@ -26,9 +26,14 @@ public class LayeredImageButton extends Button {
 	protected float calculateHeight() {
 		return 0;
 	}
+	
+	@Override
+	protected void updateButton() {
+		
+	}
 
 	@Override
-	public void renderElement() {
+	public void renderComponent() {
 		
 	}
 

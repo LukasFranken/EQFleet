@@ -6,6 +6,7 @@ import java.util.List;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import de.instinct.eqfleet.audio.AudioManager;
@@ -33,15 +34,16 @@ import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 
 public class App extends ApplicationAdapter {
 
-    public static final String VERSION = "0.0.51";
-    private static final String LOGTAG = "APP";
+    public static final String VERSION = "0.0.52";
+    private final String LOGTAG = "APP";
 
-    private static boolean halted;
+    private boolean halted;
 
     @Override
     public void create() {
     	Logger.log(LOGTAG, "Welcome to EQFLEET v" + VERSION, ConsoleColor.YELLOW);
     	Logger.log(LOGTAG, "Running on display size: " + GraphicsUtil.screenBounds(), ConsoleColor.YELLOW);
+    	GraphicsUtil.init(new Vector2(400, 900));
     	PreferenceUtil.init("EQFleet");
     	SkinManager.init();
     	TextureManager.init();
@@ -90,7 +92,7 @@ public class App extends ApplicationAdapter {
 				.build());
 		fontTypes.add(FontTypeConfiguration.builder()
 				.type(FontType.SMALL)
-				.name("bedstead")
+				.name("larabie")
 				.size(12)
 				.build());
 		fontTypes.add(FontTypeConfiguration.builder()

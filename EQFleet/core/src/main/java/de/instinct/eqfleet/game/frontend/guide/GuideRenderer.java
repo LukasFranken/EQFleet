@@ -10,6 +10,7 @@ import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.backend.driver.local.tutorial.guide.GuideEvent;
 import de.instinct.eqfleet.game.backend.driver.local.tutorial.guide.subtypes.CameraMoveGuideEvent;
 import de.instinct.eqfleet.game.backend.driver.local.tutorial.guide.subtypes.DialogGuideEvent;
+import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.MathUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
@@ -88,13 +89,13 @@ public class GuideRenderer {
 				Label messageLabel = new Label(currentDialogGuideEvent.getMessage().getText());
 				switch (currentDialogGuideEvent.getMessage().getVerticalAlignment()) {
 				case TOP:
-					messageLabel.setBounds(new Rectangle(20, Gdx.graphics.getHeight() - 180, Gdx.graphics.getWidth() - 40, 70));
+					messageLabel.setBounds(new Rectangle(20, GraphicsUtil.baseScreenBounds().height - 180, GraphicsUtil.baseScreenBounds().width - 40, 70));
 					break;
 				case CENTER:
-					messageLabel.setBounds(new Rectangle(20, (Gdx.graphics.getHeight() / 2) - 35, Gdx.graphics.getWidth() - 40, 70));
+					messageLabel.setBounds(new Rectangle(20, (GraphicsUtil.baseScreenBounds().height / 2) - 35, GraphicsUtil.baseScreenBounds().width - 40, 70));
 					break;
 				case BOTTOM:
-					messageLabel.setBounds(new Rectangle(20, 20, Gdx.graphics.getWidth() - 40, 70));
+					messageLabel.setBounds(new Rectangle(20, 20, GraphicsUtil.baseScreenBounds().width - 40, 70));
 					break;
 					
 				}

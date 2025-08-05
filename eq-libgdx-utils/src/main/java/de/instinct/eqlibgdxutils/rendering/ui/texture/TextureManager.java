@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
+import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.PreferenceUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.draw.TextureDrawMode;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.draw.TextureRenderer;
@@ -101,7 +102,7 @@ public class TextureManager {
 			
 			break;
 		case ROUNDED_RECTANGLE:
-			put(tag, glowShapeRenderer.getGlowTexture(bounds, color, glow));
+			put(tag, glowShapeRenderer.getGlowTexture(GraphicsUtil.scaleFactorAdjusted(bounds), color, glow));
 			break;
 		case CIRCTANGLE:
 			

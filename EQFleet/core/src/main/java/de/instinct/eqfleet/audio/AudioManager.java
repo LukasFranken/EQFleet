@@ -5,10 +5,14 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 
 import de.instinct.eqlibgdxutils.MathUtil;
+import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
+import de.instinct.eqlibgdxutils.debug.logging.Logger;
 import de.instinct.eqlibgdxutils.generic.cache.Cache;
 import de.instinct.eqlibgdxutils.generic.cache.model.LoadSequence;
 
 public class AudioManager {
+	
+	private static final String LOGTAG = "AUDIO";
 
 	private static Music currentMusic;
 	private static Music queuedInMusic;
@@ -39,6 +43,7 @@ public class AudioManager {
 	}
 
 	public static void playMusic(String tag, boolean loop) {
+		Logger.log(LOGTAG, "Loading music: " + tag, ConsoleColor.YELLOW);
 		if (currentMusic == null) {
 			currentMusic = Gdx.audio.newMusic(Gdx.files.internal("audio/music/" + tag + ".mp3"));
 			currentMusic.setVolume(targetMusicVolume);
@@ -52,6 +57,7 @@ public class AudioManager {
 				queuedInMusic.play();
 			} catch (Exception e) {
 				Gdx.app.error("AudioManager", "Failed to play queued music: " + tag, e);
+				Logger.log(LOGTAG, "Failed to play queued music: " + tag, ConsoleColor.YELLOW);
 			}
 		}
 	}
@@ -70,6 +76,7 @@ public class AudioManager {
 			currentMusic.setVolume(targetMusicVolume - currentVolume);
 			if (currentSwapElapsed >= swapDuration) {
 				currentMusic.stop();
+				currentMusic.dispose();
 				currentMusic = queuedInMusic;
 				queuedInMusic = null;
 			}
@@ -102,7 +109,8 @@ public class AudioManager {
 	}
 
 	public static void dispose() {
-
+		for (Sound sfx : sfxs.getAllLoadedElements()) sfx.dispose();
+		for (Music voice : voices.getAllLoadedElements()) voice.dispose();
 	}
 
 }

@@ -5,7 +5,7 @@ import de.instinct.engine.model.ship.Defense;
 import de.instinct.engine.model.ship.Weapon;
 import lombok.ToString;
 
-@ToString
+@ToString(callSuper = true)
 public class Unit extends Entity {
 
 	public Defense defense;

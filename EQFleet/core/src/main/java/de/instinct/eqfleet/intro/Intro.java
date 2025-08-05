@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Rectangle;
 import de.instinct.api.auth.dto.TokenVerificationResponse;
 import de.instinct.api.core.API;
 import de.instinct.eqfleet.App;
+import de.instinct.eqfleet.GlobalStaticData;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.backend.driver.local.tutorial.TutorialMode;
 import de.instinct.eqfleet.menu.main.Menu;
@@ -45,8 +46,10 @@ public class Intro {
 		initializeSlideshow();
 		loadWelcomeSlides();
 		active = true;
-		String authKey = PreferenceUtil.load("authkey");
-		//String authKey = "";
+		String authKey = "";
+		if (!GlobalStaticData.debugIntro) {
+			authKey = PreferenceUtil.load("authkey");
+		}
 		if (!authKey.contentEquals("")) {
 			verifyAuthKey(authKey, true);
 		} else {

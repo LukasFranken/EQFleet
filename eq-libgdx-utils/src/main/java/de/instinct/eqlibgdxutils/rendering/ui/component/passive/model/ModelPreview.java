@@ -55,15 +55,15 @@ public class ModelPreview extends Component {
 	}
 
 	@Override
-	protected void updateElement() {
-		camera.viewportWidth = getBounds().width;
-		camera.viewportHeight = getBounds().height;
+	protected void updateComponent() {
+		camera.viewportWidth = getScreenScaleAdjustedBounds().width;
+		camera.viewportHeight = getScreenScaleAdjustedBounds().height;
 		camera.update();
 	}
 
 	@Override
-	protected void renderElement() {
-		Rectangle bounds = getBounds();
+	protected void renderComponent() {
+		Rectangle bounds = getScreenScaleAdjustedBounds();
 		if (bounds.width <= 0 || bounds.height <= 0) return;
 
 		ViewportUtil.apply(bounds);

@@ -19,12 +19,12 @@ public class CircularLoadingBar extends LoadingBar {
 	}
 	
 	@Override
-	protected void updateElement() {
+	protected void updateComponent() {
 		
 	}
 
 	@Override
-	protected void renderElement() {
+	protected void renderComponent() {
 		
 	}
 

@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import de.instinct.api.game.dto.MapPreview;
 import de.instinct.api.game.dto.PreviewPlanet;
 import de.instinct.eqfleet.game.GameConfig;
+import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.MathUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
@@ -43,13 +44,18 @@ public class MapPreviewSection extends Component {
 	public void dispose() {
 		
 	}
+	
+	@Override
+	protected void updateComponent() {
+		
+	}
 
 	@Override
-	protected void renderElement() {
+	protected void renderComponent() {
 		for (PreviewPlanet planet : mapPreview.getPlanets()) {
 			Vector2 planetScreenPos = getScreenPosition(planet.getXPos(), planet.getYPos());
 			SimpleShapeRenderer.drawRectangle(
-					new Rectangle(planetScreenPos.x - 3, planetScreenPos.y - 3, 5, 5),
+					GraphicsUtil.scaleFactorAdjusted(new Rectangle(planetScreenPos.x - 3, planetScreenPos.y - 3, 5, 5)),
 					planet.isAncient() && planet.getOwnerId() == 0 ? GameConfig.ancientColor : getPlayerColor(planet.getOwnerId()),
 					2f);
 		}
@@ -64,11 +70,6 @@ public class MapPreviewSection extends Component {
 
 	private Vector2 getScreenPosition(float xPos, float yPos) {
 		return MathUtil.translate(new Vector2(xPos, yPos), new Rectangle(-1000, -1000, 2000, 2000), getBounds());
-	}
-
-	@Override
-	protected void updateElement() {
-		
 	}
 
 }

@@ -1,9 +1,9 @@
 package de.instinct.eqlibgdxutils.rendering.ui.module;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
+import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
 import de.instinct.eqlibgdxutils.rendering.ui.core.UIElement;
 import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
@@ -28,7 +28,7 @@ public abstract class BaseModule extends UIElement {
 		elementMargin = 10f;
 		backgroundColor = Color.BLACK;
 		decorated = false;
-		setBounds(new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		setBounds(GraphicsUtil.baseScreenBounds());
 		defaultBorder = new Border();
 		defaultBorder.setSize(2);
 		Color borderColor = new Color(SkinManager.skinColor);
@@ -53,10 +53,10 @@ public abstract class BaseModule extends UIElement {
 	@Override
 	public void renderElement() {
 		if (decorated) {
-			setBorder(defaultBorder);
+			defaultBorder.setBounds(getBounds());
+			defaultBorder.setAlpha(getAlpha());
+			defaultBorder.render();
 			renderBackground();
-		} else {
-			setBorder(null);
 		}
 		renderContent();
 	}

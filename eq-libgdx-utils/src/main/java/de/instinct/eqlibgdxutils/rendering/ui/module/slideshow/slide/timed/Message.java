@@ -17,10 +17,14 @@ public class Message extends TimedSlide {
 		label = new Label(message);
 		label.setBounds(new Rectangle(0, 0, getBounds().width, getBounds().height));
 	}
+	
+	@Override
+	protected void updateSlide(float slideAlpha) {
+		label.setAlpha(slideAlpha);
+	}
 
 	@Override
-	public void renderContent(float slideAlpha) {
-		label.setAlpha(slideAlpha);
+	public void renderContent() {
 		label.render();
 	}
 

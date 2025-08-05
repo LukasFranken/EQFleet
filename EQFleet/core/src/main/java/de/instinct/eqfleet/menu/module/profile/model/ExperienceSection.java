@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.eqfleet.menu.module.profile.ProfileModel;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
+import de.instinct.eqlibgdxutils.rendering.ui.component.passive.image.Image;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.HorizontalAlignment;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.subtypes.PlainRectangularLoadingBar;
@@ -29,6 +30,9 @@ public class ExperienceSection extends Component {
 	private Label currentRankEXPLabel;
 	private Label nextRankEXPLabel;
 	private PlainRectangularLoadingBar expBar;
+	
+	private Image rankImage;
+	private Image nextRankImage;
 	
 	private float margin = 20f;
 	
@@ -91,37 +95,39 @@ public class ExperienceSection extends Component {
 	protected float calculateWidth() {
 		return getBounds().width;
 	}
-
+	
 	@Override
-	public void dispose() {
-		
-	}
-
-	@Override
-	protected void renderElement() {
+	protected void updateComponent() {
 		currentRankNameLabel.setBounds(nameLabelBounds);
 		currentRankNameLabel.setText(formatRankLabel(ProfileModel.profile.getRank().getLabel()));
-		currentRankNameLabel.render();
 		nextRankNameLabel.setBounds(nameLabelBounds);
 		nextRankNameLabel.setText(formatRankLabel(ProfileModel.profile.getRank().getNextRank().getLabel()));
-		nextRankNameLabel.render();
-		if (rankImagesEnabled) {
-			TextureManager.draw(TextureManager.getTexture("ui/image/rank", ProfileModel.profile.getRank().getFileName()), new Rectangle(getBounds().x, nameLabelBounds.y, 40, 40));
-			TextureManager.draw(TextureManager.getTexture("ui/image/rank", ProfileModel.profile.getRank().getNextRank().getFileName()), new Rectangle(getBounds().x + getBounds().width - 40f, nameLabelBounds.y, 40, 40));
-		}
-		
 		expBar.setBounds(expBarBounds);
 		expBar.setMaxValue(ProfileModel.profile.getRank().getNextRequiredExp() - ProfileModel.profile.getRank().getRequiredExp());
 		expBar.setCurrentValue(ProfileModel.profile.getCurrentExp() - ProfileModel.profile.getRank().getRequiredExp());
 		expBar.setCustomDescriptor(ProfileModel.profile.getCurrentExp() + "");
-		expBar.render();
-		TextureManager.draw("profile_expOutline" + uuid);
-		
 		currentRankEXPLabel.setBounds(expLabelBounds);
 		currentRankEXPLabel.setText(ProfileModel.profile.getRank().getRequiredExp() + "");
-		currentRankEXPLabel.render();
 		nextRankEXPLabel.setBounds(expLabelBounds);
 		nextRankEXPLabel.setText(ProfileModel.profile.getRank().getNextRequiredExp() + "");
+		
+		rankImage = new Image(TextureManager.getTexture("ui/image/rank", ProfileModel.profile.getRank().getFileName()));
+		rankImage.setBounds(new Rectangle(getBounds().x, nameLabelBounds.y, 40, 40));
+		nextRankImage = new Image(TextureManager.getTexture("ui/image/rank", ProfileModel.profile.getRank().getNextRank().getFileName()));
+		nextRankImage.setBounds(new Rectangle(getBounds().x + getBounds().width - 40f, nameLabelBounds.y, 40, 40));
+	}
+
+	@Override
+	protected void renderComponent() {
+		currentRankNameLabel.render();
+		nextRankNameLabel.render();
+		if (rankImagesEnabled) {
+			rankImage.render();
+			nextRankImage.render();
+		}
+		expBar.render();
+		TextureManager.draw("profile_expOutline" + uuid);
+		currentRankEXPLabel.render();
 		nextRankEXPLabel.render();
 	}
 	
@@ -132,9 +138,9 @@ public class ExperienceSection extends Component {
 		}
 		return label;
 	}
-
+	
 	@Override
-	protected void updateElement() {
+	public void dispose() {
 		
 	}
 

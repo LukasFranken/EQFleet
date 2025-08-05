@@ -6,7 +6,7 @@ import java.util.List;
 import de.instinct.engine.model.ship.ShipData;
 import lombok.ToString;
 
-@ToString
+@ToString(callSuper = true)
 public class Player {
 	
 	public int id;

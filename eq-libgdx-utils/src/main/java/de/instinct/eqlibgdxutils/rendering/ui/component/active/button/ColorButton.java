@@ -49,12 +49,16 @@ public class ColorButton extends Button {
 	protected float calculateHeight() {
 		return fixedHeight == 0 ? FontUtil.getFontHeightPx() + (contentMargin * 2) : fixedHeight;
 	}
-
+	
 	@Override
-	public void renderElement() {
-		TextureManager.draw(TextureManager.createTexture(getButtonColor()), getBounds(), getAlpha());
+	protected void updateButton() {
 		label.setAlpha(getAlpha());
 		label.setBounds(getBounds());
+	}
+
+	@Override
+	public void renderComponent() {
+		TextureManager.draw(TextureManager.createTexture(getButtonColor()), getScreenScaleAdjustedBounds(), getAlpha());
 		label.render();
 	}
 

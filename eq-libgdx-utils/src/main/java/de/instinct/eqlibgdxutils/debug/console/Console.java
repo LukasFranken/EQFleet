@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
+import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.InputUtil;
 import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.debug.Metric;
@@ -46,19 +47,20 @@ public class Console {
 	
 	private static List<String> inputList;
 	private static int lastCommandIndex = -1;
+	private static List<String> tagFilter;
 	
 	public static void init() {
 		commandProcessor = new CommandProcessor();
 		inputList = new ArrayList<>();
-		backgroundTexture = TextureManager.createTexture(new Color(0, 0, 0, 0.8f));
+		backgroundTexture = TextureManager.createTexture(new Color(0, 0, 0, 0.85f));
 		initializeMetrics();
 		activationScreenTaps = new ArrayList<>();
 		activationScreenTaps.add(ActivationScreenTap.builder()
-				.region(new Rectangle(0, Gdx.graphics.getHeight() - tapSize, tapSize, tapSize))
+				.region(GraphicsUtil.scaleFactorAdjusted(new Rectangle(0, GraphicsUtil.baseScreenBounds().getHeight() - tapSize, tapSize, tapSize)))
 				.activated(false)
 				.build());
 		activationScreenTaps.add(ActivationScreenTap.builder()
-				.region(new Rectangle(Gdx.graphics.getWidth() - tapSize, Gdx.graphics.getHeight() - tapSize, tapSize, tapSize))
+				.region(GraphicsUtil.scaleFactorAdjusted(new Rectangle(GraphicsUtil.baseScreenBounds().getWidth() - tapSize, GraphicsUtil.baseScreenBounds().getHeight() - tapSize, tapSize, tapSize)))
 				.activated(false)
 				.build());
 		
@@ -77,6 +79,11 @@ public class Console {
 			}
 			
 		});
+		tagFilter = new ArrayList<>();
+	}
+	
+	public static List<String> getTagFilter() {
+		return tagFilter;
 	}
 	
 	private static void initializeMetrics() {
@@ -88,7 +95,9 @@ public class Console {
 	}
 	
 	public static void setCommands(CommandLoader commandLoader) {
-		commandProcessor.setCommands(commandLoader.getCommands());
+		BaseCommandLoader baseCommandLoader = new BaseCommandLoader();
+		commandProcessor.addCommands(baseCommandLoader.getCommands());
+		commandProcessor.addCommands(commandLoader.getCommands());
 	}
 	
 	public static void toggle() {
@@ -130,16 +139,16 @@ public class Console {
 		Rectangle logsBounds = new Rectangle(
 				logPanelMargin, 
 				consoleInputHeight + logPanelMargin + borderMargin, 
-				Gdx.graphics.getWidth() - (logPanelMargin * 2), 
-				Gdx.graphics.getHeight() - consoleInputHeight - metricsHeight - (logPanelMargin * 2) - borderMargin);
-		SimpleShapeRenderer.drawRectangle(logsBounds, SkinManager.skinColor, 1);
+				GraphicsUtil.baseScreenBounds().getWidth() - (logPanelMargin * 2), 
+				GraphicsUtil.baseScreenBounds().getHeight() - consoleInputHeight - metricsHeight - (logPanelMargin * 2) - borderMargin);
+		SimpleShapeRenderer.drawRectangle(GraphicsUtil.scaleFactorAdjusted(logsBounds), SkinManager.skinColor, 1);
 		
 		int logLineHorizontalMargin = 5;
-		List<LogLine> logLines = Logger.getLogs((int)(logsBounds.height / logLineHeight));
+		List<LogLine> logLines = Logger.getLogs((int)(logsBounds.height / logLineHeight), tagFilter);
 		for (int i = 0; i < logLines.size(); i++) {
 			LogLine logLine = logLines.get(logLines.size() - 1 - i);
 			String logMessage = "[" + StringUtils.getTime(logLine.getTimestamp()) + "] " + logLine.getTag() + " - " + logLine.getMessage();
-			String labelText = StringUtils.limitWithDotDotDot(logMessage, (int)((logsBounds.width - (logLineHorizontalMargin * 2)) / FontUtil.getFontTextWidthPx(1, FontType.TINY)));
+			String labelText = StringUtils.limitWithDotDotDot(logMessage, (int)((logsBounds.width - (logLineHorizontalMargin * 2)) / FontUtil.getNormalizedFontTextWidthPx(1, FontType.TINY)));
 			Label logLineLabel = new Label(labelText);
 			logLineLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
 			logLineLabel.setType(FontType.TINY);
@@ -173,7 +182,7 @@ public class Console {
 		if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
 			commandTextField.setContent(commandProcessor.autocomplete(commandTextField.getContent()));
 		}
-		commandTextField.setBounds(new Rectangle(borderMargin, borderMargin, Gdx.graphics.getWidth() - (borderMargin * 2), consoleInputHeight));
+		commandTextField.setBounds(new Rectangle(borderMargin, borderMargin, GraphicsUtil.baseScreenBounds().getWidth() - (borderMargin * 2), consoleInputHeight));
 		commandTextField.render();
 	}
 

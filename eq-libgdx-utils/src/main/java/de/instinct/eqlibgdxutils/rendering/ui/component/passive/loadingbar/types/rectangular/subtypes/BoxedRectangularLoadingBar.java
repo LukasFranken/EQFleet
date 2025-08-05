@@ -41,7 +41,7 @@ public class BoxedRectangularLoadingBar extends RectangularLoadingBar {
 	}
 	
 	@Override
-	protected void updateElement() {
+	protected void updateComponent() {
 		
 	}
 
@@ -52,10 +52,10 @@ public class BoxedRectangularLoadingBar extends RectangularLoadingBar {
 	    int segmentSpace = calculateSegmentSpace(getSegments());
 
 	    float totalSpacing = (segments - 1) * segmentSpace;
-	    float segmentWidth = (getBounds().width - (getBorder().getSize() * 2) - totalSpacing) / (float) segments;
-	    float xPos = getBounds().x + getBorder().getSize();
-	    float yPos = getBounds().y + getBorder().getSize();
-	    float height = getBounds().height - (getBorder().getSize() * 2);
+	    float segmentWidth = (getScreenScaleAdjustedBounds().width - (getBorder().getSize() * 2) - totalSpacing) / (float) segments;
+	    float xPos = getScreenScaleAdjustedBounds().x + getBorder().getSize();
+	    float yPos = getScreenScaleAdjustedBounds().y + getBorder().getSize();
+	    float height = getScreenScaleAdjustedBounds().height - (getBorder().getSize() * 2);
 
 	    for (int i = 0; i < segments; i++) {
 	        float segmentXPos = xPos + i * (segmentWidth + segmentSpace);

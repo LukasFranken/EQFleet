@@ -1,9 +1,7 @@
 package de.instinct.eqlibgdxutils.rendering.ui.core;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
-import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
@@ -16,12 +14,7 @@ public abstract class UIElement {
 	
 	private float fixedWidth;
 	private float fixedHeight;
-
 	private float alpha;
-
-	private Border border;
-
-	private boolean debug;
 
 	public UIElement() {
 		alpha = 1f;
@@ -51,14 +44,6 @@ public abstract class UIElement {
 	public void render() {
 		update();
 		renderElement();
-		if (debug) {
-			border = new Border();
-			border.setColor(Color.ORANGE);
-			border.setSize(2f);
-		}
-		if (border != null && border.getColor() != null) {
-			drawBorder();
-		}
 	}
 	
 	public void update() {
@@ -77,18 +62,6 @@ public abstract class UIElement {
 	}
 
 	protected abstract void updateElement();
-
-	public void debug() {
-		debug = true;
-	}
-
-	private void drawBorder() {
-		border.getColor().a = alpha;
-		TextureManager.draw(TextureManager.createTexture(border.getColor()), new Rectangle(getBounds().getX(), getBounds().getY(), border.getSize(), getBounds().getHeight()));
-		TextureManager.draw(TextureManager.createTexture(border.getColor()), new Rectangle(getBounds().getX(), getBounds().getY(), getBounds().getWidth(), border.getSize()));
-		TextureManager.draw(TextureManager.createTexture(border.getColor()), new Rectangle(getBounds().getX() + getBounds().getWidth() - border.getSize(), getBounds().getY(), border.getSize(), getBounds().getHeight()));
-		TextureManager.draw(TextureManager.createTexture(border.getColor()), new Rectangle(getBounds().getX(), getBounds().getY() + getBounds().getHeight() - border.getSize(), getBounds().getWidth(), border.getSize()));
-	}
 
 	protected abstract void renderElement();
 

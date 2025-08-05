@@ -164,7 +164,7 @@ public class ShopRenderer extends BaseModuleRenderer {
 		Label nameLabel = new Label(name);
 		nameLabel.setType(FontType.NORMAL);
 		nameLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
-		nameLabel.setFixedWidth(FontUtil.getFontTextWidthPx(12, nameLabel.getType()));
+		nameLabel.setFixedWidth(FontUtil.getNormalizedFontTextWidthPx(12, nameLabel.getType()));
 		nameLabel.setFixedHeight(itemHeight);
 		return nameLabel;
 	}
@@ -182,7 +182,7 @@ public class ShopRenderer extends BaseModuleRenderer {
 		priceLabel.setType(FontType.SMALL);
 		priceLabel.setColor(price > Inventory.getResource(Resource.CREDITS) ? Color.RED : Color.GREEN);
 		priceLabel.setHorizontalAlignment(HorizontalAlignment.RIGHT);
-		priceLabel.setFixedWidth(FontUtil.getFontTextWidthPx(8, priceLabel.getType()));
+		priceLabel.setFixedWidth(FontUtil.getNormalizedFontTextWidthPx(8, priceLabel.getType()));
 		priceLabel.setFixedHeight(itemHeight);
 		return priceLabel;
 	}

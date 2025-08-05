@@ -18,6 +18,7 @@ import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.planet.Planet;
 import de.instinct.engine.util.EngineUtility;
 import de.instinct.eqfleet.game.GameConfig;
+import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.rendering.model.ModelLoader;
 import de.instinct.eqlibgdxutils.rendering.model.ModelRenderer;
 
@@ -62,7 +63,7 @@ public class ShipRenderer {
 	private void renderShipRoute(Ship ship, Planet target, PerspectiveCamera camera) {
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 		shapeRenderer.setProjectionMatrix(camera.combined);
-		float baseLineWidth = 2f;
+		float baseLineWidth = 2f * GraphicsUtil.getHorizontalDisplayScaleFactor();
 		float dynamicLineWidth = baseLineWidth * (Gdx.graphics.getDensity() > 1 ? Gdx.graphics.getDensity() : 1f);
 		Gdx.gl.glLineWidth(dynamicLineWidth);
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);

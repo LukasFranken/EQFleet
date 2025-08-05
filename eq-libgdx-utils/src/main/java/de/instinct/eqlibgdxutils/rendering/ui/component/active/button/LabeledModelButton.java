@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
+import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.HorizontalAlignment;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
@@ -27,6 +28,7 @@ public class LabeledModelButton extends Button {
 	private Label noteLabel;
 	
 	private float labelHeight = 20f;
+	private Rectangle modelBounds;
 	
 	public LabeledModelButton(ModelPreviewConfiguration modelConfig, String labelText, Action action) {
 		super();
@@ -63,24 +65,30 @@ public class LabeledModelButton extends Button {
 		noteLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
 		noteLabel.setFixedWidth(getBounds().width);
 	}
-
+	
 	@Override
-	protected void renderElement() {
-		Rectangle modelBounds = new Rectangle(getBounds().x, getBounds().y + labelHeight, getBounds().width, getBounds().height - labelHeight);
-		TextureManager.draw(modelPreviewBackgroundTexture, modelBounds, getAlpha());
+	protected void updateButton() {
+		modelBounds = new Rectangle(getBounds().x, getBounds().y + labelHeight, getBounds().width, getBounds().height - labelHeight);
 		modelPreview.setBounds(modelBounds);
 		modelPreview.setAlpha(getAlpha());
-		modelPreview.render();
 		label.setFixedWidth(getBounds().width);
 		label.setPosition(getBounds().x, getBounds().y);
 		label.setAlpha(getAlpha());
-		label.render();
 		if (noteLabel != null) {
 			noteLabel.setPosition(modelBounds.x + 4, modelBounds.y + 2);
 			noteLabel.setAlpha(getAlpha());
+		}
+	}
+
+	@Override
+	protected void renderComponent() {
+		TextureManager.draw(modelPreviewBackgroundTexture, GraphicsUtil.scaleFactorAdjusted(modelBounds), getAlpha());
+		modelPreview.render();
+		label.render();
+		if (noteLabel != null) {
 			noteLabel.render();
 		}
-		if (isHovered() || isDown()) TextureManager.draw(hoverTexture, modelBounds, 0.3f);
+		if (isHovered() || isDown()) TextureManager.draw(hoverTexture, GraphicsUtil.scaleFactorAdjusted(modelBounds), 0.3f);
 	}
 
 	@Override

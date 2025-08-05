@@ -89,7 +89,7 @@ public class TutorialLoader {
 		Defense tutorialShipDefense = new Defense();
 		tutorialShipDefense.armor = 9;
 		tutorialShipDefense.shield = 3;
-		tutorialShipDefense.shieldRegenerationSpeed = 0.1f;
+		tutorialShipDefense.shieldRegenerationSpeed = 0.2f;
 		tutorialShip.defense = tutorialShipDefense;
 		player1.ships.add(tutorialShip);
 		player1.maxCommandPoints = 10;
@@ -112,6 +112,27 @@ public class TutorialLoader {
 		aiPlayer.ships.get(0).defense.armor = 3;
 		aiPlayer.ships.get(0).defense.shield = 2;
 		aiPlayer.ships.get(0).movementSpeed = 100f;
+		
+		ShipData aiSmartassShip = new ShipData();
+		aiSmartassShip.type = ShipType.FIGHTER;
+		aiSmartassShip.model = "hawk";
+		aiSmartassShip.movementSpeed = 100f;
+		aiSmartassShip.cost = 3;
+		aiSmartassShip.commandPointsCost = 1;
+		Weapon aiSmartassShipWeapon = new Weapon();
+		aiSmartassShipWeapon.type = WeaponType.LASER;
+		aiSmartassShipWeapon.damage = 12;
+		aiSmartassShipWeapon.range = 100f;
+		aiSmartassShipWeapon.cooldown = 500;
+		aiSmartassShipWeapon.speed = 220f;
+		aiSmartassShip.weapon = aiSmartassShipWeapon;
+		Defense aiSmartassShipDefense = new Defense();
+		aiSmartassShipDefense.armor = 20;
+		aiSmartassShipDefense.shield = 20;
+		aiSmartassShipDefense.shieldRegenerationSpeed = 0.2f;
+		aiSmartassShip.defense = aiSmartassShipDefense;
+		aiPlayer.ships.add(aiSmartassShip);
+		
 		players.add(aiPlayer);
 
 		return players;
@@ -209,138 +230,142 @@ public class TutorialLoader {
 		});
 		guideQueue.add(firstMessageGuideEvent);
 
-		DialogGuideEvent secondMessageGuideEvent = new DialogGuideEvent();
-		secondMessageGuideEvent.setDuration(6.5f);
-		secondMessageGuideEvent.setMessage(new MessageBehavior() {
-			
-			@Override
-			public VerticalAlignment getVerticalAlignment() {
-				return VerticalAlignment.CENTER;
-			}
-			
-			@Override
-			public String getText() {
-				return "The metrics from your brainwave analysis indicate\na significant complexity in strategic computation";
-			}
-			
-		});
-		secondMessageGuideEvent.setAction(new ActionBehavior() {
-			
-			@Override
-			public void executeAtStart() {
-				AudioManager.playVoice("tutorial_voiceline_2");
-			}
-			
-			@Override
-			public void executeAtEnd() {}
-			
-		});
-		guideQueue.add(secondMessageGuideEvent);
+		if (mode == TutorialMode.FULL) {
+			DialogGuideEvent secondMessageGuideEvent = new DialogGuideEvent();
+			secondMessageGuideEvent.setDuration(6.5f);
+			secondMessageGuideEvent.setMessage(new MessageBehavior() {
+				
+				@Override
+				public VerticalAlignment getVerticalAlignment() {
+					return VerticalAlignment.CENTER;
+				}
+				
+				@Override
+				public String getText() {
+					return "The metrics from your brainwave analysis\nindicate a significant complexity\nin strategic computation";
+				}
+				
+			});
+			secondMessageGuideEvent.setAction(new ActionBehavior() {
+				
+				@Override
+				public void executeAtStart() {
+					AudioManager.playVoice("tutorial_voiceline_2");
+				}
+				
+				@Override
+				public void executeAtEnd() {}
+				
+			});
+			guideQueue.add(secondMessageGuideEvent);
 
-		DialogGuideEvent fourthMessageGuideEvent = new DialogGuideEvent();
-		fourthMessageGuideEvent.setDuration(6f);
-		fourthMessageGuideEvent.setMessage(new MessageBehavior() {
-			
-			@Override
-			public VerticalAlignment getVerticalAlignment() {
-				return VerticalAlignment.CENTER;
-			}
-			
-			@Override
-			public String getText() {
-				return "By martial law of the terran aristrocracy,\nyou have been assigned the career of a commander";
-			}
-			
-		});
-		fourthMessageGuideEvent.setAction(new ActionBehavior() {
-			
-			@Override
-			public void executeAtStart() {
-				AudioManager.playVoice("tutorial_voiceline_3");
-			}
-			
-			@Override
-			public void executeAtEnd() {}
-			
-		});
-		guideQueue.add(fourthMessageGuideEvent);
+			DialogGuideEvent fourthMessageGuideEvent = new DialogGuideEvent();
+			fourthMessageGuideEvent.setDuration(6f);
+			fourthMessageGuideEvent.setMessage(new MessageBehavior() {
+				
+				@Override
+				public VerticalAlignment getVerticalAlignment() {
+					return VerticalAlignment.CENTER;
+				}
+				
+				@Override
+				public String getText() {
+					return "By martial law of the terran aristrocracy,\n you have been assigned the career of\na commander";
+				}
+				
+			});
+			fourthMessageGuideEvent.setAction(new ActionBehavior() {
+				
+				@Override
+				public void executeAtStart() {
+					AudioManager.playVoice("tutorial_voiceline_3");
+				}
+				
+				@Override
+				public void executeAtEnd() {}
+				
+			});
+			guideQueue.add(fourthMessageGuideEvent);
+		}
 		
-		DialogGuideEvent fifthMessageGuideEvent = new DialogGuideEvent();
-		fifthMessageGuideEvent.setDuration(2.5f);
-		fifthMessageGuideEvent.setMessage(new MessageBehavior() {
+		if (mode == TutorialMode.FULL) {
+			DialogGuideEvent fifthMessageGuideEvent = new DialogGuideEvent();
+			fifthMessageGuideEvent.setDuration(2.5f);
+			fifthMessageGuideEvent.setMessage(new MessageBehavior() {
+				
+				@Override
+				public VerticalAlignment getVerticalAlignment() {
+					return VerticalAlignment.CENTER;
+				}
+				
+				@Override
+				public String getText() {
+					return "I will guide you through the basics";
+				}
+				
+			});
+			fifthMessageGuideEvent.setAction(new ActionBehavior() {
+				
+				@Override
+				public void executeAtStart() {
+					AudioManager.playVoice("tutorial_voiceline_4");
+				}
+				
+				@Override
+				public void executeAtEnd() {}
+				
+			});
+			guideQueue.add(fifthMessageGuideEvent);
 			
-			@Override
-			public VerticalAlignment getVerticalAlignment() {
-				return VerticalAlignment.CENTER;
-			}
+			PauseGuideEvent anotherDelayGuideEvent = new PauseGuideEvent();
+			anotherDelayGuideEvent.setDuration(1f);
+			guideQueue.add(anotherDelayGuideEvent);
 			
-			@Override
-			public String getText() {
-				return "I will guide you through the basics";
-			}
+			DialogGuideEvent sateliteMessageGuideEvent = new DialogGuideEvent();
+			sateliteMessageGuideEvent.setDuration(7f);
+			sateliteMessageGuideEvent.setMessage(new MessageBehavior() {
+				
+				@Override
+				public VerticalAlignment getVerticalAlignment() {
+					return VerticalAlignment.CENTER;
+				}
+				
+				@Override
+				public String getText() {
+					return "We have updated your personal digital\ninterface with the communication software for\nour quantum tunnel projector satellite";
+				}
+				
+			});
+			sateliteMessageGuideEvent.setAction(new ActionBehavior() {
+				
+				@Override
+				public void executeAtStart() {
+					AudioManager.playVoice("tutorial_voiceline_5");
+				}
+				
+				@Override
+				public void executeAtEnd() {}
+				
+			});
+			guideQueue.add(sateliteMessageGuideEvent);
 			
-		});
-		fifthMessageGuideEvent.setAction(new ActionBehavior() {
-			
-			@Override
-			public void executeAtStart() {
-				AudioManager.playVoice("tutorial_voiceline_4");
-			}
-			
-			@Override
-			public void executeAtEnd() {}
-			
-		});
-		guideQueue.add(fifthMessageGuideEvent);
-		
-		PauseGuideEvent anotherDelayGuideEvent = new PauseGuideEvent();
-		anotherDelayGuideEvent.setDuration(1f);
-		guideQueue.add(anotherDelayGuideEvent);
-		
-		DialogGuideEvent sateliteMessageGuideEvent = new DialogGuideEvent();
-		sateliteMessageGuideEvent.setDuration(7f);
-		sateliteMessageGuideEvent.setMessage(new MessageBehavior() {
-			
-			@Override
-			public VerticalAlignment getVerticalAlignment() {
-				return VerticalAlignment.CENTER;
-			}
-			
-			@Override
-			public String getText() {
-				return "We have updated your personal digital interface\nwith the communication software for our\nquantum tunnel projector satellite";
-			}
-			
-		});
-		sateliteMessageGuideEvent.setAction(new ActionBehavior() {
-			
-			@Override
-			public void executeAtStart() {
-				AudioManager.playVoice("tutorial_voiceline_5");
-			}
-			
-			@Override
-			public void executeAtEnd() {}
-			
-		});
-		guideQueue.add(sateliteMessageGuideEvent);
-		
-		DialogGuideEvent fleetMessageGuideEvent = new DialogGuideEvent();
-		fleetMessageGuideEvent.setDuration(6f);
-		fleetMessageGuideEvent.setMessage(new MessageBehavior() {
-			
-			@Override
-			public VerticalAlignment getVerticalAlignment() {
-				return VerticalAlignment.CENTER;
-			}
-			
-			@Override
-			public String getText() {
-				return "giving you realtime access to commands\nand information of your fleet\nall across the universe";
-			}
-			
-		});
-		guideQueue.add(fleetMessageGuideEvent);
+			DialogGuideEvent fleetMessageGuideEvent = new DialogGuideEvent();
+			fleetMessageGuideEvent.setDuration(6f);
+			fleetMessageGuideEvent.setMessage(new MessageBehavior() {
+				
+				@Override
+				public VerticalAlignment getVerticalAlignment() {
+					return VerticalAlignment.CENTER;
+				}
+				
+				@Override
+				public String getText() {
+					return "giving you realtime access to commands\nand information of your fleet\nall across the universe";
+				}
+				
+			});
+			guideQueue.add(fleetMessageGuideEvent);
+		}
 		
 		DialogGuideEvent sixthsMessageGuideEvent = new DialogGuideEvent();
 		sixthsMessageGuideEvent.setDuration(3f);
@@ -406,34 +431,36 @@ public class TutorialLoader {
 		});
 		guideQueue.add(timeMessageGuideEvent);
 		
-		DialogGuideEvent time2MessageGuideEvent = new DialogGuideEvent();
-		time2MessageGuideEvent.setDuration(4f);
-		time2MessageGuideEvent.setMessage(new MessageBehavior() {
-			
-			@Override
-			public VerticalAlignment getVerticalAlignment() {
-				return VerticalAlignment.TOP;
-			}
-			
-			@Override
-			public String getText() {
-				return "When expired, an algorithm will\ndecide over your net performance";
-			}
-			
-		});
-		time2MessageGuideEvent.setAction(new ActionBehavior() {
-			
-			@Override
-			public void executeAtStart() {
-				Game.setUIElementVisible("time", true);
-				AudioManager.playVoice("tutorial_voiceline_8");
-			}
-			
-			@Override
-			public void executeAtEnd() {}
-			
-		});
-		guideQueue.add(time2MessageGuideEvent);
+		if (mode == TutorialMode.FULL) {
+			DialogGuideEvent time2MessageGuideEvent = new DialogGuideEvent();
+			time2MessageGuideEvent.setDuration(4f);
+			time2MessageGuideEvent.setMessage(new MessageBehavior() {
+				
+				@Override
+				public VerticalAlignment getVerticalAlignment() {
+					return VerticalAlignment.TOP;
+				}
+				
+				@Override
+				public String getText() {
+					return "When expired, an algorithm will\ndecide over your net performance";
+				}
+				
+			});
+			time2MessageGuideEvent.setAction(new ActionBehavior() {
+				
+				@Override
+				public void executeAtStart() {
+					Game.setUIElementVisible("time", true);
+					AudioManager.playVoice("tutorial_voiceline_8");
+				}
+				
+				@Override
+				public void executeAtEnd() {}
+				
+			});
+			guideQueue.add(time2MessageGuideEvent);
+		}
 
 		CameraMoveGuideEvent initialGuideEvent = new CameraMoveGuideEvent();
 		initialGuideEvent.setDuration(2f);
@@ -505,33 +532,35 @@ public class TutorialLoader {
 		moveToNeutralGuideEvent.setTargetCameraPos(new Vector3(-50f, -700f, 2000f));
 		guideQueue.add(moveToNeutralGuideEvent);
 
-		DialogGuideEvent tenthMessageGuideEvent = new DialogGuideEvent();
-		tenthMessageGuideEvent.setDuration(3f);
-		tenthMessageGuideEvent.setMessage(new MessageBehavior() {
-			
-			@Override
-			public VerticalAlignment getVerticalAlignment() {
-				return VerticalAlignment.TOP;
-			}
-			
-			@Override
-			public String getText() {
-				return "The gray planet is uninhabited";
-			}
-			
-		});
-		tenthMessageGuideEvent.setAction(new ActionBehavior() {
-			
-			@Override
-			public void executeAtStart() {
-				AudioManager.playVoice("tutorial_voiceline_11");
-			}
-			
-			@Override
-			public void executeAtEnd() {}
-			
-		});
-		guideQueue.add(tenthMessageGuideEvent);
+		if (mode == TutorialMode.FULL) {
+			DialogGuideEvent tenthMessageGuideEvent = new DialogGuideEvent();
+			tenthMessageGuideEvent.setDuration(3f);
+			tenthMessageGuideEvent.setMessage(new MessageBehavior() {
+				
+				@Override
+				public VerticalAlignment getVerticalAlignment() {
+					return VerticalAlignment.TOP;
+				}
+				
+				@Override
+				public String getText() {
+					return "The gray planet is uninhabited";
+				}
+				
+			});
+			tenthMessageGuideEvent.setAction(new ActionBehavior() {
+				
+				@Override
+				public void executeAtStart() {
+					AudioManager.playVoice("tutorial_voiceline_11");
+				}
+				
+				@Override
+				public void executeAtEnd() {}
+				
+			});
+			guideQueue.add(tenthMessageGuideEvent);
+		}
 
 		DialogGuideEvent firstFleetMoveGuideEvent = new DialogGuideEvent();
 		firstFleetMoveGuideEvent.setMessage(new MessageBehavior() {
@@ -584,38 +613,52 @@ public class TutorialLoader {
 		
 		DialogGuideEvent ownShipSendPauseMessageGuideEvent = new DialogGuideEvent();
 		ownShipSendPauseMessageGuideEvent.setDuration(1f);
-		guideQueue.add(ownShipSendPauseMessageGuideEvent);
-		
-		DialogGuideEvent sentShipGuideEvent = new DialogGuideEvent();
-		sentShipGuideEvent.setDuration(3.5f);
-		sentShipGuideEvent.setMessage(new MessageBehavior() {
-			
-			@Override
-			public VerticalAlignment getVerticalAlignment() {
-				return VerticalAlignment.TOP;
-			}
-			
-			@Override
-			public String getText() {
-				return "You have issued a command for a ship\nto travel to the neutral planet";
-			}
-			
-		});
-		sentShipGuideEvent.setAction(new ActionBehavior() {
+		ownShipSendPauseMessageGuideEvent.setAction(new ActionBehavior() {
 			
 			@Override
 			public void executeAtStart() {
-				Game.pause();
-				AudioManager.playVoice("tutorial_voiceline_13");
+				
 			}
 			
 			@Override
 			public void executeAtEnd() {
-				
+				Game.pause();
 			}
 			
 		});
-		guideQueue.add(sentShipGuideEvent);
+		guideQueue.add(ownShipSendPauseMessageGuideEvent);
+		
+		if (mode == TutorialMode.FULL) {
+			DialogGuideEvent sentShipGuideEvent = new DialogGuideEvent();
+			sentShipGuideEvent.setDuration(3.5f);
+			sentShipGuideEvent.setMessage(new MessageBehavior() {
+				
+				@Override
+				public VerticalAlignment getVerticalAlignment() {
+					return VerticalAlignment.TOP;
+				}
+				
+				@Override
+				public String getText() {
+					return "You have issued a command for a ship\nto travel to the neutral planet";
+				}
+				
+			});
+			sentShipGuideEvent.setAction(new ActionBehavior() {
+				
+				@Override
+				public void executeAtStart() {
+					AudioManager.playVoice("tutorial_voiceline_13");
+				}
+				
+				@Override
+				public void executeAtEnd() {
+					
+				}
+				
+			});
+			guideQueue.add(sentShipGuideEvent);
+		}
 		
 		DialogGuideEvent resourceCostMessageGuideEvent = new DialogGuideEvent();
 		resourceCostMessageGuideEvent.setDuration(7f);
@@ -628,7 +671,7 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "Every ship costs planetary resources,\nas well as a varying amount of Command Points (CP)";
+				return "Every ship costs planetary resources,\nas well as a varying amount of\nCommand Points (CP)";
 			}
 			
 		});
@@ -647,33 +690,35 @@ public class TutorialLoader {
 		});
 		guideQueue.add(resourceCostMessageGuideEvent);
 
-		DialogGuideEvent thirteenthMessageGuideEvent = new DialogGuideEvent();
-		thirteenthMessageGuideEvent.setDuration(3f);
-		thirteenthMessageGuideEvent.setMessage(new MessageBehavior() {
-			
-			@Override
-			public VerticalAlignment getVerticalAlignment() {
-				return VerticalAlignment.TOP;
-			}
-			
-			@Override
-			public String getText() {
-				return "You can see your CP meter at the bottom";
-			}
-			
-		});
-		thirteenthMessageGuideEvent.setAction(new ActionBehavior() {
-			
-			@Override
-			public void executeAtStart() {
-				AudioManager.playVoice("tutorial_voiceline_15");
-			}
-			
-			@Override
-			public void executeAtEnd() {}
-			
-		});
-		guideQueue.add(thirteenthMessageGuideEvent);
+		if (mode == TutorialMode.FULL) {
+			DialogGuideEvent thirteenthMessageGuideEvent = new DialogGuideEvent();
+			thirteenthMessageGuideEvent.setDuration(3f);
+			thirteenthMessageGuideEvent.setMessage(new MessageBehavior() {
+				
+				@Override
+				public VerticalAlignment getVerticalAlignment() {
+					return VerticalAlignment.TOP;
+				}
+				
+				@Override
+				public String getText() {
+					return "You can see your CP meter\nat the bottom";
+				}
+				
+			});
+			thirteenthMessageGuideEvent.setAction(new ActionBehavior() {
+				
+				@Override
+				public void executeAtStart() {
+					AudioManager.playVoice("tutorial_voiceline_15");
+				}
+				
+				@Override
+				public void executeAtEnd() {}
+				
+			});
+			guideQueue.add(thirteenthMessageGuideEvent);
+		}
 
 		DialogGuideEvent fifteenthMessageGuideEvent = new DialogGuideEvent();
 		fifteenthMessageGuideEvent.setDuration(4f);
@@ -686,7 +731,7 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "Both CP and planetary resources regenerate\ngradually over time";
+				return "Both CP and planetary resources\nregenerate gradually over time";
 			}
 			
 		});
@@ -726,33 +771,35 @@ public class TutorialLoader {
 		});
 		guideQueue.add(firstFleetMoveGuideFinishEvent);
 
-		DialogGuideEvent sixteenthMessageGuideEvent = new DialogGuideEvent();
-		sixteenthMessageGuideEvent.setDuration(5f);
-		sixteenthMessageGuideEvent.setMessage(new MessageBehavior() {
-			
-			@Override
-			public VerticalAlignment getVerticalAlignment() {
-				return VerticalAlignment.TOP;
-			}
-			
-			@Override
-			public String getText() {
-				return "You gained control over the previously\nneutral planet and its resource production";
-			}
-			
-		});
-		sixteenthMessageGuideEvent.setAction(new ActionBehavior() {
-			
-			@Override
-			public void executeAtStart() {
-				AudioManager.playVoice("tutorial_voiceline_17");
-			}
-			
-			@Override
-			public void executeAtEnd() {}
-			
-		});
-		guideQueue.add(sixteenthMessageGuideEvent);
+		if (mode == TutorialMode.FULL) {
+			DialogGuideEvent sixteenthMessageGuideEvent = new DialogGuideEvent();
+			sixteenthMessageGuideEvent.setDuration(5f);
+			sixteenthMessageGuideEvent.setMessage(new MessageBehavior() {
+				
+				@Override
+				public VerticalAlignment getVerticalAlignment() {
+					return VerticalAlignment.TOP;
+				}
+				
+				@Override
+				public String getText() {
+					return "You gained control over the previously\nneutral planet and its resource production";
+				}
+				
+			});
+			sixteenthMessageGuideEvent.setAction(new ActionBehavior() {
+				
+				@Override
+				public void executeAtStart() {
+					AudioManager.playVoice("tutorial_voiceline_17");
+				}
+				
+				@Override
+				public void executeAtEnd() {}
+				
+			});
+			guideQueue.add(sixteenthMessageGuideEvent);
+		}
 
 		DialogGuideEvent seventeenthMessageGuideEvent = new DialogGuideEvent();
 		seventeenthMessageGuideEvent.setDuration(4.5f);
@@ -820,50 +867,52 @@ public class TutorialLoader {
 		});
 		guideQueue.add(twentysecondMessageGuideEvent);
 		
-		DialogGuideEvent secondTurbulenceMessageGuideEvent = new DialogGuideEvent();
-		secondTurbulenceMessageGuideEvent.setDuration(5.8f);
-		secondTurbulenceMessageGuideEvent.setMessage(new MessageBehavior() {
+		if (mode == TutorialMode.FULL) {
+			DialogGuideEvent secondTurbulenceMessageGuideEvent = new DialogGuideEvent();
+			secondTurbulenceMessageGuideEvent.setDuration(5.8f);
+			secondTurbulenceMessageGuideEvent.setMessage(new MessageBehavior() {
+				
+				@Override
+				public VerticalAlignment getVerticalAlignment() {
+					return VerticalAlignment.TOP;
+				}
+				
+				@Override
+				public String getText() {
+					return "The Turbulence is a scarcely researched,\nhighly intelligent, silicon based, collective\nlife form";
+				}
+				
+			});
+			secondTurbulenceMessageGuideEvent.setAction(new ActionBehavior() {
+				
+				@Override
+				public void executeAtStart() {
+					AudioManager.playVoice("tutorial_voiceline_20");
+				}
+				
+				@Override
+				public void executeAtEnd() {}
+				
+			});
+			guideQueue.add(secondTurbulenceMessageGuideEvent);
 			
-			@Override
-			public VerticalAlignment getVerticalAlignment() {
-				return VerticalAlignment.TOP;
-			}
-			
-			@Override
-			public String getText() {
-				return "The Turbulence is a scarcely researched,\nhighly intelligent, silicon based, collective\nlife form";
-			}
-			
-		});
-		secondTurbulenceMessageGuideEvent.setAction(new ActionBehavior() {
-			
-			@Override
-			public void executeAtStart() {
-				AudioManager.playVoice("tutorial_voiceline_20");
-			}
-			
-			@Override
-			public void executeAtEnd() {}
-			
-		});
-		guideQueue.add(secondTurbulenceMessageGuideEvent);
-		
-		DialogGuideEvent thirdTurbulenceMessageGuideEvent = new DialogGuideEvent();
-		thirdTurbulenceMessageGuideEvent.setDuration(4f);
-		thirdTurbulenceMessageGuideEvent.setMessage(new MessageBehavior() {
-			
-			@Override
-			public VerticalAlignment getVerticalAlignment() {
-				return VerticalAlignment.TOP;
-			}
-			
-			@Override
-			public String getText() {
-				return "Most of all, it is extremely hostile\ntowards other lifeforms";
-			}
-			
-		});
-		guideQueue.add(thirdTurbulenceMessageGuideEvent);
+			DialogGuideEvent thirdTurbulenceMessageGuideEvent = new DialogGuideEvent();
+			thirdTurbulenceMessageGuideEvent.setDuration(4f);
+			thirdTurbulenceMessageGuideEvent.setMessage(new MessageBehavior() {
+				
+				@Override
+				public VerticalAlignment getVerticalAlignment() {
+					return VerticalAlignment.TOP;
+				}
+				
+				@Override
+				public String getText() {
+					return "Most of all, it is extremely hostile\ntowards other lifeforms";
+				}
+				
+			});
+			guideQueue.add(thirdTurbulenceMessageGuideEvent);
+		}
 		
 		DialogGuideEvent enemyCPMessageGuideEvent = new DialogGuideEvent();
 		enemyCPMessageGuideEvent.setDuration(7f);
@@ -905,6 +954,8 @@ public class TutorialLoader {
 		panAwayToMapGuideEvent.setTargetCameraPos(new Vector3(130f, -700f, 3000f));
 		guideQueue.add(panAwayToMapGuideEvent);
 		
+		CameraMoveGuideEvent panToShipGuideEvent = new CameraMoveGuideEvent();
+		panToShipGuideEvent.setDuration(2f);
 		DialogGuideEvent twentyfourthMessageGuideEvent = new DialogGuideEvent();
 		twentyfourthMessageGuideEvent.setMessage(new MessageBehavior() {
 			
@@ -930,7 +981,9 @@ public class TutorialLoader {
 			public boolean isEndConditionMet() {
 				for (Ship ship : GameModel.activeGameState.ships) {
 					if (ship.ownerId == 1) {
-						return true;
+						if (ship.targetPlanetId == 3 || ship.targetPlanetId == 1) {
+							return true;
+						}
 					}
 				}
 				return false;
@@ -948,12 +1001,17 @@ public class TutorialLoader {
 			@Override
 			public void executeAtEnd() {
 				GameModel.inputEnabled = false;
-				int originId = 1;
+				int originId = 0;
 				int targetId = 3;
 				for (Ship ship : GameModel.activeGameState.ships) {
 					if (ship.ownerId == 1) {
 						originId = ship.originPlanetId;
 						targetId = ship.targetPlanetId;
+						if (targetId == 3) {
+							panToShipGuideEvent.setTargetCameraPos(new Vector3(300f, -450f, 1300f));
+						} else {
+							panToShipGuideEvent.setTargetCameraPos(new Vector3(270f, -660f, 1300f));
+						}
 					}
 				}
 				FleetMovementMessage aiFleetMoveMessage = new FleetMovementMessage();
@@ -1001,6 +1059,7 @@ public class TutorialLoader {
 		});
 		guideQueue.add(enemyShipSendMessageGuideEvent);
 		
+		
 		DialogGuideEvent enemyShipSend2MessageGuideEvent = new DialogGuideEvent();
 		enemyShipSend2MessageGuideEvent.setDuration(4.5f);
 		enemyShipSend2MessageGuideEvent.setMessage(new MessageBehavior() {
@@ -1028,10 +1087,6 @@ public class TutorialLoader {
 			
 		});
 		guideQueue.add(enemyShipSend2MessageGuideEvent);
-		
-		CameraMoveGuideEvent panToShipGuideEvent = new CameraMoveGuideEvent();
-		panToShipGuideEvent.setDuration(2f);
-		panToShipGuideEvent.setTargetCameraPos(new Vector3(300f, -450f, 1300f));
 		guideQueue.add(panToShipGuideEvent);
 		
 		DialogGuideEvent enemyShipSend3MessageGuideEvent = new DialogGuideEvent();
@@ -1149,61 +1204,63 @@ public class TutorialLoader {
 		panAwayToMapFromAncientGuideEvent.setTargetCameraPos(new Vector3(130f, -200f, 3800f));
 		guideQueue.add(panAwayToMapFromAncientGuideEvent);
 		
-		DialogGuideEvent ancientShipInfoMessageGuideEvent = new DialogGuideEvent();
-		ancientShipInfoMessageGuideEvent.setDuration(9.5f);
-		ancientShipInfoMessageGuideEvent.setMessage(new MessageBehavior() {
+		if (mode == TutorialMode.FULL) {
+			DialogGuideEvent ancientShipInfoMessageGuideEvent = new DialogGuideEvent();
+			ancientShipInfoMessageGuideEvent.setDuration(9.5f);
+			ancientShipInfoMessageGuideEvent.setMessage(new MessageBehavior() {
+				
+				@Override
+				public VerticalAlignment getVerticalAlignment() {
+					return VerticalAlignment.TOP;
+				}
+				
+				@Override
+				public String getText() {
+					return "We have equipped our fleet with a magnetic\nheat and radiation shield to withstand the\nextreme condition of stars to allow our\nships to extract this ancient technology";
+				}
+				
+			});
+			ancientShipInfoMessageGuideEvent.setAction(new ActionBehavior() {
+				
+				@Override
+				public void executeAtStart() {
+					AudioManager.playVoice("tutorial_voiceline_29");
+				}
+				
+				@Override
+				public void executeAtEnd() {}
+				
+			});
+			guideQueue.add(ancientShipInfoMessageGuideEvent);
 			
-			@Override
-			public VerticalAlignment getVerticalAlignment() {
-				return VerticalAlignment.TOP;
-			}
-			
-			@Override
-			public String getText() {
-				return "We have equipped our fleet with a magnetic\nheat and radiation shield to withstand the extreme\ncondition of stars to allow our ships to\nextract this ancient technology";
-			}
-			
-		});
-		ancientShipInfoMessageGuideEvent.setAction(new ActionBehavior() {
-			
-			@Override
-			public void executeAtStart() {
-				AudioManager.playVoice("tutorial_voiceline_29");
-			}
-			
-			@Override
-			public void executeAtEnd() {}
-			
-		});
-		guideQueue.add(ancientShipInfoMessageGuideEvent);
-		
-		DialogGuideEvent secondAncientDecreaseInfoMessageGuideEvent = new DialogGuideEvent();
-		secondAncientDecreaseInfoMessageGuideEvent.setDuration(7.5f);
-		secondAncientDecreaseInfoMessageGuideEvent.setMessage(new MessageBehavior() {
-			
-			@Override
-			public VerticalAlignment getVerticalAlignment() {
-				return VerticalAlignment.TOP;
-			}
-			
-			@Override
-			public String getText() {
-				return "Unfortunately, this procedure requires extreme\namounts of dark matter, which our ships\ncan only safely store so much of";
-			}
-			
-		});
-		secondAncientDecreaseInfoMessageGuideEvent.setAction(new ActionBehavior() {
-			
-			@Override
-			public void executeAtStart() {
-				AudioManager.playVoice("tutorial_voiceline_30");
-			}
-			
-			@Override
-			public void executeAtEnd() {}
-			
-		});
-		guideQueue.add(secondAncientDecreaseInfoMessageGuideEvent);
+			DialogGuideEvent secondAncientDecreaseInfoMessageGuideEvent = new DialogGuideEvent();
+			secondAncientDecreaseInfoMessageGuideEvent.setDuration(7.5f);
+			secondAncientDecreaseInfoMessageGuideEvent.setMessage(new MessageBehavior() {
+				
+				@Override
+				public VerticalAlignment getVerticalAlignment() {
+					return VerticalAlignment.TOP;
+				}
+				
+				@Override
+				public String getText() {
+					return "Unfortunately, this procedure requires extreme\namounts of dark matter, which our ships\ncan only safely store so much of";
+				}
+				
+			});
+			secondAncientDecreaseInfoMessageGuideEvent.setAction(new ActionBehavior() {
+				
+				@Override
+				public void executeAtStart() {
+					AudioManager.playVoice("tutorial_voiceline_30");
+				}
+				
+				@Override
+				public void executeAtEnd() {}
+				
+			});
+			guideQueue.add(secondAncientDecreaseInfoMessageGuideEvent);
+		}
 		
 		DialogGuideEvent ancientDecreaseInfoMessageGuideEvent = new DialogGuideEvent();
 		ancientDecreaseInfoMessageGuideEvent.setDuration(6f);
@@ -1216,7 +1273,7 @@ public class TutorialLoader {
 			
 			@Override
 			public String getText() {
-				return "So when captured, your planetary resources\non the star decrease, not increase over time";
+				return "When captured, your planetary resources\non the star decrease, not increase over time";
 			}
 			
 		});
@@ -1334,33 +1391,35 @@ public class TutorialLoader {
 		});
 		guideQueue.add(ancientWinConditionInfoMessageGuideEvent);
 		
-		DialogGuideEvent ancientOwnLossInfoMessageGuideEvent = new DialogGuideEvent();
-		ancientOwnLossInfoMessageGuideEvent.setDuration(4.5f);
-		ancientOwnLossInfoMessageGuideEvent.setMessage(new MessageBehavior() {
-			
-			@Override
-			public VerticalAlignment getVerticalAlignment() {
-				return VerticalAlignment.TOP;
-			}
-			
-			@Override
-			public String getText() {
-				return "When the ancient planet resources are\nempty, you lose control over it";
-			}
-			
-		});
-		ancientOwnLossInfoMessageGuideEvent.setAction(new ActionBehavior() {
-			
-			@Override
-			public void executeAtStart() {
-				AudioManager.playVoice("tutorial_voiceline_34");
-			}
-			
-			@Override
-			public void executeAtEnd() {}
-			
-		});
-		guideQueue.add(ancientOwnLossInfoMessageGuideEvent);
+		if (mode == TutorialMode.FULL) {
+			DialogGuideEvent ancientOwnLossInfoMessageGuideEvent = new DialogGuideEvent();
+			ancientOwnLossInfoMessageGuideEvent.setDuration(4.5f);
+			ancientOwnLossInfoMessageGuideEvent.setMessage(new MessageBehavior() {
+				
+				@Override
+				public VerticalAlignment getVerticalAlignment() {
+					return VerticalAlignment.TOP;
+				}
+				
+				@Override
+				public String getText() {
+					return "When the ancient planet resources are\nempty, you lose control over it";
+				}
+				
+			});
+			ancientOwnLossInfoMessageGuideEvent.setAction(new ActionBehavior() {
+				
+				@Override
+				public void executeAtStart() {
+					AudioManager.playVoice("tutorial_voiceline_34");
+				}
+				
+				@Override
+				public void executeAtEnd() {}
+				
+			});
+			guideQueue.add(ancientOwnLossInfoMessageGuideEvent);
+		}
 		
 		DialogGuideEvent timeoutConditionInfoMessageGuideEvent = new DialogGuideEvent();
 		timeoutConditionInfoMessageGuideEvent.setDuration(7f);

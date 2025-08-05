@@ -1,13 +1,20 @@
 package de.instinct.eqfleet.menu.common.components;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g3d.Material;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.math.Vector3;
 
 import de.instinct.api.core.modules.MenuModule;
 import de.instinct.api.core.modules.ModuleUnlockRequirement;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqlibgdxutils.generic.Action;
+import de.instinct.eqlibgdxutils.rendering.model.ModelLoader;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ImageButton;
+import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.LabeledModelButton;
+import de.instinct.eqlibgdxutils.rendering.ui.component.passive.model.ModelPreviewConfiguration;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.popup.PopupRenderer;
@@ -16,20 +23,21 @@ import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 
 public class DefaultButtonFactory {
 	
-	public static ColorButton moduleButton(MenuModule module) {
-		Border buttonBorder = new Border();
-		buttonBorder.setColor(new Color(SkinManager.skinColor));
-		buttonBorder.setSize(2);
-
-		ColorButton moduleButton = new ColorButton(module.toString().substring(0, 3));
-		moduleButton.setBorder(buttonBorder);
-		moduleButton.setColor(Color.BLACK);
-		moduleButton.setFixedHeight(50);
-		moduleButton.setFixedWidth(50);
-		moduleButton.setLabelColor(new Color(SkinManager.skinColor));
-		moduleButton.setHoverColor(new Color(SkinManager.darkerSkinColor));
-		moduleButton.setDownColor(new Color(SkinManager.lighterSkinColor));
-		moduleButton.setAction(new Action() {
+	public static LabeledModelButton moduleButton(MenuModule module) {
+		ModelInstance model = ModelLoader.instanciate("ship");
+        for (Material material : model.materials) {
+            material.set(ColorAttribute.createDiffuse(SkinManager.darkestSkinColor));
+        }
+        
+		ModelPreviewConfiguration shipModelPreviewConfig = ModelPreviewConfiguration.builder()
+				.model(model)
+				.baseRotationAngle(-90f)
+				.baseRotationAxis(new Vector3(1, 0, 0))
+				.scale(20f)
+				.grid(false)
+				.build();
+		
+		LabeledModelButton menuModelButton = new LabeledModelButton(shipModelPreviewConfig, module.toString(), new Action() {
 			
 			@Override
 			public void execute() {
@@ -37,8 +45,9 @@ public class DefaultButtonFactory {
 			}
 			
 		});
-		
-		return moduleButton;
+		menuModelButton.setFixedWidth(50f);
+		menuModelButton.setFixedHeight(70f);
+		return menuModelButton;
 	}
 	
 	public static ImageButton moduleButton(ModuleUnlockRequirement moduleUnlockRequirement) {

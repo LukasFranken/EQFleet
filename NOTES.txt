@@ -1,15 +1,14 @@
 - ALPHA RELEASE TODO:
-
+bf9bb9c1-2733-4beb-8afd-e8dae9cc2747
 GENERAL:
 - appicon, ios loadscreen etc.
 - check android
 
 - Audio
- -> sound FX
  -> audio settings
+ -> music glitches/crashes on transition
 
 - find cpu bottleneck
-- match found accept screen
 - show rank in lobby
 - planet resource upgrades part of construction
 - zoom factor per conq map
@@ -19,14 +18,14 @@ GENERAL:
 - settings via meta module (show grid, show fleet lines)
 - planet defense not since start
 - defeated/victory reason
-- temporary console resource cheat admin
-- delete authkey console command, away from settings
 - freggy seite offline nehmen
 - ai mod: send last resort ancient planet so that ship arrives a few seconds before end
 - hangar space needed for build blueprint, not buy blueprint
 - planet is grey sometimes after capture
 - radio music looping randomly through tracks
 - neutral planets less damage but more hp
+ -> scaling neutral player
+- make resource bar around planet colorscale?
 
 - add model preview to construction popup
  
@@ -39,14 +38,10 @@ GENERAL:
 - random amazon requests crash gameserver and maybe others
 
 GAME:
-- models
-
-- list all commands command
-
 - prevent bot from bypassing resource cost by doubleshipping
 
 META:
-- into back button
+- intro back button
 
 - playtab logic finished refactoring
 
@@ -61,7 +56,7 @@ GENERAL:
 - void run = coop dungeoncrawler
 
 GAME:
- 
+- sending multiple ships?
 - improved ai
 
 META:

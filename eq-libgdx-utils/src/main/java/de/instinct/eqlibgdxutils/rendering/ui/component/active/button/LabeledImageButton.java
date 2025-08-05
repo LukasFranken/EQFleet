@@ -22,6 +22,8 @@ public class LabeledImageButton extends Button {
 
 	private Texture hoverTexture;
 	private Texture clickTexture;
+	
+	private Rectangle imageBounds;
 
 	public LabeledImageButton(Texture imageTexture, String message) {
 		super();
@@ -46,29 +48,37 @@ public class LabeledImageButton extends Button {
 	protected float calculateHeight() {
 		return getBounds().height;
 	}
+	
+	@Override
+	protected void updateButton() {
+		imageBounds = calculateImageBounds(getScreenScaleAdjustedBounds());
+		messageLabel.setPosition(getBounds().x + getBounds().width + contentMargin + spacing, getBounds().y);
+		messageLabel.setFixedWidth(getBounds().width - getBounds().width - (contentMargin * 2) - spacing);
+		messageLabel.setFixedHeight(getBounds().height);
+	}
 
 	@Override
-	protected void renderElement() {
-		Rectangle imageBounds = calculateImageBounds();
+	protected void renderComponent() {
 		TextureManager.draw(imageTexture, imageBounds);
-		messageLabel.setPosition(getBounds().x + imageBounds.width + contentMargin + spacing, getBounds().y);
-		messageLabel.setFixedWidth(getBounds().width - imageBounds.width - (contentMargin * 2) - spacing);
-		messageLabel.setFixedHeight(getBounds().height);
 		messageLabel.render();
 		if (isHovered()) {
-			TextureManager.draw(hoverTexture, getBounds());
+			TextureManager.draw(hoverTexture, getScreenScaleAdjustedBounds());
 		}
 		if (isDown()) {
-			TextureManager.draw(clickTexture, getBounds());
+			TextureManager.draw(clickTexture, getScreenScaleAdjustedBounds());
 		}
 	}
 
-	public Rectangle calculateImageBounds() {
-		return new Rectangle(getBounds().x + contentMargin, getBounds().y + contentMargin, adjustedWidth(), getBounds().height - (contentMargin * 2));
+	private Rectangle calculateImageBounds(Rectangle bounds) {
+		return new Rectangle(
+				bounds.x + contentMargin,
+				bounds.y + contentMargin,
+				adjustedWidth(bounds),
+				bounds.height - (contentMargin * 2));
 	}
 
-	private float adjustedWidth() {
-		return imageTexture.getWidth() / (imageTexture.getHeight() / (getBounds().height - (contentMargin * 2)));
+	private float adjustedWidth(Rectangle bounds) {
+		return imageTexture.getWidth() / (imageTexture.getHeight() / (bounds.height - (contentMargin * 2)));
 	}
 
 	@Override

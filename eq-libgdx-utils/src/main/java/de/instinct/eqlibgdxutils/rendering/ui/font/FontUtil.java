@@ -11,6 +11,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 
+import de.instinct.eqlibgdxutils.GraphicsUtil;
+
 public class FontUtil {
 	
 	private static Map<FontType, BitmapFont> fonts;
@@ -34,7 +36,7 @@ public class FontUtil {
         	}
         	FreeTypeFontGenerator generator = new FreeTypeFontGenerator(fontFile);
             FreeTypeFontParameter params = new FreeTypeFontParameter();
-            params.size = Math.round(fontTypeConfiguration.getSize());
+            params.size = Math.round(fontTypeConfiguration.getSize() * GraphicsUtil.getHorizontalDisplayScaleFactor());
             fonts.put(fontTypeConfiguration.getType(), generator.generateFont(params));
             generator.dispose();
         }
@@ -51,12 +53,24 @@ public class FontUtil {
 		return getFontHeightPx(FontType.NORMAL);
 	}
 	
+	public static float getNormalizedFontHeightPx(FontType type) {
+		return fonts.get(type).getCapHeight() / GraphicsUtil.getVerticalDisplayScaleFactor();
+	}
+	
 	public static float getFontHeightPx(FontType type) {
 		return fonts.get(type).getCapHeight();
+	}
+	
+	public static float getNormalizedFontTextWidthPx(int length, FontType type) {
+		return getFontTextWidthPx(length, type) / GraphicsUtil.getHorizontalDisplayScaleFactor();
 	}
 
 	public static float getFontTextWidthPx(int length) {
 		return getFontTextWidthPx(length, FontType.NORMAL);
+	}
+	
+	public static float getNormalizedFontTextWidthPx(String text, FontType type) {
+		return getFontTextWidthPx(text, type) / GraphicsUtil.getHorizontalDisplayScaleFactor();
 	}
 	
 	public static float getFontTextWidthPx(String text) {
@@ -64,11 +78,11 @@ public class FontUtil {
 	}
 
 	public static float getFontTextWidthPx(int length, FontType type) {
-		return fonts.get(type).getSpaceXadvance() * length;
+		return (fonts.get(type).getSpaceXadvance() * length);
 	}
 	
 	public static float getFontTextWidthPx(String text, FontType type) {
-		return fonts.get(type).getSpaceXadvance() * text.length();
+		return (fonts.get(type).getSpaceXadvance() * text.length());
 	}
 	
 }

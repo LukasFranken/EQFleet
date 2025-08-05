@@ -21,6 +21,7 @@ import de.instinct.engine.util.EngineUtility;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.backend.driver.local.LocalDriver;
+import de.instinct.eqfleet.menu.main.Menu;
 
 public class CustomDriver extends LocalDriver {
 	
@@ -114,6 +115,7 @@ public class CustomDriver extends LocalDriver {
 	@Override
 	public void finish() {
 		finished = true;
+		Menu.load();
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
+import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.InputUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.container.list.ElementList;
@@ -54,8 +55,8 @@ public class PopupRenderer {
 	private static void createWindowTextures(Popup newPopup) {
 		newPopup.getContentContainer().update();
 		popupBounds = new Rectangle(
-				(Gdx.graphics.getWidth() / 2) - (newPopup.getContentContainer().getBounds().getWidth() / 2) - MARGIN,
-				(Gdx.graphics.getHeight() / 2) - ((newPopup.getContentContainer().getBounds().getHeight() + TITLE_BAR_HEIGHT) / 2) - MARGIN,
+				(GraphicsUtil.baseScreenBounds().width / 2) - (newPopup.getContentContainer().getBounds().getWidth() / 2) - MARGIN,
+				(GraphicsUtil.baseScreenBounds().height / 2) - ((newPopup.getContentContainer().getBounds().getHeight() + TITLE_BAR_HEIGHT) / 2) - MARGIN,
 				newPopup.getContentContainer().getBounds().getWidth() + (MARGIN * 2),
 				newPopup.getContentContainer().getBounds().getHeight() + TITLE_BAR_HEIGHT + (MARGIN * 2));
 		currentWindowTextureTag = "popup_" + newPopup.getTitle();
@@ -79,7 +80,7 @@ public class PopupRenderer {
 		destroy();
 		if (popup != null) {
 			TextureManager.draw(BG_DARKENING_TAG, new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), BG_DARKENING);
-			TextureManager.draw(POPUP_BG_TAG, popupBounds, 1f);
+			TextureManager.draw(POPUP_BG_TAG, GraphicsUtil.scaleFactorAdjusted(popupBounds), 1f);
 			TextureManager.draw(currentWindowTextureTag);
 			TextureManager.draw(currentWindowTitlebarTextureTag);
 			title.setBounds(new Rectangle(
@@ -93,7 +94,7 @@ public class PopupRenderer {
 				inCreationFrame = false;
 			} else {
 				popup.getContentContainer().render();
-				if (popup.isCloseOnClickOutside() && InputUtil.isClicked() && !popupBounds.contains(InputUtil.getMousePosition())) {
+				if (popup.isCloseOnClickOutside() && InputUtil.isClicked() && !GraphicsUtil.scaleFactorAdjusted(popupBounds).contains(InputUtil.getMousePosition())) {
 					close();
 				}
 			}

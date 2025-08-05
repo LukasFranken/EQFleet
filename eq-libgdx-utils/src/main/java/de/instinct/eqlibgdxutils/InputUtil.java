@@ -16,17 +16,18 @@ public class InputUtil {
 	public static void update() {
 		if (Gdx.input.isTouched()) {
 			pressed = true;
+			released = false;
 		} else {
-			pressed = false;
-			released = true;
-		}
-		if (!touched && released) {
 			if (pressed) {
+				pressed = false;
+				released = true;
+			}
+			if (!touched && released) {
 				touched = true;
 				released = false;
+			} else {
+				touched = false;
 			}
-		} else {
-			touched = false;
 		}
 	}
 	

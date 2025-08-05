@@ -25,7 +25,7 @@ public class GridRenderer {
 	public void drawGrid(Camera camera) {
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		Gdx.gl.glLineWidth(config.getLineThickness() * GraphicsUtil.getDisplayScaleFactor());
+		Gdx.gl.glLineWidth(config.getLineThickness() * GraphicsUtil.getHorizontalDisplayScaleFactor());
 
 		shapeRenderer.setProjectionMatrix(camera.combined);
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);

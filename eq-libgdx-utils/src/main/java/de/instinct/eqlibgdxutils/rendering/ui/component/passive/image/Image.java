@@ -31,13 +31,13 @@ public class Image extends Component {
 	}
 
 	@Override
-	protected void updateElement() {
+	protected void updateComponent() {
 		
 	}
 	
 	@Override
-	public void renderElement() {
-		TextureManager.draw(texture, getBounds(), getAlpha());
+	public void renderComponent() {
+		TextureManager.draw(texture, getScreenScaleAdjustedBounds(), getAlpha());
 	}
 
 	@Override

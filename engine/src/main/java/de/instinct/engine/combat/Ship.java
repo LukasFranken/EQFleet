@@ -4,7 +4,7 @@ import de.instinct.engine.combat.unit.Unit;
 import de.instinct.engine.model.ship.ShipType;
 import lombok.ToString;
 
-@ToString
+@ToString(callSuper = true)
 public class Ship extends Unit {
 
 	public String model;
