@@ -113,9 +113,8 @@ public class App extends ApplicationAdapter {
 	@Override
     public void render() {
 		long startNanoTime = System.nanoTime();
-
+		InputUtil.update();
 		try {
-			InputUtil.update();
 			if (!halted) {
 				AudioManager.update();
 				ScreenUtils.clear(0f, 0f, 0f, 1f);
@@ -127,11 +126,9 @@ public class App extends ApplicationAdapter {
 		        PopupRenderer.render();
 			}
 		} catch (Exception e) {
-			Logger.log("APP", e.getMessage(), ConsoleColor.RED);
-			e.printStackTrace();
+			Logger.log(LOGTAG, e);
 			halted = true;
 		}
-
         long endNanoTime = System.nanoTime();
         double deltaTime = (endNanoTime - startNanoTime) / 1_000_000.0;
         Console.updateMetric("this_frame_time_MS", deltaTime);

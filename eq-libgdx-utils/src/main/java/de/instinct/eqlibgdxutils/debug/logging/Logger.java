@@ -14,6 +14,14 @@ public class Logger {
 	private static final Object logsLock = new Object();
 
 	private static final SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy - HH:mm:ss");
+	
+	public static void log(String tag, Exception e) {
+		log(tag, e.getMessage(), ConsoleColor.RED);
+		for (StackTraceElement element : e.getStackTrace()) {
+			String classname = element.getFileName().contains(".") ? element.getFileName().split("\\.")[0] : element.getFileName();
+			log(tag, classname + "." + element.getMethodName() + ":" + element.getLineNumber(), ConsoleColor.RED);
+		}
+	}
 
 	public static void log(String message) {
 		log("UNTAGGED", message);

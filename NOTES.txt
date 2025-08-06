@@ -25,6 +25,7 @@ GENERAL:
  -> scaling neutral player
 - externalize planet resource bar to circularloadingbar component
 - replace money label with other squad player names
+- scrollable console log
 
 GAME:
 
