@@ -66,5 +66,10 @@ public class InputUtil {
 	public static Vector2 getMousePosition() {
 		return new Vector2(getMouseX(), getMouseY());
 	}
+	
+	public static Vector2 getNormalizedMousePosition() {
+		Rectangle normalizedScreenBounds = GraphicsUtil.scaleFactorDeducted(new Rectangle(0, 0, getMouseX(), getMouseY()));
+		return new Vector2(normalizedScreenBounds.width, normalizedScreenBounds.height);
+	}
 
 }

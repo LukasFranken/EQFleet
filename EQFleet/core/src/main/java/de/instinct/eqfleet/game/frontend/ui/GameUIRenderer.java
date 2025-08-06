@@ -423,17 +423,17 @@ public class GameUIRenderer {
 	
 	private void renderArrowLabel() {
 		if (inputManager.getSelectedPlanetId() != null && inputManager.getSelectedShipId() != null && Gdx.input.isTouched()) {
-			float arrowLabelYOffset = Gdx.app.getType() == ApplicationType.Android || Gdx.app.getType() == ApplicationType.Android ? 80f : 40f;
+			float arrowLabelYOffset = Gdx.app.getType() == ApplicationType.Android || Gdx.app.getType() == ApplicationType.iOS ? 80f : 40f;
 			Integer selectedId = inputManager.getSelectedPlanetId();
 			Planet selected = (selectedId != null) ? EngineUtility.getPlanet(state.planets, selectedId) : null;
 			Player owner = EngineUtility.getPlayer(state.players, selected.ownerId);
 			ShipData ship = owner.ships.get(inputManager.getSelectedShipId());
 			String shipName = ship.model;
-	        float labelWidth = FontUtil.getFontTextWidthPx(shipName, FontType.SMALL);
+	        float labelWidth = FontUtil.getNormalizedFontTextWidthPx(shipName, FontType.SMALL);
 	        Color labelColor = new Color(selected.currentResources >= ship.cost && owner.currentCommandPoints >= ship.commandPointsCost ? Color.GREEN : Color.RED);
 	        Label shipLabel = new Label(shipName);
 	        shipLabel.setColor(labelColor);
-	        shipLabel.setBounds(GraphicsUtil.scaleFactorDeducted(new Rectangle(InputUtil.getMouseX() - (labelWidth / 2), InputUtil.getMouseY() - 10f + arrowLabelYOffset, labelWidth, 20f)));
+	        shipLabel.setBounds(new Rectangle(InputUtil.getNormalizedMousePosition().x - (labelWidth / 2), InputUtil.getNormalizedMousePosition().y - 10f + arrowLabelYOffset, labelWidth, 20f));
 	        shipLabel.setType(FontType.SMALL);
 	        shipLabel.render();
 		}
