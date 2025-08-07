@@ -10,6 +10,7 @@ import com.esotericsoftware.kryo.Kryo;
 import de.instinct.engine.ai.difficulty.AiBehaviorParameters;
 import de.instinct.engine.ai.difficulty.AiDifficulty;
 import de.instinct.engine.combat.Ship;
+import de.instinct.engine.combat.Turret;
 import de.instinct.engine.combat.projectile.DirectionalProjectile;
 import de.instinct.engine.combat.projectile.HomingProjectile;
 import de.instinct.engine.combat.projectile.Projectile;
@@ -20,6 +21,7 @@ import de.instinct.engine.model.PlayerConnectionStatus;
 import de.instinct.engine.model.UnitData;
 import de.instinct.engine.model.planet.Planet;
 import de.instinct.engine.model.planet.PlanetData;
+import de.instinct.engine.model.planet.TurretData;
 import de.instinct.engine.model.ship.Defense;
 import de.instinct.engine.model.ship.ShipData;
 import de.instinct.engine.model.ship.ShipType;
@@ -80,6 +82,8 @@ public class KryoRegistrator {
 		kryo.register(BuildTurretMessage.class);
 		kryo.register(BuildTurretOrder.class);
 		kryo.register(UnitData.class);
+		kryo.register(TurretData.class);
+		kryo.register(Turret.class);
 	}
 
 }

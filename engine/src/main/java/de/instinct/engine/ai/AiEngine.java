@@ -86,7 +86,7 @@ public class AiEngine {
 	}
 
 	private GameOrder calculateBuildOrder(AiPlayer aiPlayer, GameState state) {
-		if (aiPlayer.currentCommandPoints >= 2) {
+		if (aiPlayer.currentCommandPoints >= 2 && aiPlayer.planetData.turret != null) {
 			for (Planet planet : state.planets) {
 				Turret turret = EngineUtility.getPlanetTurret(state.turrets, planet.id);
 				if (turret == null) {

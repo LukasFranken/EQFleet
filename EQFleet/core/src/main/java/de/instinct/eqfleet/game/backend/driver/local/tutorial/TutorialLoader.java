@@ -138,6 +138,7 @@ public class TutorialLoader {
 
 	private GameMap generateMap() {
 		GameMap map = new GameMap();
+		map.zoomFactor = 1f;
 		List<PlanetInitialization> planets = new ArrayList<>();
 		PlanetInitialization startPlanetPlayerOne = new PlanetInitialization();
     	startPlanetPlayerOne.ownerId = 1;
