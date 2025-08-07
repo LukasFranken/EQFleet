@@ -401,7 +401,7 @@ public class StarmapRenderer extends BaseModuleRenderer {
 	}
 	
 	private StarsystemData getClickedStarsystem() {
-		float selectionRadius = 20f;
+		float selectionRadius = 30f * GraphicsUtil.getHorizontalDisplayScaleFactor();
 		for (StarsystemData starsystem : selectedGalaxy.getData().getStarsystems()) {
 			if (getStarsystemActualScreenPosition(starsystem).dst(InputUtil.getMouseX(), InputUtil.getMouseY()) < selectionRadius) {
 				return starsystem;
