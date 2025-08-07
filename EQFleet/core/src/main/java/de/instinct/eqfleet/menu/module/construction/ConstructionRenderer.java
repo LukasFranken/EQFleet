@@ -9,7 +9,9 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.math.Vector3;
 
-import de.instinct.api.construction.dto.PlanetTurretBlueprint;
+import de.instinct.api.construction.dto.PlayerTurretData;
+import de.instinct.api.game.engine.EngineInterface;
+import de.instinct.engine.model.planet.TurretData;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
 import de.instinct.eqfleet.menu.main.Menu;
@@ -63,14 +65,15 @@ private List<LabeledModelButton> turretButtons;
 	@Override
 	public void reload() {
 		turretButtons = new ArrayList<>();
-		if (ConstructionModel.infrastructure != null && ConstructionModel.infrastructure.getPlanetTurretBlueprints() != null) {
-			for (PlanetTurretBlueprint blueprint : ConstructionModel.infrastructure.getPlanetTurretBlueprints()) {
-				turretButtons.add(createTurretButton(blueprint));
+		if (ConstructionModel.infrastructure != null && ConstructionModel.playerInfrastructure != null) {
+			for (PlayerTurretData playerTurretData : ConstructionModel.playerInfrastructure.getPlayerTurrets()) {
+				TurretData turretData = EngineInterface.getPlayerTurretData(playerTurretData, ConstructionModel.infrastructure);
+				turretButtons.add(createTurretButton(playerTurretData, turretData));
 			}
 		}
 	}
 	
-	private LabeledModelButton createTurretButton(PlanetTurretBlueprint blueprint) {
+	private LabeledModelButton createTurretButton(PlayerTurretData playerTurretData, TurretData turretData) {
 		ModelInstance model = ModelLoader.instanciate("ship");
         for (Material material : model.materials) {
             material.set(ColorAttribute.createDiffuse(SkinManager.darkestSkinColor));
@@ -84,21 +87,21 @@ private List<LabeledModelButton> turretButtons;
 				.grid(false)
 				.build();
 		
-		LabeledModelButton turretButton = new LabeledModelButton(shipModelPreviewConfig, blueprint.getName(), new Action() {
+		LabeledModelButton turretButton = new LabeledModelButton(shipModelPreviewConfig, turretData.model, new Action() {
 			
 			@Override
 			public void execute() {
-				createTurretPopup(blueprint);
+				createTurretPopup(playerTurretData.getUuid(), turretData);
 			}
 			
 		});
 		turretButton.setFixedWidth(50f);
 		turretButton.setFixedHeight(70f);
-		turretButton.getModelPreview().getBorder().setColor(blueprint.isInUse() ? Color.GREEN : SkinManager.skinColor);
+		turretButton.getModelPreview().getBorder().setColor(playerTurretData.isInUse() ? Color.GREEN : SkinManager.skinColor);
 		return turretButton;
 	}
 	
-	private void createTurretPopup(PlanetTurretBlueprint blueprint) {
+	private void createTurretPopup(String uuid, TurretData turretData) {
 		ModelInstance turretModel = ModelLoader.instanciate("ship");
         for (Material material : turretModel.materials) {
             material.set(ColorAttribute.createDiffuse(SkinManager.darkestSkinColor));
@@ -119,23 +122,27 @@ private List<LabeledModelButton> turretButtons;
 		ElementList popupContent = new ElementList();
 		popupContent.setMargin(10f);
 		popupContent.getElements().add(turretModelPreview);
-		popupContent.getElements().add(createLabelStack("WEAPON", blueprint.getPlanetWeapon().getType().toString()));
-		popupContent.getElements().add(createLabelStack("DAMAGE", StringUtils.format(blueprint.getPlanetWeapon().getDamage(), 0)));
-		popupContent.getElements().add(createLabelStack("RANGE", StringUtils.format(blueprint.getPlanetWeapon().getRange(), 0)));
-		popupContent.getElements().add(createLabelStack("COOLDOWN", StringUtils.format(blueprint.getPlanetWeapon().getCooldown()/1000f, 1) + "s"));
-		popupContent.getElements().add(createLabelStack("SPEED", StringUtils.format(blueprint.getPlanetWeapon().getSpeed(), 0)));
+		popupContent.getElements().add(createLabelStack("RESOURCE COST", StringUtils.format(turretData.cost, 0)));
+		popupContent.getElements().add(createLabelStack("CP COST", StringUtils.format(turretData.commandPointsCost, 0)));
+		popupContent.getElements().add(createLabelStack("ROTATION SPEED", StringUtils.format(turretData.rotationSpeed, 0)));
+		popupContent.getElements().add(createLabelStack("--------", "--------"));
+		popupContent.getElements().add(createLabelStack("WEAPON", turretData.weapon.type.toString()));
+		popupContent.getElements().add(createLabelStack("DAMAGE", StringUtils.format(turretData.weapon.damage, 0)));
+		popupContent.getElements().add(createLabelStack("RANGE", StringUtils.format(turretData.weapon.range, 0)));
+		popupContent.getElements().add(createLabelStack("COOLDOWN", StringUtils.format(turretData.weapon.cooldown/1000f, 1) + "s"));
+		popupContent.getElements().add(createLabelStack("PROJECTILE SPEED", StringUtils.format(turretData.weapon.speed, 0)));
 		popupContent.getElements().add(createLabelStack("--------", "--------"));
 		popupContent.getElements().add(createLabelStack("DEFENSE", ""));
-		popupContent.getElements().add(createLabelStack("ARMOR", StringUtils.format(blueprint.getPlanetDefense().getArmor(), 0)));
-		popupContent.getElements().add(createLabelStack("SHIELD", StringUtils.format(blueprint.getPlanetDefense().getShield(), 0)));
-		popupContent.getElements().add(createLabelStack("SHIELD/SEC", StringUtils.format(blueprint.getPlanetDefense().getShieldRegenerationSpeed(), 1)));
+		popupContent.getElements().add(createLabelStack("ARMOR", StringUtils.format(turretData.defense.armor, 0)));
+		popupContent.getElements().add(createLabelStack("SHIELD", StringUtils.format(turretData.defense.shield, 0)));
+		popupContent.getElements().add(createLabelStack("SHIELD/SEC", StringUtils.format(turretData.defense.shieldRegenerationSpeed, 1)));
 		
 		ColorButton useButton = DefaultButtonFactory.colorButton("Use", new Action() {
 			
 			@Override
 			public void execute() {
 				Menu.queue(UseTurretMessage.builder()
-						.turretUUID(blueprint.getUuid())
+						.turretUUID(uuid)
 						.build());
 				
 				PopupRenderer.close();
@@ -147,7 +154,7 @@ private List<LabeledModelButton> turretButtons;
 		popupContent.getElements().add(useButton);
 		
 		PopupRenderer.create(Popup.builder()
-				.title(blueprint.getName())
+				.title(turretData.model.toUpperCase())
 				.contentContainer(popupContent)
 				.closeOnClickOutside(true)
 				.build());

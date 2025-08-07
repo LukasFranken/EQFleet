@@ -7,7 +7,6 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import de.instinct.engine.combat.CombatProcessor;
-import de.instinct.engine.combat.unit.UnitManager;
 import de.instinct.engine.initialization.GameStateInitialization;
 import de.instinct.engine.initialization.PlanetInitialization;
 import de.instinct.engine.meta.MetaProcessor;
@@ -17,7 +16,8 @@ import de.instinct.engine.model.PlayerConnectionStatus;
 import de.instinct.engine.model.planet.Planet;
 import de.instinct.engine.order.GameOrder;
 import de.instinct.engine.order.OrderValidator;
-import de.instinct.engine.resource.ResourceProcessor;
+import de.instinct.engine.planet.PlanetProcessor;
+import de.instinct.engine.player.PlayerProcessor;
 import de.instinct.engine.util.EngineUtility;
 
 public class FleetEngine {
@@ -27,7 +27,8 @@ public class FleetEngine {
 	private OrderValidator orderValidator;
 	private Queue<GameOrder> unprocessedOrders;
 	
-	private ResourceProcessor resourceProcessor;
+	private PlanetProcessor planetProcessor;
+	private PlayerProcessor playerProcessor;
 	private CombatProcessor combatProcessor;
 	private MetaProcessor metaProcessor;
 	
@@ -38,7 +39,8 @@ public class FleetEngine {
 	public void initialize() {
 		orderValidator = new OrderValidator();
 		unprocessedOrders = new ConcurrentLinkedQueue<>();
-		resourceProcessor = new ResourceProcessor();
+		planetProcessor = new PlanetProcessor();
+		playerProcessor = new PlayerProcessor();
 		combatProcessor = new CombatProcessor();
 		metaProcessor = new MetaProcessor();
 		orderIdCounter = 0;
@@ -52,7 +54,9 @@ public class FleetEngine {
 		state.players = initializePlayers(initialization.players);
 		state.connectionStati = generateConnectionStati(initialization.players);
 		state.planets = generateInitialPlanets(initialization, state);
+		state.zoomFactor = initialization.map.zoomFactor;
 		state.ships = new ArrayList<>();
+		state.turrets = new ArrayList<>();
 		state.projectiles = new ArrayList<>();
 		state.gameTimeMS = 0;
 		state.maxGameTimeMS = initialization.gameTimeLimitMS;
@@ -75,6 +79,7 @@ public class FleetEngine {
 		state.teamPausesCount.put(0, 0);
 		state.teamPausesCount.put(1, initialization.pauseCountLimit);
 		state.teamPausesCount.put(2, initialization.pauseCountLimit);
+		combatProcessor.initialize(state);
 		return state;
 	}
 	
@@ -99,14 +104,11 @@ public class FleetEngine {
 		List<Planet> initialPlanets = new ArrayList<>();
 		for (PlanetInitialization init : initialization.map.planets) {
 			Player planetOwner = EngineUtility.getPlayer(initialization.players, init.ownerId);
-			Planet initialPlanet = UnitManager.createPlanet(planetOwner.planetData, state);
+			Planet initialPlanet = planetProcessor.createPlanet(planetOwner.planetData, state);
 			initialPlanet.ownerId = init.ownerId;
 			initialPlanet.position = init.position;
-			if (initialPlanet.defense != null) initialPlanet.defense.currentArmor = initialPlanet.defense.armor * init.startArmorPercent;
 			if (init.ancient) {
 				initialPlanet.ancient = true;
-				initialPlanet.weapon = null;
-				initialPlanet.defense = null;
 			}
 			initialPlanets.add(initialPlanet);
 		}
@@ -138,7 +140,8 @@ public class FleetEngine {
 			metaProcessor.update(state, deltaTime);
 			if (state.teamPause == 0 && state.resumeCountdownMS <= 0) {
 				combatProcessor.update(state, deltaTime);
-			    resourceProcessor.update(state, deltaTime);
+			    planetProcessor.update(state, deltaTime);
+			    playerProcessor.update(state, deltaTime);
 			    state.gameTimeMS += deltaTime;
 			}
 		}

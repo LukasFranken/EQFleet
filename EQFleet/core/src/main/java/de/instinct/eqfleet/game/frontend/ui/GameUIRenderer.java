@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import de.instinct.api.core.API;
+import de.instinct.engine.combat.Turret;
 import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.Player;
 import de.instinct.engine.model.PlayerConnectionStatus;
@@ -25,10 +26,12 @@ import de.instinct.engine.net.message.types.SurrenderMessage;
 import de.instinct.engine.util.EngineUtility;
 import de.instinct.eqfleet.ApplicationMode;
 import de.instinct.eqfleet.GlobalStaticData;
+import de.instinct.eqfleet.audio.AudioManager;
 import de.instinct.eqfleet.game.GameConfig;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.frontend.GameInputManager;
 import de.instinct.eqfleet.game.frontend.GameRenderer;
+import de.instinct.eqfleet.game.frontend.InteractionMode;
 import de.instinct.eqfleet.game.frontend.ui.model.GameUIElement;
 import de.instinct.eqfleet.game.frontend.ui.model.UIBounds;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
@@ -63,6 +66,10 @@ public class GameUIRenderer {
 	
 	private ColorButton surrenderButton;
     private ColorButton resumeButton;
+    
+    private ColorButton unitControlButton;
+    private ColorButton constructionButton;
+    private ColorButton qLinkButton;
     
     public static Color bluroutColor;
 	
@@ -104,6 +111,30 @@ public class GameUIRenderer {
     	surrenderButton.setBounds(surrenderBounds);
         Rectangle resumeBounds = new Rectangle((GraphicsUtil.baseScreenBounds().width / 2) - 50, 100, 100, 40);
         resumeButton.setBounds(resumeBounds);
+        
+        unitControlButton = DefaultButtonFactory.colorButton("U", () -> {
+        	if (GameModel.mode != InteractionMode.UNIT_CONTROL) {
+        		GameModel.mode = InteractionMode.UNIT_CONTROL;
+        		AudioManager.playVoice("units");
+        	}
+		});
+        unitControlButton.setBounds(new Rectangle(GraphicsUtil.baseScreenBounds().width - 50, 100, 30, 30));
+        
+        constructionButton = DefaultButtonFactory.colorButton("C", () -> {
+			if (GameModel.mode != InteractionMode.CONSTRUCTION) {
+        		GameModel.mode = InteractionMode.CONSTRUCTION;
+        		AudioManager.playVoice("construction");
+        	}
+		});
+        constructionButton.setBounds(new Rectangle(GraphicsUtil.baseScreenBounds().width - 50, 150, 30, 30));
+        
+        qLinkButton = DefaultButtonFactory.colorButton("Q", () -> {
+			if (GameModel.mode != InteractionMode.Q_LINK) {
+        		GameModel.mode = InteractionMode.Q_LINK;
+        		AudioManager.playVoice("qlink");
+        	}
+		});
+        qLinkButton.setBounds(new Rectangle(GraphicsUtil.baseScreenBounds().width - 50, 200, 30, 30));
 	}
 
 	private void initializeElements() {
@@ -142,9 +173,9 @@ public class GameUIRenderer {
 				updateStaticUI();
 				renderResourceCircles();
 				defenseUIRenderer.render(state, camera);
-				renderShipSelection();
 				renderStaticUI();
-				renderPauseScreen(state);
+				renderModeButtons(state);
+				renderShipSelection();
 				renderCountdownScreen(state);
 				renderPauseScreen(state);
 				if (!state.started) {
@@ -155,6 +186,25 @@ public class GameUIRenderer {
 		renderMessageText();
 	}
 	
+	private void renderModeButtons(GameState state) {
+		Player self = EngineUtility.getPlayer(state.players, GameModel.playerId);
+		if (self.planetData.turret != null) {
+			if (GameModel.mode == InteractionMode.UNIT_CONTROL) {
+				unitControlButton.getBorder().setColor(Color.GREEN);
+			} else {
+				unitControlButton.getBorder().setColor(SkinManager.skinColor);
+			}
+			unitControlButton.render();
+			
+			if (GameModel.mode == InteractionMode.CONSTRUCTION) {
+				constructionButton.getBorder().setColor(Color.GREEN);
+			} else {
+				constructionButton.getBorder().setColor(SkinManager.skinColor);
+			}
+			constructionButton.render();
+		}
+	}
+
 	private void renderCountdownScreen(GameState state) {
 		if (state.resumeCountdownMS > 0) {
 			TextureManager.draw(TextureManager.createTexture(bluroutColor), GraphicsUtil.screenBounds());
@@ -305,7 +355,7 @@ public class GameUIRenderer {
 		renderSelectionShapes();
 		renderArrowLabel();
 		renderCPCostRect();
-		renderShipSelectionCircles();
+		renderRadialSelectionCircles();
 	}
 
 	private void renderSelectionShapes() {
@@ -321,28 +371,55 @@ public class GameUIRenderer {
 	}
 
 	private void renderCPCostRect() {
-		if (inputManager.getSelectedPlanetId() != null && inputManager.getSelectedShipId() != null && Gdx.input.isTouched()) {
+		if (inputManager.getSelectedPlanetId() != null && Gdx.input.isTouched()) {
+			float cpCost = 0f;
 			Planet selected = EngineUtility.getPlanet(state.planets, inputManager.getSelectedPlanetId());
 			Player owner = EngineUtility.getPlayer(state.players, selected.ownerId);
-			float shipCPCost = owner.ships.get(inputManager.getSelectedShipId()).commandPointsCost;
-			double maxCP = owner.maxCommandPoints;
-			double currentCP = owner.currentCommandPoints;
-			float thickness = 3f;
-			Rectangle cpCostRectBounds = GraphicsUtil.scaleFactorAdjusted(new Rectangle(bounds.getOwnCPBar().x, bounds.getOwnCPBar().y, bounds.getOwnCPBar().width * (float)(shipCPCost / maxCP), bounds.getOwnCPBar().height));
-			Color rectColor = shipCPCost > currentCP ? new Color(0.5f, 0.5f, 0.5f, 1f) : new Color(0f, 1f, 0f, 1f);
-			complexShapeRenderer.setProjectionMatrix(new Matrix4().setToOrtho2D(0, 0, GraphicsUtil.screenBounds().getWidth(), GraphicsUtil.screenBounds().getHeight()));
-			complexShapeRenderer.setColor(rectColor);
-			complexShapeRenderer.roundRectangle(cpCostRectBounds, thickness);
+			
+			switch (GameModel.mode) {
+			case UNIT_CONTROL:
+				if (inputManager.getSelectedShipId() != null || inputManager.getHoveredShipId() != null) {
+					cpCost = owner.ships.get(inputManager.getSelectedShipId() == null ? inputManager.getHoveredShipId() : inputManager.getSelectedShipId()).commandPointsCost;
+				}
+				break;
+			case CONSTRUCTION:
+				if (inputManager.getHoveredBuildingId() != null) {
+					cpCost = owner.planetData.turret.commandPointsCost;
+				}
+				break;
+			case Q_LINK:
+				break;
+			}
+			
+			if (cpCost > 0f) {
+				double maxCP = owner.maxCommandPoints;
+				double currentCP = owner.currentCommandPoints;
+				float thickness = 3f;
+				Rectangle cpCostRectBounds = GraphicsUtil.scaleFactorAdjusted(new Rectangle(bounds.getOwnCPBar().x, bounds.getOwnCPBar().y, bounds.getOwnCPBar().width * (float)(cpCost / maxCP), bounds.getOwnCPBar().height));
+				Color rectColor = cpCost > currentCP ? new Color(0.5f, 0.5f, 0.5f, 1f) : new Color(0f, 1f, 0f, 1f);
+				complexShapeRenderer.setProjectionMatrix(new Matrix4().setToOrtho2D(0, 0, GraphicsUtil.screenBounds().getWidth(), GraphicsUtil.screenBounds().getHeight()));
+				complexShapeRenderer.setColor(rectColor);
+				complexShapeRenderer.roundRectangle(cpCostRectBounds, thickness);
+			}
 		}
 	}
 
-	private void renderShipSelectionCircles() {
+	private void renderRadialSelectionCircles() {
 		Integer selectedId = inputManager.getSelectedPlanetId();
 		Planet selected = (selectedId != null) ? EngineUtility.getPlanet(state.planets, selectedId) : null;
 		if (selected != null) {
 			Player owner = EngineUtility.getPlayer(state.players, selected.ownerId);
-			if (owner.ships.size() > 1 && inputManager.getSelectedShipId() == null) {
-				renderShipSelectionCircle(selected.position.x, selected.position.y, owner);
+			switch (GameModel.mode) {
+			case UNIT_CONTROL:
+				if (owner.ships.size() > 1 && inputManager.getSelectedShipId() == null) {
+					renderShipSelectionCircle(selected.position.x, selected.position.y, owner);
+				}
+				break;
+			case CONSTRUCTION:
+				renderBuildingSelectionCircle(selected.position.x, selected.position.y, owner);
+				break;
+			case Q_LINK:
+				break;
 			}
 		}
 	}
@@ -353,16 +430,24 @@ public class GameUIRenderer {
 		
 		if (selected != null) {
 			shapeRenderer.circle(selected.position.x, selected.position.y, EngineUtility.PLANET_RADIUS);
-			Player owner = EngineUtility.getPlayer(state.players, selected.ownerId);
-			
-			Integer shipIndex = inputManager.getSelectedShipId();
-			if (owner.ships.size() == 1) shipIndex = 0;
-			if (shipIndex != null) {
-				int fleetCost = owner.ships.get(shipIndex).cost;
-				if (fleetCost > 0 && owner.planetData.maxResourceCapacity > 0) {
-					renderResourceCircle(selected.position.x, selected.position.y, fleetCost < selected.currentResources ? Color.GREEN : Color.RED, (float)(fleetCost / owner.planetData.maxResourceCapacity));
-				}
-			}
+			renderResourceCost(selected);
+		}
+	}
+
+	private void renderResourceCost(Planet selected) {
+		int resourceCost = 0;
+		Player owner = EngineUtility.getPlayer(state.players, selected.ownerId);
+		Integer shipIndex = inputManager.getSelectedShipId();
+		if (shipIndex == null) shipIndex = inputManager.getHoveredShipId();
+		if (owner.ships.size() == 1) shipIndex = 0;
+		if (shipIndex != null) {
+			resourceCost = owner.ships.get(shipIndex).cost;
+		}
+		if (inputManager.getHoveredBuildingId() != null) {
+			resourceCost = owner.planetData.turret.cost;
+		}
+		if (resourceCost > 0 && owner.planetData.maxResourceCapacity > 0) {
+			renderResourceCircle(selected.position.x, selected.position.y, resourceCost <= selected.currentResources ? Color.GREEN : Color.RED, (float)(resourceCost / owner.planetData.maxResourceCapacity));
 		}
 	}
 
@@ -391,12 +476,13 @@ public class GameUIRenderer {
 					renderResourceCircle(hovered.position.x, hovered.position.y, Color.GREEN, (float)(fleetCost / target.planetData.maxResourceCapacity));
 				}
 			}
-			if (hovered.weapon != null) {
+			Turret turret = EngineUtility.getPlanetTurret(state.turrets, hovered.id);
+			if (turret != null) {
 				shapeRenderer.end();
 				setDensityLineWidth();
 				shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 				shapeRenderer.setColor(GameConfig.getPlayerColor(hovered.ownerId));
-				shapeRenderer.circle(hovered.position.x, hovered.position.y, hovered.weapon.range + EngineUtility.PLANET_RADIUS);
+				shapeRenderer.circle(hovered.position.x, hovered.position.y, turret.weapon.range + EngineUtility.PLANET_RADIUS);
 			}
 		}
 	}
@@ -423,7 +509,7 @@ public class GameUIRenderer {
 	
 	private void renderArrowLabel() {
 		if (inputManager.getSelectedPlanetId() != null && inputManager.getSelectedShipId() != null && Gdx.input.isTouched()) {
-			float arrowLabelYOffset = Gdx.app.getType() == ApplicationType.Android || Gdx.app.getType() == ApplicationType.iOS ? 80f : 40f;
+			float arrowLabelYOffset = Gdx.app.getType() == ApplicationType.Android || Gdx.app.getType() == ApplicationType.iOS ? 50f : 30f;
 			Integer selectedId = inputManager.getSelectedPlanetId();
 			Planet selected = (selectedId != null) ? EngineUtility.getPlanet(state.planets, selectedId) : null;
 			Player owner = EngineUtility.getPlayer(state.players, selected.ownerId);
@@ -497,6 +583,74 @@ public class GameUIRenderer {
 	        String shipName = owner.ships.get(i).model;
 	        float labelWidth = FontUtil.getFontTextWidthPx(shipName, FontType.SMALL);
 	        Label shipLabel = new Label(shipName);
+	        shipLabel.setColor(isSelected ? selectedColor : unselectedColorLabel);
+	        shipLabel.setBounds(GraphicsUtil.scaleFactorDeducted(new Rectangle(labelPos.x - (labelWidth / 2), labelPos.y - 10f, labelWidth, 20f)));
+	        shipLabel.setType(FontType.SMALL);
+	        shipLabel.render();
+	    }
+	}
+	
+	private void renderBuildingSelectionCircle(float x, float y, Player owner) {
+		Color unselectedColor = new Color(0.5f, 0.5f, 0.5f, 0.2f);
+		Color unselectedColorLabel = new Color(0.7f, 0.7f, 0.7f, 0.5f);
+		Color selectedColor = new Color(SkinManager.skinColor.r, SkinManager.skinColor.g, SkinManager.skinColor.b, 0.5f);
+		
+	    int buildingCount = 1;
+	    float outerRadius = EngineUtility.PLANET_RADIUS + 80f;
+	    float innerRadius = EngineUtility.PLANET_RADIUS + 20f;
+	    float sectionAngle = 360f / buildingCount;
+	    float marginAngle = 30f / buildingCount;
+	    
+	    shapeRenderer.setProjectionMatrix(camera.combined);
+	    for (int i = 0; i < buildingCount; i++) {
+	    	Gdx.gl.glEnable(GL20.GL_BLEND);
+	    	Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		    shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+	        boolean isSelected = (inputManager.getHoveredBuildingId() != null && inputManager.getHoveredBuildingId() == i);
+	        if (isSelected) {
+	            shapeRenderer.setColor(selectedColor);
+	        } else {
+	            shapeRenderer.setColor(unselectedColor);
+	        }
+	        
+	        float angleOffset = - 90;
+	        if (buildingCount == 4) {
+	        	angleOffset = - 45;
+	        }
+	        if (buildingCount == 1) {
+	        	marginAngle = 0f;
+	        }
+	        
+	        float startAngle = i * sectionAngle + angleOffset;
+	        float endAngle = (i + 1) * sectionAngle + angleOffset;
+	        
+	        for (float angle = startAngle + marginAngle; angle < endAngle - marginAngle; angle += 1f) {
+	            float rad1 = (float) Math.toRadians(angle);
+	            float rad2 = (float) Math.toRadians(angle + 1f);
+	            
+	            float x1 = x + innerRadius * (float) Math.cos(rad1);
+	            float y1 = y + innerRadius * (float) Math.sin(rad1);
+	            float x2 = x + outerRadius * (float) Math.cos(rad1);
+	            float y2 = y + outerRadius * (float) Math.sin(rad1);
+	            float x3 = x + outerRadius * (float) Math.cos(rad2);
+	            float y3 = y + outerRadius * (float) Math.sin(rad2);
+	            float x4 = x + innerRadius * (float) Math.cos(rad2);
+	            float y4 = y + innerRadius * (float) Math.sin(rad2);
+	            
+	            shapeRenderer.triangle(x1, y1, x2, y2, x3, y3);
+	            shapeRenderer.triangle(x1, y1, x3, y3, x4, y4);
+	        }
+	        shapeRenderer.end();
+	        Gdx.gl.glDisable(GL20.GL_BLEND);
+	        
+	        float midAngle = (float) Math.toRadians((startAngle + endAngle) / 2);
+	        float labelX = x + (50f + outerRadius) * (float) Math.cos(midAngle);
+	        float labelY = y + (50f + outerRadius) * (float) Math.sin(midAngle);
+	        Vector3 labelPos = camera.project(new Vector3(labelX, labelY, 0f));
+	        
+	        String buildingName = owner.planetData.turret.model + " Turret";
+	        float labelWidth = FontUtil.getFontTextWidthPx(buildingName, FontType.SMALL);
+	        Label shipLabel = new Label(buildingName);
 	        shipLabel.setColor(isSelected ? selectedColor : unselectedColorLabel);
 	        shipLabel.setBounds(GraphicsUtil.scaleFactorDeducted(new Rectangle(labelPos.x - (labelWidth / 2), labelPos.y - 10f, labelWidth, 20f)));
 	        shipLabel.setType(FontType.SMALL);

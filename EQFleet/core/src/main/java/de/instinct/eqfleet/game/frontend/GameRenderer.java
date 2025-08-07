@@ -34,6 +34,7 @@ public class GameRenderer {
 	public static boolean isFlipped;
 
 	public void init() {
+		GameModel.mode = InteractionMode.UNIT_CONTROL;
 		isFlipped = false;
 		uiRenderer = new GameUIRenderer();
 		
@@ -54,7 +55,8 @@ public class GameRenderer {
 	}
 
 	public void render(GameState state) {
-		if (state != null && !uiRenderer.initialized) {
+		if (!uiRenderer.initialized) {
+			camera.position.set(new Vector3(BASE_CAM_POS.x, BASE_CAM_POS.y, BASE_CAM_POS.z / state.zoomFactor));
 			uiRenderer.init();
 		}
 		camera.update();

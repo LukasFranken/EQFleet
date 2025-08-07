@@ -6,7 +6,7 @@ import de.instinct.engine.net.message.types.FleetMovementMessage;
 import de.instinct.engine.net.message.types.LoadedMessage;
 import de.instinct.engine.order.GameOrder;
 import de.instinct.engine.order.types.ShipMovementOrder;
-import de.instinct.engine.util.EngineUtility;
+import de.instinct.engine.util.VictoryCalculator;
 import de.instinct.eqfleet.audio.AudioManager;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.GameModel;
@@ -65,7 +65,7 @@ public class TutorialDriver extends LocalDriver {
 	@Override
 	protected void postEngineUpdate() {
 		if (GameModel.activeGameState != null && GameModel.activeGameState.started && !finished) {
-        	EngineUtility.checkVictory(GameModel.activeGameState);
+        	VictoryCalculator.checkVictory(GameModel.activeGameState);
         	if (GameModel.activeGameState.winner != 0) {
     			GameModel.guidedEvents = null;
     			Game.stop();

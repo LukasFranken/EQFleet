@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import de.instinct.engine.model.Player;
 import de.instinct.engine.model.planet.Planet;
 import de.instinct.engine.model.ship.ShipData;
+import de.instinct.engine.order.types.BuildTurretOrder;
 import de.instinct.engine.order.types.GamePauseOrder;
 import de.instinct.engine.order.types.ShipMovementOrder;
 import de.instinct.engine.tools.devrunner.TestEngineManager;
@@ -31,6 +32,7 @@ public class ActionPanel extends JPanel {
     private JComboBox<String> targetDropdown;
     private JComboBox<String> shipDropdown;
     private JButton sendButton;
+    private JButton buildButton;
     private JButton pauseButton;
     private JButton startButton;
     
@@ -82,6 +84,21 @@ public class ActionPanel extends JPanel {
         	
         });
         add(sendButton);
+        
+        buildButton = new JButton("build");
+        buildButton.setBounds(10, 180, 180, 20);
+        buildButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				BuildTurretOrder order = new BuildTurretOrder();
+				order.playerId = 1;
+				order.planetId = Integer.parseInt((String) originDropdown.getSelectedItem());
+				TestEngineManager.queue(order);
+			}
+        	
+        });
+        add(buildButton);
         
         pauseButton = new JButton("pause");
         pauseButton.setBounds(10, 745, 180, 20);

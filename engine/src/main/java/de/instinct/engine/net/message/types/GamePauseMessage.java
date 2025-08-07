@@ -3,7 +3,7 @@ package de.instinct.engine.net.message.types;
 import de.instinct.engine.net.message.NetworkMessage;
 import lombok.ToString;
 
-@ToString
+@ToString(callSuper = true)
 public class GamePauseMessage extends NetworkMessage {
 
 	public String gameUUID;

@@ -23,6 +23,10 @@ public class GridRenderer {
 	}
 
 	public void drawGrid(Camera camera) {
+		if (config.getStep() <= 0) throw new IllegalStateException("Grid step must be greater than 0");
+		if (camera.position.z == Float.POSITIVE_INFINITY) throw new IllegalStateException("Camera position z cannot be infinite");
+		if (camera.position.z <= 0) throw new IllegalStateException("Camera position z cannot be 0 or negative");
+		
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		Gdx.gl.glLineWidth(config.getLineThickness() * GraphicsUtil.getHorizontalDisplayScaleFactor());
@@ -35,13 +39,13 @@ public class GridRenderer {
 
 		float gridZ = 0f;
 		float gridPlaneDistance = Math.abs(camera.position.z - gridZ);
+		
 		float aspectRatio = camera.viewportWidth / camera.viewportHeight;
-
 		if (camera instanceof PerspectiveCamera) {
 			PerspectiveCamera pCam = (PerspectiveCamera) camera;
 			float halfHeight = (float) (gridPlaneDistance * Math.tan(Math.toRadians(pCam.fieldOfView * 0.5f)));
 			float halfWidth = halfHeight * aspectRatio;
-
+			
 			float left = camera.position.x - halfWidth;
 			float right = camera.position.x + halfWidth;
 			float bottom = camera.position.y - halfHeight;
@@ -53,7 +57,7 @@ public class GridRenderer {
 			for (float x = startX; x <= right; x += config.getStep()) {
 				shapeRenderer.line(x, bottom, gridZ, x, top, gridZ);
 			}
-
+			
 			for (float y = startY; y <= top; y += config.getStep()) {
 				shapeRenderer.line(left, y, gridZ, right, y, gridZ);
 			}
@@ -65,7 +69,7 @@ public class GridRenderer {
 
 			float startX = (float) Math.floor(left / config.getStep()) * config.getStep();
 			float startY = (float) Math.floor(bottom / config.getStep()) * config.getStep();
-
+			
 			for (float x = startX; x <= right; x += config.getStep()) {
 				shapeRenderer.line(x, bottom, gridZ, x, top, gridZ);
 			}

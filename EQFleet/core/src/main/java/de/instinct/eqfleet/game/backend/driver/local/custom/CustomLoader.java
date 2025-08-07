@@ -18,8 +18,9 @@ import de.instinct.engine.initialization.GameStateInitialization;
 import de.instinct.engine.initialization.PlanetInitialization;
 import de.instinct.engine.map.GameMap;
 import de.instinct.engine.model.AiPlayer;
-import de.instinct.engine.model.PlanetData;
 import de.instinct.engine.model.Player;
+import de.instinct.engine.model.planet.PlanetData;
+import de.instinct.engine.model.planet.TurretData;
 import de.instinct.engine.model.ship.Defense;
 import de.instinct.engine.model.ship.Weapon;
 import de.instinct.engine.model.ship.WeaponType;
@@ -33,10 +34,10 @@ public class CustomLoader {
 		aiEngine = new AiEngine();
 	}
 	
-	public GameStateInitialization generateInitialGameState(LoadoutData loadout) {
+	public GameStateInitialization generateInitialGameState(LoadoutData loadout, int threatLevel) {
 		GameStateInitialization initialization = new GameStateInitialization();
 		initialization.gameUUID = UUID.randomUUID().toString();
-		initialization.players = loadPlayers(loadout);
+		initialization.players = loadPlayers(loadout, threatLevel);
 		initialization.map = generateMap(GameType.builder()
 				.factionMode(FactionMode.ONE_VS_ONE)
 				.gameMode(GameMode.CONQUEST)
@@ -50,7 +51,7 @@ public class CustomLoader {
 		return initialization;
 	}
 
-	public List<Player> loadPlayers(LoadoutData loadout) {
+	public List<Player> loadPlayers(LoadoutData loadout, int threatLevel) {
 		List<Player> players = new ArrayList<>();
 		
 		Player neutralPlayer = new Player();
@@ -58,16 +59,22 @@ public class CustomLoader {
 		neutralPlayer.teamId = 0;
 		neutralPlayer.name = "Neutral Player";
 		PlanetData neutralPlanetData = new PlanetData();
-		Weapon neutralPlanetWeapon = new Weapon();
-		neutralPlanetWeapon.type = WeaponType.PROJECTILE;
-		neutralPlanetWeapon.damage = 4;
-		neutralPlanetWeapon.range = 100f;
-		neutralPlanetWeapon.cooldown = 1000;
-		neutralPlanetWeapon.speed = 120f;
-		neutralPlanetData.weapon = neutralPlanetWeapon;
-		Defense neutralPlanetDefense = new Defense();
-		neutralPlanetDefense.armor = 100;
-		neutralPlanetData.defense = neutralPlanetDefense;
+		if (threatLevel >= 10) {
+			TurretData neutralPlanetTurret = new TurretData();
+			neutralPlanetTurret.rotationSpeed = 1f;
+			neutralPlanetTurret.model = "hawk";
+			Weapon neutralPlanetWeapon = new Weapon();
+			neutralPlanetWeapon.type = WeaponType.PROJECTILE;
+			neutralPlanetWeapon.damage = 2 + (2 * ((float)threatLevel/100f));
+			neutralPlanetWeapon.range = 100f;
+			neutralPlanetWeapon.cooldown = 1000;
+			neutralPlanetWeapon.speed = 120f;
+			neutralPlanetTurret.weapon = neutralPlanetWeapon;
+			Defense neutralPlanetDefense = new Defense();
+			neutralPlanetDefense.armor = 50 + threatLevel;
+			neutralPlanetTurret.defense = neutralPlanetDefense;
+			neutralPlanetData.turret = neutralPlanetTurret;
+		}
 		neutralPlayer.planetData = neutralPlanetData;
 		neutralPlayer.ships = new ArrayList<>();
 		players.add(neutralPlayer);
@@ -90,7 +97,7 @@ public class CustomLoader {
 		newPlayer.commandPointsGenerationSpeed = loadout.getCommander().getCommandPointsGenerationSpeed();
 		newPlayer.startCommandPoints = loadout.getCommander().getStartCommandPoints();
 		newPlayer.maxCommandPoints = loadout.getCommander().getMaxCommandPoints();
-		newPlayer.planetData = EngineInterface.getPlanetData(loadout.getInfrastructure());
+		newPlayer.planetData = EngineInterface.getPlanetData(loadout.getPlayerInfrastructure(), API.construction().construction());
 		newPlayer.ships = EngineInterface.getShips(loadout.getShips(), API.shipyard().shipyard());
 		return newPlayer;
 	}
@@ -102,6 +109,7 @@ public class CustomLoader {
 		generateNeutralPlanets(planets);
 		generatePlayerPlanets(planets, gameType);
 		map.planets = planets;
+		map.zoomFactor = 1f;
 		return map;
 	}
 

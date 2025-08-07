@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 import de.instinct.eqlibgdxutils.GraphicsUtil;
+import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
 
 public class ParticleRenderer {
@@ -46,7 +47,7 @@ public class ParticleRenderer {
 				.effectFileName(effectFileName)
 				.totalParticles((int)(currentPixels * particlePerPixel))
 				.build();
-		Logger.log("PARTICLE", "loading: " + tag + " - total particles: " + particleAnimation.getTotalParticles());
+		Logger.log("PARTICLE", "loading: " + tag + " - total particles: " + particleAnimation.getTotalParticles(), ConsoleColor.YELLOW);
 		List<ParticleEffect> particleEffects = particleLoader.loadParticles(particleAnimation);
 		particleAnimation.setParticleEffects(particleEffects);
 		particleAnimations.put(tag, particleAnimation);

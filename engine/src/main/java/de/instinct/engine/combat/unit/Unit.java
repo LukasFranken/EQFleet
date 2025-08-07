@@ -8,6 +8,9 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class Unit extends Entity {
 
+	public String model;
+	public int planetId;
+	public int cost;
 	public Defense defense;
 	public Weapon weapon;
 	

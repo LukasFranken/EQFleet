@@ -13,8 +13,9 @@ import de.instinct.engine.initialization.PlanetInitialization;
 import de.instinct.engine.map.GameMap;
 import de.instinct.engine.model.AiPlayer;
 import de.instinct.engine.model.GameState;
-import de.instinct.engine.model.PlanetData;
 import de.instinct.engine.model.Player;
+import de.instinct.engine.model.planet.PlanetData;
+import de.instinct.engine.model.planet.TurretData;
 import de.instinct.engine.model.ship.Defense;
 import de.instinct.engine.model.ship.ShipData;
 import de.instinct.engine.model.ship.ShipType;
@@ -38,7 +39,6 @@ public class TestEngineManager {
 	
 	public static void update(long deltaTime) {
 		engine.update(state, deltaTime);
-		System.out.println(state.teamPausesMS + " - " + state.teamPausesCount + " - " + state.currentPauseReason);
 		for (Player player : state.players) {
 			if (player instanceof AiPlayer) {
 				List<GameOrder> aiOrders = aiEngine.act((AiPlayer)player, state);
@@ -78,19 +78,22 @@ public class TestEngineManager {
 		PlanetData neutralPlanetData = new PlanetData();
 		neutralPlanetData.resourceGenerationSpeed = 0;
 		neutralPlanetData.maxResourceCapacity = 0;
-		neutralPlanetData.percentOfArmorAfterCapture = 0;
+		TurretData neutralPlanetTurret = new TurretData();
+		neutralPlanetTurret.model = "hawk";
 		Weapon neutralPlanetWeapon = new Weapon();
 		neutralPlanetWeapon.type = WeaponType.MISSILE;
 		neutralPlanetWeapon.damage = 5;
 		neutralPlanetWeapon.range = 100f;
 		neutralPlanetWeapon.cooldown = 1000;
 		neutralPlanetWeapon.speed = 80f;
-		neutralPlanetData.weapon = neutralPlanetWeapon;
+		neutralPlanetTurret.weapon = neutralPlanetWeapon;
 		Defense neutralPlanetDefense = new Defense();
 		neutralPlanetDefense.shield = 0;
 		neutralPlanetDefense.armor = 50;
 		neutralPlanetDefense.shieldRegenerationSpeed = 0;
-		neutralPlanetData.defense = neutralPlanetDefense;
+		neutralPlanetTurret.defense = neutralPlanetDefense;
+		neutralPlanetTurret.rotationSpeed = 1f;
+		neutralPlanetData.turret = neutralPlanetTurret;
 		neutralPlayer.planetData = neutralPlanetData;
 		neutralPlayer.ships = new ArrayList<>();
 		players.add(neutralPlayer);
@@ -102,7 +105,7 @@ public class TestEngineManager {
 		players.add(player);
 		
 		AiEngine aiEngine = new AiEngine();
-		Player aiPlayer = aiEngine.initialize(1);
+		Player aiPlayer = aiEngine.initialize(10);
 		aiPlayer.id = 4;
 		aiPlayer.teamId = 2;
 		players.add(aiPlayer);
@@ -114,7 +117,7 @@ public class TestEngineManager {
 			player2.name = "Player 2";
 			players.add(player2);
 			
-			Player aiPlayer2 = aiEngine.initialize(1);
+			Player aiPlayer2 = aiEngine.initialize(50);
 			aiPlayer2.id = 5;
 			aiPlayer2.teamId = 2;
 			players.add(aiPlayer2);
@@ -143,19 +146,24 @@ public class TestEngineManager {
 		PlanetData playerPlanetData = new PlanetData();
 		playerPlanetData.resourceGenerationSpeed = 1f;
 		playerPlanetData.maxResourceCapacity = 20;
-		playerPlanetData.percentOfArmorAfterCapture = 0.2f;
+		TurretData playerPlanetTurret = new TurretData();
+		playerPlanetTurret.commandPointsCost = 3;
+		playerPlanetTurret.model = "hawk";
+		playerPlanetTurret.cost = 10;
 		Weapon playerPlanetWeapon = new Weapon();
 		playerPlanetWeapon.type = WeaponType.PROJECTILE;
 		playerPlanetWeapon.damage = 5;
 		playerPlanetWeapon.range = 100f;
 		playerPlanetWeapon.cooldown = 1000;
 		playerPlanetWeapon.speed = 150f;
-		playerPlanetData.weapon = playerPlanetWeapon;
+		playerPlanetTurret.weapon = playerPlanetWeapon;
 		Defense playerPlanetDefense = new Defense();
 		playerPlanetDefense.shield = 10;
 		playerPlanetDefense.armor = 20;
 		playerPlanetDefense.shieldRegenerationSpeed = 0.5f;
-		playerPlanetData.defense = playerPlanetDefense;
+		playerPlanetTurret.defense = playerPlanetDefense;
+		playerPlanetTurret.rotationSpeed = 1f;
+		playerPlanetData.turret = playerPlanetTurret;
 		player.planetData = playerPlanetData;
 		player.ships = new ArrayList<>();
 		

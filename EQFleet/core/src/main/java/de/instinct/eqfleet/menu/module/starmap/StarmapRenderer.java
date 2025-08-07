@@ -63,17 +63,14 @@ public class StarmapRenderer extends BaseModuleRenderer {
 	private float galaxyZoomElapsed;
 	private Galaxy selectedGalaxy;
 	private boolean zoomIn;
-	
 	private float darkeningDuration = 0.5f;
 
 	private PerspectiveCamera camera;
 
 	private DecalBatch decalBatch;
-	
 	private ColorButton backButton;
 	
 	private boolean isLoading;
-	
 	private Rectangle screenAdjustedModuleBounds;
 
 	@Override

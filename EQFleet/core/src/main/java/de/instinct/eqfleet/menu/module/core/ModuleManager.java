@@ -16,8 +16,23 @@ public class ModuleManager {
 		moduleOpenMessages = new ArrayList<>();
 		moduleOpenMessages.add(InitialModuleOpenMessage.builder()
 				.module(MenuModule.STARMAP)
-				.message("Prepare for battle\nand conquer the galaxy!\n\n Remember to regularly check the\nmenu for unlocked modules!")
+				.message("Prepare for battle\nand conquer the galaxy!\n\nRemember to regularly check the\nmenu for unlocked modules!")
 				.opened(preferenceLoadedModules.contains(MenuModule.STARMAP.toString()))
+				.build());
+		moduleOpenMessages.add(InitialModuleOpenMessage.builder()
+				.module(MenuModule.PROFILE)
+				.message("Before you can access your profile,\nyou need to choose a unique name")
+				.opened(preferenceLoadedModules.contains(MenuModule.PROFILE.toString()))
+				.build());
+		moduleOpenMessages.add(InitialModuleOpenMessage.builder()
+				.module(MenuModule.SETTINGS)
+				.message("Settings are stored on the server\nand will transfer across devices")
+				.opened(preferenceLoadedModules.contains(MenuModule.SETTINGS.toString()))
+				.build());
+		moduleOpenMessages.add(InitialModuleOpenMessage.builder()
+				.module(MenuModule.INVENTORY)
+				.message("View and manage your\nresources and items")
+				.opened(preferenceLoadedModules.contains(MenuModule.INVENTORY.toString()))
 				.build());
 		moduleOpenMessages.add(InitialModuleOpenMessage.builder()
 				.module(MenuModule.SHIPYARD)
@@ -26,13 +41,33 @@ public class ModuleManager {
 				.build());
 		moduleOpenMessages.add(InitialModuleOpenMessage.builder()
 				.module(MenuModule.WORKSHOP)
-				.message("Upgrade ships and turrets\nand build new ones from\nblueprints you own")
+				.message("Upgrade ships and build new\nones from blueprints you own")
 				.opened(preferenceLoadedModules.contains(MenuModule.WORKSHOP.toString()))
 				.build());
 		moduleOpenMessages.add(InitialModuleOpenMessage.builder()
+				.module(MenuModule.SHOP)
+				.message("Time to put your\nhard earned credits to use")
+				.opened(preferenceLoadedModules.contains(MenuModule.SHOP.toString()))
+				.build());
+		moduleOpenMessages.add(InitialModuleOpenMessage.builder()
+				.module(MenuModule.PLANET)
+				.message("View your buildings and select\nthem for use in battle")
+				.opened(preferenceLoadedModules.contains(MenuModule.PLANET.toString()))
+				.build());
+		moduleOpenMessages.add(InitialModuleOpenMessage.builder()
 				.module(MenuModule.CONSTRUCTION)
-				.message("View your turrets and select\nthem for use in battle")
+				.message("Build and upgrade your\ninfrastructure\n\nConstruction mode unlocked!")
 				.opened(preferenceLoadedModules.contains(MenuModule.CONSTRUCTION.toString()))
+				.build());
+		moduleOpenMessages.add(InitialModuleOpenMessage.builder()
+				.module(MenuModule.SOCIAL)
+				.message("Connect with other commanders,\ngroup up, form alliances.\n\nThe universe is too vast to\nconquer it alone!")
+				.opened(preferenceLoadedModules.contains(MenuModule.SOCIAL.toString()))
+				.build());
+		moduleOpenMessages.add(InitialModuleOpenMessage.builder()
+				.module(MenuModule.MARKET)
+				.message("Trade resources with\nother commanders")
+				.opened(preferenceLoadedModules.contains(MenuModule.MARKET.toString()))
 				.build());
 	}
 	

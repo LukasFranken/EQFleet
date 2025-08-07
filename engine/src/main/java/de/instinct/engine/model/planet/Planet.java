@@ -1,10 +1,10 @@
 package de.instinct.engine.model.planet;
 
-import de.instinct.engine.combat.unit.Unit;
+import de.instinct.engine.entity.Entity;
 import lombok.ToString;
 
 @ToString(callSuper = true)
-public class Planet extends Unit {
+public class Planet extends Entity {
 	
 	public boolean ancient;
 	

@@ -218,7 +218,7 @@ public class PostGameRenderer extends BaseModuleRenderer {
 						.build());
 			}
 			
-			claimButton.setPosition((GraphicsUtil.baseScreenBounds().width / 2) - (claimButton.getFixedWidth() / 2), 50);
+			claimButton.setPosition((GraphicsUtil.baseScreenBounds().width / 2) - (claimButton.getFixedWidth() / 2), 70);
 			elements.add(PostGameElement.builder()
 					.duration(PER_ITEM_DURATION_MS)
 					.uiElement(claimButton)

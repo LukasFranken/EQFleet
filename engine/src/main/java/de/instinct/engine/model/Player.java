@@ -3,6 +3,7 @@ package de.instinct.engine.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.instinct.engine.model.planet.PlanetData;
 import de.instinct.engine.model.ship.ShipData;
 import lombok.ToString;
 

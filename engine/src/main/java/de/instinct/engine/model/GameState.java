@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.instinct.engine.combat.Ship;
+import de.instinct.engine.combat.Turret;
 import de.instinct.engine.combat.projectile.Projectile;
 import de.instinct.engine.model.planet.Planet;
 import de.instinct.engine.order.GameOrder;
@@ -18,6 +19,7 @@ public class GameState {
 	public List<PlayerConnectionStatus> connectionStati;
 	public List<Planet> planets;
 	public List<Ship> ships;
+	public List<Turret> turrets;
 	public List<Projectile> projectiles;
 	public List<GameOrder> orders;
 	public long gameTimeMS;
@@ -29,6 +31,7 @@ public class GameState {
 	public Map<Integer, Double> teamATPs;
 	public boolean started;
 	public int entityCounter;
+	public float zoomFactor;
 	
 	public long resumeCountdownMS;
 	public long maxPauseMS;
@@ -58,6 +61,10 @@ public class GameState {
 		for (Ship ship : this.ships) {
 			clone.ships.add(ship.clone());
 		}
+		clone.turrets = new ArrayList<>();
+		for (Turret turret : this.turrets) {
+			clone.turrets.add(turret.clone());
+		}
 		clone.projectiles = new ArrayList<>();
 		for (Projectile projectile : this.projectiles) {
 			clone.projectiles.add(projectile.clone());
@@ -75,6 +82,7 @@ public class GameState {
 		clone.teamATPs = new HashMap<>(this.teamATPs);
 		clone.started = this.started;
 		clone.entityCounter = this.entityCounter;
+		clone.zoomFactor = this.zoomFactor;
 		clone.resumeCountdownMS = this.resumeCountdownMS;
 		clone.maxPauseMS = this.maxPauseMS;
 		clone.minPauseMS = this.minPauseMS;

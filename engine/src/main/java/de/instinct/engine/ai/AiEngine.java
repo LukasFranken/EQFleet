@@ -6,14 +6,17 @@ import java.util.List;
 import de.instinct.engine.ai.difficulty.AiStatManager;
 import de.instinct.engine.ai.difficulty.DifficultyLoader;
 import de.instinct.engine.combat.Ship;
+import de.instinct.engine.combat.Turret;
 import de.instinct.engine.model.AiPlayer;
 import de.instinct.engine.model.GameState;
-import de.instinct.engine.model.PlanetData;
 import de.instinct.engine.model.Player;
 import de.instinct.engine.model.planet.Planet;
+import de.instinct.engine.model.planet.PlanetData;
+import de.instinct.engine.model.planet.TurretData;
 import de.instinct.engine.model.ship.ShipData;
 import de.instinct.engine.model.ship.ShipType;
 import de.instinct.engine.order.GameOrder;
+import de.instinct.engine.order.types.BuildTurretOrder;
 import de.instinct.engine.order.types.ShipMovementOrder;
 import de.instinct.engine.util.EngineUtility;
 
@@ -43,10 +46,17 @@ public class AiEngine {
 		PlanetData aiPlanetData = new PlanetData();
 		aiPlanetData.resourceGenerationSpeed = 1;
 		aiPlanetData.maxResourceCapacity = 10;
-		aiPlanetData.percentOfArmorAfterCapture = 0.2f;
 		
-		aiPlanetData.weapon = AiStatManager.getPlanetWeapon(threatLevel);
-		aiPlanetData.defense = AiStatManager.getPlanetDefense(threatLevel);
+		if (threatLevel >= 10) {
+			TurretData aiTurret = new TurretData();
+			aiTurret.model = "hawk";
+			aiTurret.weapon = AiStatManager.getPlanetWeapon(threatLevel);
+			aiTurret.defense = AiStatManager.getPlanetDefense(threatLevel);
+			aiTurret.commandPointsCost = 1;
+			aiTurret.cost = 10;
+			aiTurret.rotationSpeed = 0.1f;
+			aiPlanetData.turret = aiTurret;
+		}
 		
 		newAiPlayer.planetData = aiPlanetData;
 		newAiPlayer.commandPointsGenerationSpeed = 0.1f;
@@ -68,8 +78,28 @@ public class AiEngine {
 			
 			GameOrder defensiveOrder = calculateDefensiveOrder(aiPlayer, state);
 			if (defensiveOrder != null) newOrders.add(defensiveOrder);
+			
+			GameOrder buildOrder = calculateBuildOrder(aiPlayer, state);
+			if (buildOrder != null) newOrders.add(buildOrder);
 		}
 		return newOrders;
+	}
+
+	private GameOrder calculateBuildOrder(AiPlayer aiPlayer, GameState state) {
+		if (aiPlayer.currentCommandPoints >= 2) {
+			for (Planet planet : state.planets) {
+				Turret turret = EngineUtility.getPlanetTurret(state.turrets, planet.id);
+				if (turret == null) {
+					if (planet.currentResources >= aiPlayer.planetData.turret.cost) {
+						BuildTurretOrder newBuildTurretOrder = new BuildTurretOrder();
+						newBuildTurretOrder.planetId = planet.id;
+						newBuildTurretOrder.playerId = aiPlayer.id;
+						return newBuildTurretOrder;
+					}
+				}
+			}
+		}
+		return null;
 	}
 
 	private GameOrder calculateOffensiveOrder(AiPlayer aiPlayer, GameState state) {
@@ -137,7 +167,7 @@ public class AiEngine {
 							if (ownPlanet.currentResources >= aiPlayer.ships.get(0).cost) {
 								ShipMovementOrder newShipMovementOrder = new ShipMovementOrder();
 								newShipMovementOrder.fromPlanetId = ownPlanet.id;
-								newShipMovementOrder.toPlanetId = ship.originPlanetId;
+								newShipMovementOrder.toPlanetId = ship.planetId;
 								newShipMovementOrder.playerId = aiPlayer.id;
 								newShipMovementOrder.playerShipId = 0;
 								return newShipMovementOrder;

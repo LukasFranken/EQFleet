@@ -1,64 +1,53 @@
 package de.instinct.engine.combat;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.badlogic.gdx.math.Vector2;
 
-import de.instinct.engine.combat.unit.Unit;
-import de.instinct.engine.combat.unit.UnitManager;
+import de.instinct.engine.combat.unit.UnitProcessor;
 import de.instinct.engine.entity.EntityManager;
 import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.Player;
 import de.instinct.engine.model.planet.Planet;
+import de.instinct.engine.model.ship.ShipData;
 import de.instinct.engine.order.types.ShipMovementOrder;
 import de.instinct.engine.util.EngineUtility;
 import de.instinct.engine.util.VectorUtil;
 
-public class ShipProcessor {
-	
-	private WeaponProcessor weaponProcessor;
+public class ShipProcessor extends UnitProcessor {
 	
 	public ShipProcessor() {
-		weaponProcessor = new WeaponProcessor();
+		super();
 	}
 
 	public void updateShips(GameState state, long deltaTime) {
-		List<Ship> shipsToRemove = new ArrayList<>();
 		for (Ship ship : state.ships) {
-			if (ship.defense.currentArmor <= 0) {
-				shipsToRemove.add(ship);
-				continue;
-			}
-			weaponProcessor.updateWeapon(ship.weapon, deltaTime);
-			Unit closestInRangeTarget = UnitManager.getClosestInRangeTarget(ship, ship.weapon.range, state);
-			if (closestInRangeTarget != null) {
-				weaponProcessor.fireAtTarget(ship, closestInRangeTarget, state, deltaTime);
-			} else {
-				if (moveShip(ship, state, deltaTime)) {
-					shipsToRemove.add(ship);
-				}
-			}
+			updateShip(ship, state, deltaTime);
 		}
-		for (Ship ship : shipsToRemove) {
-			state.ships.remove(ship);
-		}
+		super.removeDestroyed(state.ships.iterator());
 	}
 	
-	public Ship createShipInstance(ShipMovementOrder movement, GameState state) {
+	private void updateShip(Ship ship, GameState state, long deltaTime) {
+		super.updateUnit(ship, state, deltaTime);
+		if (super.getClosestInRangeTarget(ship, ship.weapon.range, state) == null) {
+			moveShip(ship, state, deltaTime);
+		}
+	}
+
+	public void createShipInstance(ShipMovementOrder movement, GameState state) {
 		Planet fromPlanet = EngineUtility.getPlanet(state.planets, movement.fromPlanetId);
 		Planet toPlanet = EngineUtility.getPlanet(state.planets, movement.toPlanetId);
 		Player player = EngineUtility.getPlayer(state.players, movement.playerId);
-		Ship newShip = UnitManager.createShip(player.ships.get(movement.playerShipId), state);
-		player.currentCommandPoints -= player.ships.get(movement.playerShipId).commandPointsCost;
-		newShip.ownerId = movement.playerId;
+		ShipData shipData = player.ships.get(movement.playerShipId);
+		Ship newShip = new Ship();
+		super.initializeUnit(newShip, shipData, movement.fromPlanetId, state, true);
 		newShip.position = VectorUtil.getTargetPosition(fromPlanet.position, toPlanet.position, EngineUtility.PLANET_RADIUS);
 		newShip.targetPlanetId = movement.toPlanetId;
-		newShip.originPlanetId = movement.fromPlanetId;
-		return newShip;
+		newShip.type = shipData.type;
+		newShip.movementSpeed = shipData.movementSpeed;
+		newShip.radius = 3;
+		state.ships.add(newShip);
 	}
 	
-	private boolean moveShip(Ship ship, GameState state, long deltaTime) {
+	private void moveShip(Ship ship, GameState state, long deltaTime) {
 		Player shipOwner = EngineUtility.getPlayer(state.players, ship.ownerId);
 		Planet targetPlanet = EngineUtility.getPlanet(state.planets, ship.targetPlanetId);
 		Player targetPlanetOwner = EngineUtility.getPlayer(state.players, targetPlanet.ownerId);
@@ -70,26 +59,16 @@ public class ShipProcessor {
 				if (targetPlanet.currentResources > targetPlanet.maxResourceCapacity) {
 					targetPlanet.currentResources = targetPlanet.maxResourceCapacity;
 				}
-			} else if (targetPlanet.defense == null) {
+			} else {
 				conquerPlanet(targetPlanet, shipOwner);
 				targetPlanet.currentResources += ship.cost;
 			}
-			return true;
+			ship.flaggedForDestroy = true;
 		}
-		return false;
 	}
 	
 	private void conquerPlanet(Planet planet, Player newOwner) {
 		planet.ownerId = newOwner.id;
-		if (newOwner.planetData.defense != null) {
-			planet.defense = newOwner.planetData.defense.clone();
-			planet.defense.currentShield = 0;
-			planet.defense.currentArmor = newOwner.planetData.defense.armor * newOwner.planetData.percentOfArmorAfterCapture;
-		}
-		if (newOwner.planetData.weapon != null) {
-			planet.weapon = newOwner.planetData.weapon.clone();
-			planet.weapon.currentCooldown = planet.weapon.cooldown;
-		}
 		planet.resourceGenerationSpeed = newOwner.planetData.resourceGenerationSpeed;
 		planet.maxResourceCapacity = newOwner.planetData.maxResourceCapacity;
 		planet.currentResources = 0;

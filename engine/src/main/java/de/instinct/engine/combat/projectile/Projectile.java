@@ -14,7 +14,6 @@ public abstract class Projectile extends Entity {
 	public float aoeRadius;
 	public float elapsedMS;
 	public int lifetimeMS;
-	public boolean alive;
 
 	public Projectile clone() {
 		Projectile clone = (Projectile) super.clone();

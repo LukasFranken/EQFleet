@@ -8,8 +8,8 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.engine.combat.Ship;
+import de.instinct.engine.combat.Turret;
 import de.instinct.engine.model.GameState;
-import de.instinct.engine.model.planet.Planet;
 import de.instinct.engine.model.ship.Defense;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.ComplexShapeRenderer;
 
@@ -25,10 +25,10 @@ public class DefenseUIRenderer {
 	
 	public void render(GameState state, PerspectiveCamera camera) {
 		shapeRenderer.setProjectionMatrix(camera.combined);
-		for (Planet planet : state.planets) {
-			if (planet.defense != null) {
-				Rectangle defenseArea = new Rectangle(planet.position.x - 30, planet.position.y, 60, 14);
-				renderBar(planet.defense, defenseArea, true);
+		for (Turret turret : state.turrets) {
+			if (turret.defense != null) {
+				Rectangle defenseArea = new Rectangle(turret.position.x - 30, turret.position.y, 60, 14);
+				renderBar(turret.defense, defenseArea, true);
 			}
 		}
 		

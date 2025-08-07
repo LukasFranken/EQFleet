@@ -15,8 +15,8 @@ import de.instinct.engine.initialization.GameStateInitialization;
 import de.instinct.engine.initialization.PlanetInitialization;
 import de.instinct.engine.map.GameMap;
 import de.instinct.engine.model.AiPlayer;
-import de.instinct.engine.model.PlanetData;
 import de.instinct.engine.model.Player;
+import de.instinct.engine.model.planet.PlanetData;
 import de.instinct.engine.model.ship.Defense;
 import de.instinct.engine.model.ship.ShipData;
 import de.instinct.engine.model.ship.ShipType;
@@ -97,7 +97,6 @@ public class TutorialLoader {
 		player1.commandPointsGenerationSpeed = 0.2;
 		player1.currentCommandPoints = player1.startCommandPoints;
 		PlanetData tutorialPlanetData = new PlanetData();
-		tutorialPlanetData.percentOfArmorAfterCapture = 0.2f;
 		tutorialPlanetData.resourceGenerationSpeed = 1;
 		tutorialPlanetData.maxResourceCapacity = 10;
 		player1.planetData = tutorialPlanetData;
@@ -106,8 +105,7 @@ public class TutorialLoader {
 		AiPlayer aiPlayer = aiEngine.initialize(1);
 		aiPlayer.id = 2;
 		aiPlayer.teamId = 2;
-		aiPlayer.planetData.defense = null;
-		aiPlayer.planetData.weapon = null;
+		aiPlayer.planetData.turret = null;
 		aiPlayer.ships.get(0).weapon.damage = 1;
 		aiPlayer.ships.get(0).defense.armor = 3;
 		aiPlayer.ships.get(0).defense.shield = 2;
@@ -1005,7 +1003,7 @@ public class TutorialLoader {
 				int targetId = 3;
 				for (Ship ship : GameModel.activeGameState.ships) {
 					if (ship.ownerId == 1) {
-						originId = ship.originPlanetId;
+						originId = ship.planetId;
 						targetId = ship.targetPlanetId;
 						if (targetId == 3) {
 							panToShipGuideEvent.setTargetCameraPos(new Vector3(300f, -450f, 1300f));

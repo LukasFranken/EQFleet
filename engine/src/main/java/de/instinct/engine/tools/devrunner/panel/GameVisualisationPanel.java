@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import com.badlogic.gdx.math.Vector2;
 
 import de.instinct.engine.combat.Ship;
+import de.instinct.engine.combat.Turret;
 import de.instinct.engine.combat.projectile.Projectile;
 import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.planet.Planet;
@@ -39,9 +40,33 @@ public class GameVisualisationPanel extends JPanel {
         	renderUI(g, TestEngineManager.state);
             renderPlanets(g, TestEngineManager.state);
             renderShips(g, TestEngineManager.state);
+            renderTurrets(g, TestEngineManager.state);
             renderProjectiles(g, TestEngineManager.state);
         }
     }
+
+	private void renderTurrets(Graphics g, GameState state) {
+		for (Turret turret : state.turrets) {
+			Vector2 screenPosition = convertToScreenPosition(turret.position);
+			g.setColor(Color.GRAY);
+			g.drawRect((int)screenPosition.x - 7, (int)screenPosition.y + 18, 30, 3);
+			g.setColor(Color.BLUE);
+			g.drawRect((int)screenPosition.x - 6, (int)screenPosition.y + 19, (int)(28 * (turret.defense.currentShield / turret.defense.shield)), 1);
+			g.setColor(Color.GRAY);
+			g.drawRect((int)screenPosition.x - 7, (int)screenPosition.y + 21, 30, 3);
+			g.setColor(Color.YELLOW);
+			g.drawRect((int)screenPosition.x - 6, (int)screenPosition.y + 22, (int)(28 * (turret.defense.currentArmor / turret.defense.armor)), 1);
+			int radius = (int) (EngineUtility.PLANET_RADIUS * WORLD_TO_PIXEL_SCALE + turret.weapon.range * WORLD_TO_PIXEL_SCALE);
+			screenPosition = convertToScreenPosition(turret.position);
+			screenPosition.x -= radius;
+			screenPosition.y -= radius;
+			g.drawOval((int) screenPosition.x, 
+			           (int) screenPosition.y, 
+			           radius * 2, 
+			           radius * 2);
+		}
+		
+	}
 
 	private void renderUI(Graphics g, GameState state) {
 		g.setColor(Color.LIGHT_GRAY);
@@ -89,29 +114,9 @@ public class GameVisualisationPanel extends JPanel {
 		g.drawString(format(planet.currentResources, 1), (int) screenPosition.x, (int) screenPosition.y);
 		g.setColor(Color.GRAY);
 		g.drawString(planet.id + "", (int) screenPosition.x - 18, (int) screenPosition.y - 18);
-		if (planet.defense != null) {
-			g.setColor(Color.GRAY);
-			g.drawRect((int)screenPosition.x - 7, (int)screenPosition.y + 18, 30, 3);
-			g.setColor(Color.BLUE);
-			g.drawRect((int)screenPosition.x - 6, (int)screenPosition.y + 19, (int)(28 * (planet.defense.currentShield / planet.defense.shield)), 1);
-			g.setColor(Color.GRAY);
-			g.drawRect((int)screenPosition.x - 7, (int)screenPosition.y + 21, 30, 3);
-			g.setColor(Color.YELLOW);
-			g.drawRect((int)screenPosition.x - 6, (int)screenPosition.y + 22, (int)(28 * (planet.defense.currentArmor / planet.defense.armor)), 1);
-		}
-		
 		Color planetColor = EngineUtils.getPlanetColor(planet.ownerId, planet.ancient);
 		g.setColor(planetColor);
-		if (planet.weapon != null) {
-			int radius = (int) (EngineUtility.PLANET_RADIUS * WORLD_TO_PIXEL_SCALE + planet.weapon.range * WORLD_TO_PIXEL_SCALE);
-			screenPosition = convertToScreenPosition(planet.position);
-			screenPosition.x -= radius;
-			screenPosition.y -= radius;
-			g.drawOval((int) screenPosition.x, 
-			           (int) screenPosition.y, 
-			           radius * 2, 
-			           radius * 2);
-		}
+		
 	}
 	
 	private void renderShips(Graphics g, GameState state) {

@@ -1,37 +1,34 @@
 package de.instinct.engine.combat.projectile;
 
-import java.util.Iterator;
-
 import com.badlogic.gdx.math.Vector2;
 
 import de.instinct.engine.combat.Ship;
+import de.instinct.engine.combat.Turret;
 import de.instinct.engine.combat.unit.Unit;
-import de.instinct.engine.combat.unit.UnitManager;
+import de.instinct.engine.combat.unit.UnitProcessor;
 import de.instinct.engine.entity.EntityManager;
+import de.instinct.engine.entity.EntityProcessor;
 import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.Player;
 import de.instinct.engine.model.planet.Planet;
 import de.instinct.engine.util.EngineUtility;
 import de.instinct.engine.util.VectorUtil;
 
-public class ProjectileProcessor {
+public class ProjectileProcessor extends EntityProcessor {
 
     public void updateProjectiles(GameState state, long deltaTime) {
-        Iterator<Projectile> iterator = state.projectiles.iterator();
-        while (iterator.hasNext()) {
-            Projectile projectile = iterator.next();
-            updateProjectile(projectile, state, deltaTime);
-            if (!projectile.alive) {
-                iterator.remove();
-            }
+        for (Projectile projectile : state.projectiles) {
+        	updateProjectile(projectile, state, deltaTime);
         }
+        super.removeDestroyed(state.projectiles.iterator());
     }
 
     private void updateProjectile(Projectile projectile, GameState state, long deltaTime) {
+    	super.updateEntity(projectile, state, deltaTime);
         calculateMovement(projectile, state, deltaTime);
         calculateHit(projectile, state);
         if (projectile.elapsedMS >= projectile.lifetimeMS) {
-			projectile.alive = false;
+			projectile.flaggedForDestroy = true;
 		}
     }
 
@@ -66,7 +63,7 @@ public class ProjectileProcessor {
 
     private Unit findNewTarget(HomingProjectile projectile, GameState state) {
     	float remainingMissileRange = (projectile.lifetimeMS - projectile.elapsedMS) / 1000f * projectile.movementSpeed;
-		return UnitManager.getClosestInRangeTarget(projectile, remainingMissileRange, state);
+		return UnitProcessor.getClosestInRangeTarget(projectile, remainingMissileRange, state);
 	}
 
 	private void calculateHit(Projectile projectile, GameState state) {
@@ -74,15 +71,15 @@ public class ProjectileProcessor {
         for (Ship ship : state.ships) {
         	if (checkHit(projectile, projectileOwner, ship, state)) {
         		dealDamage(projectile, ship, state);
-        		projectile.alive = false;
+        		projectile.flaggedForDestroy = true;
         		break;
         	}
         }
-        if (projectile.alive) {
-        	for (Planet planet : state.planets) {
-        		if (checkHit(projectile, projectileOwner, planet, state)) {
-            		dealDamage(projectile, planet, state);
-            		projectile.alive = false;
+        if (!projectile.flaggedForDestroy) {
+        	for (Turret turret : state.turrets) {
+        		if (checkHit(projectile, projectileOwner, turret, state)) {
+            		dealDamage(projectile, turret, state);
+            		projectile.flaggedForDestroy = true;
             		break;
             	}
             }
@@ -118,16 +115,16 @@ public class ProjectileProcessor {
         			}
         		}
         	}
-        	for (Planet pentencialTargetPlanet : state.planets) {
-        		float distanceToTarget = EntityManager.entityDistance(projectile, pentencialTargetPlanet);
+        	for (Turret pentencialTargetTurret : state.turrets) {
+        		float distanceToTarget = EntityManager.entityDistance(projectile, pentencialTargetTurret);
         		if (distanceToTarget < projectile.aoeRadius) {
-        			if (projectileOwner.teamId != EngineUtility.getPlayer(state.players, pentencialTargetPlanet.ownerId).teamId) {
-        				if (pentencialTargetPlanet.defense != null) {
+        			if (projectileOwner.teamId != EngineUtility.getPlayer(state.players, pentencialTargetTurret.ownerId).teamId) {
+        				if (pentencialTargetTurret.defense != null) {
         					float remainingDamage = projectile.damage;
-    						float shieldDamage = Math.min(pentencialTargetPlanet.defense.currentShield, remainingDamage);
-    						pentencialTargetPlanet.defense.currentShield -= shieldDamage;
+    						float shieldDamage = Math.min(pentencialTargetTurret.defense.currentShield, remainingDamage);
+    						pentencialTargetTurret.defense.currentShield -= shieldDamage;
     						remainingDamage -= shieldDamage;
-    						pentencialTargetPlanet.defense.currentArmor -= remainingDamage;
+    						pentencialTargetTurret.defense.currentArmor -= remainingDamage;
         				}
         			}
         		}
@@ -158,7 +155,7 @@ public class ProjectileProcessor {
 			break;
 		}
         
-        EntityManager.initializeEntity(projectile, state);
+        super.initializeEntity(projectile, state);
         projectile.ownerId = origin.ownerId;
         projectile.originId = origin.id;
         projectile.weaponType = origin.weapon.type;
@@ -166,7 +163,6 @@ public class ProjectileProcessor {
 		projectile.damage = origin.weapon.damage;
 		projectile.aoeRadius = origin.weapon.aoeRadius;
 		projectile.radius = 1f;
-        projectile.alive = true;
         
         if (projectile instanceof HomingProjectile) {
         	Vector2 startPosition = VectorUtil.getTargetPosition(origin.position, target.position, origin.radius);
@@ -188,7 +184,7 @@ public class ProjectileProcessor {
         
         if (target instanceof Ship) {
             Ship ship = (Ship) target;
-            Unit closestInRangeTarget = UnitManager.getClosestInRangeTarget(ship, ship.weapon.range, state);
+            Unit closestInRangeTarget = UnitProcessor.getClosestInRangeTarget(ship, ship.weapon.range, state);
             if (closestInRangeTarget == null && ship.targetPlanetId > 0) {
                 Planet targetPlanet = EngineUtility.getPlanet(state.planets, ship.targetPlanetId);
                 if (targetPlanet != null) {

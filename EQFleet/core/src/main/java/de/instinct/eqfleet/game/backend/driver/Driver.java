@@ -49,9 +49,9 @@ public abstract class Driver {
 	protected abstract void postEngineUpdate();
 	
 	public void stop() {
-		finish();
 		AudioManager.stopAllSfx();
 		AudioManager.stopAllVoices();
+		finish();
 		scheduler.schedule(() -> {
 			
 			try {

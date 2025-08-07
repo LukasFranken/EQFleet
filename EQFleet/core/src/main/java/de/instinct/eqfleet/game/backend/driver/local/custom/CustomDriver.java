@@ -9,15 +9,19 @@ import de.instinct.engine.initialization.GameStateInitialization;
 import de.instinct.engine.model.AiPlayer;
 import de.instinct.engine.model.Player;
 import de.instinct.engine.net.message.NetworkMessage;
+import de.instinct.engine.net.message.types.BuildTurretMessage;
 import de.instinct.engine.net.message.types.FleetMovementMessage;
 import de.instinct.engine.net.message.types.GamePauseMessage;
 import de.instinct.engine.net.message.types.LoadedMessage;
 import de.instinct.engine.net.message.types.SurrenderMessage;
 import de.instinct.engine.order.GameOrder;
+import de.instinct.engine.order.types.BuildTurretOrder;
 import de.instinct.engine.order.types.GamePauseOrder;
 import de.instinct.engine.order.types.ShipMovementOrder;
 import de.instinct.engine.order.types.SurrenderOrder;
 import de.instinct.engine.util.EngineUtility;
+import de.instinct.engine.util.VictoryCalculator;
+import de.instinct.eqfleet.audio.AudioManager;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.backend.driver.local.LocalDriver;
@@ -39,7 +43,7 @@ public class CustomDriver extends LocalDriver {
 	public void setup() {
 		LoadoutData loadout = API.meta().loadout(API.authKey);
 		GameModel.playerId = 1;
-		GameStateInitialization initialGameState = customLoader.generateInitialGameState(loadout);
+		GameStateInitialization initialGameState = customLoader.generateInitialGameState(loadout, 10);
 		GameModel.activeGameState = engine.initializeGameState(initialGameState);
 		GameModel.lastUpdateTimestampMS = System.currentTimeMillis();
 		finished = false;
@@ -52,6 +56,9 @@ public class CustomDriver extends LocalDriver {
 			if (newMessage != null) {
 				if (newMessage instanceof FleetMovementMessage) {
 					engine.queue(GameModel.activeGameState, getOrder((FleetMovementMessage)newMessage));
+				}
+				if (newMessage instanceof BuildTurretMessage) {
+					engine.queue(GameModel.activeGameState, getOrder((BuildTurretMessage)newMessage));
 				}
 				if (newMessage instanceof GamePauseMessage) {
 					engine.queue(GameModel.activeGameState, getOrder((GamePauseMessage)newMessage));
@@ -72,6 +79,13 @@ public class CustomDriver extends LocalDriver {
 		order.fromPlanetId = message.fromPlanetId;
 		order.toPlanetId = message.toPlanetId;
 		order.playerShipId = message.shipId;
+		return order;
+	}
+	
+	private GameOrder getOrder(BuildTurretMessage message) {
+		BuildTurretOrder order = new BuildTurretOrder();
+		order.playerId = message.userUUID.contentEquals(API.authKey) ? 1 : 2;
+		order.planetId = message.planetId;
 		return order;
 	}
 	
@@ -105,7 +119,7 @@ public class CustomDriver extends LocalDriver {
 				e.printStackTrace();
 			}
         	
-			EngineUtility.checkVictory(GameModel.activeGameState);
+			VictoryCalculator.checkVictory(GameModel.activeGameState);
 			if (GameModel.activeGameState.winner != 0) {
 				Game.stop();
 			}
@@ -114,6 +128,11 @@ public class CustomDriver extends LocalDriver {
 
 	@Override
 	public void finish() {
+		if (GameModel.activeGameState.winner == EngineUtility.getPlayer(GameModel.activeGameState.players, GameModel.playerId).teamId) {
+			AudioManager.playVoice("victory");
+		} else {
+			AudioManager.playVoice("defeat");
+		}
 		finished = true;
 		Menu.load();
 	}

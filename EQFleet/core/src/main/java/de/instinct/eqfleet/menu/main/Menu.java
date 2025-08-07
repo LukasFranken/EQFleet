@@ -25,6 +25,7 @@ import de.instinct.eqfleet.menu.common.architecture.BaseModule;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.module.construction.Construction;
 import de.instinct.eqfleet.menu.module.construction.ConstructionRenderer;
+import de.instinct.eqfleet.menu.module.construction.message.ReloadConstructionMessage;
 import de.instinct.eqfleet.menu.module.core.ModuleManager;
 import de.instinct.eqfleet.menu.module.core.ModuleMessage;
 import de.instinct.eqfleet.menu.module.inventory.Inventory;
@@ -53,6 +54,7 @@ import de.instinct.eqfleet.menu.postgame.PostGameModel;
 import de.instinct.eqfleet.menu.postgame.PostGameRenderer;
 import de.instinct.eqfleet.net.WebManager;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
+import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
 
 public class Menu {
@@ -153,6 +155,7 @@ public class Menu {
 
 	private static void updateBaseInfo() {
 		queue(ReloadShipyardMessage.builder().build());
+		queue(ReloadConstructionMessage.builder().build());
 		if (PostGameModel.reward == null) {
 			queue(LoadProfileMessage.builder().build());
 			queue(LoadResourcesMessage.builder().build());
@@ -236,12 +239,12 @@ public class Menu {
 			    			    		MenuModel.lockedModules = moduleInfoResult;
 			    			    		reload();
 			    					} else {
-			    						Logger.log("Menu", "ModuleData couldn't be loaded!");
+			    						Logger.log("Menu", "Locked ModuleData couldn't be loaded!", ConsoleColor.RED);
 			    					}
 			    			    }
 			    		);
 					} else {
-						Logger.log("Menu", "ModuleData couldn't be loaded!");
+						Logger.log("Menu", "ModuleData couldn't be loaded!", ConsoleColor.RED);
 					}
 			    }
 		);

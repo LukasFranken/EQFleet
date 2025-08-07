@@ -10,6 +10,7 @@ import de.instinct.api.core.API;
 import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.Player;
 import de.instinct.engine.model.planet.Planet;
+import de.instinct.engine.net.message.types.BuildTurretMessage;
 import de.instinct.engine.net.message.types.FleetMovementMessage;
 import de.instinct.engine.net.message.types.GamePauseMessage;
 import de.instinct.engine.util.EngineUtility;
@@ -24,11 +25,12 @@ public class GameInputManager {
 	private Integer selectedPlanetId = null;
 	private Integer hoveredShipId = null;
     private Integer selectedShipId = null;
+    private Integer hoveredBuildingId = null;
     
     private Vector3 dragStartPosition = new Vector3();
     private boolean isDragging = false;
-    private float shipSelectionThreshold = 80f;
-    private float shipHoverThreshold = 20f;
+    private float radialSelectionThreshold = 80f;
+    private float radialHoverThreshold = 20f;
     
     public void handleInput(PerspectiveCamera camera, GameState state) {
         if (!GameModel.inputEnabled) {
@@ -38,7 +40,7 @@ public class GameInputManager {
         	Vector3 worldTouch = getTouchWorldPosition(camera);
         	if (Gdx.input.justTouched()) {
                 for (Planet planet : state.planets) {
-                    if (planet.ownerId == GameModel.playerId && isClickInsidePlanet(worldTouch, planet)) {
+                    if (planet.ownerId == GameModel.playerId && isTouchInsidePlanet(worldTouch, planet)) {
                         selectedPlanetId = planet.id;
                         dragStartPosition.set(worldTouch);
                         isDragging = true;
@@ -60,27 +62,39 @@ public class GameInputManager {
             
             if (Gdx.input.isTouched() && selectedPlanetId != null && isDragging) {
                 Player player = getPlayerForSelectedPlanet(state);
-                if (player != null && selectedShipId == null) {
-                	if (player.ships.size() > 1) {
-                		updateShipSelectionFromDrag(worldTouch, state);
-                	} else {
-                		selectedShipId = 0;
+                switch (GameModel.mode) {
+				case UNIT_CONTROL:
+					if (selectedShipId == null) {
+                		if (player.ships.size() > 1) {
+                    		updateShipSelectionFromDrag(worldTouch, state);
+                    	} else {
+                    		selectedShipId = 0;
+                    	}
                 	}
-                }
+					break;
+				case CONSTRUCTION:
+					updateBuildingSelectionFromDrag(worldTouch, state);
+					break;
+				case Q_LINK:
+					//updateBuildingSelectionFromDrag(worldTouch, state);
+					break;
+				}
             }
 
             if (!Gdx.input.isTouched() && selectedPlanetId != null) {
                 isDragging = false;
                 for (Planet planet : state.planets) {
-                    if (planet.id != selectedPlanetId && isClickInsidePlanet(worldTouch, planet)) {
-                        FleetMovementMessage order = new FleetMovementMessage();
-                        order.gameUUID = state.gameUUID;
-                        order.userUUID = API.authKey;
-                        order.fromPlanetId = selectedPlanetId;
-                        order.toPlanetId = planet.id;
-                        order.shipId = selectedShipId == null ? 0 : selectedShipId;
-                        GameModel.outputMessageQueue.add(order);
-                        break;
+                    if (isTouchInsidePlanet(worldTouch, planet)) {
+                    	if (planet.id != selectedPlanetId) {
+                    		FleetMovementMessage order = new FleetMovementMessage();
+                            order.gameUUID = state.gameUUID;
+                            order.userUUID = API.authKey;
+                            order.fromPlanetId = selectedPlanetId;
+                            order.toPlanetId = planet.id;
+                            order.shipId = selectedShipId == null ? 0 : selectedShipId;
+                            GameModel.outputMessageQueue.add(order);
+                            break;
+                    	}
                     }
                 }
                 selectedPlanetId = null;
@@ -109,9 +123,9 @@ public class GameInputManager {
         float sectorSize = 360f / shipCount;
         int selectedShipIndex = (int)((angle + sectorSize/2) % 360 / sectorSize);
         
-        if (distance < EngineUtility.PLANET_RADIUS + shipSelectionThreshold) {
+        if (distance < EngineUtility.PLANET_RADIUS + radialSelectionThreshold) {
             selectedShipId = null;
-            if (distance > EngineUtility.PLANET_RADIUS + shipHoverThreshold) {
+            if (distance > EngineUtility.PLANET_RADIUS + radialHoverThreshold) {
             	hoveredShipId = selectedShipIndex;
             } else {
             	hoveredShipId = null;
@@ -119,6 +133,45 @@ public class GameInputManager {
         } else {
             selectedShipId = selectedShipIndex;
             hoveredShipId = null;
+        }
+    }
+	
+	private void updateBuildingSelectionFromDrag(Vector3 currentPosition, GameState state) {
+        Planet sourcePlanet = EngineUtility.getPlanet(state.planets, selectedPlanetId);
+        if (sourcePlanet == null) return;
+        
+        float dx = currentPosition.x - sourcePlanet.position.x;
+        float dy = currentPosition.y - sourcePlanet.position.y;
+        float distance = (float) Math.sqrt(dx * dx + dy * dy);
+        
+        float angle = (float) Math.toDegrees(Math.atan2(dy, dx));
+        if (angle < 0) angle += 360;
+        
+        Player player = getPlayerForSelectedPlanet(state);
+        int buildingCount = 1;
+        if (buildingCount == 3) {
+        	angle = angle + 30f; 
+        }
+        
+        float sectorSize = 360f / buildingCount;
+        int selectedBuildingIndex = (int)((angle + sectorSize/2) % 360 / sectorSize);
+        if (distance < EngineUtility.PLANET_RADIUS + radialSelectionThreshold) {
+        	hoveredBuildingId = null;
+            if (distance > EngineUtility.PLANET_RADIUS + radialHoverThreshold) {
+            	hoveredBuildingId = selectedBuildingIndex;
+            } else {
+            	hoveredBuildingId = null;
+            }
+        } else {
+        	if (hoveredBuildingId != null && hoveredBuildingId == 0) {
+        		BuildTurretMessage order = new BuildTurretMessage();
+    			order.gameUUID = state.gameUUID;
+    			order.userUUID = API.authKey;
+    			order.planetId = selectedPlanetId;
+    			GameModel.outputMessageQueue.add(order);
+        	}
+            hoveredBuildingId = null;
+            selectedPlanetId = null;
         }
     }
     
@@ -139,7 +192,7 @@ public class GameInputManager {
         );
     }
 
-    private boolean isClickInsidePlanet(Vector3 worldClick, Planet planet) {
+    private boolean isTouchInsidePlanet(Vector3 worldClick, Planet planet) {
         return Vector3.dst(planet.position.x, planet.position.y, 0f, worldClick.x, worldClick.y, 0f) < EngineUtility.PLANET_RADIUS + HITBOX_INCREASE;
     }
     
@@ -153,6 +206,10 @@ public class GameInputManager {
     
     public Integer getHoveredShipId() {
 		return hoveredShipId;
+	}
+    
+    public Integer getHoveredBuildingId() {
+		return hoveredBuildingId;
 	}
 
     public Planet getHoveredPlanet(PerspectiveCamera camera, GameState state) {

@@ -16,6 +16,7 @@ public class AudioManager {
 
 	private static Music currentMusic;
 	private static Music queuedInMusic;
+	private static Music currentVoice;
 	private static Cache<Music> voices;
 	private static Cache<Sound> sfxs;
 
@@ -87,9 +88,14 @@ public class AudioManager {
 	public static void playVoice(String tag) {
 		Music voice = voices.get(tag);
 		if (voice != null) {
-			voice.setVolume(1f);
+			if (currentVoice != null) {
+				currentVoice.stop();
+				currentVoice.dispose();
+			}
+			voice.setVolume(0.5f);
 			voice.setLooping(false);
 			voice.play();
+			currentVoice = voice;
 		}
 	}
 

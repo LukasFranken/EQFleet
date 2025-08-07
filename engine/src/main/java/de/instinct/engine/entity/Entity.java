@@ -11,6 +11,7 @@ public abstract class Entity implements Cloneable {
 	public int ownerId;
 	public Vector2 position;
 	public float radius;
+	public boolean flaggedForDestroy;
 	
 	@Override
     public Entity clone() {

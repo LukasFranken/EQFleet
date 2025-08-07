@@ -12,20 +12,23 @@ GENERAL:
 - planet defense not since start
 - planet resource upgrades part of construction
 
-- zoom factor per conq map
-- duo, trio campaign via social group
-- social module, squad and aliance with vault
 - stats in profile like gametime, furthest in each campaign
-- defeated/victory reason
 - freggy seite offline nehmen
 - ai mod: send last resort ancient planet so that ship arrives a few seconds before end
 - hangar space needed for build blueprint, not buy blueprint
 - radio music looping randomly through tracks
-- neutral planets less damage but more hp
- -> scaling neutral player
 - externalize planet resource bar to circularloadingbar component
-- replace money label with other squad player names
 - scrollable console log
+- make beam actual beam
+
+- make ai build turret if no turret on planet
+- turret build time
+
+- duo, trio campaign via social group
+- social module, squad and aliance with vault
+- replace money label with other squad player names
+
+- validate each order on integration, otherwise order stack works
 
 GAME:
 
@@ -40,7 +43,6 @@ META:
 - proper inventory
 
 BUGS:
-- prevent bot from bypassing resource cost by doubleshipping
 - random amazon requests crash gameserver and maybe others
 - random nullpointer before tutorial on ios
 - music randomly glitches/crashes on transition
@@ -62,9 +64,17 @@ META:
 - Technology module to unlock abilities and stuff like range and defensebar
 
 - abilities 
- -> need to be researched over time with techtree
  -> techtree advances with ability usage exp gain
    -> usage depends on ability effect e.g. damage dealt / units slowed etc.
+- ability module after rankunlocked needs to be unlocked 
+  -> with total ap collected and equilibrium
+  -> to build ai chip that enables a brainwave interface for equilibrium modulation
+  -> enable new abilities and upgrade them with use
+    -> training ai chip
+- equilibrium
+ -> matter, which can be molecularly arranged at will through energy
+ -> stat for total ap collected
+- ships balanced, buildings mostly resources, abilities mostly cp
 
 - Shipyard
  -> higher classes
