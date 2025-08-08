@@ -84,7 +84,7 @@ public class CustomLoader {
 		userPlayer.teamId = 1;
 		players.add(userPlayer);
 		
-		AiPlayer aiPlayer = aiEngine.initialize(1);
+		AiPlayer aiPlayer = aiEngine.initialize(threatLevel);
 		aiPlayer.id = 4;
 		aiPlayer.teamId = 2;
 		players.add(aiPlayer);

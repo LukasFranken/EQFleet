@@ -11,6 +11,7 @@ import de.instinct.api.auth.dto.TokenVerificationResponse;
 import de.instinct.api.core.API;
 import de.instinct.eqfleet.App;
 import de.instinct.eqfleet.GlobalStaticData;
+import de.instinct.eqfleet.audio.AudioManager;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.backend.driver.local.tutorial.TutorialMode;
 import de.instinct.eqfleet.menu.main.Menu;
@@ -265,6 +266,7 @@ public class Intro {
 		active = false;
 		elementQueue.clear();
 		Menu.open();
+		AudioManager.startRadio();
 	}
 
 	public static void render() {

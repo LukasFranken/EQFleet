@@ -7,7 +7,6 @@ import lombok.ToString;
 public class Turret extends Unit {
 	
 	public String model;
-	public int planetId;
 	public float rotationSpeed;
 	
 	public Turret clone() {

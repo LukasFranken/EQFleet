@@ -64,6 +64,10 @@ public class Console {
 				.region(GraphicsUtil.scaleFactorAdjusted(new Rectangle(GraphicsUtil.baseScreenBounds().getWidth() - tapSize, GraphicsUtil.baseScreenBounds().getHeight() - tapSize, tapSize, tapSize)))
 				.activated(false)
 				.build());
+		activationScreenTaps.add(ActivationScreenTap.builder()
+				.region(GraphicsUtil.scaleFactorAdjusted(new Rectangle(GraphicsUtil.baseScreenBounds().getWidth() - tapSize, 0, tapSize, tapSize)))
+				.activated(false)
+				.build());
 		
 		commandTextField = new LimitedInputField();
 		commandTextField.setMaxChars(50);
@@ -163,7 +167,7 @@ public class Console {
 				consoleInputHeight + logPanelMargin + borderMargin, 
 				GraphicsUtil.baseScreenBounds().getWidth() - (logPanelMargin * 2), 
 				GraphicsUtil.baseScreenBounds().getHeight() - consoleInputHeight - metricsHeight - (logPanelMargin * 2) - borderMargin);
-		SimpleShapeRenderer.drawRectangle(GraphicsUtil.scaleFactorAdjusted(logsBounds), SkinManager.skinColor, 1);
+		SimpleShapeRenderer.drawRoundRectangle(GraphicsUtil.scaleFactorAdjusted(logsBounds), SkinManager.skinColor, 1);
 		
 		int logLineHorizontalMargin = 5;
 		List<LogLine> logLines = Logger.getLogs((int)(logsBounds.height / logLineHeight), tagFilter);
@@ -213,9 +217,11 @@ public class Console {
 			boolean wasValidTap = false;
 			for (ActivationScreenTap screenTap : activationScreenTaps) {
 				if (!screenTap.isActivated()) {
-					if (InputUtil.mouseIsOver(screenTap.getRegion())) {
+					if (InputUtil.mouseIsOver(GraphicsUtil.scaleFactorAdjusted(screenTap.getRegion()))) {
 						screenTap.setActivated(true);
 						wasValidTap = true;
+					} else {
+						break;
 					}
 				}
 			}

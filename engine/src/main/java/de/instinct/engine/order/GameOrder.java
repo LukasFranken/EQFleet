@@ -14,7 +14,6 @@ public abstract class GameOrder {
 	public long orderId;
 	public OrderType type;
 	public long acceptedTimeMS;
-	public boolean processed;
 	
 	public GameOrder clone() {
 		try {

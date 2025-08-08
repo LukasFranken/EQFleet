@@ -6,8 +6,10 @@ GENERAL:
 - build apk
 
 - settings via meta module (show grid, show fleet lines)
-- audio settings
-- more sfx (maybe avoid voices)
+- account security
+ -> optional email provision
+ -> authkey regeneration via mail
+ -> optional 2-factor with mail on new device
  
 - planet defense not since start
 - planet resource upgrades part of construction
@@ -21,20 +23,25 @@ GENERAL:
 - scrollable console log
 - make beam actual beam
 
-- make ai build turret if no turret on planet
+- music as radio
+- intro back button
 - turret build time
+- doesnt leave lobby after conquest
+- fix particle ap stream on mobile
+- menu rank icon doesnt update after rankup
+- surrender sometimes grants extreme amount of exp
+- allow modes only after game start
 
 - duo, trio campaign via social group
 - social module, squad and aliance with vault
-- replace money label with other squad player names
+- replace money label with other squad player names (if in group), but remove click-on
+- remove calculate widht/height from all component except dynamiccomponent
 
-- validate each order on integration, otherwise order stack works
+- custom desktop window frame
 
 GAME:
 
 META:
-- intro back button
-
 - playtab logic finished refactoring
 
 - shop
@@ -44,10 +51,8 @@ META:
 
 BUGS:
 - random amazon requests crash gameserver and maybe others
-- random nullpointer before tutorial on ios
-- music randomly glitches/crashes on transition
 - gameserver rubberbanding
-- planet is grey sometimes after capture
+- console not typeable after name setting
 
 ---------------------------------------------------------------------
 FUTURE RELEASES TODO:
@@ -143,17 +148,8 @@ IDEAS
 - pvp only at certain complexity
 - coop gives bonus resources
 
-Voice mod steps:
-- duplicate track into 4x
-- all 4: filter EQ: VOICE
-- 2nd and 4th: volume -5db
-- 2nd and 4th: echo: VOICE
-- 3rd and 4th: delay track by 20MS
-- all 4: compressor: VOICE
-
-Music mod steps (TRASH):
+Voice mod steps (TRASH):
 - duplicate into 2x
 - both: filter EQ: VOICE
-- 2nd: delay track by 20MS
-- 1st: -1db volume
-- both: compressor: VOICE
+- both: reverb: VOICE
+- 2nd: delay track by 30MS

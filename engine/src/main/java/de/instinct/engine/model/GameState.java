@@ -1,8 +1,10 @@
 package de.instinct.engine.model;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 import de.instinct.engine.combat.Ship;
 import de.instinct.engine.combat.Turret;
@@ -21,6 +23,7 @@ public class GameState {
 	public List<Ship> ships;
 	public List<Turret> turrets;
 	public List<Projectile> projectiles;
+	public Queue<GameOrder> unprocessedOrders;
 	public List<GameOrder> orders;
 	public long gameTimeMS;
 	public long maxGameTimeMS;
@@ -31,6 +34,7 @@ public class GameState {
 	public Map<Integer, Double> teamATPs;
 	public boolean started;
 	public int entityCounter;
+	public int orderCounter;
 	public float zoomFactor;
 	
 	public long resumeCountdownMS;
@@ -69,6 +73,10 @@ public class GameState {
 		for (Projectile projectile : this.projectiles) {
 			clone.projectiles.add(projectile.clone());
 		}
+		clone.unprocessedOrders = this.unprocessedOrders;
+		if (clone.unprocessedOrders != null) {
+			clone.unprocessedOrders = new ArrayDeque<>(this.unprocessedOrders);
+		}
 		clone.orders = new ArrayList<>();
 		for (GameOrder gameOrder : this.orders) {
 			clone.orders.add(gameOrder.clone());
@@ -82,6 +90,7 @@ public class GameState {
 		clone.teamATPs = new HashMap<>(this.teamATPs);
 		clone.started = this.started;
 		clone.entityCounter = this.entityCounter;
+		clone.orderCounter = this.orderCounter;
 		clone.zoomFactor = this.zoomFactor;
 		clone.resumeCountdownMS = this.resumeCountdownMS;
 		clone.maxPauseMS = this.maxPauseMS;

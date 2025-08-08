@@ -392,6 +392,7 @@ public class TutorialLoader {
 			public void executeAtEnd() {
 				GameModel.visible = true;
 				AudioManager.playMusic("eqspace1", true);
+				AudioManager.startRadio();
 			}
 			
 		});

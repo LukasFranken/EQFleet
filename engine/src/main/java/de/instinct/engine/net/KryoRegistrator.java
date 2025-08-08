@@ -3,6 +3,7 @@ package de.instinct.engine.net;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.PriorityQueue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryo.Kryo;
@@ -84,6 +85,7 @@ public class KryoRegistrator {
 		kryo.register(UnitData.class);
 		kryo.register(TurretData.class);
 		kryo.register(Turret.class);
+		kryo.register(ConcurrentLinkedQueue.class);
 	}
 
 }

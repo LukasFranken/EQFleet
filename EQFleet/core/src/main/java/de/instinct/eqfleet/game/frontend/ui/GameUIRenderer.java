@@ -107,9 +107,9 @@ public class GameUIRenderer {
         	order.pause = false;
         	GameModel.outputMessageQueue.add(order);
     	});
-    	Rectangle surrenderBounds = new Rectangle((GraphicsUtil.baseScreenBounds().width / 2) - 50, 200, 100, 40);
+    	Rectangle surrenderBounds = new Rectangle((GraphicsUtil.baseScreenBounds().width / 2) - 60, 200, 120, 40);
     	surrenderButton.setBounds(surrenderBounds);
-        Rectangle resumeBounds = new Rectangle((GraphicsUtil.baseScreenBounds().width / 2) - 50, 100, 100, 40);
+        Rectangle resumeBounds = new Rectangle((GraphicsUtil.baseScreenBounds().width / 2) - 60, 100, 120, 40);
         resumeButton.setBounds(resumeBounds);
         
         unitControlButton = DefaultButtonFactory.colorButton("U", () -> {
@@ -412,11 +412,11 @@ public class GameUIRenderer {
 			switch (GameModel.mode) {
 			case UNIT_CONTROL:
 				if (owner.ships.size() > 1 && inputManager.getSelectedShipId() == null) {
-					renderShipSelectionCircle(selected.position.x, selected.position.y, owner);
+					renderShipSelectionCircle(selected, owner);
 				}
 				break;
 			case CONSTRUCTION:
-				renderBuildingSelectionCircle(selected.position.x, selected.position.y, owner);
+				renderBuildingSelectionCircle(selected, owner);
 				break;
 			case Q_LINK:
 				break;
@@ -440,7 +440,7 @@ public class GameUIRenderer {
 		Integer shipIndex = inputManager.getSelectedShipId();
 		if (shipIndex == null) shipIndex = inputManager.getHoveredShipId();
 		if (owner.ships.size() == 1) shipIndex = 0;
-		if (shipIndex != null) {
+		if (shipIndex != null && GameModel.mode == InteractionMode.UNIT_CONTROL) {
 			resourceCost = owner.ships.get(shipIndex).cost;
 		}
 		if (inputManager.getHoveredBuildingId() != null) {
@@ -525,10 +525,13 @@ public class GameUIRenderer {
 		}
 	}
 
-	private void renderShipSelectionCircle(float x, float y, Player owner) {
+	private void renderShipSelectionCircle(Planet planet, Player owner) {
+		float x = planet.position.x;
+		float y = planet.position.y;
 		Color unselectedColor = new Color(0.5f, 0.5f, 0.5f, 0.2f);
 		Color unselectedColorLabel = new Color(0.7f, 0.7f, 0.7f, 0.5f);
 		Color selectedColor = new Color(SkinManager.skinColor.r, SkinManager.skinColor.g, SkinManager.skinColor.b, 0.5f);
+		Color selectedAffordableColor = new Color(0f, 1f, 0f, 0.5f);
 		
 	    int shipCount = owner.ships.size();
 	    float outerRadius = EngineUtility.PLANET_RADIUS + 80f;
@@ -542,8 +545,12 @@ public class GameUIRenderer {
 	    	Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		    shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 	        boolean isSelected = (inputManager.getHoveredShipId() != null && inputManager.getHoveredShipId() == i);
+	        boolean isAffordable = owner.ships.get(i).cost <= planet.currentResources && owner.ships.get(i).commandPointsCost <= owner.currentCommandPoints;
 	        if (isSelected) {
-	            shapeRenderer.setColor(selectedColor);
+	        	shapeRenderer.setColor(selectedColor);
+	        	if (isAffordable) {
+	        		shapeRenderer.setColor(selectedAffordableColor);
+	        	}
 	        } else {
 	            shapeRenderer.setColor(unselectedColor);
 	        }
@@ -583,17 +590,20 @@ public class GameUIRenderer {
 	        String shipName = owner.ships.get(i).model;
 	        float labelWidth = FontUtil.getFontTextWidthPx(shipName, FontType.SMALL);
 	        Label shipLabel = new Label(shipName);
-	        shipLabel.setColor(isSelected ? selectedColor : unselectedColorLabel);
+	        shipLabel.setColor(isSelected ? (isAffordable ? selectedAffordableColor : selectedColor) : unselectedColorLabel);
 	        shipLabel.setBounds(GraphicsUtil.scaleFactorDeducted(new Rectangle(labelPos.x - (labelWidth / 2), labelPos.y - 10f, labelWidth, 20f)));
 	        shipLabel.setType(FontType.SMALL);
 	        shipLabel.render();
 	    }
 	}
 	
-	private void renderBuildingSelectionCircle(float x, float y, Player owner) {
+	private void renderBuildingSelectionCircle(Planet planet, Player owner) {
+		float x = planet.position.x;
+		float y = planet.position.y;
 		Color unselectedColor = new Color(0.5f, 0.5f, 0.5f, 0.2f);
 		Color unselectedColorLabel = new Color(0.7f, 0.7f, 0.7f, 0.5f);
 		Color selectedColor = new Color(SkinManager.skinColor.r, SkinManager.skinColor.g, SkinManager.skinColor.b, 0.5f);
+		Color selectedAffordableColor = new Color(0f, 1f, 0f, 0.5f);
 		
 	    int buildingCount = 1;
 	    float outerRadius = EngineUtility.PLANET_RADIUS + 80f;
@@ -607,8 +617,12 @@ public class GameUIRenderer {
 	    	Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		    shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 	        boolean isSelected = (inputManager.getHoveredBuildingId() != null && inputManager.getHoveredBuildingId() == i);
+	        boolean isAffordable = owner.planetData.turret.cost <= planet.currentResources && owner.planetData.turret.commandPointsCost <= owner.currentCommandPoints;
 	        if (isSelected) {
-	            shapeRenderer.setColor(selectedColor);
+	        	shapeRenderer.setColor(selectedColor);
+	        	if (isAffordable) {
+	        		shapeRenderer.setColor(selectedAffordableColor);
+	        	}
 	        } else {
 	            shapeRenderer.setColor(unselectedColor);
 	        }
@@ -650,11 +664,11 @@ public class GameUIRenderer {
 	        
 	        String buildingName = owner.planetData.turret.model + " Turret";
 	        float labelWidth = FontUtil.getFontTextWidthPx(buildingName, FontType.SMALL);
-	        Label shipLabel = new Label(buildingName);
-	        shipLabel.setColor(isSelected ? selectedColor : unselectedColorLabel);
-	        shipLabel.setBounds(GraphicsUtil.scaleFactorDeducted(new Rectangle(labelPos.x - (labelWidth / 2), labelPos.y - 10f, labelWidth, 20f)));
-	        shipLabel.setType(FontType.SMALL);
-	        shipLabel.render();
+	        Label buildingLabel = new Label(buildingName);
+	        buildingLabel.setColor(isSelected ? (isAffordable ? selectedAffordableColor : selectedColor) : unselectedColorLabel);
+	        buildingLabel.setBounds(GraphicsUtil.scaleFactorDeducted(new Rectangle(labelPos.x - (labelWidth / 2), labelPos.y - 10f, labelWidth, 20f)));
+	        buildingLabel.setType(FontType.SMALL);
+	        buildingLabel.render();
 	    }
 	}
 

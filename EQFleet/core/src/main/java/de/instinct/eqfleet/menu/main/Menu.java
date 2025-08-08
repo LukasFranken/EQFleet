@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -18,7 +17,6 @@ import de.instinct.api.core.API;
 import de.instinct.api.core.modules.MenuModule;
 import de.instinct.api.matchmaking.model.GameMode;
 import de.instinct.api.meta.dto.modules.ModuleInfoRequest;
-import de.instinct.eqfleet.audio.AudioManager;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
@@ -150,7 +148,6 @@ public class Menu {
 	public static void open() {
 		Game.dispose();
 		MenuModel.active = true;
-		AudioManager.playMusic("eqspace" + (new Random().nextInt(4) + 1), true);
 	}
 
 	private static void updateBaseInfo() {

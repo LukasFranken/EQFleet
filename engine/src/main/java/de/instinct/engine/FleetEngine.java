@@ -3,7 +3,6 @@ package de.instinct.engine;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import de.instinct.engine.combat.CombatProcessor;
@@ -15,7 +14,6 @@ import de.instinct.engine.model.Player;
 import de.instinct.engine.model.PlayerConnectionStatus;
 import de.instinct.engine.model.planet.Planet;
 import de.instinct.engine.order.GameOrder;
-import de.instinct.engine.order.OrderValidator;
 import de.instinct.engine.planet.PlanetProcessor;
 import de.instinct.engine.player.PlayerProcessor;
 import de.instinct.engine.util.EngineUtility;
@@ -24,32 +22,26 @@ public class FleetEngine {
 	
 	private final int UPDATE_INTERVAL_MS = 10;
 	
-	private OrderValidator orderValidator;
-	private Queue<GameOrder> unprocessedOrders;
-	
 	private PlanetProcessor planetProcessor;
 	private PlayerProcessor playerProcessor;
 	private CombatProcessor combatProcessor;
 	private MetaProcessor metaProcessor;
 	
-	private long orderIdCounter;
-	
 	private boolean updateContainedValidOrder;
 	
 	public void initialize() {
-		orderValidator = new OrderValidator();
-		unprocessedOrders = new ConcurrentLinkedQueue<>();
 		planetProcessor = new PlanetProcessor();
 		playerProcessor = new PlayerProcessor();
 		combatProcessor = new CombatProcessor();
 		metaProcessor = new MetaProcessor();
-		orderIdCounter = 0;
 	}
 	
 	public GameState initializeGameState(GameStateInitialization initialization) {
 		GameState state = new GameState();
 		state.orders = new ArrayList<>();
+		state.unprocessedOrders = new ConcurrentLinkedQueue<>();
 		state.entityCounter = 0;
+		state.orderCounter = 0;
 		state.gameUUID = initialization.gameUUID;
 		state.players = initializePlayers(initialization.players);
 		state.connectionStati = generateConnectionStati(initialization.players);
@@ -119,7 +111,6 @@ public class FleetEngine {
 		try {
 			if (state.started) {
 				advanceTime(state, progressionMS);
-			    workOnOrderQueue(state);
 			    integrateNewOrders(state);
 			}
 		} catch (Exception e) {
@@ -128,8 +119,22 @@ public class FleetEngine {
 	}
 	
 	private void integrateNewOrders(GameState state) {
-		combatProcessor.integrateNewOrders(state);
-		metaProcessor.integrateNewOrders(state);
+		updateContainedValidOrder = false;
+		while (!state.unprocessedOrders.isEmpty()) {
+			GameOrder order = state.unprocessedOrders.poll();
+			if (processOrder(state, order)) {
+				order.orderId = state.orderCounter++;
+				order.acceptedTimeMS = state.gameTimeMS;
+				state.orders.add(order);
+				updateContainedValidOrder = true;
+			}
+		}
+	}
+
+	private boolean processOrder(GameState state, GameOrder order) {
+		if (combatProcessor.integrateNewOrder(state, order)) return true;
+		if (metaProcessor.integrateNewOrder(state, order)) return true;
+		return false;
 	}
 
 	private void advanceTime(GameState state, long progressionMS) {
@@ -147,20 +152,8 @@ public class FleetEngine {
 		}
 	}
 	
-	private void workOnOrderQueue(GameState state) {
-		updateContainedValidOrder = false;
-		while (!unprocessedOrders.isEmpty()) {
-			GameOrder order = unprocessedOrders.poll();
-			if (orderValidator.isValid(state, order)) {
-				order.orderId = orderIdCounter++;
-				state.orders.add(order);
-				updateContainedValidOrder = true;
-			}
-		}
-	}
-	
 	public void queue(GameState state, GameOrder order) {
-		unprocessedOrders.add(order);
+		state.unprocessedOrders.add(order);
 	}
 	
 	public boolean containedValidOrders() {

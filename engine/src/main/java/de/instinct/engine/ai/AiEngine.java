@@ -90,7 +90,7 @@ public class AiEngine {
 			for (Planet planet : state.planets) {
 				Turret turret = EngineUtility.getPlanetTurret(state.turrets, planet.id);
 				if (turret == null) {
-					if (planet.currentResources >= aiPlayer.planetData.turret.cost) {
+					if (planet.currentResources >= aiPlayer.planetData.turret.cost && planet.ownerId == aiPlayer.id) {
 						BuildTurretOrder newBuildTurretOrder = new BuildTurretOrder();
 						newBuildTurretOrder.planetId = planet.id;
 						newBuildTurretOrder.playerId = aiPlayer.id;
