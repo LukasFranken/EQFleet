@@ -220,6 +220,7 @@ public class TutorialLoader {
 			
 			@Override
 			public void executeAtStart() {
+				AudioManager.updateUserVoiceVolume(0.7f);
 				AudioManager.playVoice("tutorial_voiceline_1");
 			}
 			
@@ -1470,6 +1471,7 @@ public class TutorialLoader {
 				GameModel.inputEnabled = true;
 				GameModel.activeGameState.maxGameTimeMS = GameModel.activeGameState.gameTimeMS + 60_000;
 				AudioManager.playVoice("tutorial_voiceline_36");
+				AudioManager.updateUserVoiceVolume(0.5f);
 			}
 			
 			@Override
