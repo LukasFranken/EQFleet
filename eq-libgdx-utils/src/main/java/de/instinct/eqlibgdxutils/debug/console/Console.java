@@ -57,15 +57,15 @@ public class Console {
 		initializeMetrics();
 		activationScreenTaps = new ArrayList<>();
 		activationScreenTaps.add(ActivationScreenTap.builder()
-				.region(GraphicsUtil.scaleFactorAdjusted(new Rectangle(0, GraphicsUtil.baseScreenBounds().getHeight() - tapSize, tapSize, tapSize)))
+				.region(new Rectangle(0, GraphicsUtil.baseScreenBounds().getHeight() - tapSize, tapSize, tapSize))
 				.activated(false)
 				.build());
 		activationScreenTaps.add(ActivationScreenTap.builder()
-				.region(GraphicsUtil.scaleFactorAdjusted(new Rectangle(GraphicsUtil.baseScreenBounds().getWidth() - tapSize, GraphicsUtil.baseScreenBounds().getHeight() - tapSize, tapSize, tapSize)))
+				.region(new Rectangle(GraphicsUtil.baseScreenBounds().getWidth() - tapSize, GraphicsUtil.baseScreenBounds().getHeight() - tapSize, tapSize, tapSize))
 				.activated(false)
 				.build());
 		activationScreenTaps.add(ActivationScreenTap.builder()
-				.region(GraphicsUtil.scaleFactorAdjusted(new Rectangle(GraphicsUtil.baseScreenBounds().getWidth() - tapSize, 0, tapSize, tapSize)))
+				.region(new Rectangle(GraphicsUtil.baseScreenBounds().getWidth() - tapSize, 0, tapSize, tapSize))
 				.activated(false)
 				.build());
 		
@@ -225,7 +225,6 @@ public class Console {
 					}
 				}
 			}
-			
 			if (!wasValidTap) {
 				for (ActivationScreenTap screenTap : activationScreenTaps) {
 					screenTap.setActivated(false);

@@ -131,7 +131,6 @@ public class AudioManager {
 		if (voice != null) {
 			if (currentVoice != null) {
 				currentVoice.stop();
-				currentVoice.dispose();
 			}
 			voice.setVolume(1f * userVoiceVolume);
 			voice.setLooping(false);
