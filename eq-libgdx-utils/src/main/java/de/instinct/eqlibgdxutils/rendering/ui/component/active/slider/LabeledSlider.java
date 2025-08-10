@@ -53,10 +53,12 @@ public class LabeledSlider extends Component {
 		label.setFixedWidth(FontUtil.getNormalizedFontTextWidthPx(labelChars, label.getType()) + labelInnerMargin);
 		label.setText(labelUpdateAction.getLabelText(slider.getCurrentValue()));
 		label.getBorder().setBounds(getBounds());
+		label.setAlpha(getAlpha());
 		
 		Rectangle sliderBounds = new Rectangle(getBounds());
 		sliderBounds.width -= label.getBounds().width + labelSliderMargin;
 		slider.setBounds(sliderBounds);
+		slider.setAlpha(getAlpha());
 	}
 	
 	@Override

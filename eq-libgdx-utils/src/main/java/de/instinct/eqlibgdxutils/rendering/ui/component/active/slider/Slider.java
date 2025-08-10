@@ -57,6 +57,7 @@ public class Slider extends Component {
 	protected void updateComponent() {
 		sliderButton.setFixedHeight(getBounds().height);
 		sliderButton.setFixedWidth(getBounds().height);
+		sliderButton.setAlpha(getAlpha());
 		if (sliderButton.isDown()) {
 			if (lastUpdateMousePosition != null) {
 				Vector2 thisUpdateMousePosition = InputUtil.getNormalizedMousePosition();
@@ -80,7 +81,9 @@ public class Slider extends Component {
 	@Override
 	protected void renderComponent() {
 		Rectangle sliderLineRect = new Rectangle(getScreenScaleAdjustedBounds().x, getScreenScaleAdjustedBounds().y + (getScreenScaleAdjustedBounds().height / 2) + 1, getScreenScaleAdjustedBounds().width, 2);
-		SimpleShapeRenderer.drawRectangle(sliderLineRect, SkinManager.darkerSkinColor);
+		Color sliderLineColor = new Color(SkinManager.darkerSkinColor);
+		sliderLineColor.a *= getAlpha();
+		SimpleShapeRenderer.drawRectangle(sliderLineRect, sliderLineColor);
 		sliderButton.render();
 	}
 

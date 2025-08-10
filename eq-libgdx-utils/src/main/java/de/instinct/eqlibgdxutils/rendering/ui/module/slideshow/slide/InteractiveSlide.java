@@ -43,6 +43,7 @@ public abstract class InteractiveSlide extends Slide {
 	@Override
 	protected void updateSlide(float slideAlpha) {
 		backButton.setPosition(GraphicsUtil.baseScreenBounds().width / 2 - (backButton.getFixedWidth() / 2), 100);
+		backButton.setAlpha(slideAlpha);
 		updateInteractiveSlide(slideAlpha);
 	}
 	
@@ -51,7 +52,6 @@ public abstract class InteractiveSlide extends Slide {
 	@Override
 	public void renderContent() {
 		if (backButtonEnabled) {
-			backButton.setAlpha(getAlpha());
 			backButton.render();
 		}
 		renderInteractiveSlideContent();

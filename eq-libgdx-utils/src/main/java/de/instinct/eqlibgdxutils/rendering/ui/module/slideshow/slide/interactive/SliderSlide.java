@@ -73,7 +73,7 @@ public class SliderSlide extends InteractiveSlide {
 		});
 		slider = new Slider(valueChangeAction, initialValue);
 		slider.setFixedWidth(getBounds().width / 2);
-		slider.setFixedHeight(40);
+		slider.setFixedHeight(30);
 	}
 
 	@Override

@@ -20,8 +20,6 @@ GENERAL:
 - scrollable console log
 - make beam actual beam
 
-- intro start with language+sound settings
-
 - duo, trio campaign via social group
 - social module, squad and aliance with vault
 - replace money label with other squad player names (if in group), but remove click-on
@@ -51,7 +49,6 @@ BUGS:
 REFACTIORING:
 - allow modes only after game start
 - externalize planet resource bar to circularloadingbar component
-- externalize slider to libgdxutils
 - speed up low exp animation postgame
 - remove calculate widht/height from all component except dynamiccomponent
 

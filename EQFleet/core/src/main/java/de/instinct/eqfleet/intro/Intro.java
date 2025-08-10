@@ -166,6 +166,9 @@ public class Intro {
 					AudioManager.updateUserMusicVolume(Float.parseFloat(newVolume));
 					AudioManager.updateUserVoiceVolume(Float.parseFloat(newVolume));
 					AudioManager.updateUserSfxVolume(Float.parseFloat(newVolume));
+					AudioManager.saveUserMusicVolume(Float.parseFloat(newVolume));
+					AudioManager.saveUserVoiceVolume(Float.parseFloat(newVolume));
+					AudioManager.saveUserSfxVolume(Float.parseFloat(newVolume));
 					AudioManager.stop();
 					createDoYouHaveAnAccountSlide();
 				}
@@ -175,9 +178,6 @@ public class Intro {
 			introSlideshow.add(volumeSelectionSlide);
 			
 		} else {
-			AudioManager.updateUserMusicVolume(Float.parseFloat(volume));
-			AudioManager.updateUserVoiceVolume(Float.parseFloat(volume));
-			AudioManager.updateUserSfxVolume(Float.parseFloat(volume));
 			createDoYouHaveAnAccountSlide();
 		}
 	}
