@@ -118,7 +118,7 @@ public class GameUIRenderer {
         		AudioManager.playVoice("units");
         	}
 		});
-        unitControlButton.setBounds(new Rectangle(GraphicsUtil.baseScreenBounds().width - 50, 100, 30, 30));
+        unitControlButton.setBounds(new Rectangle(GraphicsUtil.baseScreenBounds().width - 60, 100, 40, 40));
         
         constructionButton = DefaultButtonFactory.colorButton("C", () -> {
 			if (GameModel.mode != InteractionMode.CONSTRUCTION) {
@@ -126,7 +126,7 @@ public class GameUIRenderer {
         		AudioManager.playVoice("construction");
         	}
 		});
-        constructionButton.setBounds(new Rectangle(GraphicsUtil.baseScreenBounds().width - 50, 150, 30, 30));
+        constructionButton.setBounds(new Rectangle(GraphicsUtil.baseScreenBounds().width - 60, 160, 40, 40));
         
         qLinkButton = DefaultButtonFactory.colorButton("Q", () -> {
 			if (GameModel.mode != InteractionMode.Q_LINK) {
@@ -134,7 +134,7 @@ public class GameUIRenderer {
         		AudioManager.playVoice("qlink");
         	}
 		});
-        qLinkButton.setBounds(new Rectangle(GraphicsUtil.baseScreenBounds().width - 50, 200, 30, 30));
+        qLinkButton.setBounds(new Rectangle(GraphicsUtil.baseScreenBounds().width - 60, 220, 40, 40));
 	}
 
 	private void initializeElements() {
@@ -174,7 +174,9 @@ public class GameUIRenderer {
 				renderResourceCircles();
 				defenseUIRenderer.render(state, camera);
 				renderStaticUI();
-				renderModeButtons(state);
+				if (state.teamPause == 0 && state.resumeCountdownMS <= 0) {
+					renderModeButtons(state);
+				}
 				renderShipSelection();
 				renderCountdownScreen(state);
 				renderPauseScreen(state);

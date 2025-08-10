@@ -12,8 +12,15 @@ import lombok.EqualsAndHashCode;
 public class Message extends TimedSlide {
 
 	private Label label;
+	private String message;
 	
 	public Message(String message) {
+		super();
+		this.message = message;
+	}
+	
+	@Override
+	protected void initTimedSlide() {
 		label = new Label(message);
 		label.setBounds(new Rectangle(0, 0, getBounds().width, getBounds().height));
 	}
@@ -25,7 +32,9 @@ public class Message extends TimedSlide {
 
 	@Override
 	public void renderContent() {
-		label.render();
+		if (label != null && label.getText() != null) {
+			label.render();
+		}
 	}
 
 }

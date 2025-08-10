@@ -6,7 +6,7 @@ import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.MathUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.LimitedInputField;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
-import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.Slide;
+import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.InteractiveSlide;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.model.SlideCondition;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.model.SlideLifeCycleStage;
 import lombok.Data;
@@ -15,7 +15,7 @@ import lombok.Getter;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class InputFieldDialog extends Slide {
+public class InputFieldDialog extends InteractiveSlide {
 
 	private float LABEL_MOVE_DURATION = 0.5f;
 	private float LABEL_MAX_OFFSET = 20f;
@@ -31,6 +31,10 @@ public class InputFieldDialog extends Slide {
 		super();
 		mainLabel = new Label(message);
 		subLabel = new Label(subMessage);
+	}
+	
+	@Override
+	protected void initInteractiveSlide() {
 		getConditions().add(new SlideCondition() {
 
 			@Override
@@ -41,14 +45,11 @@ public class InputFieldDialog extends Slide {
 		});
 		inputField = new LimitedInputField();
 		LABEL_MAX_OFFSET *= GraphicsUtil.getHorizontalDisplayScaleFactor();
-	}
-
-	public void build() {
 		inputField.focus();
 	}
 	
 	@Override
-	protected void updateSlide(float slideAlpha) {
+	protected void updateInteractiveSlide(float slideAlpha) {
 		float labelYOffset = 0f;
 		float buttonAlpha = 0f;
 		if (getStage() == SlideLifeCycleStage.FADE_OUT) {
@@ -75,7 +76,7 @@ public class InputFieldDialog extends Slide {
 	}
 
 	@Override
-	public void renderContent() {
+	public void renderInteractiveSlideContent() {
 		inputField.render();
 		mainLabel.render();
 		subLabel.render();

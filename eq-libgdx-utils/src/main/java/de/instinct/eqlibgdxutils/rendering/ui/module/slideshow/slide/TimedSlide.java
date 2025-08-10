@@ -13,6 +13,10 @@ public abstract class TimedSlide extends Slide {
 
 	public TimedSlide() {
 		super();
+	}
+	
+	@Override
+	protected void initSlide() {
 		getConditions().add(new SlideCondition() {
 
 			@Override
@@ -21,6 +25,9 @@ public abstract class TimedSlide extends Slide {
 			}
 
 		});
+		initTimedSlide();
 	}
+
+	protected abstract void initTimedSlide();
 
 }

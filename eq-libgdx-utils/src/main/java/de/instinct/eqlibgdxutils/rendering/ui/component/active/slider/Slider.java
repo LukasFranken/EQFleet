@@ -1,4 +1,4 @@
-package de.instinct.eqfleet.menu.module.settings.model;
+package de.instinct.eqlibgdxutils.rendering.ui.component.active.slider;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
@@ -59,12 +59,12 @@ public class Slider extends Component {
 		sliderButton.setFixedWidth(getBounds().height);
 		if (sliderButton.isDown()) {
 			if (lastUpdateMousePosition != null) {
-				Vector2 thisUpdateMousePosition = InputUtil.getMousePosition();
+				Vector2 thisUpdateMousePosition = InputUtil.getNormalizedMousePosition();
 				float deltaX = thisUpdateMousePosition.x - lastUpdateMousePosition.x;
 				currentValue = MathUtil.clamp(currentValue + (deltaX / (getMaxButtonXPos() - getBounds().x)), 0, 1f);
 				valueChangeAction.execute(currentValue);
 			}
-			lastUpdateMousePosition = InputUtil.getMousePosition();
+			lastUpdateMousePosition = InputUtil.getNormalizedMousePosition();
 		} else {
 			if (lastUpdateMousePosition != null) {
 				if (dragEndAction != null) {
@@ -73,14 +73,14 @@ public class Slider extends Component {
 				lastUpdateMousePosition = null;
 			}
 		}
+		float sliderXPos = MathUtil.linear(getBounds().x, getMaxButtonXPos(), currentValue);
+		sliderButton.setPosition(sliderXPos, getBounds().y);
 	}
 	
 	@Override
 	protected void renderComponent() {
 		Rectangle sliderLineRect = new Rectangle(getScreenScaleAdjustedBounds().x, getScreenScaleAdjustedBounds().y + (getScreenScaleAdjustedBounds().height / 2) + 1, getScreenScaleAdjustedBounds().width, 2);
 		SimpleShapeRenderer.drawRectangle(sliderLineRect, SkinManager.darkerSkinColor);
-		float sliderXPos = MathUtil.linear(getBounds().x, getMaxButtonXPos(), currentValue);
-		sliderButton.setPosition(sliderXPos, getBounds().y);
 		sliderButton.render();
 	}
 

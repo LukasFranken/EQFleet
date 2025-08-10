@@ -8,12 +8,12 @@ import com.badlogic.gdx.math.Rectangle;
 import de.instinct.eqlibgdxutils.ClipboardUtil;
 import de.instinct.eqlibgdxutils.MathUtil;
 import de.instinct.eqlibgdxutils.StringUtils;
+import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
-import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
-import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.Slide;
+import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.InteractiveSlide;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.model.SlideCondition;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.model.SlideLifeCycleStage;
 import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
@@ -22,7 +22,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class ClipboardDialog extends Slide {
+public class ClipboardDialog extends InteractiveSlide {
 
 	private final float CONTENT_FADE_IN_DURATION = 0.5f;
 	private final float LABEL_MAX_OFFSET = 20f;
@@ -40,13 +40,22 @@ public class ClipboardDialog extends Slide {
 	private float contentElapsed;
 	private long lastClipboardLoad;
 	private boolean active;
+	
+	private String message;
+	private Action useAction;
 
-	public ClipboardDialog(String message) {
+	public ClipboardDialog(String message, Action useAction) {
 		super();
+		this.message = message;
+		this.useAction = useAction;
+	}
+	
+	@Override
+	protected void initInteractiveSlide() {
+		active = true;
 		messageLabel = new Label(message);
 		keyLabel = new Label(authKey);
 		responseLabel = new Label(response);
-		active = true;
 		getConditions().add(new SlideCondition() {
 
 			@Override
@@ -55,26 +64,13 @@ public class ClipboardDialog extends Slide {
 			}
 
 		});
-		build();
-	}
-
-	public void build() {
-		Border buttonBorder = new Border();
-		buttonBorder.setColor(new Color(SkinManager.skinColor));
-		buttonBorder.setSize(2);
-
-		useButton = new ColorButton("Use");
-		useButton.setBorder(buttonBorder);
-		useButton.setColor(Color.BLACK);
+		useButton = createSlideButton("Use");
 		useButton.setFixedWidth(60);
-		useButton.setFixedHeight(40);
-		useButton.setLabelColor(new Color(SkinManager.skinColor));
-		useButton.setHoverColor(new Color(SkinManager.darkerSkinColor));
-		useButton.setDownColor(new Color(SkinManager.lighterSkinColor));
+		useButton.setAction(useAction);
 	}
 
 	@Override
-	protected void updateSlide(float slideAlpha) {
+	protected void updateInteractiveSlide(float slideAlpha) {
 		loadClipboardContent();
 
 		float labelYOffset = 0f;
@@ -115,7 +111,7 @@ public class ClipboardDialog extends Slide {
 	}
 	
 	@Override
-	public void renderContent() {
+	public void renderInteractiveSlideContent() {
 		messageLabel.render();
 		if (authKey != null) {
 			useButton.render();

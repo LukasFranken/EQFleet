@@ -1,4 +1,4 @@
-package de.instinct.eqfleet.menu.module.settings.model;
+package de.instinct.eqlibgdxutils.rendering.ui.component.active.slider;
 
 import lombok.Builder;
 import lombok.Data;

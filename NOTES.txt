@@ -2,7 +2,6 @@ ALPHA RELEASE TODO:
 
 GENERAL:
 - appicon, ios loadscreen etc.
-- check android
 - build apk
 
 - settings via meta module (show grid, show fleet lines)
@@ -10,32 +9,22 @@ GENERAL:
  -> optional email provision
  -> authkey regeneration via mail
  -> optional 2-factor with mail on new device
+- radio: show track, skip track, previous track
+- settings tabs (audio, video, gameplay, account)
  
-- planet defense not since start
 - planet resource upgrades part of construction
 
 - stats in profile like gametime, furthest in each campaign
-- freggy seite offline nehmen
 - ai mod: send last resort ancient planet so that ship arrives a few seconds before end
-- hangar space needed for build blueprint, not buy blueprint
-- radio music looping randomly through tracks
-- externalize planet resource bar to circularloadingbar component
+- ai mod: prevent player from easy AP win
 - scrollable console log
 - make beam actual beam
 
-- music as radio
-- intro back button
-- turret build time
-- doesnt leave lobby after conquest
-- fix particle ap stream on mobile
-- menu rank icon doesnt update after rankup
-- surrender sometimes grants extreme amount of exp
-- allow modes only after game start
+- intro start with language+sound settings
 
 - duo, trio campaign via social group
 - social module, squad and aliance with vault
 - replace money label with other squad player names (if in group), but remove click-on
-- remove calculate widht/height from all component except dynamiccomponent
 
 - custom desktop window frame
 
@@ -53,10 +42,23 @@ BUGS:
 - random amazon requests crash gameserver and maybe others
 - gameserver rubberbanding
 - console not typeable after name setting
+- doesnt leave lobby after conquest
+- fix particle ap stream on mobile
+- menu rank icon doesnt update after rankup
+- surrender sometimes grants extreme amount of exp?
+- hangar space needed for build blueprint, not buy blueprint
+
+REFACTIORING:
+- allow modes only after game start
+- externalize planet resource bar to circularloadingbar component
+- externalize slider to libgdxutils
+- speed up low exp animation postgame
+- remove calculate widht/height from all component except dynamiccomponent
 
 ---------------------------------------------------------------------
 FUTURE RELEASES TODO:
 GENERAL:
+- building build time
 - void run = coop dungeoncrawler
 
 GAME:

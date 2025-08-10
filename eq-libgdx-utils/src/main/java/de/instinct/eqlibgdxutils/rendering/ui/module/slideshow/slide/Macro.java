@@ -1,7 +1,4 @@
-package de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.timed;
-
-import java.util.ArrayList;
-import java.util.List;
+package de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide;
 
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.Slide;
@@ -13,12 +10,16 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class Macro extends Slide {
 
-	private List<Action> actions;
+	private Action action;
 	private boolean executed;
 
-	public Macro() {
+	public Macro(Action action) {
 		super();
-		actions = new ArrayList<>();
+		this.action = action;
+	}
+	
+	@Override
+	protected void initSlide() {
 		getConditions().add(new SlideCondition() {
 
 			@Override
@@ -32,9 +33,7 @@ public class Macro extends Slide {
 	
 	@Override
 	protected void updateSlide(float slideAlpha) {
-		for (Action action : actions) {
-			action.execute();
-		}
+		action.execute();
 		executed = true;
 	}
 
@@ -42,9 +41,5 @@ public class Macro extends Slide {
 	public void renderContent() {
 		
 	}
-
-	public void setAction(Action action) {
-		actions.add(action);
-	}
-
+	
 }

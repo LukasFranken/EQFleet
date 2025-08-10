@@ -10,6 +10,10 @@ public class Pause extends TimedSlide {
 
 	public Pause() {
 		super();
+	}
+	
+	@Override
+	protected void initTimedSlide() {
 		setFade(false);
 	}
 	

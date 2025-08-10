@@ -24,16 +24,27 @@ public abstract class Slide {
 	private float alpha;
 	private Rectangle bounds;
 	private boolean fade;
+	private boolean back;
 
 	private SlideLifeCycleStage stage;
 	private List<SlideCondition> conditions;
 
 	public Slide() {
-		stage = SlideLifeCycleStage.CREATED;
 		conditions = new ArrayList<>();
+	}
+
+	public void init() {
+		stage = SlideLifeCycleStage.CREATED;
+		conditions.clear();
 		bounds = GraphicsUtil.baseScreenBounds();
 		fade = true;
+		stageElapsed = 0f;
+		alpha = 0f;
+		back = false;
+		initSlide();
 	}
+
+	protected abstract void initSlide();
 
 	public void render() {
 		update();
@@ -67,6 +78,13 @@ public abstract class Slide {
 					} else {
 						setStage(SlideLifeCycleStage.FINISHED);
 					}
+				}
+			}
+			if (back) {
+				if (fade) {
+					setStage(SlideLifeCycleStage.FADE_OUT);
+				} else {
+					setStage(SlideLifeCycleStage.FINISHED);
 				}
 			}
 			break;

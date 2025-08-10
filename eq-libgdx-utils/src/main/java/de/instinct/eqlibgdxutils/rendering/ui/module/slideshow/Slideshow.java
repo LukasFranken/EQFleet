@@ -1,6 +1,7 @@
 package de.instinct.eqlibgdxutils.rendering.ui.module.slideshow;
 
-import java.util.Queue;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.instinct.eqlibgdxutils.rendering.ui.module.BaseModule;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.model.SlideLifeCycleStage;
@@ -11,11 +12,13 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class Slideshow extends BaseModule {
 
-	private Queue<Slide> elementQueue;
-	private Slide currentElement;
+	private List<Slide> slideList;
+	private int currentElement;
 
 	public Slideshow() {
 		setDecorated(false);
+		currentElement = 0;
+		slideList = new ArrayList<>();
 	}
 
 	@Override
@@ -26,31 +29,33 @@ public class Slideshow extends BaseModule {
 
 	@Override
 	public void updateContent() {
-
+		if (currentElement < slideList.size() && slideList.get(currentElement) != null) {
+			slideList.get(currentElement).setBounds(getBounds());
+			if (slideList.get(currentElement).getStage() == SlideLifeCycleStage.FINISHED) {
+				if (!slideList.get(currentElement).isBack()) {
+					currentElement++;
+				} else {
+					currentElement--;
+					slideList.get(currentElement).init();
+					slideList.remove(slideList.size() - 1);
+				}
+			}
+		}
+	}
+	
+	public void add(Slide slide) {
+		slide.init();
+		slideList.add(slide);
 	}
 
 	@Override
 	public void updateContentPosition() {
 
 	}
-	
-	@Override
-	protected void updateElement() {
-		
-	}
 
 	@Override
 	protected void renderContent() {
-		if (currentElement == null && elementQueue != null) {
-			currentElement = elementQueue.poll();
-		}
-		if (currentElement != null) {
-			currentElement.setBounds(getBounds());
-			currentElement.render();
-			if (currentElement.getStage() == SlideLifeCycleStage.FINISHED) {
-				currentElement = null;
-			}
-		}
+		if (currentElement < slideList.size() && slideList.get(currentElement) != null) slideList.get(currentElement).render();
 	}
 
 	@Override
