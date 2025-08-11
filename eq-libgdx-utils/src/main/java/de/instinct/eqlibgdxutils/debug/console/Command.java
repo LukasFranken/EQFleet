@@ -8,6 +8,7 @@ import lombok.Data;
 public class Command {
 	
 	private String method;
+	private String logMethod;
 	private String description;
 	private CommandAction action;
 

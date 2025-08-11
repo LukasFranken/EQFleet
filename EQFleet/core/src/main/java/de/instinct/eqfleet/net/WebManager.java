@@ -70,7 +70,7 @@ public class WebManager {
         Request<?> request = requestQueue.peek();
         if (request != null) {
             request.getRequestAction().execute();
-            requestQueue.remove();
+            if (!requestQueue.isEmpty()) requestQueue.remove();
         }
     }
     

@@ -15,10 +15,11 @@ GENERAL:
 - planet resource upgrades part of construction
 
 - stats in profile like gametime, furthest in each campaign
-- ai mod: send last resort ancient planet so that ship arrives a few seconds before end
-- ai mod: prevent player from easy AP win
 - scrollable console log
 - make beam actual beam
+
+- elimination bonus?
+- delete all prefs command/prefmanager
 
 - duo, trio campaign via social group
 - social module, squad and aliance with vault
@@ -41,7 +42,6 @@ BUGS:
 - gameserver rubberbanding
 - console not typeable after name setting
 - doesnt leave lobby after conquest
-- fix particle ap stream on mobile
 - menu rank icon doesnt update after rankup
 - surrender sometimes grants extreme amount of exp?
 - hangar space needed for build blueprint, not buy blueprint
@@ -51,12 +51,15 @@ REFACTIORING:
 - externalize planet resource bar to circularloadingbar component
 - speed up low exp animation postgame
 - remove calculate widht/height from all component except dynamiccomponent
+- ios crashes after a while
+- prevent all shutdown crashes
 
 ---------------------------------------------------------------------
 FUTURE RELEASES TODO:
 GENERAL:
 - building build time
 - void run = coop dungeoncrawler
+- ai behavior manager tool
 
 GAME:
 - sending multiple ships?

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.instinct.api.core.modules.MenuModule;
-import de.instinct.eqlibgdxutils.PreferenceUtil;
+import de.instinct.eqfleet.PreferenceManager;
 import de.instinct.eqlibgdxutils.rendering.ui.popup.PopupRenderer;
 
 public class ModuleManager {
@@ -12,7 +12,7 @@ public class ModuleManager {
 	private static List<InitialModuleOpenMessage> moduleOpenMessages;
 	
 	public static void init() {
-		String preferenceLoadedModules = PreferenceUtil.load("initialmodule");
+		String preferenceLoadedModules = PreferenceManager.load("initialmodule");
 		moduleOpenMessages = new ArrayList<>();
 		moduleOpenMessages.add(InitialModuleOpenMessage.builder()
 				.module(MenuModule.STARMAP)
@@ -76,8 +76,8 @@ public class ModuleManager {
 			if (message.getModule() == module) {
 				if (!message.isOpened()) {
 					message.setOpened(true);
-					String loadedString = PreferenceUtil.load("initialmodule");
-					PreferenceUtil.save("initialmodule", (loadedString.isEmpty() ? "" : (loadedString + ",")) + message.getModule().toString());
+					String loadedString = PreferenceManager.load("initialmodule");
+					PreferenceManager.save("initialmodule", (loadedString.isEmpty() ? "" : (loadedString + ",")) + message.getModule().toString());
 					PopupRenderer.createMessageDialog(module.toString(), message.getMessage());
 				}
 				break;

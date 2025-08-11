@@ -48,11 +48,14 @@ public class MetricUtil {
 	private static ColorButton scrollDownButton;
 
 	public static void init() {
-		batch = new SpriteBatch();
 		metrics = new ArrayList<>();
 		metricsAddQueue = new ConcurrentLinkedQueue<>();
 		metricsUpdateQueue = new ConcurrentLinkedQueue<>();
 		metricsRemoveQueue = new ConcurrentLinkedQueue<>();
+	}
+	
+	public static void build() {
+		batch = new SpriteBatch();
 		backgroundColorTexture = createBackgroundColorTexture();
 		spanHorizontal = true;
 		fixedHeight = (int)GraphicsUtil.baseScreenBounds().getHeight();

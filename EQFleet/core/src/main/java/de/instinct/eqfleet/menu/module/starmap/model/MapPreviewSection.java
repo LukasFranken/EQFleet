@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import de.instinct.api.game.dto.MapPreview;
 import de.instinct.api.game.dto.PreviewPlanet;
 import de.instinct.eqfleet.game.GameConfig;
+import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.MathUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
@@ -51,7 +52,7 @@ public class MapPreviewSection extends Component {
 
 	@Override
 	protected void renderComponent() {
-		float planetRadius = 3f * mapPreview.getZoomFactor();
+		float planetRadius = 3f * mapPreview.getZoomFactor() * GraphicsUtil.getVerticalDisplayScaleFactor();
 		for (PreviewPlanet planet : mapPreview.getPlanets()) {
 			Vector2 planetScreenPos = getScreenPosition(planet.getXPos(), planet.getYPos());
 			Color planetColor = planet.isAncient() && planet.getOwnerId() == 0 ? GameConfig.ancientColor : getPlayerColor(planet.getOwnerId());

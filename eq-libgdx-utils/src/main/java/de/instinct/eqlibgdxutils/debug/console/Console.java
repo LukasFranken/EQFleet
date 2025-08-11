@@ -52,9 +52,15 @@ public class Console {
 	
 	public static void init() {
 		commandProcessor = new CommandProcessor();
+		BaseCommandLoader baseCommandLoader = new BaseCommandLoader();
+		commandProcessor.addCommands(baseCommandLoader.getCommands());
 		inputList = new ArrayList<>();
+		MetricUtil.init();
+	}
+	
+	public static void build() {
+		buildMetrics();
 		backgroundTexture = TextureManager.createTexture(new Color(0, 0, 0, 0.85f));
-		initializeMetrics();
 		activationScreenTaps = new ArrayList<>();
 		activationScreenTaps.add(ActivationScreenTap.builder()
 				.region(new Rectangle(0, GraphicsUtil.baseScreenBounds().getHeight() - tapSize, tapSize, tapSize))
@@ -97,6 +103,10 @@ public class Console {
 		}
 	}
 	
+	public static List<Command> getRegisteredCommands() {
+		return commandProcessor.getCommands();
+	}
+	
 	public static void saveFilter() {
 		String filterString = "";
 		for (String tag : Console.getTagFilter()) {
@@ -112,18 +122,16 @@ public class Console {
 		return tagFilter;
 	}
 	
-	private static void initializeMetrics() {
-    	MetricUtil.init();
+	private static void buildMetrics() {
+    	MetricUtil.build();
     	MetricUtil.setFixedHeight(metricsHeight);
     	if (!MetricUtil.isActive()) {
 			MetricUtil.toggle();
 		}
 	}
 	
-	public static void setCommands(CommandLoader commandLoader) {
-		BaseCommandLoader baseCommandLoader = new BaseCommandLoader();
-		commandProcessor.addCommands(baseCommandLoader.getCommands());
-		commandProcessor.addCommands(commandLoader.getCommands());
+	public static void addCommands(List<Command> commands) {
+		commandProcessor.addCommands(commands);
 	}
 	
 	public static void toggle() {

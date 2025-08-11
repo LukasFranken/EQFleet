@@ -8,8 +8,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 
+import de.instinct.eqfleet.PreferenceManager;
 import de.instinct.eqlibgdxutils.MathUtil;
-import de.instinct.eqlibgdxutils.PreferenceUtil;
 import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
@@ -23,7 +23,7 @@ public class AudioManager {
 	private static Music currentMusic;
 	private static Music queuedInMusic;
 	private static Music currentVoice;
-	private static List<Music> availableRadioTracks;
+	private static List<String> availableRadioTracks;
 	private static Cache<Music> voices;
 	private static Cache<Sound> sfxs;
 
@@ -39,6 +39,10 @@ public class AudioManager {
 
 	public static void init() {
 		availableRadioTracks = new ArrayList<>();
+		availableRadioTracks.add("eqspace1");
+		availableRadioTracks.add("eqspace2");
+		availableRadioTracks.add("eqspace3");
+		availableRadioTracks.add("eqspace4");
 		voices = new Cache<>(new LoadSequence<Music>() {
 
 			@Override
@@ -55,15 +59,15 @@ public class AudioManager {
 			}
 
 		});
-		String musicVolumePrefString = PreferenceUtil.load("musicvolume");
+		String musicVolumePrefString = PreferenceManager.load("musicvolume");
 		if (!musicVolumePrefString.isEmpty()) {
 			userMusicVolume = Float.parseFloat(musicVolumePrefString);
 		}
-		String voiceVolumePrefString = PreferenceUtil.load("voicevolume");
+		String voiceVolumePrefString = PreferenceManager.load("voicevolume");
 		if (!voiceVolumePrefString.isEmpty()) {
 			userVoiceVolume = Float.parseFloat(voiceVolumePrefString);
 		}
-		String sfxVolumePrefString = PreferenceUtil.load("sfxvolume");
+		String sfxVolumePrefString = PreferenceManager.load("sfxvolume");
 		if (!sfxVolumePrefString.isEmpty()) {
 			userSfxVolume = Float.parseFloat(sfxVolumePrefString);
 		}
@@ -103,7 +107,7 @@ public class AudioManager {
 	public static void update() {
 		if (radioMode) {
 			if (currentMusic == null || !currentMusic.isPlaying()) {
-				String tag = "eqspace" + (new Random().nextInt(4) + 1);
+				String tag = availableRadioTracks.get(new Random().nextInt(4));
 				currentMusic = Gdx.audio.newMusic(Gdx.files.internal("audio/music/" + tag + ".mp3"));
 				currentMusic.setVolume(targetMusicVolume * userMusicVolume);
 				currentMusic.setLooping(false);
@@ -187,15 +191,15 @@ public class AudioManager {
 	}
 
 	public static void saveUserMusicVolume(float currentValue) {
-		PreferenceUtil.save("musicvolume", StringUtils.format(currentValue, 2));
+		PreferenceManager.save("musicvolume", StringUtils.format(currentValue, 2));
 	}
 	
 	public static void saveUserVoiceVolume(float currentValue) {
-		PreferenceUtil.save("voicevolume", StringUtils.format(currentValue, 2));
+		PreferenceManager.save("voicevolume", StringUtils.format(currentValue, 2));
 	}
 	
 	public static void saveUserSfxVolume(float currentValue) {
-		PreferenceUtil.save("sfxvolume", StringUtils.format(currentValue, 2));
+		PreferenceManager.save("sfxvolume", StringUtils.format(currentValue, 2));
 	}
 
 }

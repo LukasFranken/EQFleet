@@ -44,8 +44,8 @@ public class AiEngine {
 		newAiPlayer.ships.add(aiShip);
 		
 		PlanetData aiPlanetData = new PlanetData();
-		aiPlanetData.resourceGenerationSpeed = 1;
-		aiPlanetData.maxResourceCapacity = 10;
+		aiPlanetData.resourceGenerationSpeed = AiStatManager.getResourceGenerationSpeed(threatLevel);
+		aiPlanetData.maxResourceCapacity = AiStatManager.getMaxResourceCapacity(threatLevel);
 		
 		if (threatLevel >= 10) {
 			TurretData aiTurret = new TurretData();
@@ -59,9 +59,9 @@ public class AiEngine {
 		}
 		
 		newAiPlayer.planetData = aiPlanetData;
-		newAiPlayer.commandPointsGenerationSpeed = 0.1f;
-		newAiPlayer.startCommandPoints = 3;
-		newAiPlayer.maxCommandPoints = 10;
+		newAiPlayer.commandPointsGenerationSpeed = AiStatManager.getCommandPointsGenerationSpeed(threatLevel);
+		newAiPlayer.startCommandPoints = AiStatManager.getStartCommandPoints(threatLevel);
+		newAiPlayer.maxCommandPoints = AiStatManager.getMaxCommandPoints(threatLevel);
 		newAiPlayer.currentCommandPoints = newAiPlayer.startCommandPoints;
 		
 		difficultyLoader.load(newAiPlayer, threatLevel);
@@ -138,13 +138,28 @@ public class AiEngine {
 		}
 		if (state.maxGameTimeMS - state.gameTimeMS < 10000 && state.teamATPs.get(aiPlayer.teamId == 2 ? 1 : 2) == 0) {
 			for (Planet planet : state.planets) {
-				if (planet.ancient) {
+				if (planet.ancient && closestOwnPlanet.currentResources >= aiPlayer.ships.get(0).cost) {
 					ShipMovementOrder newShipMovementOrder = new ShipMovementOrder();
 					newShipMovementOrder.fromPlanetId = closestOwnPlanet.id;
 					newShipMovementOrder.toPlanetId = planet.id;
 					newShipMovementOrder.playerId = aiPlayer.id;
 					newShipMovementOrder.playerShipId = 0;
 					return newShipMovementOrder;
+				}
+			}
+		}
+		if (state.teamATPs.get(aiPlayer.teamId == 2 ? 1 : 2) >= state.atpToWin / 2) {
+			for (Planet planet : state.planets) {
+				if (planet.ancient) {
+					Player planetOwner = EngineUtility.getPlayer(state.players, planet.ownerId);
+					if (planetOwner.teamId != aiPlayer.teamId && closestOwnPlanet.currentResources >= aiPlayer.ships.get(0).cost && aiPlayer.currentCommandPoints > 1) {
+						ShipMovementOrder newShipMovementOrder = new ShipMovementOrder();
+						newShipMovementOrder.fromPlanetId = closestOwnPlanet.id;
+						newShipMovementOrder.toPlanetId = planet.id;
+						newShipMovementOrder.playerId = aiPlayer.id;
+						newShipMovementOrder.playerShipId = 0;
+						return newShipMovementOrder;
+					}
 				}
 			}
 		}

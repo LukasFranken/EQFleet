@@ -63,7 +63,7 @@ public class PlainRectangularLoadingBar extends RectangularLoadingBar {
 			break;
 		case SOUTH:
 			TextureManager.draw(bar, new Rectangle(getScreenScaleAdjustedBounds().x + getBorder().getSize(),
-					getScreenScaleAdjustedBounds().y + + getBounds().height - getBorder().getSize() - verticalBarLength,
+					getScreenScaleAdjustedBounds().y + + getScreenScaleAdjustedBounds().height - getBorder().getSize() - verticalBarLength,
 					getScreenScaleAdjustedBounds().width - (getBorder().getSize()) * 2,
 					verticalBarLength), getAlpha());
 			break;

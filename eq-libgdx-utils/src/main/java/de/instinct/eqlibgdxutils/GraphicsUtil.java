@@ -47,6 +47,15 @@ public class GraphicsUtil {
 		return adjustedBounds;
 	}
 	
+	public static Vector2 scaleFactorAdjusted(Vector2 unadjustedPosition) {
+		float horizontalScaleFactor = getHorizontalDisplayScaleFactor();
+		float verticalScaleFactor = getVerticalDisplayScaleFactor();
+		Vector2 adjustedPosition = new Vector2(unadjustedPosition);
+		adjustedPosition.x *= horizontalScaleFactor;
+		adjustedPosition.y *= verticalScaleFactor;
+		return adjustedPosition;
+	}
+	
 	public static Rectangle scaleFactorDeducted(Rectangle unadjustedBounds) {
 		float horizontalScaleFactor = getHorizontalDisplayScaleFactor();
 		float verticalScaleFactor = getVerticalDisplayScaleFactor();
@@ -56,6 +65,15 @@ public class GraphicsUtil {
 		adjustedBounds.width /= horizontalScaleFactor;
 		adjustedBounds.height /= verticalScaleFactor;
 		return adjustedBounds;
+	}
+	
+	public static Vector2 scaleFactorDeducted(Vector2 unadjustedPosition) {
+		float horizontalScaleFactor = getHorizontalDisplayScaleFactor();
+		float verticalScaleFactor = getVerticalDisplayScaleFactor();
+		Vector2 adjustedPosition = new Vector2(unadjustedPosition);
+		adjustedPosition.x /= horizontalScaleFactor;
+		adjustedPosition.y /= verticalScaleFactor;
+		return adjustedPosition;
 	}
 
 }

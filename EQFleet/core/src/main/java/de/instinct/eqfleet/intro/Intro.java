@@ -9,13 +9,13 @@ import de.instinct.api.auth.dto.TokenVerificationResponse;
 import de.instinct.api.core.API;
 import de.instinct.eqfleet.App;
 import de.instinct.eqfleet.GlobalStaticData;
+import de.instinct.eqfleet.PreferenceManager;
 import de.instinct.eqfleet.audio.AudioManager;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.backend.driver.local.tutorial.TutorialMode;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.main.MenuModel;
 import de.instinct.eqfleet.net.WebManager;
-import de.instinct.eqlibgdxutils.PreferenceUtil;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.slider.ValueChangeAction;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
@@ -25,7 +25,6 @@ import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.interactive
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.interactive.ClipboardDialog;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.interactive.MultiChoiceDialog;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.interactive.SliderSlide;
-import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.model.SlideAction;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.model.SlideChoice;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.model.SlideCondition;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.timed.Message;
@@ -47,7 +46,7 @@ public class Intro {
 		active = true;
 		String authKey = "";
 		if (!GlobalStaticData.debugIntro) {
-			authKey = PreferenceUtil.load("authkey");
+			authKey = PreferenceManager.load("authkey");
 		}
 		if (!authKey.contentEquals("")) {
 			verifyAuthKey(authKey, true);
@@ -65,7 +64,7 @@ public class Intro {
 			    result -> {
 					if (result == TokenVerificationResponse.VERIFIED) {
 						API.authKey = authKey;
-						PreferenceUtil.save("authkey", authKey);
+						PreferenceManager.save("authkey", authKey);
 						loadMenu();
 					} else {
 						if (loadfirst) {
@@ -115,7 +114,7 @@ public class Intro {
 	}
 	
 	private static void createFirstTimeSlides() {
-		String language = PreferenceUtil.load("language");
+		String language = PreferenceManager.load("language");
 		if (language.isEmpty()) {
 			createSelectLanguageSlide();
 		} else {
@@ -136,7 +135,7 @@ public class Intro {
 			
 			@Override
 			public void execute() {
-				PreferenceUtil.save("language", "en");
+				PreferenceManager.save("language", "en");
 				createVolumeSelectionSlide();
 			}
 			
@@ -146,9 +145,9 @@ public class Intro {
 	}
 	
 	private static void createVolumeSelectionSlide() {
-		String volume = PreferenceUtil.load("initialvolume");
+		String volume = PreferenceManager.load("initialvolume");
 		if (volume.isEmpty()) {
-			AudioManager.playMusic("eqspace1", false);
+			AudioManager.playMusic("eqspace2", false);
 			ValueChangeAction volumeChangeAction = new ValueChangeAction() {
 				
 				@Override
@@ -162,7 +161,7 @@ public class Intro {
 				@Override
 				public void execute() {
 					String newVolume = String.valueOf(AudioManager.getUserMusicVolume());
-					PreferenceUtil.save("initialvolume", newVolume);
+					PreferenceManager.save("initialvolume", newVolume);
 					AudioManager.updateUserMusicVolume(Float.parseFloat(newVolume));
 					AudioManager.updateUserVoiceVolume(Float.parseFloat(newVolume));
 					AudioManager.updateUserSfxVolume(Float.parseFloat(newVolume));
@@ -229,7 +228,7 @@ public class Intro {
 					    () -> API.authentication().register(),
 					    result -> {
 					    	API.authKey = result;
-							PreferenceUtil.save("authkey", result);
+					    	PreferenceManager.save("authkey", result);
 							Game.startTutorial(TutorialMode.FULL);
 							active = false;
 					    }
@@ -249,7 +248,7 @@ public class Intro {
 					    () -> API.authentication().register(),
 					    result -> {
 					    	API.authKey = result;
-							PreferenceUtil.save("authkey", result);
+					    	PreferenceManager.save("authkey", result);
 							Game.startTutorial(TutorialMode.SHORT);
 							active = false;
 					    }
@@ -270,7 +269,7 @@ public class Intro {
 					    result -> {
 					    	API.authKey = result;
 							if (result != null) {
-								PreferenceUtil.save("authkey", result);
+								PreferenceManager.save("authkey", result);
 							}
 							loadMenu();
 					    }

@@ -399,7 +399,6 @@ public class GameUILoader {
 		        }
 				if (activeAncientPlanet != null) {
 			    	if (activeAncientPlanet.ownerId != 0) {
-			    		
 					    Player self = EngineUtility.getPlayer(GameModel.activeGameState.players, GameModel.playerId);
 			    		if (owner.teamId == self.teamId) {
 			    			alphaStore += Gdx.graphics.getDeltaTime();

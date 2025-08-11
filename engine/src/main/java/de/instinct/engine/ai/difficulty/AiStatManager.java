@@ -68,4 +68,40 @@ public class AiStatManager {
 		return aiPlanetDefense;
 	}
 
+	public static float getResourceGenerationSpeed(int threatLevel) {
+		float resourceGenerationSpeedPerPowOfTen = 1f;
+		return scaleWithThreatLevelByPowerOfTen(threatLevel, resourceGenerationSpeedPerPowOfTen);
+	}
+
+	public static float getMaxResourceCapacity(int threatLevel) {
+		float maxResourceCapacityPerPowOfTen = 10f;
+		return scaleWithThreatLevelByPowerOfTen(threatLevel, maxResourceCapacityPerPowOfTen);
+	}
+
+	public static double getCommandPointsGenerationSpeed(int threatLevel) {
+		float commandPointsGenerationSpeedPerPowOfTen = 0.1f;
+		return scaleWithThreatLevelByPowerOfTen(threatLevel, commandPointsGenerationSpeedPerPowOfTen);
+	}
+	
+	public static double getStartCommandPoints(int threatLevel) {
+		float startCommandPointsPerPowOfTen = 3f;
+		return scaleWithThreatLevelByPowerOfTen(threatLevel, startCommandPointsPerPowOfTen);
+	}
+	
+	public static double getMaxCommandPoints(int threatLevel) {
+		float maxCommandPointsPerPowOfTen = 10f;
+		return scaleWithThreatLevelByPowerOfTen(threatLevel, maxCommandPointsPerPowOfTen);
+	}
+	
+	private static float scaleWithThreatLevelByPowerOfTen(int threatLevel, float baseValue) {
+		float remainingThreat = threatLevel;
+		float scalingMaxResourceCapacity = 0;
+		while (remainingThreat > 10) {
+			remainingThreat /= 10;
+			scalingMaxResourceCapacity += baseValue;
+		}
+		scalingMaxResourceCapacity += (remainingThreat/10f) * baseValue;
+		return Math.max(baseValue, scalingMaxResourceCapacity);
+	}
+
 }

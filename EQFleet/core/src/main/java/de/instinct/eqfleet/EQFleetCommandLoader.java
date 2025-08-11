@@ -9,10 +9,10 @@ import de.instinct.api.core.API;
 import de.instinct.api.meta.dto.ExperienceUpdateResponseCode;
 import de.instinct.api.meta.dto.Resource;
 import de.instinct.api.meta.dto.ResourceAmount;
+import de.instinct.api.meta.dto.ResourceData;
 import de.instinct.api.meta.dto.ResourceUpdateResponseCode;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.net.WebManager;
-import de.instinct.eqlibgdxutils.PreferenceUtil;
 import de.instinct.eqlibgdxutils.debug.console.Command;
 import de.instinct.eqlibgdxutils.debug.console.CommandAction;
 import de.instinct.eqlibgdxutils.debug.console.CommandLoader;
@@ -32,6 +32,7 @@ public class EQFleetCommandLoader implements CommandLoader {
 		List<Command> commands = new ArrayList<>();
 		commands.add(Command.builder()
 				.method("exit")
+				.logMethod("exit")
 				.description("close the application")
 				.action(new CommandAction() {
 					
@@ -44,23 +45,13 @@ public class EQFleetCommandLoader implements CommandLoader {
 		
 		commands.add(Command.builder()
 				.method("version")
+				.logMethod("version")
 				.description("show the current EQFleet version")
 				.action(new CommandAction() {
 					
 					@Override
 					public void execute(String message) {
 						log("EQFleet Version: v" + App.VERSION);
-					}
-				})
-				.build());
-		commands.add(Command.builder()
-				.method("clear")
-				.description("clear the console log")
-				.action(new CommandAction() {
-					
-					@Override
-					public void execute(String message) {
-						Logger.clear();
 					}
 				})
 				.build());
@@ -74,6 +65,7 @@ public class EQFleetCommandLoader implements CommandLoader {
 		List<Command> menuCommands = new ArrayList<>();
 		menuCommands.add(Command.builder()
 				.method("menu.reload")
+				.logMethod("menu.reload")
 				.description("reload the menu and all its modules")
 				.action(new CommandAction() {
 					
@@ -92,191 +84,113 @@ public class EQFleetCommandLoader implements CommandLoader {
 		List<Command> configCommands = new ArrayList<>();
 		configCommands.add(Command.builder()
 				.method("config.key")
+				.logMethod("config.key")
 				.description("show the auth key for the EQFleet API")
 				.action(new CommandAction() {
 					
 					@Override
 					public void execute(String message) {
-						log("saved authkey: " + PreferenceUtil.load("authkey"));
+						log("saved authkey: " + PreferenceManager.load("authkey"));
 					}
 					
 				})
 				.build());
 		configCommands.add(Command.builder()
 				.method("config.deletekey")
+				.logMethod("config.deletekey")
 				.description("delete the local auth key for the EQFleet API")
 				.action(new CommandAction() {
 					
 					@Override
 					public void execute(String message) {
-						PreferenceUtil.save("authkey", "");
+						PreferenceManager.save("authkey", "");
 						log("local auth key deleted");
 					}
 					
 				})
 				.build());
 		configCommands.add(Command.builder()
-				.method("config.glow=off")
-				.description("disable the glow effect for UI elements")
+				.method("config.glow=")
+				.logMethod("config.glow=<mode>")
+				.description("glow effect for UI elements, see modes with 'listglow'")
 				.action(new CommandAction() {
 					
 					@Override
 					public void execute(String message) {
-						PreferenceUtil.save("glow", "0");
-						TextureManager.setDefaultGlowRadius(0);
-						Menu.reload();
-						log("Glow effect disabled");
+						String mode = message.replace("config.glow=", "").trim();
+						switch (mode) {
+						case "off":
+							PreferenceManager.save("glow", "0");
+							TextureManager.setDefaultGlowRadius(0);
+							Menu.reload();
+							log("Glow effect disabled");
+							break;
+						case "low":
+							PreferenceManager.save("glow", "10");
+							TextureManager.setDefaultGlowRadius(10);
+							Menu.reload();
+							log("Glow effect set to low");
+							break;
+						case "high":
+							PreferenceManager.save("glow", "30");
+							TextureManager.setDefaultGlowRadius(30);
+							Menu.reload();
+							log("Glow effect set to high");
+							break;
+
+						default:
+							log("Invalid glow mode, use 'listglow'");
+							break;
+						}
 					}
 					
 				})
 				.build());
 		configCommands.add(Command.builder()
-				.method("config.glow=low")
-				.description("set the glow effect for UI elements to low (10px)")
+				.method("listglow")
+				.logMethod("listglow")
+				.description("lists all glow modes")
 				.action(new CommandAction() {
 					
 					@Override
 					public void execute(String message) {
-						PreferenceUtil.save("glow", "10");
-						TextureManager.setDefaultGlowRadius(10);
-						Menu.reload();
-						log("Glow effect set to low");
-					}
-					
-				})
-				.build());
-		configCommands.add(Command.builder()
-				.method("config.glow=high")
-				.description("set the glow effect for UI elements to high (30px)")
-				.action(new CommandAction() {
-					
-					@Override
-					public void execute(String message) {
-						PreferenceUtil.save("glow", "30");
-						TextureManager.setDefaultGlowRadius(30);
-						Menu.reload();
-						log("Glow effect set to high");
+						log("off, low, high");
 					}
 					
 				})
 				.build());
 		
 		configCommands.add(Command.builder()
-				.method("config.skin=red")
-				.description("set the skin color to red (default)")
+				.method("config.skin=")
+				.logMethod("config.skin=<color>")
+				.description("set the skin color, see available colors with 'listskin'")
 				.action(new CommandAction() {
 					
 					@Override
 					public void execute(String message) {
-						PreferenceUtil.save("skin", "RED");
-						SkinManager.setSkinColor(SkinColor.RED);
-						Menu.reload();
-						log("Skin color set to red");
+						String color = message.replace("config.skin=", "").trim().toUpperCase();
+						try {
+							SkinManager.setSkinColor(SkinColor.valueOf(color));
+							PreferenceManager.save("skin", color);
+							Menu.reload();
+							log("Skin color set to " + color);
+						} catch (Exception e) {
+							log("Error setting skin color: " + color);
+							log(e.getMessage());
+						}
 					}
 					
 				})
 				.build());
 		configCommands.add(Command.builder()
-				.method("config.skin=blue")
-				.description("set the skin color to blue")
+				.method("listskin")
+				.logMethod("listskin")
+				.description("list all available skin colors")
 				.action(new CommandAction() {
 					
 					@Override
 					public void execute(String message) {
-						PreferenceUtil.save("skin", "BLUE");
-						SkinManager.setSkinColor(SkinColor.BLUE);
-						Menu.reload();
-						log("Skin color set to blue");
-					}
-					
-				})
-				.build());
-		configCommands.add(Command.builder()
-				.method("config.skin=purple")
-				.description("set the skin color to purple")
-				.action(new CommandAction() {
-					
-					@Override
-					public void execute(String message) {
-						PreferenceUtil.save("skin", "PURPLE");
-						SkinManager.setSkinColor(SkinColor.PURPLE);
-						Menu.reload();
-						log("Skin color set to purple");
-					}
-					
-				})
-				.build());
-		configCommands.add(Command.builder()
-				.method("config.skin=pink")
-				.description("set the skin color to pink")
-				.action(new CommandAction() {
-					
-					@Override
-					public void execute(String message) {
-						PreferenceUtil.save("skin", "PINK");
-						SkinManager.setSkinColor(SkinColor.PINK);
-						Menu.reload();
-						log("Skin color set to pink");
-					}
-					
-				})
-				.build());
-		configCommands.add(Command.builder()
-				.method("config.skin=orange")
-				.description("set the skin color to orange")
-				.action(new CommandAction() {
-					
-					@Override
-					public void execute(String message) {
-						PreferenceUtil.save("skin", "ORANGE");
-						SkinManager.setSkinColor(SkinColor.ORANGE);
-						Menu.reload();
-						log("Skin color set to orange");
-					}
-					
-				})
-				.build());
-		configCommands.add(Command.builder()
-				.method("config.skin=yellow")
-				.description("set the skin color to yellow")
-				.action(new CommandAction() {
-					
-					@Override
-					public void execute(String message) {
-						PreferenceUtil.save("skin", "YELLOW");
-						SkinManager.setSkinColor(SkinColor.YELLOW);
-						Menu.reload();
-						log("Skin color set to yellow");
-					}
-					
-				})
-				.build());
-		configCommands.add(Command.builder()
-				.method("config.skin=gray")
-				.description("set the skin color to gray")
-				.action(new CommandAction() {
-					
-					@Override
-					public void execute(String message) {
-						PreferenceUtil.save("skin", "GRAY");
-						SkinManager.setSkinColor(SkinColor.GRAY);
-						Menu.reload();
-						log("Skin color set to gray");
-					}
-					
-				})
-				.build());
-		configCommands.add(Command.builder()
-				.method("config.skin=white")
-				.description("set the skin color to white")
-				.action(new CommandAction() {
-					
-					@Override
-					public void execute(String message) {
-						PreferenceUtil.save("skin", "WHITE");
-						SkinManager.setSkinColor(SkinColor.WHITE);
-						Menu.reload();
-						log("Skin color set to white");
+						log("red, blue, purple, pink, orange, yellow, gray, white");
 					}
 					
 				})
@@ -287,21 +201,22 @@ public class EQFleetCommandLoader implements CommandLoader {
 	private List<Command> getGameCommands() {
 		List<Command> gameCommands = new ArrayList<>();
 		gameCommands.add(Command.builder()
-				.method("resourcehelp")
-				.description("get help for resource commands")
+				.method("listresource")
+				.logMethod("listresource")
+				.description("list all available resource types")
 				.action(new CommandAction() {
 					
 					@Override
 					public void execute(String message) {
-						log("usage: addresource=<type>,<amount>");
-						log("Types: credits, metal, crystal, deuterium, equilibrium");
+						log("credits, metal, crystal, deuterium, equilibrium");
 					}
 					
 				})
 				.build());
 		gameCommands.add(Command.builder()
 				.method("addresource=")
-				.description("adds an amount of a resource (see resourcehelp)")
+				.logMethod("addresource=<type>,<amount>")
+				.description("adds an amount of a resource, see 'listresource' for types")
 				.action(new CommandAction() {
 					
 					@Override
@@ -332,7 +247,56 @@ public class EQFleetCommandLoader implements CommandLoader {
 				})
 				.build());
 		gameCommands.add(Command.builder()
+				.method("addallresources")
+				.logMethod("addallresources")
+				.description("adds 1000 of all resources")
+				.action(new CommandAction() {
+					
+					@Override
+					public void execute(String message) {
+						ResourceData resources = new ResourceData();
+						resources.setResources(new ArrayList<>());
+						ResourceAmount credits = new ResourceAmount();
+						credits.setType(Resource.CREDITS);
+						credits.setAmount(10000);
+						resources.getResources().add(credits);
+						ResourceAmount metal = new ResourceAmount();
+						metal.setType(Resource.METAL);
+						metal.setAmount(1000);
+						resources.getResources().add(metal);
+						ResourceAmount crystal = new ResourceAmount();
+						crystal.setType(Resource.CRYSTAL);
+						crystal.setAmount(1000);
+						resources.getResources().add(crystal);
+						ResourceAmount deuterium = new ResourceAmount();
+						deuterium.setType(Resource.DEUTERIUM);
+						deuterium.setAmount(1000);
+						resources.getResources().add(deuterium);
+						ResourceAmount equilibrium = new ResourceAmount();
+						equilibrium.setType(Resource.EQUILIBRIUM);
+						equilibrium.setAmount(1000);
+						resources.getResources().add(equilibrium);
+						try {
+							WebManager.enqueue(
+								    () -> API.meta().addResources(API.authKey, resources),
+								    result -> {
+								    	if (result == ResourceUpdateResponseCode.SUCCESS) {
+								    		log("added resources");
+								    	} else {
+								    		log("error adding resources: " + result);
+								    	}
+								    }
+							);
+						} catch (Exception e) {
+							Logger.log(LOG_TAG, "malformed command. see resourcehelp", LOG_COLOR);
+						}
+					}
+					
+				})
+				.build());
+		gameCommands.add(Command.builder()
 				.method("addexperience=")
+				.logMethod("addexperience=<amount>")
 				.description("adds an amount of experience")
 				.action(new CommandAction() {
 					

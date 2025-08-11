@@ -16,13 +16,7 @@ public class CommandProcessor {
 			Logger.log("Console", "No commands registered");
 			return;
 		}
-		if (message.startsWith("help")) {
-			for (Command command : commands) {
-				if (command.getMethod().equalsIgnoreCase(message.replace("help", "").trim())) {
-					Logger.log("Console", command.getMethod());
-					return;
-				}
-			}
+		if (message.toLowerCase().startsWith("help")) {
 			printBaseHelp();
 			return;
 		} else {
@@ -38,12 +32,9 @@ public class CommandProcessor {
 
 	private void printBaseHelp() {
 		Logger.log("Console", "-------Console Help--------");
-		Logger.log("Console", "Use 'help <command>' to get more information about a specific command.");
+		Logger.log("Console", "Use listall to list all commands");
+		Logger.log("Console", "Use list=<tag> to list all commands starting with that tag");
 		Logger.log("Console", "---------------------------");
-		Logger.log("Console", "Available commands:");
-		for (Command command : commands) {
-			Logger.log("Console", command.getMethod() + " - " + command.getDescription());
-		}
 	}
 
 	public String autocomplete(String message) {

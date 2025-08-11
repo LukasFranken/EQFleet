@@ -60,7 +60,7 @@ public class TestEngineManager {
 		init.map = initializeMap(3);
 		init.ancientPlanetResourceDegradationFactor = 0.5f;
 		init.gameTimeLimitMS = 180_000;
-		init.atpToWin = 50;
+		init.atpToWin = 40;
 		init.pauseTimeLimitMS = 30_000;
 		init.pauseCountLimit = 3;
 		return init;
@@ -82,7 +82,7 @@ public class TestEngineManager {
 		neutralPlanetTurret.model = "hawk";
 		Weapon neutralPlanetWeapon = new Weapon();
 		neutralPlanetWeapon.type = WeaponType.MISSILE;
-		neutralPlanetWeapon.damage = 5;
+		neutralPlanetWeapon.damage = 3;
 		neutralPlanetWeapon.range = 100f;
 		neutralPlanetWeapon.cooldown = 1000;
 		neutralPlanetWeapon.speed = 80f;
@@ -152,7 +152,7 @@ public class TestEngineManager {
 		playerPlanetTurret.cost = 10;
 		Weapon playerPlanetWeapon = new Weapon();
 		playerPlanetWeapon.type = WeaponType.PROJECTILE;
-		playerPlanetWeapon.damage = 5;
+		playerPlanetWeapon.damage = 6;
 		playerPlanetWeapon.range = 100f;
 		playerPlanetWeapon.cooldown = 1000;
 		playerPlanetWeapon.speed = 150f;
@@ -171,7 +171,7 @@ public class TestEngineManager {
 		playerShipHawk.model = "hawk";
 		playerShipHawk.type = ShipType.FIGHTER;
 		playerShipHawk.movementSpeed = 60;
-		playerShipHawk.cost = 2;
+		playerShipHawk.cost = 4;
 		playerShipHawk.commandPointsCost = 1;
 		Weapon playerShipWeaponHawk = new Weapon();
 		playerShipWeaponHawk.type = WeaponType.LASER;

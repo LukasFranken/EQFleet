@@ -17,7 +17,6 @@ import de.instinct.eqfleet.net.WebManager;
 import de.instinct.eqlibgdxutils.CursorUtil;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.InputUtil;
-import de.instinct.eqlibgdxutils.PreferenceUtil;
 import de.instinct.eqlibgdxutils.debug.console.Console;
 import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
@@ -42,13 +41,13 @@ public class App extends ApplicationAdapter {
     @Override
     public void create() {
     	Logger.log(LOGTAG, "Welcome to EQFLEET v" + VERSION, ConsoleColor.YELLOW);
+    	Console.init();
+    	Console.addCommands(new EQFleetCommandLoader().getCommands());
+    	PreferenceManager.init();
     	GraphicsUtil.init(new Vector2(400, 900));
-    	PreferenceUtil.init("EQFleet");
-    	SkinManager.init();
     	TextureManager.init();
     	TextureManager.setDefaultGlowRadius(1);
-    	Console.init();
-    	Console.setCommands(new EQFleetCommandLoader());
+    	SkinManager.init();
     	AudioManager.init();
     	loadFonts();
     	Gdx.input.setInputProcessor(new InputMultiplexer());
@@ -59,7 +58,7 @@ public class App extends ApplicationAdapter {
         Game.init();
         ParticleRenderer.init();
         ModelRenderer.init();
-
+        Console.build();
         Console.registerMetric(NumberMetric.builder()
         		.decimals(2)
         		.tag("this_frame_time_MS")
