@@ -134,7 +134,7 @@ public class PostGameRenderer extends BaseModuleRenderer {
 					.build());
 			
 			elements.add(PostGameElement.builder()
-					.duration(PER_ITEM_DURATION_MS * 3)
+					.duration(PER_ITEM_DURATION_MS * (PostGameModel.reward.getExperience() > 10 ? 3 : 1))
 					.uiElement(experienceSection)
 					.animationAction(new AnimationAction() {
 						

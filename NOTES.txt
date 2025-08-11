@@ -18,9 +18,6 @@ GENERAL:
 - scrollable console log
 - make beam actual beam
 
-- elimination bonus?
-- delete all prefs command/prefmanager
-
 - duo, trio campaign via social group
 - social module, squad and aliance with vault
 - replace money label with other squad player names (if in group), but remove click-on
@@ -30,12 +27,8 @@ GENERAL:
 GAME:
 
 META:
-- playtab logic finished refactoring
-
 - shop
  -> turret blueprints
- 
-- proper inventory
 
 BUGS:
 - random amazon requests crash gameserver and maybe others
@@ -45,18 +38,17 @@ BUGS:
 - menu rank icon doesnt update after rankup
 - surrender sometimes grants extreme amount of exp?
 - hangar space needed for build blueprint, not buy blueprint
-
-REFACTIORING:
-- allow modes only after game start
-- externalize planet resource bar to circularloadingbar component
-- speed up low exp animation postgame
-- remove calculate widht/height from all component except dynamiccomponent
 - ios crashes after a while
 - prevent all shutdown crashes
+
+REFACTIORING:
+- externalize planet resource bar to circularloadingbar component
+- remove calculate widht/height from all component except dynamiccomponent
 
 ---------------------------------------------------------------------
 FUTURE RELEASES TODO:
 GENERAL:
+- playtab overhaul
 - building build time
 - void run = coop dungeoncrawler
 - ai behavior manager tool

@@ -34,7 +34,7 @@ public class Label extends Component {
 	}
 
 	@Override
-	protected float calculateWidth() {
+	public float calculateWidth() {
 		String[] lines = text.split("\n");
 		float maxWidth = 0;
 		for (String line : lines) {
@@ -47,7 +47,7 @@ public class Label extends Component {
 	}
 
 	@Override
-	protected float calculateHeight() {
+	public float calculateHeight() {
 		String[] lines = text.split("\n");
 		return lines.length * FontUtil.getNormalizedFontHeightPx(type) + (lines.length - 1) * lineSpacing;
 	}

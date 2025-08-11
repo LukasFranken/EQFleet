@@ -41,12 +41,12 @@ public class ColorButton extends Button {
 	}
 
 	@Override
-	protected float calculateWidth() {
+	public float calculateWidth() {
 		return fixedWidth == 0 ? FontUtil.getFontTextWidthPx(label.getText(), FontType.NORMAL) + (contentMargin * 2) : fixedWidth;
 	}
 
 	@Override
-	protected float calculateHeight() {
+	public float calculateHeight() {
 		return fixedHeight == 0 ? FontUtil.getFontHeightPx() + (contentMargin * 2) : fixedHeight;
 	}
 	

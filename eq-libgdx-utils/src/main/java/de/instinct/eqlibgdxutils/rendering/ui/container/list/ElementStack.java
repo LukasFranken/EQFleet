@@ -18,7 +18,7 @@ public class ElementStack extends ElementContainer {
 	}
 
 	@Override
-	protected float calculateWidth() {
+	public float calculateWidth() {
 		float width = 0;
 		for (UIElement element : getElements()) {
 			width = Math.max(width, element.getBounds().width);
@@ -27,7 +27,7 @@ public class ElementStack extends ElementContainer {
 	}
 
 	@Override
-	protected float calculateHeight() {
+	public float calculateHeight() {
 		float height = 0;
 		for (UIElement element : getElements()) {
 			height = Math.max(height, element.getBounds().height);

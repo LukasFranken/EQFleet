@@ -42,6 +42,7 @@ import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 
 public class WorkshopRenderer extends BaseModuleRenderer {
 	
+	private Label spaceLabel;
 	private List<LabeledModelButton> shipButtons;
 	
 	private final float popupWidth = 250f;
@@ -57,14 +58,6 @@ public class WorkshopRenderer extends BaseModuleRenderer {
 	}
 
 	private void renderWorkshopInfo() {
-		Rectangle labelBounds = new Rectangle(
-				MenuModel.moduleBounds.x + 20,
-				MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - 30,
-				MenuModel.moduleBounds.width - 40,
-				20);
-		Label spaceLabel = new Label("Hangar Space: " + ShipyardModel.playerShipyard.getShips().size() + "/" + ShipyardModel.playerShipyard.getSlots());
-		spaceLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
-		spaceLabel.setBounds(labelBounds);
 		spaceLabel.render();
 	}
 	
@@ -85,6 +78,14 @@ public class WorkshopRenderer extends BaseModuleRenderer {
 
 	@Override
 	public void reload() {
+		Rectangle labelBounds = new Rectangle(
+				MenuModel.moduleBounds.x + 20,
+				MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - 30,
+				MenuModel.moduleBounds.width - 40,
+				20);
+		spaceLabel = new Label("Hangar Space: " + ShipyardModel.playerShipyard.getUsedSlots() + "/" + ShipyardModel.playerShipyard.getSlots());
+		spaceLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
+		spaceLabel.setBounds(labelBounds);
 		createShipButtons();
 		checkForResponses();
 	}

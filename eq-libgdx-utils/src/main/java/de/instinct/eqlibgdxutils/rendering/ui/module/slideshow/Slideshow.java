@@ -59,12 +59,12 @@ public class Slideshow extends BaseModule {
 	}
 
 	@Override
-	protected float calculateWidth() {
+	public float calculateWidth() {
 		return getBounds().width;
 	}
 
 	@Override
-	protected float calculateHeight() {
+	public float calculateHeight() {
 		return getBounds().height;
 	}
 

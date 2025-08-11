@@ -32,9 +32,9 @@ public abstract class UIElement {
 		}
 	}
 
-	protected abstract float calculateWidth();
+	public abstract float calculateWidth();
 
-	protected abstract float calculateHeight();
+	public abstract float calculateHeight();
 
 	public void setPosition(float x, float y) {
 		bounds.x = x;

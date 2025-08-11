@@ -113,12 +113,12 @@ public class LimitedInputField extends Component {
 	}
 
 	@Override
-	protected float calculateWidth() {
+	public float calculateWidth() {
 		return (10 * 2) + FontUtil.getFontTextWidthPx(maxChars) + maxCharsLabelWidth;
 	}
 
 	@Override
-	protected float calculateHeight() {
+	public float calculateHeight() {
 		return 40 * GraphicsUtil.getHorizontalDisplayScaleFactor();
 	}
 	

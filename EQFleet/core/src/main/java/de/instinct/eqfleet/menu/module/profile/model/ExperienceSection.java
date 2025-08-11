@@ -83,7 +83,7 @@ public class ExperienceSection extends Component {
 	}
 	
 	@Override
-	protected float calculateHeight() {
+	public float calculateHeight() {
 		if (rankImagesEnabled) {
 			return 40 + 20 + 20 + (margin * 2);
 		} else {
@@ -92,7 +92,7 @@ public class ExperienceSection extends Component {
 	}
 
 	@Override
-	protected float calculateWidth() {
+	public float calculateWidth() {
 		return getBounds().width;
 	}
 	

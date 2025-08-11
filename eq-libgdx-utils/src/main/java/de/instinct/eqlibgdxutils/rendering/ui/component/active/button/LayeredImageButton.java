@@ -18,12 +18,12 @@ public class LayeredImageButton extends Button {
 	}
 
 	@Override
-	protected float calculateWidth() {
+	public float calculateWidth() {
 		return 0;
 	}
 
 	@Override
-	protected float calculateHeight() {
+	public float calculateHeight() {
 		return 0;
 	}
 	

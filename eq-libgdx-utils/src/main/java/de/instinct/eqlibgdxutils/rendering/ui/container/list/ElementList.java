@@ -25,7 +25,7 @@ public class ElementList extends ElementContainer {
 	}
 
 	@Override
-	protected float calculateWidth() {
+	public float calculateWidth() {
 		float width = 0;
 		for (UIElement element : getElements()) {
 			element.update();
@@ -35,7 +35,7 @@ public class ElementList extends ElementContainer {
 	}
 
 	@Override
-	protected float calculateHeight() {
+	public float calculateHeight() {
 		float height = 0;
 		for (int i = 0; i < getElements().size(); i++) {
 			getElements().get(i).update();

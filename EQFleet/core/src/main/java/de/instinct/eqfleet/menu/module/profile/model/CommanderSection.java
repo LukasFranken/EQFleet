@@ -13,13 +13,13 @@ public class CommanderSection extends Component {
 	}
 	
 	@Override
-	protected float calculateHeight() {
+	public float calculateHeight() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	protected float calculateWidth() {
+	public float calculateWidth() {
 		// TODO Auto-generated method stub
 		return 0;
 	}

@@ -28,7 +28,7 @@ public class Description extends Component {
 	}
 
 	@Override
-	protected float calculateWidth() {
+	public float calculateWidth() {
 		float width = 0f;
 		for (DescriptionLine line : lines) {
 			width = Math.max(width, getLineWidth(line));
@@ -45,7 +45,7 @@ public class Description extends Component {
 	}
 
 	@Override
-	protected float calculateHeight() {
+	public float calculateHeight() {
 		return (lines.size() * FontUtil.getFontHeightPx()) + ((lines.size() - 1) * lineSpacing);
 	}
 	

@@ -24,12 +24,12 @@ public class ImageButton extends Button {
 	}
 
 	@Override
-	protected float calculateWidth() {
+	public float calculateWidth() {
 		return imageTexture.getWidth();
 	}
 
 	@Override
-	protected float calculateHeight() {
+	public float calculateHeight() {
 		return imageTexture.getHeight();
 	}
 

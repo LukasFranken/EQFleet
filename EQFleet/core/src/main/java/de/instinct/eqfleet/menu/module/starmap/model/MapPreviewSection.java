@@ -31,12 +31,12 @@ public class MapPreviewSection extends Component {
 	}
 	
 	@Override
-	protected float calculateHeight() {
+	public float calculateHeight() {
 		return getBounds().height;
 	}
 
 	@Override
-	protected float calculateWidth() {
+	public float calculateWidth() {
 		return getBounds().width;
 	}
 

@@ -44,12 +44,12 @@ public class Slider extends Component {
 	}
 	
 	@Override
-	protected float calculateWidth() {
+	public float calculateWidth() {
 		return getBounds().width;
 	}
 	
 	@Override
-	protected float calculateHeight() {
+	public float calculateHeight() {
 		return getBounds().height;
 	}
 	

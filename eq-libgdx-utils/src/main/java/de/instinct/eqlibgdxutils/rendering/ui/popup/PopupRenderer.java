@@ -53,6 +53,10 @@ public class PopupRenderer {
 	}
 	
 	private static void createWindowTextures(Popup newPopup) {
+		title = new Label(newPopup.getTitle());
+		if (newPopup.getContentContainer().calculateWidth() < title.calculateWidth()) {
+			newPopup.getContentContainer().setFixedWidth(title.calculateWidth());
+		}
 		newPopup.getContentContainer().update();
 		popupBounds = new Rectangle(
 				(GraphicsUtil.baseScreenBounds().width / 2) - (newPopup.getContentContainer().getBounds().getWidth() / 2) - MARGIN,
@@ -73,7 +77,6 @@ public class PopupRenderer {
 				SkinManager.skinColor);
 		TextureManager.createTexture(BG_DARKENING_TAG, Color.BLACK);
 		TextureManager.createTexture(POPUP_BG_TAG, Color.BLACK);
-		title = new Label(newPopup.getTitle());
 	}
 
 	public static void render() {

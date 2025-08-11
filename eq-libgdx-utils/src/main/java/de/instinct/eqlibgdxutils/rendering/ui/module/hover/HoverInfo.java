@@ -40,12 +40,12 @@ public class HoverInfo extends BaseModule {
 	}
 
 	@Override
-	protected float calculateWidth() {
+	public float calculateWidth() {
 		return (getElementMargin() * 2) + elementList.getBounds().width;
 	}
 
 	@Override
-	protected float calculateHeight() {
+	public float calculateHeight() {
 		return (getElementMargin() * 2) + elementList.getBounds().height;
 	}
 	
