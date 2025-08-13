@@ -7,7 +7,6 @@ import de.instinct.api.meta.dto.ResourceAmount;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.common.components.DefaultLabelFactory;
 import de.instinct.eqfleet.menu.main.MenuModel;
-import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.rendering.ui.container.list.ElementStack;
 
 public class InventoryRenderer extends BaseModuleRenderer {
@@ -33,7 +32,8 @@ public class InventoryRenderer extends BaseModuleRenderer {
 			float step = 20f;
 			int i = 0;
 			for (ResourceAmount resource : InventoryModel.resources.getResources()) {
-				ElementStack resourceStack = DefaultLabelFactory.createLabelStack(resource.getType().toString(), StringUtils.formatBigNumber(resource.getAmount()), Inventory.getColorForResource(resource.getType()), MenuModel.moduleBounds.width - 40);
+				ElementStack resourceStack = DefaultLabelFactory.createResourceStack(resource);
+				resourceStack.setFixedWidth(MenuModel.moduleBounds.width - 40);
 				resourceStack.setPosition(MenuModel.moduleBounds.x + 20, MenuModel.moduleBounds.x + MenuModel.moduleBounds.height - 10 - (i * step));
 				resourceStacks.add(resourceStack);
 				i++;

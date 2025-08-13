@@ -122,10 +122,8 @@ public class PostGameRenderer extends BaseModuleRenderer {
 			experienceSection.setRankImagesEnabled(false);
 			experienceSection.init(50, GraphicsUtil.baseScreenBounds().getHeight() / 2 + 50, GraphicsUtil.baseScreenBounds().getWidth() - 100);
 			
-			ElementStack experienceLabels = DefaultLabelFactory.createLabelStack(
-					"EXP",
-					StringUtils.formatBigNumber(PostGameModel.reward.getExperience()),
-					GraphicsUtil.baseScreenBounds().width / 2);
+			ElementStack experienceLabels = DefaultLabelFactory.createLabelStack("EXP", StringUtils.formatBigNumber(PostGameModel.reward.getExperience()));
+			experienceLabels.setFixedWidth(GraphicsUtil.baseScreenBounds().width / 2);
 			experienceLabels.setPosition(GraphicsUtil.baseScreenBounds().width / 4, experienceSection.getBounds().y + experienceSection.getActualHeight() + 20);
 			
 			elements.add(PostGameElement.builder()
@@ -169,7 +167,8 @@ public class PostGameRenderer extends BaseModuleRenderer {
 							rankUpElementList.getElements().add(newRankLabel);
 							
 							for (CommanderUpgrade upgrade : rankUpCommanderUpgrade.getUpgrades()) {
-								rankUpElementList.getElements().add(DefaultLabelFactory.createLabelStack(upgrade.getStat().getLabel(), "+" + (upgrade.getStat() == CommanderStat.CP_PER_SECOND ? StringUtils.format(upgrade.getValue(), 2) : StringUtils.format(upgrade.getValue(), 0)), 120));
+								rankUpElementList.getElements().add(DefaultLabelFactory.createLabelStack(upgrade.getStat().getLabel(), "+" + (upgrade.getStat() == CommanderStat.CP_PER_SECOND ? StringUtils.format(upgrade.getValue(), 2) : StringUtils.format(upgrade.getValue(), 0))));
+								rankUpElementList.setFixedWidth(140);
 							}
 							
 							ColorButton acceptButton = DefaultButtonFactory.colorButton("Accept", new Action() {
@@ -198,10 +197,8 @@ public class PostGameRenderer extends BaseModuleRenderer {
 			if (PostGameModel.reward.getResources().size() > 0) {
 				int i = 0;
 				for (ResourceAmount resource : PostGameModel.reward.getResources()) {
-					ElementStack resourceLabels = DefaultLabelFactory.createLabelStack(
-							resource.getType().toString(),
-							StringUtils.formatBigNumber(resource.getAmount()),
-							GraphicsUtil.baseScreenBounds().width / 2);
+					ElementStack resourceLabels = DefaultLabelFactory.createResourceStack(resource);
+					resourceLabels.setFixedWidth(GraphicsUtil.baseScreenBounds().width / 2);
 					resourceLabels.setPosition(GraphicsUtil.baseScreenBounds().width / 4, (GraphicsUtil.baseScreenBounds().getHeight() / 2) - 50 - (30 * i));
 					elements.add(PostGameElement.builder()
 							.duration(PER_ITEM_DURATION_MS)

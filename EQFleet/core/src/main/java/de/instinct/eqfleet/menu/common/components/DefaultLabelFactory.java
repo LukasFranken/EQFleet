@@ -12,42 +12,46 @@ import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 
 public class DefaultLabelFactory {
 	
-	public static ElementStack createLabelStack(String tag, String value, float width) {
-		return createLabelStack(tag, value, SkinManager.skinColor, width);
-	}
-
-	public static ElementStack createLabelStack(String tag, String value, Color color, float width) {
+	public static ElementStack createLabelStack(String tag, String value, Color colorTag, Color colorValue) {
 		ElementStack labelStack = new ElementStack();
 		Label tagLabel = new Label(tag);
 		tagLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
-		tagLabel.setFixedWidth(width);
-		tagLabel.setColor(color);
+		tagLabel.setColor(colorTag);
 		labelStack.getElements().add(tagLabel);
 		
 		Label valueLabel = new Label(value);
 		valueLabel.setHorizontalAlignment(HorizontalAlignment.RIGHT);
-		valueLabel.setFixedWidth(width);
-		valueLabel.setColor(color);
+		valueLabel.setColor(colorValue);
 		labelStack.getElements().add(valueLabel);
+		return labelStack;
+	}
+	
+	public static ElementStack createLabelStack(String tag, String value) {
+		return createLabelStack(tag, value, SkinManager.skinColor, SkinManager.skinColor);
+	}
+	
+	public static ElementStack createLabelStack(String tag, String value, float width) {
+		ElementStack labelStack = createLabelStack(tag, value);
+		labelStack.setFixedWidth(width);
 		return labelStack;
 	}
 
 	public static ElementStack createCostStack(ResourceAmount cost, float width) {
+		ElementStack labelStack = createCostStack(cost);
+		labelStack.setFixedWidth(width);
+		return labelStack;
+	}
+	
+	public static ElementStack createCostStack(ResourceAmount cost) {
 		String valueString = StringUtils.formatBigNumber(Math.abs(cost.getAmount()));
 		Color costColor = Math.abs(cost.getAmount()) > Inventory.getResource(cost.getType()) ? Color.RED : Color.GREEN;
-		
-		ElementStack labelStack = new ElementStack();
-		Label tagLabel = new Label(cost.getType().toString());
-		tagLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
-		tagLabel.setFixedWidth(width);
-		labelStack.getElements().add(tagLabel);
-		
-		Label valueLabel = new Label(valueString);
-		valueLabel.setHorizontalAlignment(HorizontalAlignment.RIGHT);
-		valueLabel.setFixedWidth(width);
-		valueLabel.setColor(costColor);
-		labelStack.getElements().add(valueLabel);
-		return labelStack;
+		return createLabelStack(cost.getType().toString(), valueString, SkinManager.skinColor, costColor);
+	}
+	
+	public static ElementStack createResourceStack(ResourceAmount cost) {
+		String valueString = StringUtils.formatBigNumber(Math.abs(cost.getAmount()));
+		Color resourceColor = Inventory.getColorForResource(cost.getType());
+		return createLabelStack(cost.getType().toString(), valueString, resourceColor, resourceColor);
 	}
 	
 }

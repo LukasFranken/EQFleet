@@ -13,7 +13,7 @@ public class ElementStack extends ElementContainer {
 	protected void updateElementsPosition() {
 		for (int i = 0; i < getElements().size(); i++) {
 			UIElement currentElement = getElements().get(i);
-			currentElement.setPosition(getBounds().x, getBounds().y);
+			currentElement.setBounds(getBounds());
 		}
 	}
 

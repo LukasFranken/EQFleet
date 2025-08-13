@@ -24,6 +24,12 @@ GENERAL:
 
 - custom desktop window frame
 
+- all resource labels colored
+
+- german
+- remove ap and sun from tutorial/early maps (until abilities)
+- after game, move to main menu and highlight unlocks
+
 GAME:
 
 META:
