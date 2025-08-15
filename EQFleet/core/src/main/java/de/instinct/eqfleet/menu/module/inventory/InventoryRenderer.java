@@ -30,11 +30,11 @@ public class InventoryRenderer extends BaseModuleRenderer {
 	public void reload() {
 		if (InventoryModel.resources != null) {
 			float step = 20f;
-			int i = 0;
+			int i = 1;
 			for (ResourceAmount resource : InventoryModel.resources.getResources()) {
 				ElementStack resourceStack = DefaultLabelFactory.createResourceStack(resource);
 				resourceStack.setFixedWidth(MenuModel.moduleBounds.width - 40);
-				resourceStack.setPosition(MenuModel.moduleBounds.x + 20, MenuModel.moduleBounds.x + MenuModel.moduleBounds.height - 10 - (i * step));
+				resourceStack.setPosition(MenuModel.moduleBounds.x + 20, MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - 10 - (i * step));
 				resourceStacks.add(resourceStack);
 				i++;
 			}

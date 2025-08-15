@@ -60,7 +60,6 @@ public class Menu {
 	private static PostGameRenderer postGameRenderer;
 	private static MenuRenderer menuRenderer;
 	
-	private static Map<MenuModule, BaseModule> modules;
 	private static Map<MenuModule, BaseModuleRenderer> renderers;
 	
 	private static ScheduledExecutorService scheduler;
@@ -75,31 +74,27 @@ public class Menu {
 		menuRenderer = new MenuRenderer();
 		reloadRequired = new ConcurrentLinkedQueue<>();
 		
-		modules = new HashMap<>();
+		MenuModel.modules = new HashMap<>();
 		renderers = new HashMap<>();
 		
 		MenuModel.active = false;
 		
-		modules.put(MenuModule.PLAY, new Play());
+		MenuModel.modules.put(MenuModule.PLAY, new Play());
 		renderers.put(MenuModule.PLAY, new PlayRenderer());
-		modules.put(MenuModule.PROFILE, new Profile());
+		MenuModel.modules.put(MenuModule.PROFILE, new Profile());
 		renderers.put(MenuModule.PROFILE, new ProfileRenderer());
-		modules.put(MenuModule.INVENTORY, new Inventory());
-		renderers.put(MenuModule.INVENTORY, new InventoryRenderer());
-		modules.put(MenuModule.SETTINGS, new Settings());
+		MenuModel.modules.put(MenuModule.SETTINGS, new Settings());
 		renderers.put(MenuModule.SETTINGS, new SettingsRenderer());
-		modules.put(MenuModule.SHIPYARD, new Shipyard());
+		MenuModel.modules.put(MenuModule.SHIPYARD, new Shipyard());
 		renderers.put(MenuModule.SHIPYARD, new ShipyardRenderer());
-		modules.put(MenuModule.CONSTRUCTION, new Construction());
+		MenuModel.modules.put(MenuModule.CONSTRUCTION, new Construction());
 		renderers.put(MenuModule.CONSTRUCTION, new ConstructionRenderer());
-		modules.put(MenuModule.WORKSHOP, new Workshop());
-		renderers.put(MenuModule.WORKSHOP, new WorkshopRenderer());
-		modules.put(MenuModule.SHOP, new Shop());
+		MenuModel.modules.put(MenuModule.SHOP, new Shop());
 		renderers.put(MenuModule.SHOP, new ShopRenderer());
-		modules.put(MenuModule.STARMAP, new Starmap());
+		MenuModel.modules.put(MenuModule.STARMAP, new Starmap());
 		renderers.put(MenuModule.STARMAP, new StarmapRenderer());
 		
-		for (BaseModule module : modules.values()) {
+		for (BaseModule module : MenuModel.modules.values()) {
 			module.init();
 		}
 		
@@ -168,11 +163,11 @@ public class Menu {
 	private static void update() {
 		while (!moduleMessageQueue.isEmpty()) {
 			ModuleMessage message = moduleMessageQueue.poll();
-			BaseModule module = modules.get(message.getMenuModule());
+			BaseModule module = MenuModel.modules.get(message.getMenuModule());
 			if (module == null) continue;
 			module.processBackendMessage(message);
 		}
-		for (BaseModule module : modules.values()) {
+		for (BaseModule module : MenuModel.modules.values()) {
 			if (MenuModel.unlockedModules != null && MenuModel.unlockedModules.getEnabledModules().contains(module.getMenuModule())) {
 				module.update();
 			}
@@ -200,7 +195,7 @@ public class Menu {
 	}
 	
 	public static void openModule(MenuModule menuModule) {
-		BaseModule module = modules.get(menuModule);
+		BaseModule module = MenuModel.modules.get(menuModule);
 		if (module == null) {
 			Logger.log("Menu", "Tried to open missing module: " + menuModule);
 			return;
@@ -268,7 +263,7 @@ public class Menu {
 		}
 		close();
 		menuRenderer.dispose();
-		for (BaseModule module : modules.values()) {
+		for (BaseModule module : MenuModel.modules.values()) {
 			if (module != null) {
 				module.close();
 			}

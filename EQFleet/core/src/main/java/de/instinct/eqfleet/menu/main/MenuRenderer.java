@@ -94,13 +94,13 @@ public class MenuRenderer extends BaseModuleRenderer {
 		TextureManager.createShapeTexture("main_creditsOutline", ComplexShapeType.ROUNDED_RECTANGLE, new Rectangle(menuBounds.x + menuBounds.width - 103, menuBounds.y + menuBounds.height + 10, 85, 20), Color.GREEN);
 		
 		tabButtons = new LinkedHashMap<>();
-		for (MenuModule module : MenuModel.unlockedModules.getEnabledModules()) {
+		for (MenuModule module : MenuModel.modules.keySet()) {
 			createModuleButton(module);
 		}
 		
 		if (MenuModel.lockedModules != null && MenuModel.lockedModules.getUnlockRequirements() != null) {
 			for (ModuleUnlockRequirement moduleUnlockRequirement : MenuModel.lockedModules.getUnlockRequirements()) {
-				createModuleButton(moduleUnlockRequirement);
+				//createModuleButton(moduleUnlockRequirement);
 			}
 		}
 		

@@ -45,7 +45,7 @@ public class DefaultLabelFactory {
 	public static ElementStack createCostStack(ResourceAmount cost) {
 		String valueString = StringUtils.formatBigNumber(Math.abs(cost.getAmount()));
 		Color costColor = Math.abs(cost.getAmount()) > Inventory.getResource(cost.getType()) ? Color.RED : Color.GREEN;
-		return createLabelStack(cost.getType().toString(), valueString, SkinManager.skinColor, costColor);
+		return createLabelStack(cost.getType().toString(), valueString, Inventory.getColorForResource(cost.getType()), costColor);
 	}
 	
 	public static ElementStack createResourceStack(ResourceAmount cost) {

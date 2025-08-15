@@ -21,8 +21,6 @@ public abstract class BaseModule extends UIElement {
 	private boolean decorated;
 	private Border defaultBorder;
 
-	private int rendercount = 0;
-
     public BaseModule() {
 		transparency = 1f;
 		elementMargin = 10f;
