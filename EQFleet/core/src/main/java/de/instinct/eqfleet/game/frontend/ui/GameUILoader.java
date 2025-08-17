@@ -48,8 +48,10 @@ public class GameUILoader {
 			loadTeammate2CPBar(bounds);
 			loadEnemy3CPBar(bounds);
 		}
-		loadTeamAPBar(bounds);
-		loadEnemyAPBar(bounds);
+		if (EngineUtility.mapHasAncient(GameModel.activeGameState)) {
+			loadTeamAPBar(bounds);
+			loadEnemyAPBar(bounds);
+		}
 		
 		return elements;
 	}

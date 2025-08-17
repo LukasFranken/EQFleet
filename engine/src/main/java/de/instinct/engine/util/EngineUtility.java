@@ -66,5 +66,14 @@ public class EngineUtility {
 		}
 		return null;
 	}
+	
+	public static boolean mapHasAncient(GameState state) {
+		for (Planet planet : state.planets) {
+			if (planet.ancient) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 }

@@ -1,4 +1,4 @@
-package de.instinct.eqfleet.menu.module.inventory.message;
+package de.instinct.eqfleet.menu.module.profile.inventory.message;
 
 import de.instinct.api.core.modules.MenuModule;
 import de.instinct.eqfleet.menu.module.core.ModuleMessage;

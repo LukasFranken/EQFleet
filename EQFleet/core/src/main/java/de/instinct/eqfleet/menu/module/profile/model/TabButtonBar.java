@@ -3,9 +3,12 @@ package de.instinct.eqfleet.menu.module.profile.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.graphics.Color;
+
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
+import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -31,7 +34,10 @@ public class TabButtonBar extends Component {
 	private void createButtons() {
 		buttons = new ArrayList<>();
 		for (TabOption option : options) {
-			ColorButton button = DefaultButtonFactory.colorButton(option.getLabel(), option.getSwitchAction());
+			ColorButton button = DefaultButtonFactory.colorButton(option.getLabel(), () -> {
+				selectedOption = option;
+				if (option.getSwitchAction() != null) option.getSwitchAction().execute();
+			});
 			buttons.add(button);
 		}
 	}
@@ -48,14 +54,26 @@ public class TabButtonBar extends Component {
 	
 	@Override
 	protected void updateComponent() {
+		int i = 0;
+		float buttonWidth = getBounds().width / buttons.size();
 		for (ColorButton button : buttons) {
-			button.setFixedHeight(getHeight());
+			button.setFixedHeight(getBounds().height);
+			button.setFixedWidth(buttonWidth);
+			button.setPosition(getBounds().x + (i * buttonWidth), getBounds().y);
+			if (button.getLabel().getText().equals(selectedOption.getLabel())) {
+				button.getLabel().setColor(new Color(SkinManager.skinColor));
+			} else {
+				button.getLabel().setColor(Color.GRAY);
+			}
+			i++;
 		}
 	}
 	
 	@Override
 	protected void renderComponent() {
-		
+		for (ColorButton button : buttons) {
+			button.render();
+		}
 	}
 
 	@Override

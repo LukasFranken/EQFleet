@@ -1,4 +1,4 @@
-package de.instinct.eqfleet.menu.module.inventory;
+package de.instinct.eqfleet.menu.module.profile.inventory;
 
 import de.instinct.api.meta.dto.ResourceData;
 

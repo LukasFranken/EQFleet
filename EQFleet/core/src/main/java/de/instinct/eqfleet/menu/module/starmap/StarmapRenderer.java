@@ -17,6 +17,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 
+import de.instinct.api.game.dto.MapPreview;
+import de.instinct.api.game.dto.PreviewPlanet;
 import de.instinct.api.meta.dto.ResourceAmount;
 import de.instinct.api.starmap.dto.GalaxyData;
 import de.instinct.api.starmap.dto.StarsystemData;
@@ -267,7 +269,7 @@ public class StarmapRenderer extends BaseModuleRenderer {
 		mapPreviewSection.setFixedWidth(popupWidth);
 		mapPreviewSection.setFixedHeight(popupWidth * 1.5f);
 		systemInfoElements.getElements().add(mapPreviewSection);
-		systemInfoElements.getElements().add(DefaultLabelFactory.createLabelStack("Req. AP", (int)starsystem.getAncientPoints() + "", popupWidth));
+		if (hasAncient(starsystem.getMapPreview())) systemInfoElements.getElements().add(DefaultLabelFactory.createLabelStack("Req. AP", (int)starsystem.getAncientPoints() + "", popupWidth));
 		systemInfoElements.getElements().add(DefaultLabelFactory.createLabelStack("Threat Level", StringUtils.formatBigNumber(starsystem.getThreatLevel(), 0), popupWidth));
 		systemInfoElements.getElements().add(DefaultLabelFactory.createLabelStack("Duration", StringUtils.generateCountdownLabel(starsystem.getDuration(), false), popupWidth));
 		systemInfoElements.getElements().add(DefaultLabelFactory.createLabelStack("-------------", "-------------", popupWidth));
@@ -283,6 +285,13 @@ public class StarmapRenderer extends BaseModuleRenderer {
 				.contentContainer(systemInfoElements)
 				.build();
 		PopupRenderer.create(systemInfoPopup);
+	}
+
+	private boolean hasAncient(MapPreview mapPreview) {
+		for (PreviewPlanet planet : mapPreview.getPlanets()) {
+			if (planet.isAncient()) return true;
+		}
+		return false;
 	}
 
 	private void renderGalaxyMap() {

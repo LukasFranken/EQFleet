@@ -1,5 +1,8 @@
 package de.instinct.eqfleet.menu.module.profile;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
@@ -9,8 +12,11 @@ import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
 import de.instinct.eqfleet.menu.common.components.DefaultLabelFactory;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.main.MenuModel;
+import de.instinct.eqfleet.menu.module.profile.inventory.InventoryRenderer;
 import de.instinct.eqfleet.menu.module.profile.message.RegisterMessage;
 import de.instinct.eqfleet.menu.module.profile.model.ExperienceSection;
+import de.instinct.eqfleet.menu.module.profile.model.TabButtonBar;
+import de.instinct.eqfleet.menu.module.profile.model.TabOption;
 import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.LimitedInputField;
@@ -40,10 +46,13 @@ public class ProfileRenderer extends BaseModuleRenderer {
 	private Rectangle registrationConfirmButtonBounds;
 	private Rectangle registrationResponseLabelBounds;
 	private Rectangle commanderSectionBounds;
-	
 	private Rectangle usernameLabelBounds;
 	
 	private ExperienceSection experienceSection;
+	
+	private TabButtonBar tabButtonBar;
+	
+	private InventoryRenderer inventoryRenderer;
 
 	public ProfileRenderer() {
 		registrationLabel = new Label("Choose a unique name");
@@ -79,6 +88,20 @@ public class ProfileRenderer extends BaseModuleRenderer {
 		usernameLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
 		
 		experienceSection = new ExperienceSection();
+		
+		List<TabOption> tabOptions = new ArrayList<>();
+		tabOptions.add(TabOption.builder()
+				.label("Overview")
+				.build());
+		tabOptions.add(TabOption.builder()
+				.label("Statistics")
+				.build());
+		tabOptions.add(TabOption.builder()
+				.label("Inventory")
+				.build());
+		tabButtonBar = new TabButtonBar(tabOptions);
+		
+		inventoryRenderer = new InventoryRenderer();
 	}
 	
 	private void register(String content) {
@@ -111,6 +134,8 @@ public class ProfileRenderer extends BaseModuleRenderer {
 		TextureManager.createShapeTexture("profile_experiencesection", ComplexShapeType.ROUNDED_RECTANGLE, experienceSectionBounds, new Color(SkinManager.skinColor));
 		commanderSectionBounds = new Rectangle(MenuModel.moduleBounds.x + margin, experienceSection.getBounds().y - 110 - margin, MenuModel.moduleBounds.width - (margin * 2), 110);
 		TextureManager.createShapeTexture("profile_commandersection", ComplexShapeType.ROUNDED_RECTANGLE, commanderSectionBounds, new Color(SkinManager.skinColor));
+		
+		inventoryRenderer.reload();
 	}
 
 	private void renderRegistration() {
@@ -134,6 +159,22 @@ public class ProfileRenderer extends BaseModuleRenderer {
 	}
 	
 	private void renderProfile() {
+		switch (tabButtonBar.getSelectedOption().getLabel()) {
+		case "Overview":
+			renderOverview();
+			break;
+		case "Statistics":
+			renderStatistics();
+			break;
+		case "Inventory":
+			inventoryRenderer.render();
+			break;
+		}
+		tabButtonBar.setBounds(new Rectangle(MenuModel.moduleBounds.x, MenuModel.moduleBounds.y, MenuModel.moduleBounds.width, 40));
+		tabButtonBar.render();
+	}
+
+	private void renderOverview() {
 		usernameLabel.setText(ProfileModel.profile.getUsername());
 		usernameLabel.setBounds(usernameLabelBounds);
 		usernameLabel.render();
@@ -145,25 +186,29 @@ public class ProfileRenderer extends BaseModuleRenderer {
 			TextureManager.draw("profile_commandersection");
 			float inModuleStackMargin = 20f;
 			ElementStack maxCPLabelStack = DefaultLabelFactory.createLabelStack("Max CP", StringUtils.format(ProfileModel.commanderData.getMaxCommandPoints(), 0), commanderSectionBounds.width - (inModuleStackMargin * 2));
-			maxCPLabelStack.setPosition(commanderSectionBounds.x + inModuleStackMargin, commanderSectionBounds.y + commanderSectionBounds.height - 30);
+			maxCPLabelStack.setPosition(commanderSectionBounds.x + inModuleStackMargin, commanderSectionBounds.y + commanderSectionBounds.height - 30 - 10);
 			maxCPLabelStack.setFixedHeight(30f);
 			maxCPLabelStack.render();
 			
 			ElementStack startCPLabelStack = DefaultLabelFactory.createLabelStack("Start CP", StringUtils.format(ProfileModel.commanderData.getStartCommandPoints(), 0), commanderSectionBounds.width - (inModuleStackMargin * 2));
-			startCPLabelStack.setPosition(commanderSectionBounds.x + inModuleStackMargin, commanderSectionBounds.y + commanderSectionBounds.height - 60);
+			startCPLabelStack.setPosition(commanderSectionBounds.x + inModuleStackMargin, commanderSectionBounds.y + commanderSectionBounds.height - 60 - 10);
 			startCPLabelStack.setFixedHeight(30f);
 			startCPLabelStack.render();
 			
 			ElementStack cpPerSecLabelStack = DefaultLabelFactory.createLabelStack("CP / sec", StringUtils.format(ProfileModel.commanderData.getCommandPointsGenerationSpeed(), 2), commanderSectionBounds.width - (inModuleStackMargin * 2));
-			cpPerSecLabelStack.setPosition(commanderSectionBounds.x + inModuleStackMargin, commanderSectionBounds.y + commanderSectionBounds.height - 90);
+			cpPerSecLabelStack.setPosition(commanderSectionBounds.x + inModuleStackMargin, commanderSectionBounds.y + commanderSectionBounds.height - 90 - 10);
 			cpPerSecLabelStack.setFixedHeight(30f);
 			cpPerSecLabelStack.render();
 		}
 	}
+	
+	private void renderStatistics() {
+		
+	}
 
 	@Override
 	public void dispose() {
-		
+		inventoryRenderer.dispose();
 	}
 
 	public void processNameRegisterResponseCode(NameRegisterResponseCode nameRegisterReponseCode) {

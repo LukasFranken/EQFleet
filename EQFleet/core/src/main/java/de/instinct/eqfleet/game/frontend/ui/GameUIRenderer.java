@@ -311,7 +311,7 @@ public class GameUIRenderer {
 	}
 
 	public void renderParticles() {
-		if (initialized) {
+		if (initialized && EngineUtility.mapHasAncient(GameModel.activeGameState)) {
 			Planet activeAncientPlanet = null;
 			for (Planet planet : GameModel.activeGameState.planets) {
 				if (planet.ancient) {

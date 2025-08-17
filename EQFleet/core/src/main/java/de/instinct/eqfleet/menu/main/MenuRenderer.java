@@ -8,20 +8,17 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.api.core.modules.MenuModule;
-import de.instinct.api.core.modules.ModuleUnlockRequirement;
 import de.instinct.api.meta.dto.Resource;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
-import de.instinct.eqfleet.menu.module.inventory.Inventory;
-import de.instinct.eqfleet.menu.module.inventory.InventoryModel;
 import de.instinct.eqfleet.menu.module.profile.ProfileModel;
+import de.instinct.eqfleet.menu.module.profile.inventory.Inventory;
+import de.instinct.eqfleet.menu.module.profile.inventory.InventoryModel;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
-import de.instinct.eqlibgdxutils.InputUtil;
 import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.Button;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
-import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ImageButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.LabeledModelButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.image.Image;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.HorizontalAlignment;
@@ -94,14 +91,8 @@ public class MenuRenderer extends BaseModuleRenderer {
 		TextureManager.createShapeTexture("main_creditsOutline", ComplexShapeType.ROUNDED_RECTANGLE, new Rectangle(menuBounds.x + menuBounds.width - 103, menuBounds.y + menuBounds.height + 10, 85, 20), Color.GREEN);
 		
 		tabButtons = new LinkedHashMap<>();
-		for (MenuModule module : MenuModel.modules.keySet()) {
+		for (MenuModule module : MenuModel.buttons) {
 			createModuleButton(module);
-		}
-		
-		if (MenuModel.lockedModules != null && MenuModel.lockedModules.getUnlockRequirements() != null) {
-			for (ModuleUnlockRequirement moduleUnlockRequirement : MenuModel.lockedModules.getUnlockRequirements()) {
-				//createModuleButton(moduleUnlockRequirement);
-			}
 		}
 		
 		rankImage = new Image(TextureManager.getTexture("ui/image/rank",  ProfileModel.profile != null ? ProfileModel.profile.getRank().getFileName() : "recruit1"));
@@ -138,11 +129,6 @@ public class MenuRenderer extends BaseModuleRenderer {
 	private void createModuleButton(MenuModule module) {
 		LabeledModelButton menuModelButton = DefaultButtonFactory.moduleButton(module);
 		tabButtons.put(module, menuModelButton);
-	}
-	
-	private void createModuleButton(ModuleUnlockRequirement moduleUnlockRequirement) {
-		ImageButton tabButton = DefaultButtonFactory.moduleButton(moduleUnlockRequirement);
-		tabButtons.put(moduleUnlockRequirement.getModule(), tabButton);
 	}
 
 	@Override
@@ -217,13 +203,6 @@ public class MenuRenderer extends BaseModuleRenderer {
 				expBar.setCurrentValue(ProfileModel.profile.getCurrentExp() - ProfileModel.profile.getRank().getRequiredExp());
 				expBar.setAlpha(MenuModel.alpha);
 				expBar.render();
-				
-				Rectangle profileBounds = GraphicsUtil.scaleFactorAdjusted(new Rectangle(0, menuBounds.y + menuBounds.height + 10, 185, 200));
-		        if (InputUtil.mouseIsOver(profileBounds)) {
-		        	if (InputUtil.isClicked()) {
-		        		Menu.openModule(MenuModule.PROFILE);
-		        	}
-		        }
 		        
 		        TextureManager.draw("main_rankOutline", MenuModel.alpha);
 				TextureManager.draw("main_nameOutline", MenuModel.alpha);
@@ -232,13 +211,6 @@ public class MenuRenderer extends BaseModuleRenderer {
 		}
 		if (InventoryModel.resources != null && MenuModel.unlockedModules.getEnabledModules().contains(MenuModule.INVENTORY)) {
 			if (MenuModel.activeModule != MenuModule.INVENTORY) {
-				Rectangle inventoryBounds = GraphicsUtil.scaleFactorAdjusted(new Rectangle(menuBounds.x + menuBounds.width - 80, menuBounds.y + menuBounds.height + 10, 120, 120));
-		        if (InputUtil.mouseIsOver(inventoryBounds)) {
-		        	if (InputUtil.isClicked()) {
-		        		Menu.openModule(MenuModule.INVENTORY);
-		        	}
-		        }
-		        
 				creditsLabel.setBounds(new Rectangle(menuBounds.x + menuBounds.width - 95, menuBounds.y + menuBounds.height + 10, 75, 20));
 				creditsLabel.setText(StringUtils.formatBigNumber(Inventory.getResource(Resource.CREDITS)));
 				creditsLabel.setAlpha(MenuModel.alpha);

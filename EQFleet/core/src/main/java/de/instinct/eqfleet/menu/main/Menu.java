@@ -2,8 +2,8 @@ package de.instinct.eqfleet.menu.main;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executors;
@@ -26,15 +26,14 @@ import de.instinct.eqfleet.menu.module.construction.ConstructionRenderer;
 import de.instinct.eqfleet.menu.module.construction.message.ReloadConstructionMessage;
 import de.instinct.eqfleet.menu.module.core.ModuleManager;
 import de.instinct.eqfleet.menu.module.core.ModuleMessage;
-import de.instinct.eqfleet.menu.module.inventory.Inventory;
-import de.instinct.eqfleet.menu.module.inventory.InventoryRenderer;
-import de.instinct.eqfleet.menu.module.inventory.message.LoadResourcesMessage;
 import de.instinct.eqfleet.menu.module.play.Play;
 import de.instinct.eqfleet.menu.module.play.PlayModel;
 import de.instinct.eqfleet.menu.module.play.PlayRenderer;
 import de.instinct.eqfleet.menu.module.play.message.UpdateLobbyStatusMessage;
 import de.instinct.eqfleet.menu.module.profile.Profile;
 import de.instinct.eqfleet.menu.module.profile.ProfileRenderer;
+import de.instinct.eqfleet.menu.module.profile.inventory.Inventory;
+import de.instinct.eqfleet.menu.module.profile.inventory.message.LoadResourcesMessage;
 import de.instinct.eqfleet.menu.module.profile.message.LoadProfileMessage;
 import de.instinct.eqfleet.menu.module.settings.Settings;
 import de.instinct.eqfleet.menu.module.settings.SettingsRenderer;
@@ -47,7 +46,6 @@ import de.instinct.eqfleet.menu.module.starmap.Starmap;
 import de.instinct.eqfleet.menu.module.starmap.StarmapRenderer;
 import de.instinct.eqfleet.menu.module.starmap.message.ReloadStarmapMessage;
 import de.instinct.eqfleet.menu.module.workshop.Workshop;
-import de.instinct.eqfleet.menu.module.workshop.WorkshopRenderer;
 import de.instinct.eqfleet.menu.postgame.PostGameModel;
 import de.instinct.eqfleet.menu.postgame.PostGameRenderer;
 import de.instinct.eqfleet.net.WebManager;
@@ -59,8 +57,6 @@ public class Menu {
 	
 	private static PostGameRenderer postGameRenderer;
 	private static MenuRenderer menuRenderer;
-	
-	private static Map<MenuModule, BaseModuleRenderer> renderers;
 	
 	private static ScheduledExecutorService scheduler;
 	private static long UPDATE_CLOCK_MS = 20;
@@ -75,24 +71,27 @@ public class Menu {
 		reloadRequired = new ConcurrentLinkedQueue<>();
 		
 		MenuModel.modules = new HashMap<>();
-		renderers = new HashMap<>();
+		MenuModel.renderers = new LinkedHashMap<>();
 		
 		MenuModel.active = false;
 		
+		MenuModel.renderers.put(MenuModule.PROFILE, new ProfileRenderer());
+		MenuModel.renderers.put(MenuModule.SETTINGS, new SettingsRenderer());
+		MenuModel.renderers.put(MenuModule.STARMAP, new StarmapRenderer());
+		MenuModel.renderers.put(MenuModule.SHIPYARD, new ShipyardRenderer());
+		MenuModel.renderers.put(MenuModule.CONSTRUCTION, new ConstructionRenderer());
+		MenuModel.renderers.put(MenuModule.SHOP, new ShopRenderer());
+		MenuModel.renderers.put(MenuModule.PLAY, new PlayRenderer());
+		
 		MenuModel.modules.put(MenuModule.PLAY, new Play());
-		renderers.put(MenuModule.PLAY, new PlayRenderer());
 		MenuModel.modules.put(MenuModule.PROFILE, new Profile());
-		renderers.put(MenuModule.PROFILE, new ProfileRenderer());
 		MenuModel.modules.put(MenuModule.SETTINGS, new Settings());
-		renderers.put(MenuModule.SETTINGS, new SettingsRenderer());
 		MenuModel.modules.put(MenuModule.SHIPYARD, new Shipyard());
-		renderers.put(MenuModule.SHIPYARD, new ShipyardRenderer());
 		MenuModel.modules.put(MenuModule.CONSTRUCTION, new Construction());
-		renderers.put(MenuModule.CONSTRUCTION, new ConstructionRenderer());
 		MenuModel.modules.put(MenuModule.SHOP, new Shop());
-		renderers.put(MenuModule.SHOP, new ShopRenderer());
 		MenuModel.modules.put(MenuModule.STARMAP, new Starmap());
-		renderers.put(MenuModule.STARMAP, new StarmapRenderer());
+		MenuModel.modules.put(MenuModule.INVENTORY, new Inventory());
+		MenuModel.modules.put(MenuModule.WORKSHOP, new Workshop());
 		
 		for (BaseModule module : MenuModel.modules.values()) {
 			module.init();
@@ -176,14 +175,14 @@ public class Menu {
 	
 	public static void render() {
 		while (reloadRequired.peek() != null) {
-			renderers.get(reloadRequired.poll()).reload();
+			MenuModel.renderers.get(reloadRequired.poll()).reload();
 		}
 		if (MenuModel.active) {
 			if (PostGameModel.reward != null) {
 				postGameRenderer.render();
 			} else {
 				if (MenuModel.activeModule != null) {
-					renderers.get(MenuModel.activeModule).render();
+					MenuModel.renderers.get(MenuModel.activeModule).render();
 				}
 				menuRenderer.render();
 			}
@@ -222,19 +221,9 @@ public class Menu {
 			    				lockedModules.add(module);
 			    			}
 			    		}
-			    		ModuleInfoRequest moduleInfoRequest = new ModuleInfoRequest();
-			    		moduleInfoRequest.setRequestedModuleInfos(lockedModules);
-			    		WebManager.enqueue(
-			    			    () -> API.meta().moduleInfo(moduleInfoRequest),
-			    			    moduleInfoResult -> {
-			    			    	if (moduleInfoResult != null) {
-			    			    		MenuModel.lockedModules = moduleInfoResult;
-			    			    		reload();
-			    					} else {
-			    						Logger.log("Menu", "Locked ModuleData couldn't be loaded!", ConsoleColor.RED);
-			    					}
-			    			    }
-			    		);
+			    		loadLockedModuleInfo(lockedModules);
+			    		loadButtons();
+			    		reload();
 					} else {
 						Logger.log("Menu", "ModuleData couldn't be loaded!", ConsoleColor.RED);
 					}
@@ -242,10 +231,36 @@ public class Menu {
 		);
 	}
 	
+	private static void loadButtons() {
+		MenuModel.buttons = new ArrayList<>();
+		if (MenuModel.unlockedModules != null && MenuModel.unlockedModules.getEnabledModules() != null) {
+	        for (MenuModule module : MenuModel.renderers.keySet()) {
+	            if (MenuModel.unlockedModules.getEnabledModules().contains(module)) {
+	                MenuModel.buttons.add(module);
+	            }
+	        }
+	    }
+	}
+
+	private static void loadLockedModuleInfo(List<MenuModule> lockedModules) {
+		ModuleInfoRequest moduleInfoRequest = new ModuleInfoRequest();
+		moduleInfoRequest.setRequestedModuleInfos(lockedModules);
+		WebManager.enqueue(
+			    () -> API.meta().moduleInfo(moduleInfoRequest),
+			    moduleInfoResult -> {
+			    	if (moduleInfoResult != null) {
+			    		MenuModel.lockedModules = moduleInfoResult;
+					} else {
+						Logger.log("Menu", "Locked ModuleData couldn't be loaded!", ConsoleColor.RED);
+					}
+			    }
+		);
+	}
+
 	public static void reload() {
 		Gdx.app.postRunnable(() -> {
 			menuRenderer.reload();
-			for (BaseModuleRenderer renderer : renderers.values()) {
+			for (BaseModuleRenderer renderer : MenuModel.renderers.values()) {
 				renderer.reload();
 			}
 			MenuModel.loaded = true;
@@ -268,7 +283,7 @@ public class Menu {
 				module.close();
 			}
 		}
-		for (BaseModuleRenderer renderer : renderers.values()) {
+		for (BaseModuleRenderer renderer : MenuModel.renderers.values()) {
 			if (renderer != null) {
 				renderer.dispose();
 			}

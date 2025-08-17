@@ -19,7 +19,7 @@ GENERAL:
 - make beam actual beam
 
 - duo, trio campaign via social group
-- social module, squad and aliance with vault
+- social module, squad and alliance with vault
 - replace money label with other squad player names (if in group), but remove click-on
 
 - custom desktop window frame
@@ -31,6 +31,8 @@ GENERAL:
 - german
 - remove ap and sun from tutorial/early maps (until abilities)
 - after game, move to main menu and highlight unlocks
+- reward cash with digital number up sound
+ -> make rewards more appealing
 
 GAME:
 

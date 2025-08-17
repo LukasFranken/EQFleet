@@ -14,7 +14,7 @@ import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.main.MenuModel;
-import de.instinct.eqfleet.menu.module.inventory.Inventory;
+import de.instinct.eqfleet.menu.module.profile.inventory.Inventory;
 import de.instinct.eqfleet.menu.module.shop.message.BuyMessage;
 import de.instinct.eqfleet.menu.module.shop.model.ShopCategoryElement;
 import de.instinct.eqfleet.menu.module.shop.model.ShopItemElement;

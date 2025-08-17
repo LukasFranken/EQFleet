@@ -3,7 +3,7 @@ package de.instinct.eqfleet.menu.common.components;
 import com.badlogic.gdx.graphics.Color;
 
 import de.instinct.api.meta.dto.ResourceAmount;
-import de.instinct.eqfleet.menu.module.inventory.Inventory;
+import de.instinct.eqfleet.menu.module.profile.inventory.Inventory;
 import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.HorizontalAlignment;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;

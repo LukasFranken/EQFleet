@@ -1,4 +1,4 @@
-package de.instinct.eqfleet.menu.module.inventory;
+package de.instinct.eqfleet.menu.module.profile.inventory;
 
 import java.util.ArrayList;
 import java.util.List;
