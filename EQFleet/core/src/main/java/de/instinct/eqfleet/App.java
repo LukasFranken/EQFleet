@@ -136,12 +136,12 @@ public class App extends ApplicationAdapter {
 
 	@Override
     public void dispose() {
+		WebManager.dispose();
         Game.dispose();
         Menu.dispose();
         TextureManager.dispose();
         AudioManager.dispose();
         ModelRenderer.dispose();
-        WebManager.dispose();
         Console.dispose();
         Logger.log(LOGTAG, "EQFLEET TERMINATED", ConsoleColor.YELLOW);
     }

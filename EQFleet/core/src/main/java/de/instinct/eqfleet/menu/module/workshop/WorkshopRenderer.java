@@ -134,7 +134,6 @@ public class WorkshopRenderer extends BaseModuleRenderer {
 				.baseRotationAngle(-90f)
 				.baseRotationAxis(new Vector3(1, 0, 0))
 				.scale(20f)
-				.grid(false)
 				.build();
 		
 		LabeledModelButton shipButton = new LabeledModelButton(shipModelPreviewConfig, bundledShipData.getBlueprint().getModel().toUpperCase(), new Action() {

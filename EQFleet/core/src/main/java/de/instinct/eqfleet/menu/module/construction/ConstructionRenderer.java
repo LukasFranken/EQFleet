@@ -84,7 +84,6 @@ private List<LabeledModelButton> turretButtons;
 				.baseRotationAngle(-90f)
 				.baseRotationAxis(new Vector3(1, 0, 0))
 				.scale(20f)
-				.grid(false)
 				.build();
 		
 		LabeledModelButton turretButton = new LabeledModelButton(shipModelPreviewConfig, turretData.model, new Action() {

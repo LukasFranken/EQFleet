@@ -34,7 +34,6 @@ public class DefaultButtonFactory {
 				.baseRotationAngle(-90f)
 				.baseRotationAxis(new Vector3(1, 0, 0))
 				.scale(20f)
-				.grid(false)
 				.build();
 		
 		LabeledModelButton menuModelButton = new LabeledModelButton(shipModelPreviewConfig, module.toString(), new Action() {

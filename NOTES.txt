@@ -33,6 +33,10 @@ GENERAL:
 - after game, move to main menu and highlight unlocks
 - reward cash with digital number up sound
  -> make rewards more appealing
+ 
+- shipyard rework
+ -> upgrade parts individually: weapon, defense, engine
+ -> seperate parts visually
 
 GAME:
 
