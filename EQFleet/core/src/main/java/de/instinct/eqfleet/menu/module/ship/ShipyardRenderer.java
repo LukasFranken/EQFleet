@@ -20,6 +20,7 @@ import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.main.MenuModel;
 import de.instinct.eqfleet.menu.module.ship.message.UnuseShipMessage;
 import de.instinct.eqfleet.menu.module.ship.message.UseShipMessage;
+import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.grid.GridConfiguration;
@@ -55,12 +56,12 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 			activeLabel.render();
 			if (shipButtons != null) {
 				renderUsedShips();
-				TextureManager.draw(TextureManager.createTexture(SkinManager.skinColor), 
-						new Rectangle(
-								MenuModel.moduleBounds.x,
+				TextureManager.draw(TextureManager.createTexture(new Color(1f, 1f, 1f, 0.2f)), 
+						GraphicsUtil.scaleFactorAdjusted(new Rectangle(
+								MenuModel.moduleBounds.x + 20,
 								MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - 120,
-								MenuModel.moduleBounds.width,
-								1));
+								MenuModel.moduleBounds.width - 40,
+								1)));
 				renderUnusedShips();
 			}
 		}
@@ -97,36 +98,38 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 
 	@Override
 	public void reload() {
-		Rectangle activeLabelBounds = new Rectangle(
-				MenuModel.moduleBounds.x + 20,
-				MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - 30,
-				MenuModel.moduleBounds.width - 40,
-				20);
-		int active = 0;
-		for (PlayerShipData ship : ShipyardModel.playerShipyard.getShips()) {
-			if (ship.isInUse()) {
-				active++;
-			}
-		}
-		activeLabel = new Label("Active: " + active + "/" + ShipyardModel.playerShipyard.getActiveShipSlots());
-		activeLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
-		activeLabel.setBounds(activeLabelBounds);
-		
-		spaceLabel = new Label("Space: " + ShipyardModel.playerShipyard.getUsedSlots() + "/" + ShipyardModel.playerShipyard.getSlots());
-		spaceLabel.setHorizontalAlignment(HorizontalAlignment.RIGHT);
-		spaceLabel.setBounds(activeLabelBounds);
-		
-		activeShipButtons = new ArrayList<>();	
-		shipButtons = new ArrayList<>();	
-		if (ShipyardModel.shipyard != null && ShipyardModel.playerShipyard.getShips() != null) {
-			for (PlayerShipData playerShip : ShipyardModel.playerShipyard.getShips()) {
-				ShipData shipData  = EngineInterface.getShipData(playerShip, ShipyardModel.shipyard);
-				if (playerShip.isInUse()) {
-					activeShipButtons.add(createShipButton(playerShip, shipData));
-				} else {
-					shipButtons.add(createShipButton(playerShip, shipData));
+		if (ShipyardModel.playerShipyard != null) {
+			Rectangle activeLabelBounds = new Rectangle(
+					MenuModel.moduleBounds.x + 20,
+					MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - 30,
+					MenuModel.moduleBounds.width - 40,
+					20);
+			int active = 0;
+			for (PlayerShipData ship : ShipyardModel.playerShipyard.getShips()) {
+				if (ship.isInUse()) {
+					active++;
 				}
-			}	
+			}
+			activeLabel = new Label("Active: " + active + "/" + ShipyardModel.playerShipyard.getActiveShipSlots());
+			activeLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
+			activeLabel.setBounds(activeLabelBounds);
+			
+			spaceLabel = new Label("Space: " + ShipyardModel.playerShipyard.getUsedSlots() + "/" + ShipyardModel.playerShipyard.getSlots());
+			spaceLabel.setHorizontalAlignment(HorizontalAlignment.RIGHT);
+			spaceLabel.setBounds(activeLabelBounds);
+			
+			activeShipButtons = new ArrayList<>();
+			shipButtons = new ArrayList<>();
+			if (ShipyardModel.shipyard != null && ShipyardModel.playerShipyard.getShips() != null) {
+				for (PlayerShipData playerShip : ShipyardModel.playerShipyard.getShips()) {
+					ShipData shipData  = EngineInterface.getShipData(playerShip, ShipyardModel.shipyard);
+					if (playerShip.isInUse()) {
+						activeShipButtons.add(createShipButton(playerShip, shipData));
+					} else {
+						shipButtons.add(createShipButton(playerShip, shipData));
+					}
+				}	
+			}
 		}
 	}
 	

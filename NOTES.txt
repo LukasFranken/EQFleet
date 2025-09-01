@@ -26,7 +26,12 @@ GENERAL:
 
 - all resource labels colored
 
+- rewards: show total with adding animation
+
 - inventory part of profile
+
+- randomly pitch/volume sound fx
+ -> makes often occuring sounds more pleasant
 
 - german
 - remove ap and sun from tutorial/early maps (until abilities)
@@ -37,6 +42,7 @@ GENERAL:
 - shipyard rework
  -> upgrade parts individually: weapon, defense, engine
  -> seperate parts visually
+ -> unlock ship levels with use (weapon damage, engine traveled, defense tanked)
 
 GAME:
 
