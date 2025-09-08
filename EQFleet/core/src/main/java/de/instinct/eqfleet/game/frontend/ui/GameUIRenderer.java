@@ -265,7 +265,7 @@ public class GameUIRenderer {
 		for (Planet planet : state.planets) {
 			Vector3 screenPos = camera.project(new Vector3(planet.position.x, planet.position.y, 0f));
 		    String value = String.valueOf((int) planet.currentResources);
-		    float labelWidth = FontUtil.getFontTextWidthPx(value);
+		    float labelWidth = FontUtil.getFontTextWidthPx(value.length());
 		    float labelHeight = FontUtil.getFontHeightPx();
 		    float labelX = screenPos.x - labelWidth / 2f;
 		    float labelY = screenPos.y - labelHeight / 2f;
@@ -517,7 +517,7 @@ public class GameUIRenderer {
 			Player owner = EngineUtility.getPlayer(state.players, selected.ownerId);
 			ShipData ship = owner.ships.get(inputManager.getSelectedShipId());
 			String shipName = ship.model;
-	        float labelWidth = FontUtil.getNormalizedFontTextWidthPx(shipName, FontType.SMALL);
+	        float labelWidth = FontUtil.getFontTextWidthPx(shipName.length(), FontType.SMALL);
 	        Color labelColor = new Color(selected.currentResources >= ship.cost && owner.currentCommandPoints >= ship.commandPointsCost ? Color.GREEN : Color.RED);
 	        Label shipLabel = new Label(shipName);
 	        shipLabel.setColor(labelColor);
@@ -590,7 +590,7 @@ public class GameUIRenderer {
 	        Vector3 labelPos = camera.project(new Vector3(labelX, labelY, 0f));
 	        
 	        String shipName = owner.ships.get(i).model;
-	        float labelWidth = FontUtil.getFontTextWidthPx(shipName, FontType.SMALL);
+	        float labelWidth = FontUtil.getFontTextWidthPx(shipName.length(), FontType.SMALL);
 	        Label shipLabel = new Label(shipName);
 	        shipLabel.setColor(isSelected ? (isAffordable ? selectedAffordableColor : selectedColor) : unselectedColorLabel);
 	        shipLabel.setBounds(GraphicsUtil.scaleFactorDeducted(new Rectangle(labelPos.x - (labelWidth / 2), labelPos.y - 10f, labelWidth, 20f)));
@@ -665,7 +665,7 @@ public class GameUIRenderer {
 	        Vector3 labelPos = camera.project(new Vector3(labelX, labelY, 0f));
 	        
 	        String buildingName = owner.planetData.turret.model + " Turret";
-	        float labelWidth = FontUtil.getFontTextWidthPx(buildingName, FontType.SMALL);
+	        float labelWidth = FontUtil.getFontTextWidthPx(buildingName.length(), FontType.SMALL);
 	        Label buildingLabel = new Label(buildingName);
 	        buildingLabel.setColor(isSelected ? (isAffordable ? selectedAffordableColor : selectedColor) : unselectedColorLabel);
 	        buildingLabel.setBounds(GraphicsUtil.scaleFactorDeducted(new Rectangle(labelPos.x - (labelWidth / 2), labelPos.y - 10f, labelWidth, 20f)));

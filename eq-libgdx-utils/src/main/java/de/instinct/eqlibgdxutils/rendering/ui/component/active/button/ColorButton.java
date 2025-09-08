@@ -3,7 +3,6 @@ package de.instinct.eqlibgdxutils.rendering.ui.component.active.button;
 import com.badlogic.gdx.graphics.Color;
 
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
-import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
@@ -29,7 +28,6 @@ public class ColorButton extends Button {
 	public ColorButton(String text) {
 		super();
 		label = new Label(text);
-		
 		labelColor = Color.GRAY;
 		color = Color.DARK_GRAY;
 		downColor = new Color(SkinManager.darkestSkinColor);
@@ -42,7 +40,7 @@ public class ColorButton extends Button {
 
 	@Override
 	public float calculateWidth() {
-		return fixedWidth == 0 ? FontUtil.getFontTextWidthPx(label.getText(), FontType.NORMAL) + (contentMargin * 2) : fixedWidth;
+		return fixedWidth == 0 ? FontUtil.getFontTextWidthPx(label.getText().length()) + (contentMargin * 2) : fixedWidth;
 	}
 
 	@Override

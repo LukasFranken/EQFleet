@@ -198,7 +198,7 @@ public class StarmapRenderer extends BaseModuleRenderer {
 			campaignBorder.setColor(new Color(SkinManager.skinColor));
 			campaignBorder.setSize(2f);
 			campaignLabel.setType(FontType.LARGE);
-			campaignLabel.setFixedWidth(FontUtil.getNormalizedFontTextWidthPx(campaignLabelString, FontType.LARGE) + 20f);
+			campaignLabel.setFixedWidth(FontUtil.getFontTextWidthPx(campaignLabelString.length(), FontType.LARGE) + 20f);
 			campaignLabel.setFixedHeight(40f);
 			campaignLabel.setPosition(MenuModel.moduleBounds.x + (MenuModel.moduleBounds.width / 2) - (campaignLabel.getFixedWidth() / 2), MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - 70f);
 			campaignLabel.setBorder(campaignBorder);

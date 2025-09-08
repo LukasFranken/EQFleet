@@ -1,7 +1,9 @@
 package de.instinct.eqlibgdxutils.rendering.ui.component.passive.label;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
@@ -38,7 +40,7 @@ public class Label extends Component {
 		String[] lines = text.split("\n");
 		float maxWidth = 0;
 		for (String line : lines) {
-			float width = FontUtil.getNormalizedFontTextWidthPx(line, type);
+			float width = FontUtil.getFontTextWidthPx(line.length(), type);
 			if (width > maxWidth) {
 				maxWidth = width;
 			}
@@ -49,7 +51,7 @@ public class Label extends Component {
 	@Override
 	public float calculateHeight() {
 		String[] lines = text.split("\n");
-		return lines.length * FontUtil.getNormalizedFontHeightPx(type) + (lines.length - 1) * lineSpacing;
+		return lines.length * FontUtil.getFontHeightPx(type) + (lines.length - 1) * lineSpacing;
 	}
 	
 	@Override
@@ -57,48 +59,43 @@ public class Label extends Component {
 
 	@Override
 	protected void renderComponent() {
-		Rectangle displayAdjustedBounds = getScreenScaleAdjustedBounds();
+		Rectangle bounds = getBounds();
 		if (backgroundColor != null) {
-			TextureManager.draw(TextureManager.createTexture(backgroundColor), displayAdjustedBounds, getAlpha());
+			TextureManager.draw(TextureManager.createTexture(backgroundColor), getScreenScaleAdjustedBounds(), getAlpha());
 		}
-
-		String[] lines = text.split("\n");
-		float lineHeight = FontUtil.getFontHeightPx(type);
-		float totalTextHeight = lines.length * lineHeight + (lines.length - 1) * lineSpacing;
-		float startY = 0f;
+		
+		Color finalColor = new Color(color);
+		finalColor.a = finalColor.a * getAlpha();
+		FontUtil.setLayoutText("[#" + finalColor.toString() + "]" + text, type);
+		GlyphLayout layout = FontUtil.getGlyphLayout();
+		float x = 0;
+		float y = 0;
 
 		switch (verticalAlignment) {
 		case TOP:
-			startY = displayAdjustedBounds.y + displayAdjustedBounds.height;
+			y = bounds.y + (bounds.height) + (layout.height);
 			break;
 		case CENTER:
-			startY = displayAdjustedBounds.y + (displayAdjustedBounds.height + totalTextHeight) / 2;
+			y = bounds.y + (bounds.height / 2f) + (layout.height / 2f);
 			break;
 		case BOTTOM:
-			startY = (displayAdjustedBounds.y + lineHeight) + (lines.length - 1) * (lineHeight + lineSpacing);
+			y = bounds.y;
 			break;
 		}
 
-		for (int i = 0; i < lines.length; i++) {
-			String line = lines[i];
-			float lineWidth = FontUtil.getFontTextWidthPx(line, type);
-			float lineX = 0f;
-			switch (horizontalAlignment) {
-			case LEFT:
-				lineX = displayAdjustedBounds.x;
-				break;
-			case CENTER:
-				lineX = displayAdjustedBounds.x + (displayAdjustedBounds.width - lineWidth) / 2;
-				break;
-			case RIGHT:
-				lineX = displayAdjustedBounds.x + displayAdjustedBounds.width - lineWidth;
-				break;
-			}
-			float lineY = startY - i * (lineHeight + lineSpacing);
-			Color finalColor = new Color(color);
-			finalColor.a = finalColor.a * getAlpha();
-			FontUtil.draw(finalColor, line, lineX, lineY, type);
+		switch (horizontalAlignment) {
+		case LEFT:
+			x = bounds.x;
+			break;
+		case CENTER:
+			x = bounds.x + (bounds.width / 2f) - (layout.width / 2f);
+			break;
+		case RIGHT:
+			x = bounds.x + bounds.width - layout.width;
+			break;
 		}
+		
+		FontUtil.draw(new Vector2(x, y), type);
 	}
 
 	@Override

@@ -211,7 +211,7 @@ public class MenuRenderer extends BaseModuleRenderer {
 		}
 		if (InventoryModel.resources != null && MenuModel.unlockedModules.getEnabledModules().contains(MenuModule.INVENTORY)) {
 			if (MenuModel.activeModule != MenuModule.INVENTORY) {
-				creditsLabel.setBounds(new Rectangle(menuBounds.x + menuBounds.width - 95, menuBounds.y + menuBounds.height + 10, 75, 20));
+				creditsLabel.setBounds(new Rectangle(menuBounds.x + menuBounds.width - 95, menuBounds.y + menuBounds.height + 10, 70, 20));
 				creditsLabel.setText(StringUtils.formatBigNumber(Inventory.getResource(Resource.CREDITS)));
 				creditsLabel.setAlpha(MenuModel.alpha);
 		        creditsLabel.render();

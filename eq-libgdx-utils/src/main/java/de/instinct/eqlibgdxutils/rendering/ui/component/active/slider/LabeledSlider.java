@@ -50,7 +50,7 @@ public class LabeledSlider extends Component {
 	@Override
 	protected void updateComponent() {
 		label.setFixedHeight(getBounds().height);
-		label.setFixedWidth(FontUtil.getNormalizedFontTextWidthPx(labelChars, label.getType()) + labelInnerMargin);
+		label.setFixedWidth(FontUtil.getFontTextWidthPx(labelChars, label.getType()) + labelInnerMargin);
 		label.setText(labelUpdateAction.getLabelText(slider.getCurrentValue()));
 		label.getBorder().setBounds(getBounds());
 		label.setAlpha(getAlpha());

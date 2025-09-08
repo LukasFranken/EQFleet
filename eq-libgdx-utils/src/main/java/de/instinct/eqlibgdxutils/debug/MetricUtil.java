@@ -108,14 +108,14 @@ public class MetricUtil {
 		if (active) {
 			batch.begin();
 			float panelWidth = calculatePanelWidth();
-			float panelHeight = fixedHeight == 0 ? elementMargin + (metrics.size() * (FontUtil.getNormalizedFontHeightPx(panelFontType) + elementMargin)) : fixedHeight;
+			float panelHeight = fixedHeight == 0 ? elementMargin + (metrics.size() * (FontUtil.getFontHeightPx(panelFontType) + elementMargin)) : fixedHeight;
 			Rectangle panelBounds = new Rectangle(0, GraphicsUtil.baseScreenBounds().getHeight() - panelHeight, panelWidth, panelHeight);
 			batch.setColor(1f, 1f, 1f, 0.5f);
 			batch.draw(backgroundColorTexture, panelBounds.x, panelBounds.y, panelBounds.width, panelBounds.height);
 			batch.end();
 			for (int i = 0; i < metrics.size(); i++) {
 				if (i + itemOffset < metrics.size()) {
-					float labelHeight = FontUtil.getNormalizedFontHeightPx(panelFontType) + elementMargin;
+					float labelHeight = FontUtil.getFontHeightPx(panelFontType) + elementMargin;
 					Rectangle metricBounds = new Rectangle(horizontalPanelOffset, GraphicsUtil.baseScreenBounds().getHeight() - topsidePanelOffset - ((i + 1) * (labelHeight + elementMargin)), calculatePanelWidth() - (horizontalPanelOffset * 2), labelHeight);
 					if (metricBounds.y > panelBounds.y) {
 						render(metrics.get(i + itemOffset), metricBounds, i + itemOffset);
@@ -167,7 +167,7 @@ public class MetricUtil {
 		} else {
 			float panelWidth = 0;
 			for (Metric metric : metrics) {
-				panelWidth = Math.max(panelWidth, FontUtil.getNormalizedFontTextWidthPx(metric.getTag() + ": " + metric.getValueString(), FontType.SMALL));
+				panelWidth = Math.max(panelWidth, FontUtil.getFontTextWidthPx((metric.getTag() + ": " + metric.getValueString()).length(), FontType.SMALL));
 			}
 			return panelWidth + (elementMargin * 2);
 		}

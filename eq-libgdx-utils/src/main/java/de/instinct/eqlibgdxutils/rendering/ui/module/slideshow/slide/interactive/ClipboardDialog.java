@@ -12,7 +12,6 @@ import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
-import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.InteractiveSlide;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.model.SlideCondition;
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.model.SlideLifeCycleStage;
@@ -90,7 +89,7 @@ public class ClipboardDialog extends InteractiveSlide {
 		messageLabel.setAlpha(slideAlpha);
 		
 		if (authKey != null) {
-			useButton.setPosition((getBounds().width / 2) - (useButton.getBounds().width / 2), (getBounds().height / 2) - useButton.getBounds().height - FontUtil.getFontHeightPx() - 35);
+			useButton.setPosition((getBounds().width / 2) - (useButton.getBounds().width / 2), (getBounds().height / 2) - useButton.getBounds().height - 35);
 			useButton.setAlpha(Math.min(clipboardLabelAlpha, slideAlpha));
 			useButton.update();
 			Color fontColor = new Color(SkinManager.lighterSkinColor);

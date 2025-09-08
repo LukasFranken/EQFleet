@@ -85,7 +85,7 @@ public class DefaultButtonFactory {
 		colorButton.setDownColor(new Color(SkinManager.lighterSkinColor));
 		colorButton.setAction(clickAction);
 		colorButton.setFixedHeight(30);
-		colorButton.setFixedWidth(FontUtil.getFontTextWidthPx(label) + 20f);
+		colorButton.setFixedWidth(FontUtil.getFontTextWidthPx(label.length()) + 20f);
 		
 		return colorButton;
 	}
