@@ -20,6 +20,7 @@ import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.main.MenuModel;
 import de.instinct.eqfleet.menu.module.ship.message.UnuseShipMessage;
 import de.instinct.eqfleet.menu.module.ship.message.UseShipMessage;
+import de.instinct.eqfleet.menu.module.workshop.message.BuildShipMessage;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.generic.Action;
@@ -143,13 +144,14 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 	}
 	
 	private Button createUnusedActiveShipButton() {
-		ColorButton button = DefaultButtonFactory.colorButton("++", null);
+		ColorButton button = DefaultButtonFactory.colorButton("+", null);
 		button.getBorder().setColor(Color.DARK_GRAY);
 		button.setFixedWidth(50f);
 		button.setFixedHeight(50f);
 		button.getLabel().setColor(Color.DARK_GRAY);
 		button.getLabel().setType(FontType.GIANT);
 		button.getLabel().setHorizontalAlignment(HorizontalAlignment.CENTER);
+		button.setEnabled(false);
 		return button;
 	}
 
@@ -247,27 +249,44 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("SHIELD", StringUtils.format(shipData.defense.shield, 0), popupWidth));
 		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("SH. REG. /s", StringUtils.format(shipData.defense.shieldRegenerationSpeed, 1), popupWidth));
 		
-		ColorButton useButton = DefaultButtonFactory.colorButton(playerShip.isInUse() ? "Unuse" : "Use", new Action() {
-			
-			@Override
-			public void execute() {
-				if (playerShip.isInUse()) {
-					Menu.queue(UnuseShipMessage.builder()
-							.shipUUID(playerShip.getUuid())
-							.build());
-				} else {
-					Menu.queue(UseShipMessage.builder()
-							.shipUUID(playerShip.getUuid())
-							.build());
+		if (playerShip.isBuilt()) {
+			ColorButton useButton = DefaultButtonFactory.colorButton(playerShip.isInUse() ? "Unuse" : "Use", new Action() {
+				
+				@Override
+				public void execute() {
+					if (playerShip.isInUse()) {
+						Menu.queue(UnuseShipMessage.builder()
+								.shipUUID(playerShip.getUuid())
+								.build());
+					} else {
+						Menu.queue(UseShipMessage.builder()
+								.shipUUID(playerShip.getUuid())
+								.build());
+					}
+					
+					PopupRenderer.close();
 				}
 				
-				PopupRenderer.close();
-			}
-			
-		});
-		useButton.setFixedHeight(30);
-		useButton.setFixedWidth(popupWidth);
-		popupContent.getElements().add(useButton);
+			});
+			useButton.setFixedHeight(30);
+			useButton.setFixedWidth(popupWidth);
+			popupContent.getElements().add(useButton);
+		} else {
+			ColorButton buildButton = DefaultButtonFactory.colorButton("Build", new Action() {
+				
+				@Override
+				public void execute() {
+					Menu.queue(BuildShipMessage.builder()
+							.shipUUID(playerShip.getUuid())
+							.build());
+					PopupRenderer.close();
+				}
+				
+			});
+			buildButton.setFixedHeight(30);
+			buildButton.setFixedWidth(popupWidth);
+			popupContent.getElements().add(buildButton);
+		}
 		
 		PopupRenderer.create(Popup.builder()
 				.title(shipData.model + " - Lv. " + playerShip.getLevel())

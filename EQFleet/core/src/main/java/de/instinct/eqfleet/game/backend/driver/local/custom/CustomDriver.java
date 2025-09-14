@@ -20,7 +20,6 @@ import de.instinct.engine.order.types.GamePauseOrder;
 import de.instinct.engine.order.types.ShipMovementOrder;
 import de.instinct.engine.order.types.SurrenderOrder;
 import de.instinct.engine.util.EngineUtility;
-import de.instinct.engine.util.VictoryCalculator;
 import de.instinct.eqfleet.audio.AudioManager;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.GameModel;
@@ -119,7 +118,6 @@ public class CustomDriver extends LocalDriver {
 				e.printStackTrace();
 			}
         	
-			VictoryCalculator.checkVictory(GameModel.activeGameState);
 			if (GameModel.activeGameState.winner != 0) {
 				Game.stop();
 			}

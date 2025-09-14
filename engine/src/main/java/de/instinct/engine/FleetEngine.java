@@ -17,6 +17,7 @@ import de.instinct.engine.order.GameOrder;
 import de.instinct.engine.planet.PlanetProcessor;
 import de.instinct.engine.player.PlayerProcessor;
 import de.instinct.engine.util.EngineUtility;
+import de.instinct.engine.util.VictoryCalculator;
 
 public class FleetEngine {
 	
@@ -112,6 +113,7 @@ public class FleetEngine {
 			if (state.started) {
 				advanceTime(state, progressionMS);
 			    integrateNewOrders(state);
+			    VictoryCalculator.checksVictory(state);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

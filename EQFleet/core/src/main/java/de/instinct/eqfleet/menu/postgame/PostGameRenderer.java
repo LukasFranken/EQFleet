@@ -48,7 +48,7 @@ public class PostGameRenderer extends BaseModuleRenderer {
 	private boolean halted;
 	
 	public PostGameRenderer() {
-		claimButton = DefaultButtonFactory.colorButton("Claim", new Action() {
+		claimButton = DefaultButtonFactory.colorButton("Continue", new Action() {
 			
 			@Override
 			public void execute() {

@@ -43,7 +43,8 @@ GENERAL:
  -> upgrade parts individually: weapon, defense, engine
  -> seperate parts visually
  -> unlock ship levels with use (weapon damage, engine traveled, defense tanked)
-
+ -> postgame screen show progress with 3 colored bars
+ 
 GAME:
 
 META:

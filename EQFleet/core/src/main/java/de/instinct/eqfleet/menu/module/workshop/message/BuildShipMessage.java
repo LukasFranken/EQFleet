@@ -15,7 +15,7 @@ public class BuildShipMessage extends ModuleMessage {
 
 	@Override
 	public MenuModule getMenuModule() {
-		return MenuModule.WORKSHOP;
+		return MenuModule.SHIPYARD;
 	}
 	
 }

@@ -3,14 +3,18 @@ package de.instinct.eqfleet.menu.module.ship;
 import de.instinct.api.core.API;
 import de.instinct.api.core.modules.MenuModule;
 import de.instinct.api.shipyard.dto.PlayerShipData;
+import de.instinct.api.shipyard.dto.ShipBuildResponse;
 import de.instinct.api.shipyard.dto.UnuseShipResponseCode;
 import de.instinct.api.shipyard.dto.UseShipResponseCode;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.module.core.ModuleMessage;
+import de.instinct.eqfleet.menu.module.profile.inventory.message.LoadResourcesMessage;
 import de.instinct.eqfleet.menu.module.ship.message.ReloadShipyardMessage;
 import de.instinct.eqfleet.menu.module.ship.message.UnuseShipMessage;
 import de.instinct.eqfleet.menu.module.ship.message.UseShipMessage;
+import de.instinct.eqfleet.menu.module.workshop.WorkshopModel;
+import de.instinct.eqfleet.menu.module.workshop.message.BuildShipMessage;
 import de.instinct.eqfleet.net.WebManager;
 
 public class Shipyard extends BaseModule {
@@ -79,6 +83,22 @@ public class Shipyard extends BaseModule {
 							loadData();
 						}
 					}
+			);
+			return true;
+		}
+		if (message instanceof BuildShipMessage) {
+			BuildShipMessage buildShipMessage = (BuildShipMessage) message;
+			WebManager.enqueue(
+					() -> API.shipyard().build(buildShipMessage.getShipUUID()),
+				    result -> {
+				    	WorkshopModel.shipBuildResponse = result;
+				    	if (result == ShipBuildResponse.SUCCESS) {
+				    		Menu.queue(LoadResourcesMessage.builder().build());
+				    		loadData();
+				    	} else {
+				    		super.requireUIReload();
+				    	}
+				    }
 			);
 			return true;
 		}

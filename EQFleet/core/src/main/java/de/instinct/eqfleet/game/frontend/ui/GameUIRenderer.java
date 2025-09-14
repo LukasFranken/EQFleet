@@ -473,9 +473,11 @@ public class GameUIRenderer {
 			if (isTargeting) {
 				Player owner = EngineUtility.getPlayer(state.players, selected.ownerId);
 				Player target = EngineUtility.getPlayer(state.players, hovered.ownerId);
-				int fleetCost = owner.ships.get(inputManager.getSelectedShipId()).cost;
-				if (owner.teamId == target.teamId) {
-					renderResourceCircle(hovered.position.x, hovered.position.y, Color.GREEN, (float)(fleetCost / target.planetData.maxResourceCapacity));
+				if (owner != null && owner.ships != null) {
+					int fleetCost = owner.ships.get(inputManager.getSelectedShipId()).cost;
+					if (owner.teamId == target.teamId) {
+						renderResourceCircle(hovered.position.x, hovered.position.y, Color.GREEN, (float)(fleetCost / target.planetData.maxResourceCapacity));
+					}
 				}
 			}
 			Turret turret = EngineUtility.getPlanetTurret(state.turrets, hovered.id);
