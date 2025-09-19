@@ -16,6 +16,7 @@ import de.instinct.engine.model.planet.Planet;
 import de.instinct.engine.order.GameOrder;
 import de.instinct.engine.planet.PlanetProcessor;
 import de.instinct.engine.player.PlayerProcessor;
+import de.instinct.engine.stats.StatCollector;
 import de.instinct.engine.util.EngineUtility;
 import de.instinct.engine.util.VictoryCalculator;
 
@@ -44,7 +45,7 @@ public class FleetEngine {
 		state.entityCounter = 0;
 		state.orderCounter = 0;
 		state.gameUUID = initialization.gameUUID;
-		state.players = initializePlayers(initialization.players);
+		state.players = initializePlayers(state.gameUUID, initialization.players);
 		state.connectionStati = generateConnectionStati(initialization.players);
 		state.planets = generateInitialPlanets(initialization, state);
 		state.zoomFactor = initialization.map.zoomFactor;
@@ -73,12 +74,14 @@ public class FleetEngine {
 		state.teamPausesCount.put(1, initialization.pauseCountLimit);
 		state.teamPausesCount.put(2, initialization.pauseCountLimit);
 		combatProcessor.initialize(state);
+		StatCollector.initialize(state.gameUUID);
 		return state;
 	}
 	
-	private List<Player> initializePlayers(List<Player> players) {
+	private List<Player> initializePlayers(String gameUUID, List<Player> players) {
 		for (Player player : players) {
 			player.currentCommandPoints = player.startCommandPoints;
+			StatCollector.initializePlayer(gameUUID, player.id, player.ships.size(), 1);
 		}
 		return players;
 	}
