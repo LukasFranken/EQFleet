@@ -132,7 +132,7 @@ public class ActionPanel extends JPanel {
 					startButton.setText("resume");
 				} else {
 					TestEngineManager.state.started = true;
-					startButton.setText("pause");
+					startButton.setText("halt");
 				}
 			}
         	

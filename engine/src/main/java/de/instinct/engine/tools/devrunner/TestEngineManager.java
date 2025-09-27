@@ -22,6 +22,9 @@ import de.instinct.engine.model.ship.ShipType;
 import de.instinct.engine.model.ship.Weapon;
 import de.instinct.engine.model.ship.WeaponType;
 import de.instinct.engine.order.GameOrder;
+import de.instinct.engine.stats.StatCollector;
+import de.instinct.engine.stats.model.GameStatistic;
+import de.instinct.engine.util.VictoryCalculator;
 
 public class TestEngineManager {
 	
@@ -45,6 +48,13 @@ public class TestEngineManager {
 				for (GameOrder order : aiOrders) {
 					engine.queue(state, order);
 				}
+			}
+		}
+		VictoryCalculator.checksVictory(state);
+		if (state.winner != 0) {
+			GameStatistic stats = StatCollector.grab(state.gameUUID);
+			if (stats != null) {
+				System.out.println(stats);
 			}
 		}
 	}

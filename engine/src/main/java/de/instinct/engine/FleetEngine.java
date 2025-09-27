@@ -45,6 +45,7 @@ public class FleetEngine {
 		state.entityCounter = 0;
 		state.orderCounter = 0;
 		state.gameUUID = initialization.gameUUID;
+		StatCollector.initialize(state.gameUUID);
 		state.players = initializePlayers(state.gameUUID, initialization.players);
 		state.connectionStati = generateConnectionStati(initialization.players);
 		state.planets = generateInitialPlanets(initialization, state);
@@ -74,7 +75,6 @@ public class FleetEngine {
 		state.teamPausesCount.put(1, initialization.pauseCountLimit);
 		state.teamPausesCount.put(2, initialization.pauseCountLimit);
 		combatProcessor.initialize(state);
-		StatCollector.initialize(state.gameUUID);
 		return state;
 	}
 	
