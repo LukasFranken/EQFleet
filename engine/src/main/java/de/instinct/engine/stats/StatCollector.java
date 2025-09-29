@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.instinct.engine.model.Player;
+import de.instinct.engine.model.ship.ShipData;
 import de.instinct.engine.stats.model.GameStatistic;
 import de.instinct.engine.stats.model.PlayerStatistic;
 import de.instinct.engine.stats.model.unit.ShipStatistic;
@@ -24,22 +26,22 @@ public class StatCollector {
 		return initStatistic;
 	}
 	
-	public static void initializePlayer(String gameUUID, int playerId, int ships, int turrets) {
+	public static void initializePlayer(String gameUUID, Player player) {
 		GameStatistic initStatistic = statistics.get(gameUUID);
 		PlayerStatistic playerStatistic = new PlayerStatistic();
-		playerStatistic.setPlayerId(playerId);
+		playerStatistic.setPlayerId(player.id);
 		
 		playerStatistic.setShipStatistics(new ArrayList<>());
-		for (int i = 0; i < ships; i++) {
+		for (ShipData ship : player.ships) {
 			ShipStatistic shipStatistic = new ShipStatistic();
-			shipStatistic.setId(i);
+			shipStatistic.setModel(ship.model);
 			playerStatistic.getShipStatistics().add(shipStatistic);
 		}
 		
 		playerStatistic.setTurretStatistics(new ArrayList<>());
-		for (int i = 0; i < turrets; i++) {
+		if (player.planetData.turret != null) {
 			TurretStatistic turretStatistic = new TurretStatistic();
-			turretStatistic.setId(i);
+			turretStatistic.setModel(player.planetData.turret.model);
 			playerStatistic.getTurretStatistics().add(turretStatistic);
 		}
 		
@@ -52,6 +54,15 @@ public class StatCollector {
 	
 	public static GameStatistic grab(String gameUUID) {
 		return statistics.remove(gameUUID);
+	}
+	
+	public static PlayerStatistic getPlayer(String gameUUID, int playerId) {
+		for (PlayerStatistic playerStatistic : get(gameUUID).getPlayerStatistics()) {
+			if (playerStatistic.getPlayerId() == playerId)
+				return playerStatistic;
+			
+		}
+		return null;
 	}
 
 }

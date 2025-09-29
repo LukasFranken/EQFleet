@@ -24,7 +24,6 @@ import de.instinct.engine.model.ship.WeaponType;
 import de.instinct.engine.order.GameOrder;
 import de.instinct.engine.stats.StatCollector;
 import de.instinct.engine.stats.model.GameStatistic;
-import de.instinct.engine.util.VictoryCalculator;
 
 public class TestEngineManager {
 	
@@ -50,7 +49,6 @@ public class TestEngineManager {
 				}
 			}
 		}
-		VictoryCalculator.checksVictory(state);
 		if (state.winner != 0) {
 			GameStatistic stats = StatCollector.grab(state.gameUUID);
 			if (stats != null) {
@@ -115,7 +113,7 @@ public class TestEngineManager {
 		players.add(player);
 		
 		AiEngine aiEngine = new AiEngine();
-		Player aiPlayer = aiEngine.initialize(10);
+		Player aiPlayer = aiEngine.initialize(100);
 		aiPlayer.id = 4;
 		aiPlayer.teamId = 2;
 		players.add(aiPlayer);
@@ -127,7 +125,7 @@ public class TestEngineManager {
 			player2.name = "Player 2";
 			players.add(player2);
 			
-			Player aiPlayer2 = aiEngine.initialize(50);
+			Player aiPlayer2 = aiEngine.initialize(500);
 			aiPlayer2.id = 5;
 			aiPlayer2.teamId = 2;
 			players.add(aiPlayer2);
@@ -140,7 +138,7 @@ public class TestEngineManager {
 			player3.name = "Player 3";
 			players.add(player3);
 			
-			Player aiPlayer3 = aiEngine.initialize(1);
+			Player aiPlayer3 = aiEngine.initialize(10);
 			aiPlayer3.id = 6;
 			aiPlayer3.teamId = 2;
 			players.add(aiPlayer3);

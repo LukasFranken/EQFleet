@@ -7,7 +7,7 @@ import de.instinct.engine.model.planet.Planet;
 
 public class VictoryCalculator {
 	
-	public static void checksVictory(GameState state) {
+	public static void checkVictory(GameState state) {
 	    if (state.winner != 0) return;
 	    checkSurrenderVictory(state);
 	    checkMapATPVictory(state);

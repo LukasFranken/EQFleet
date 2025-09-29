@@ -5,6 +5,8 @@ import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.Player;
 import de.instinct.engine.model.planet.Planet;
 import de.instinct.engine.model.planet.PlanetData;
+import de.instinct.engine.stats.StatCollector;
+import de.instinct.engine.stats.model.PlayerStatistic;
 import de.instinct.engine.util.EngineUtility;
 
 public class PlanetProcessor extends EntityProcessor {
@@ -26,6 +28,9 @@ public class PlanetProcessor extends EntityProcessor {
 	            	    planet.ownerId = 0;
 	            	    planet.currentResources = 0;
 	            	}
+	            	
+	            	PlayerStatistic playerStat = StatCollector.getPlayer(state.gameUUID, owner.id);
+	            	playerStat.setAtpGained(playerStat.getAtpGained() + (actualGain / state.ancientPlanetResourceDegradationFactor));
 	            } else {
 	                double resourceIncrease = calculateResourceGeneration(owner, deltaMS);
 	                planet.currentResources += resourceIncrease;

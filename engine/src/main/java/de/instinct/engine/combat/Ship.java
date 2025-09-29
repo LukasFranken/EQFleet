@@ -7,7 +7,6 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class Ship extends Unit {
 
-	public String model;
 	public ShipType type;
 	public float movementSpeed;
 	public int targetPlanetId;

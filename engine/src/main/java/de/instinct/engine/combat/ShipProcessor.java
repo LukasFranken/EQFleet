@@ -9,6 +9,8 @@ import de.instinct.engine.model.Player;
 import de.instinct.engine.model.planet.Planet;
 import de.instinct.engine.model.ship.ShipData;
 import de.instinct.engine.order.types.ShipMovementOrder;
+import de.instinct.engine.stats.StatCollector;
+import de.instinct.engine.stats.model.unit.ShipStatistic;
 import de.instinct.engine.util.EngineUtility;
 import de.instinct.engine.util.VectorUtil;
 
@@ -51,9 +53,12 @@ public class ShipProcessor extends UnitProcessor {
 		Player shipOwner = EngineUtility.getPlayer(state.players, ship.ownerId);
 		Planet targetPlanet = EngineUtility.getPlanet(state.planets, ship.targetPlanetId);
 		Player targetPlanetOwner = EngineUtility.getPlayer(state.players, targetPlanet.ownerId);
-		Vector2 targetPosition = VectorUtil.getTargetPosition(ship.position, targetPlanet.position, ((float)deltaTime / 1000f) * ship.movementSpeed);
+		float distance = Math.min(((float)deltaTime / 1000f) * ship.movementSpeed, VectorUtil.dst(ship.position, targetPlanet.position));
+		Vector2 targetPosition = VectorUtil.getTargetPosition(ship.position, targetPlanet.position, distance);
 		ship.position = targetPosition;
-		if (EntityManager.entityDistance(ship, targetPlanet) <= 0) {
+		ShipStatistic shipStatistic = StatCollector.getPlayer(state.gameUUID, shipOwner.id).getShip(ship.model);
+		shipStatistic.setDistanceTraveled(shipStatistic.getDistanceTraveled() + distance);
+		if (EntityManager.entityDistance(ship, targetPlanet) <= 0.01) {
 			if (targetPlanetOwner.teamId == shipOwner.teamId) {
 				targetPlanet.currentResources += ship.cost;
 				if (targetPlanet.currentResources > targetPlanet.maxResourceCapacity) {

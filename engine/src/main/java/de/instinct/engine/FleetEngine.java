@@ -81,7 +81,7 @@ public class FleetEngine {
 	private List<Player> initializePlayers(String gameUUID, List<Player> players) {
 		for (Player player : players) {
 			player.currentCommandPoints = player.startCommandPoints;
-			StatCollector.initializePlayer(gameUUID, player.id, player.ships.size(), 1);
+			StatCollector.initializePlayer(gameUUID, player);
 		}
 		return players;
 	}
@@ -113,10 +113,10 @@ public class FleetEngine {
 
 	public void update(GameState state, long progressionMS) {
 		try {
-			if (state.started) {
+			if (state.started && state.winner == 0) {
 				advanceTime(state, progressionMS);
 			    integrateNewOrders(state);
-			    VictoryCalculator.checksVictory(state);
+			    VictoryCalculator.checkVictory(state);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

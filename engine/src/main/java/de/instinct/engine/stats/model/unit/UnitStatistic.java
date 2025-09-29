@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public abstract class UnitStatistic {
 	
-	private int id;
+	private String model;
 	private float damageDealt;
 	private float damageTaken;
 	private int kills;

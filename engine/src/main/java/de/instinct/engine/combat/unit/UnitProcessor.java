@@ -14,6 +14,8 @@ import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.Player;
 import de.instinct.engine.model.UnitData;
 import de.instinct.engine.model.planet.Planet;
+import de.instinct.engine.stats.StatCollector;
+import de.instinct.engine.stats.model.PlayerStatistic;
 import de.instinct.engine.util.EngineUtility;
 
 public abstract class UnitProcessor extends EntityProcessor {
@@ -83,6 +85,10 @@ public abstract class UnitProcessor extends EntityProcessor {
 	        planet.currentResources -= unit.cost;
 	        Player player = EngineUtility.getPlayer(state.players, unit.ownerId);
 	        player.currentCommandPoints -= unitData.commandPointsCost;
+	        
+	        PlayerStatistic playerStat = StatCollector.getPlayer(state.gameUUID, player.id);
+	        playerStat.setResourcesUsed(playerStat.getResourcesUsed() + unit.cost);
+			playerStat.setCpUsed(playerStat.getCpUsed() + unitData.commandPointsCost);
 		}
         
 		if (unitData.weapon != null) unit.weapon = unitData.weapon.clone();
