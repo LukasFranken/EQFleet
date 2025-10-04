@@ -49,7 +49,7 @@ public class AiEngine {
 		
 		if (threatLevel >= 10) {
 			TurretData aiTurret = new TurretData();
-			aiTurret.model = "hawk";
+			aiTurret.model = "projectile";
 			aiTurret.weapon = AiStatManager.getPlanetWeapon(threatLevel);
 			aiTurret.defense = AiStatManager.getPlanetDefense(threatLevel);
 			aiTurret.commandPointsCost = 1;

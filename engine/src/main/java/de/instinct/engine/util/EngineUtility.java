@@ -55,6 +55,15 @@ public class EngineUtility {
 				return turret;
 			}
 		}
+		System.out.println("couldnt find unit with id " + id);
+		System.out.println("ships:");
+		for (Ship ship : state.ships) {
+			System.out.println(ship.id);
+		}
+		System.out.println("turrets:");
+		for (Turret turret : state.turrets) {
+			System.out.println(turret.id);
+		}
 		return null;
 	}
 	

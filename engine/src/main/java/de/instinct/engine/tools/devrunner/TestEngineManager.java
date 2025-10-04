@@ -87,7 +87,7 @@ public class TestEngineManager {
 		neutralPlanetData.resourceGenerationSpeed = 0;
 		neutralPlanetData.maxResourceCapacity = 0;
 		TurretData neutralPlanetTurret = new TurretData();
-		neutralPlanetTurret.model = "hawk";
+		neutralPlanetTurret.model = "projectile";
 		Weapon neutralPlanetWeapon = new Weapon();
 		neutralPlanetWeapon.type = WeaponType.MISSILE;
 		neutralPlanetWeapon.damage = 3;
@@ -156,7 +156,7 @@ public class TestEngineManager {
 		playerPlanetData.maxResourceCapacity = 20;
 		TurretData playerPlanetTurret = new TurretData();
 		playerPlanetTurret.commandPointsCost = 3;
-		playerPlanetTurret.model = "hawk";
+		playerPlanetTurret.model = "projectile";
 		playerPlanetTurret.cost = 10;
 		Weapon playerPlanetWeapon = new Weapon();
 		playerPlanetWeapon.type = WeaponType.PROJECTILE;

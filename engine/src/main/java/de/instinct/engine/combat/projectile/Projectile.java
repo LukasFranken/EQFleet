@@ -8,6 +8,7 @@ import lombok.ToString;
 public abstract class Projectile extends Entity {
 	
 	public int originId;
+	public String originModel;
 	public WeaponType weaponType;
 	public float movementSpeed;
 	public float damage;

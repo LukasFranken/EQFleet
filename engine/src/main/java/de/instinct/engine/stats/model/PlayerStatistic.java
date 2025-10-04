@@ -4,6 +4,7 @@ import java.util.List;
 
 import de.instinct.engine.stats.model.unit.ShipStatistic;
 import de.instinct.engine.stats.model.unit.TurretStatistic;
+import de.instinct.engine.stats.model.unit.UnitStatistic;
 import lombok.Data;
 
 @Data
@@ -16,10 +17,27 @@ public class PlayerStatistic {
 	private List<ShipStatistic> shipStatistics;
 	private List<TurretStatistic> turretStatistics;
 	
+	public UnitStatistic getUnit(String model) {
+		ShipStatistic shipStat = getShip(model);
+		if (shipStat != null) return shipStat;
+		TurretStatistic turretStat = getTurret(model);
+		if (turretStat != null) return turretStat;
+		return null;
+	}
+	
 	public ShipStatistic getShip(String model) {
 		for (ShipStatistic ship : shipStatistics) {
 			if (ship.getModel().contentEquals(model)) {
 				return ship;
+			}
+		}
+		return null;
+	}
+	
+	public TurretStatistic getTurret(String model) {
+		for (TurretStatistic turret : turretStatistics) {
+			if (turret.getModel().contentEquals(model)) {
+				return turret;
 			}
 		}
 		return null;

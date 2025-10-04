@@ -16,6 +16,7 @@ import de.instinct.engine.model.UnitData;
 import de.instinct.engine.model.planet.Planet;
 import de.instinct.engine.stats.StatCollector;
 import de.instinct.engine.stats.model.PlayerStatistic;
+import de.instinct.engine.stats.model.unit.UnitStatistic;
 import de.instinct.engine.util.EngineUtility;
 
 public abstract class UnitProcessor extends EntityProcessor {
@@ -81,12 +82,13 @@ public abstract class UnitProcessor extends EntityProcessor {
 		Planet planet = EngineUtility.getPlanet(state.planets, unit.planetId);
 		unit.ownerId = planet.ownerId;
 		
+		Player player = EngineUtility.getPlayer(state.players, unit.ownerId);
+        PlayerStatistic playerStat = StatCollector.getPlayer(state.gameUUID, player.id);
+		
 		if (payCost) {
 	        planet.currentResources -= unit.cost;
-	        Player player = EngineUtility.getPlayer(state.players, unit.ownerId);
 	        player.currentCommandPoints -= unitData.commandPointsCost;
 	        
-	        PlayerStatistic playerStat = StatCollector.getPlayer(state.gameUUID, player.id);
 	        playerStat.setResourcesUsed(playerStat.getResourcesUsed() + unit.cost);
 			playerStat.setCpUsed(playerStat.getCpUsed() + unitData.commandPointsCost);
 		}
@@ -97,6 +99,9 @@ public abstract class UnitProcessor extends EntityProcessor {
 			unit.defense.currentShield = unit.defense.shield;
 			unit.defense.currentArmor = unit.defense.armor;
 		}
+		
+		UnitStatistic unitStat = playerStat.getUnit(unit.model);
+		unitStat.setTimesBuilt(unitStat.getTimesBuilt() + 1);
 	}
 
 }
