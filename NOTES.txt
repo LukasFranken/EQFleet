@@ -4,6 +4,9 @@ GENERAL:
 - appicon, ios loadscreen etc.
 - build apk
 
+- antimatter shields blocking dmg instaces
+- hawk-2a
+
 - settings via meta module (show grid, show fleet lines)
 - account security
  -> optional email provision

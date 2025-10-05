@@ -103,9 +103,9 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 	public void reload() {
 		if (ShipyardModel.playerShipyard != null) {
 			Rectangle activeLabelBounds = new Rectangle(
-					MenuModel.moduleBounds.x + 20,
-					MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - 30,
-					MenuModel.moduleBounds.width - 40,
+					MenuModel.moduleBounds.x + 10,
+					MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - 25,
+					MenuModel.moduleBounds.width - 20,
 					20);
 			int active = 0;
 			for (PlayerShipData ship : ShipyardModel.playerShipyard.getShips()) {
@@ -116,10 +116,12 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 			activeLabel = new Label("Active: " + active + "/" + ShipyardModel.playerShipyard.getActiveShipSlots());
 			activeLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
 			activeLabel.setBounds(activeLabelBounds);
+			activeLabel.setType(FontType.SMALL);
 			
 			spaceLabel = new Label("Space: " + ShipyardModel.playerShipyard.getUsedSlots() + "/" + ShipyardModel.playerShipyard.getSlots());
 			spaceLabel.setHorizontalAlignment(HorizontalAlignment.RIGHT);
 			spaceLabel.setBounds(activeLabelBounds);
+			spaceLabel.setType(FontType.SMALL);
 			
 			activeShipButtons = new ArrayList<>();
 			shipButtons = new ArrayList<>();

@@ -59,7 +59,7 @@ public class Label extends Component {
 
 	@Override
 	protected void renderComponent() {
-		Rectangle bounds = getBounds();
+		Rectangle bounds = getScreenScaleAdjustedBounds();
 		if (backgroundColor != null) {
 			TextureManager.draw(TextureManager.createTexture(backgroundColor), getScreenScaleAdjustedBounds(), getAlpha());
 		}
