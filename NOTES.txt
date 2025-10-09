@@ -6,6 +6,12 @@ GENERAL:
 
 - antimatter shields blocking dmg instaces
 - hawk-2a
+- with deep tutorial, but tutorial gives rewards
+
+- if payment: global bonus and perks (idle obelisk system)
+- button needs a flashing animation system
+
+ship part: flash if level up ready
 
 - settings via meta module (show grid, show fleet lines)
 - account security

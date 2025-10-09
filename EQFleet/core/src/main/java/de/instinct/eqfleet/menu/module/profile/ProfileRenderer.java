@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Rectangle;
 import de.instinct.api.meta.dto.NameRegisterResponseCode;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
-import de.instinct.eqfleet.menu.common.components.DefaultLabelFactory;
+import de.instinct.eqfleet.menu.common.components.label.DefaultLabelFactory;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.main.MenuModel;
 import de.instinct.eqfleet.menu.module.profile.inventory.InventoryRenderer;

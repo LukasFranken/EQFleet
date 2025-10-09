@@ -58,6 +58,7 @@ public class App extends ApplicationAdapter {
         Game.init();
         ParticleRenderer.init();
         ModelRenderer.init();
+        PopupRenderer.init();
         Console.build();
         Console.registerMetric(NumberMetric.builder()
         		.decimals(2)

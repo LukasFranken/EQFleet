@@ -24,7 +24,7 @@ import de.instinct.api.starmap.dto.GalaxyData;
 import de.instinct.api.starmap.dto.StarsystemData;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
-import de.instinct.eqfleet.menu.common.components.DefaultLabelFactory;
+import de.instinct.eqfleet.menu.common.components.label.DefaultLabelFactory;
 import de.instinct.eqfleet.menu.main.MenuModel;
 import de.instinct.eqfleet.menu.module.ship.Shipyard;
 import de.instinct.eqfleet.menu.module.starmap.model.Galaxy;
@@ -263,6 +263,7 @@ public class StarmapRenderer extends BaseModuleRenderer {
 		});
 		travelButton.setFixedHeight(30);
 		travelButton.setFixedWidth(popupWidth);
+		travelButton.setLayer(1);
 		ElementList systemInfoElements = new ElementList();
 		systemInfoElements.setMargin(10);
 		MapPreviewSection mapPreviewSection = new MapPreviewSection(starsystem.getMapPreview());

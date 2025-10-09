@@ -84,4 +84,26 @@ public class ComplexShapeRenderer extends ShapeRenderer {
 	    return Math.max(1, (int)(6 * (double)Math.cbrt(radius) * (degrees / 360.0f)));
 	}
 
+	public void partialRect(Rectangle rect, float missingWidth, float missingXOffset, float thickness) {
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+    	Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		begin(ShapeRenderer.ShapeType.Filled);
+        
+		float x = rect.x;
+		float y = rect.y;
+		float w = rect.width;
+		float h = rect.height;
+		float r = thickness;
+
+		super.rect(x, y, w, r);
+		super.rect(x, y, r, h);
+		super.rect(x + w - r, y, r, h);
+		
+		super.rect(x, y + h - r, missingXOffset, r);
+		super.rect(x + missingXOffset + missingWidth, y + h - r, w - (missingXOffset + missingWidth), r);
+		
+		end();
+		Gdx.gl.glDisable(GL20.GL_BLEND);
+	}
+
 }

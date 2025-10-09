@@ -14,6 +14,7 @@ import de.instinct.api.game.engine.EngineInterface;
 import de.instinct.engine.model.planet.TurretData;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
+import de.instinct.eqfleet.menu.common.components.label.DefaultLabelFactory;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.main.MenuModel;
 import de.instinct.eqfleet.menu.module.construction.message.UseTurretMessage;
@@ -22,14 +23,10 @@ import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.model.ModelLoader;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.LabeledModelButton;
-import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.HorizontalAlignment;
-import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.model.ModelPreview;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.model.ModelPreviewConfiguration;
 import de.instinct.eqlibgdxutils.rendering.ui.container.list.ElementList;
-import de.instinct.eqlibgdxutils.rendering.ui.container.list.ElementStack;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
-import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
 import de.instinct.eqlibgdxutils.rendering.ui.popup.Popup;
 import de.instinct.eqlibgdxutils.rendering.ui.popup.PopupRenderer;
 import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
@@ -121,20 +118,20 @@ private List<LabeledModelButton> turretButtons;
 		ElementList popupContent = new ElementList();
 		popupContent.setMargin(10f);
 		popupContent.getElements().add(turretModelPreview);
-		popupContent.getElements().add(createLabelStack("RESOURCE COST", StringUtils.format(turretData.cost, 0)));
-		popupContent.getElements().add(createLabelStack("CP COST", StringUtils.format(turretData.commandPointsCost, 0)));
-		popupContent.getElements().add(createLabelStack("ROTATION SPEED", StringUtils.format(turretData.rotationSpeed, 0)));
-		popupContent.getElements().add(createLabelStack("--------", "--------"));
-		popupContent.getElements().add(createLabelStack("WEAPON", turretData.weapon.type.toString()));
-		popupContent.getElements().add(createLabelStack("DAMAGE", StringUtils.format(turretData.weapon.damage, 0)));
-		popupContent.getElements().add(createLabelStack("RANGE", StringUtils.format(turretData.weapon.range, 0)));
-		popupContent.getElements().add(createLabelStack("COOLDOWN", StringUtils.format(turretData.weapon.cooldown/1000f, 1) + "s"));
-		popupContent.getElements().add(createLabelStack("PROJECTILE SPEED", StringUtils.format(turretData.weapon.speed, 0)));
-		popupContent.getElements().add(createLabelStack("--------", "--------"));
-		popupContent.getElements().add(createLabelStack("DEFENSE", ""));
-		popupContent.getElements().add(createLabelStack("ARMOR", StringUtils.format(turretData.defense.armor, 0)));
-		popupContent.getElements().add(createLabelStack("SHIELD", StringUtils.format(turretData.defense.shield, 0)));
-		popupContent.getElements().add(createLabelStack("SHIELD/SEC", StringUtils.format(turretData.defense.shieldRegenerationSpeed, 1)));
+		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("RESOURCE COST", StringUtils.format(turretData.cost, 0), popupWidth));
+		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("CP COST", StringUtils.format(turretData.commandPointsCost, 0), popupWidth));
+		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("ROTATION SPEED", StringUtils.format(turretData.rotationSpeed, 0), popupWidth));
+		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("--------", "--------", popupWidth));
+		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("WEAPON", turretData.weapon.type.toString(), popupWidth));
+		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("DAMAGE", StringUtils.format(turretData.weapon.damage, 0), popupWidth));
+		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("RANGE", StringUtils.format(turretData.weapon.range, 0), popupWidth));
+		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("COOLDOWN", StringUtils.format(turretData.weapon.cooldown/1000f, 1) + "s", popupWidth));
+		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("PROJECTILE SPEED", StringUtils.format(turretData.weapon.speed, 0), popupWidth));
+		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("--------", "--------", popupWidth));
+		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("DEFENSE", "", popupWidth));
+		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("ARMOR", StringUtils.format(turretData.defense.armor, 0), popupWidth));
+		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("SHIELD", StringUtils.format(turretData.defense.shield, 0), popupWidth));
+		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("SHIELD/SEC", StringUtils.format(turretData.defense.shieldRegenerationSpeed, 1), popupWidth));
 		
 		ColorButton useButton = DefaultButtonFactory.colorButton("Use", new Action() {
 			
@@ -150,6 +147,7 @@ private List<LabeledModelButton> turretButtons;
 		});
 		useButton.setFixedHeight(30);
 		useButton.setFixedWidth(200);
+		useButton.setLayer(1);
 		popupContent.getElements().add(useButton);
 		
 		PopupRenderer.create(Popup.builder()
@@ -157,21 +155,6 @@ private List<LabeledModelButton> turretButtons;
 				.contentContainer(popupContent)
 				.closeOnClickOutside(true)
 				.build());
-	}
-	
-	private ElementStack createLabelStack(String label, String value) {
-		ElementStack uuidLabelStack = new ElementStack();
-		Label uuidLabel = new Label(label);
-		uuidLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
-		uuidLabel.setFixedWidth(popupWidth);
-		uuidLabelStack.getElements().add(uuidLabel);
-		
-		Label uuidValueLabel = new Label(value);
-		uuidValueLabel.setHorizontalAlignment(HorizontalAlignment.RIGHT);
-		uuidValueLabel.setFixedWidth(popupWidth);
-		uuidValueLabel.setType(FontType.SMALL);
-		uuidLabelStack.getElements().add(uuidValueLabel);
-		return uuidLabelStack;
 	}
 
 	@Override

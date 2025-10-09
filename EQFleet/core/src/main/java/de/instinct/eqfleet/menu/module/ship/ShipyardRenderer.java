@@ -15,14 +15,14 @@ import de.instinct.api.shipyard.dto.PlayerShipData;
 import de.instinct.engine.model.ship.ShipData;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
-import de.instinct.eqfleet.menu.common.components.DefaultLabelFactory;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.main.MenuModel;
+import de.instinct.eqfleet.menu.module.ship.component.shippart.ShipPartOverview;
+import de.instinct.eqfleet.menu.module.ship.component.shippart.ShipPartType;
 import de.instinct.eqfleet.menu.module.ship.message.UnuseShipMessage;
 import de.instinct.eqfleet.menu.module.ship.message.UseShipMessage;
 import de.instinct.eqfleet.menu.module.workshop.message.BuildShipMessage;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
-import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.grid.GridConfiguration;
 import de.instinct.eqlibgdxutils.rendering.model.ModelLoader;
@@ -48,7 +48,7 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 	private Label spaceLabel;
 	private Label activeLabel;
 	
-	private final float popupWidth = 250f;
+	private final float popupWidth = 200f;
 	
 	private Color blueprintColor = new Color(0f, 0f, 0.5f, 1f);
 	
@@ -228,28 +228,38 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 		shipModelPreviewBorder.setColor(Color.GRAY);
 		shipModelPreview.setBorder(shipModelPreviewBorder);
 		shipModelPreview.setFixedWidth(popupWidth);
-		shipModelPreview.setFixedHeight(popupWidth);
+		shipModelPreview.setFixedHeight(150);
 		ElementList popupContent = new ElementList();
 		popupContent.setMargin(10f);
 		popupContent.getElements().add(shipModelPreview);
-		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("TYPE", shipData.type.toString(), popupWidth));
+		/*popupContent.getElements().add(DefaultLabelFactory.createLabelStack("TYPE", shipData.type.toString(), popupWidth));
 		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("RES. COST", shipData.cost + "", popupWidth));
 		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("CP COST", shipData.commandPointsCost + "", popupWidth));
-		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("SPEED", StringUtils.format(shipData.movementSpeed, 0) + "", popupWidth));
-		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("----------", "----------", popupWidth));
-		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("WEAPON", shipData.weapon.type.toString(), popupWidth));
+		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("SPEED", StringUtils.format(shipData.movementSpeed, 0) + "", popupWidth));*/
+		ShipPartOverview coreOverview = new ShipPartOverview(popupWidth, ShipPartType.CORE, playerShip, shipData);
+		popupContent.getElements().add(coreOverview);
+		/*popupContent.getElements().add(DefaultLabelFactory.createLabelStack("WEAPON", shipData.weapon.type.toString(), popupWidth));
 		if (shipData.weapon.aoeRadius > 0) {
 			popupContent.getElements().add(DefaultLabelFactory.createLabelStack("AOE RADIUS", StringUtils.format(shipData.weapon.aoeRadius, 0), popupWidth));
 		}
 		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("DAMAGE", StringUtils.format(shipData.weapon.damage, 0), popupWidth));
 		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("RANGE", StringUtils.format(shipData.weapon.range, 0), popupWidth));
 		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("COOLDOWN", StringUtils.format(shipData.weapon.cooldown/1000f, 1) + "s", popupWidth));
-		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("SPEED", StringUtils.format(shipData.weapon.speed, 0), popupWidth));
-		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("----------", "----------", popupWidth));
-		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("DEFENSE", "", popupWidth));
+		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("SPEED", StringUtils.format(shipData.weapon.speed, 0), popupWidth));*/
+		ShipPartOverview weaponOverview = new ShipPartOverview(popupWidth, ShipPartType.WEAPON, playerShip, shipData);
+		popupContent.getElements().add(weaponOverview);
+		/*popupContent.getElements().add(DefaultLabelFactory.createLabelStack("DEFENSE", "", popupWidth));
 		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("ARMOR", StringUtils.format(shipData.defense.armor, 0), popupWidth));
 		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("SHIELD", StringUtils.format(shipData.defense.shield, 0), popupWidth));
-		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("SH. REG. /s", StringUtils.format(shipData.defense.shieldRegenerationSpeed, 1), popupWidth));
+		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("SH. REG. /s", StringUtils.format(shipData.defense.shieldRegenerationSpeed, 1), popupWidth));*/
+		ShipPartOverview shieldOverview = new ShipPartOverview(popupWidth, ShipPartType.SHIELD, playerShip, shipData);
+		popupContent.getElements().add(shieldOverview);
+		
+		ShipPartOverview hullOverview = new ShipPartOverview(popupWidth, ShipPartType.HULL, playerShip, shipData);
+		popupContent.getElements().add(hullOverview);
+		
+		ShipPartOverview engineOverview = new ShipPartOverview(popupWidth, ShipPartType.ENGINE, playerShip, shipData);
+		popupContent.getElements().add(engineOverview);
 		
 		if (playerShip.isBuilt()) {
 			ColorButton useButton = DefaultButtonFactory.colorButton(playerShip.isInUse() ? "Unuse" : "Use", new Action() {
@@ -272,6 +282,7 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 			});
 			useButton.setFixedHeight(30);
 			useButton.setFixedWidth(popupWidth);
+			useButton.setLayer(1);
 			popupContent.getElements().add(useButton);
 		} else {
 			ColorButton buildButton = DefaultButtonFactory.colorButton("Build", new Action() {
@@ -287,11 +298,12 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 			});
 			buildButton.setFixedHeight(30);
 			buildButton.setFixedWidth(popupWidth);
+			buildButton.setLayer(1);
 			popupContent.getElements().add(buildButton);
 		}
 		
 		PopupRenderer.create(Popup.builder()
-				.title(shipData.model + " - Lv. " + playerShip.getLevel())
+				.title(shipData.model.toUpperCase())
 				.contentContainer(popupContent)
 				.closeOnClickOutside(true)
 				.build());

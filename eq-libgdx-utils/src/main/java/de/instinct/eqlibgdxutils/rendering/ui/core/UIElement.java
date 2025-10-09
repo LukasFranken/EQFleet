@@ -15,6 +15,7 @@ public abstract class UIElement {
 	private float fixedWidth;
 	private float fixedHeight;
 	private float alpha;
+	private int layer;
 
 	public UIElement() {
 		alpha = 1f;

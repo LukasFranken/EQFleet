@@ -1,5 +1,6 @@
 package de.instinct.eqlibgdxutils.rendering.ui.component.active.button;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
@@ -24,6 +25,9 @@ public class ColorButton extends Button {
 	private float contentMargin;
 	private float fixedHeight;
 	private float fixedWidth;
+	
+	private boolean glowAnimation;
+	private float currentGlow;
 
 	public ColorButton(String text) {
 		super();
@@ -52,11 +56,19 @@ public class ColorButton extends Button {
 	protected void updateButton() {
 		label.setAlpha(getAlpha());
 		label.setBounds(getBounds());
+		currentGlow += Gdx.graphics.getDeltaTime();
+		if (currentGlow > 1f) {
+			currentGlow = 0f;
+		}
 	}
 
 	@Override
 	public void renderComponent() {
-		TextureManager.draw(TextureManager.createTexture(getButtonColor()), getScreenScaleAdjustedBounds(), getAlpha());
+		if (glowAnimation && !isHovered() && !isDown()) {
+			TextureManager.draw(TextureManager.createTexture(new Color(downColor)), getScreenScaleAdjustedBounds(), getAlpha() * (0.6f * (float) Math.sin(currentGlow * Math.PI)));
+		} else {
+			TextureManager.draw(TextureManager.createTexture(getButtonColor()), getScreenScaleAdjustedBounds(), getAlpha());
+		}
 		label.render();
 	}
 

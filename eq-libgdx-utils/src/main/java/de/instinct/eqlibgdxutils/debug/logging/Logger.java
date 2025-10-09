@@ -18,7 +18,7 @@ public class Logger {
 	public static void log(String tag, Exception e) {
 		log(tag, e.getMessage(), ConsoleColor.RED);
 		for (StackTraceElement element : e.getStackTrace()) {
-			String classname = element.getFileName().contains(".") ? element.getFileName().split("\\.")[0] : element.getFileName();
+			String classname = element.getFileName() == null ? "null" : (element.getFileName().contains(".") ? element.getFileName().split("\\.")[0] : element.getFileName());
 			log(tag, classname + "." + element.getMethodName() + ":" + element.getLineNumber(), ConsoleColor.RED);
 		}
 	}

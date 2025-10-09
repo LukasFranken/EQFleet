@@ -5,7 +5,7 @@ import java.util.List;
 
 import de.instinct.api.meta.dto.ResourceAmount;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
-import de.instinct.eqfleet.menu.common.components.DefaultLabelFactory;
+import de.instinct.eqfleet.menu.common.components.label.DefaultLabelFactory;
 import de.instinct.eqfleet.menu.main.MenuModel;
 import de.instinct.eqlibgdxutils.rendering.ui.container.list.ElementStack;
 

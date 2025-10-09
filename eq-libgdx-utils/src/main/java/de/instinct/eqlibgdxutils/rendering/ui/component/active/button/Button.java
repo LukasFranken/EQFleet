@@ -8,6 +8,7 @@ import de.instinct.eqlibgdxutils.InputUtil;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
 import de.instinct.eqlibgdxutils.rendering.ui.module.hover.HoverInfo;
+import de.instinct.eqlibgdxutils.rendering.ui.popup.PopupRenderer;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -30,7 +31,7 @@ public abstract class Button extends Component {
 
 	@Override
 	public void updateComponent() {
-		if (enabled) {
+		if (enabled && getLayer() >= PopupRenderer.getCurrentLayer()) {
 			Vector3 touchPoint = new Vector3(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY(), 0);
 	        if (getScreenScaleAdjustedBounds().contains(touchPoint.x, touchPoint.y)) {
 	        	if (consoleBypass ? InputUtil.isPressedConsole() : InputUtil.isPressed()) {
