@@ -147,7 +147,7 @@ public class GameInputManager {
         float angle = (float) Math.toDegrees(Math.atan2(dy, dx));
         if (angle < 0) angle += 360;
         
-        Player player = getPlayerForSelectedPlanet(state);
+        //Player player = getPlayerForSelectedPlanet(state);
         int buildingCount = 1;
         if (buildingCount == 3) {
         	angle = angle + 30f; 
