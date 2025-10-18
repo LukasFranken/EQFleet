@@ -1,18 +1,14 @@
-package de.instinct.eqlibgdxutils.rendering.ui.texture.shape;
+package de.instinct.eqlibgdxutils.rendering.ui.texture.shape.renderers;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 
-public class ComplexShapeRenderer extends ShapeRenderer {
-
+public class ExtendedShapeRenderer extends ShapeRenderer {
+	
 	public void roundRectangle(Rectangle rect, float thickness) {
-		Gdx.gl.glEnable(GL20.GL_BLEND);
-    	Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		begin(ShapeRenderer.ShapeType.Filled);
-        
 		float x = rect.x;
 		float y = rect.y;
 		float w = rect.width;
@@ -33,9 +29,7 @@ public class ComplexShapeRenderer extends ShapeRenderer {
 		super.rect(x, y + r, r, h - (r * 2));
 		super.rect(x + w - r, y + r, r, h - (r * 2));
 		super.rect(x + r, y + h - r, w - (r * 2), r);
-		
 		end();
-		Gdx.gl.glDisable(GL20.GL_BLEND);
 	}
 	
 	public void filledRoundRectangle(Rectangle rect) {
@@ -45,16 +39,14 @@ public class ComplexShapeRenderer extends ShapeRenderer {
 			roundRectangle(rect, 1f);
 		}
 		if (rect.width > 4) {
-			Gdx.gl.glEnable(GL20.GL_BLEND);
-	    	Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 			begin(ShapeRenderer.ShapeType.Filled);
 			super.rect(rect.x + 2, rect.y + 2, rect.width - 4, rect.height - 4);
 			end();
-			Gdx.gl.glDisable(GL20.GL_BLEND);
 		}
 	}
 	
-	public void cleanArc(float x, float y, float innerRadius, float outerRadius, float startAngle, float degrees) {
+	public void cleanArc(Vector2 position, float innerRadius, float outerRadius, float startAngle, float degrees) {
+		begin(ShapeRenderer.ShapeType.Filled);
 	    int segments = calculateSegments(outerRadius, degrees);
 
 	    for (int i = 0; i < segments; i++) {
@@ -64,35 +56,33 @@ public class ComplexShapeRenderer extends ShapeRenderer {
 	    	float nextAngleRad = (float)Math.toRadians(nextAngle);
 
 	        // Outer points
-	    	float x1 = x + MathUtils.cos(angleRad) * outerRadius;
-	    	float y1 = y + MathUtils.sin(angleRad) * outerRadius;
-	    	float x2 = x + MathUtils.cos(nextAngleRad) * outerRadius;
-	    	float y2 = y + MathUtils.sin(nextAngleRad) * outerRadius;
+	    	float x1 = position.x + MathUtils.cos(angleRad) * outerRadius;
+	    	float y1 = position.y + MathUtils.sin(angleRad) * outerRadius;
+	    	float x2 = position.x + MathUtils.cos(nextAngleRad) * outerRadius;
+	    	float y2 = position.y + MathUtils.sin(nextAngleRad) * outerRadius;
 
 	        // Inner points
-	    	float x3 = x + MathUtils.cos(nextAngleRad) * innerRadius;
-	    	float y3 = y + MathUtils.sin(nextAngleRad) * innerRadius;
-	    	float x4 = x + MathUtils.cos(angleRad) * innerRadius;
-	        float y4 = y + MathUtils.sin(angleRad) * innerRadius;
+	    	float x3 = position.x + MathUtils.cos(nextAngleRad) * innerRadius;
+	    	float y3 = position.y + MathUtils.sin(nextAngleRad) * innerRadius;
+	    	float x4 = position.x + MathUtils.cos(angleRad) * innerRadius;
+	        float y4 = position.y + MathUtils.sin(angleRad) * innerRadius;
 
 	        super.triangle(x1, y1, x2, y2, x3, y3);
 	        super.triangle(x1, y1, x3, y3, x4, y4);
 	    }
+	    end();
 	}
 
 	private static int calculateSegments(double radius, double degrees) {
 	    return Math.max(1, (int)(6 * (double)Math.cbrt(radius) * (degrees / 360.0f)));
 	}
 
-	public void partialRect(Rectangle rect, float missingWidth, float missingXOffset, float thickness) {
-		Gdx.gl.glEnable(GL20.GL_BLEND);
-    	Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+	public void partialRect(Rectangle bounds, float missingWidth, float missingXOffset, float thickness) {
 		begin(ShapeRenderer.ShapeType.Filled);
-        
-		float x = rect.x;
-		float y = rect.y;
-		float w = rect.width;
-		float h = rect.height;
+		float x = bounds.x;
+		float y = bounds.y;
+		float w = bounds.width;
+		float h = bounds.height;
 		float r = thickness;
 
 		super.rect(x, y, w, r);
@@ -101,9 +91,26 @@ public class ComplexShapeRenderer extends ShapeRenderer {
 		
 		super.rect(x, y + h - r, missingXOffset, r);
 		super.rect(x + missingXOffset + missingWidth, y + h - r, w - (missingXOffset + missingWidth), r);
-		
 		end();
-		Gdx.gl.glDisable(GL20.GL_BLEND);
+	}
+
+	public void rect(Rectangle bounds, float thickness) {
+		begin(ShapeRenderer.ShapeType.Filled);
+		if (thickness > 0) {
+			rect(bounds.x, bounds.y, bounds.width, thickness);
+			rect(bounds.x, bounds.y, thickness, bounds.height);
+			rect(bounds.x + bounds.width - thickness, bounds.y, thickness, bounds.height);
+			rect(bounds.x, bounds.y + bounds.height - thickness, bounds.width, thickness);
+		} else {
+			rect(bounds.x, bounds.y, bounds.width, bounds.height);
+		}
+		end();
+	}
+
+	public void circle(Vector2 position, float radius) {
+		begin(ShapeRenderer.ShapeType.Filled);
+		circle(position.x, position.y, radius);
+		end();
 	}
 
 }

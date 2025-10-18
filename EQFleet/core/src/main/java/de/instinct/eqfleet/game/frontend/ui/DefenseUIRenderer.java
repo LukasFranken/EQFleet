@@ -11,24 +11,19 @@ import de.instinct.engine.combat.Ship;
 import de.instinct.engine.combat.Turret;
 import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.ship.Defense;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.ComplexShapeRenderer;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.shapes.EQRectangle;
 
 public class DefenseUIRenderer {
 	
-	private ComplexShapeRenderer shapeRenderer;
 	private Color shieldColor = new Color(0, 0.8f, 0.8f, 0.8f);
 	private Color armorColor = new Color(1f, 0.5f, 0f, 0.8f);
 	
-	public DefenseUIRenderer() {
-		shapeRenderer = new ComplexShapeRenderer();
-	}
-	
 	public void render(GameState state, PerspectiveCamera camera) {
-		shapeRenderer.setProjectionMatrix(camera.combined);
 		for (Turret turret : state.turrets) {
 			if (turret.defense != null) {
 				Rectangle defenseArea = new Rectangle(turret.position.x - 30, turret.position.y, 60, 14);
-				renderBar(turret.defense, defenseArea, true);
+				renderDefense(camera, turret.defense, defenseArea, true);
 			}
 		}
 		
@@ -48,31 +43,40 @@ public class DefenseUIRenderer {
 	                }
 	            }
 	            occupiedAreas.add(new Rectangle(defenseArea));
-	            renderBar(ship.defense, defenseArea, false);
+	            renderDefense(camera, ship.defense, defenseArea, false);
 	        }
 	    }
 	}
 	
-	private void renderBar(Defense defense, Rectangle bounds, boolean seperate) {
+	private void renderDefense(PerspectiveCamera camera, Defense defense, Rectangle bounds, boolean seperate) {
 		if (defense.currentArmor > 0) {
 			Rectangle armorBounds = new Rectangle(bounds);
 			if (seperate) {
 				armorBounds.y = armorBounds.y - bounds.height;
 			}
-			shapeRenderer.setColor(armorColor);
-			shapeRenderer.filledRoundRectangle(new Rectangle(armorBounds.x + 1, armorBounds.y + 1, (armorBounds.width - 2) * (defense.currentArmor / defense.armor), armorBounds.height - 2));
-			shapeRenderer.setColor(new Color(0.5f, 0.5f, 0.5f, 1f));
-			shapeRenderer.roundRectangle(new Rectangle(armorBounds), 2f);
+			renderBar(camera, armorBounds, armorColor, (defense.currentArmor / defense.armor));
 			
-			Rectangle shieldBounds = new Rectangle(bounds);
-			if (defense.currentShield > 0) {
-				shieldBounds.width = (shieldBounds.width - 2) * (defense.currentShield / defense.shield);
-				shapeRenderer.setColor(shieldColor);
-				shapeRenderer.filledRoundRectangle(new Rectangle(shieldBounds.x + 1, shieldBounds.y + 1, shieldBounds.width, shieldBounds.height - 2));
-				shapeRenderer.setColor(new Color(0.5f, 0.5f, 0.5f, 1f));
-				shapeRenderer.roundRectangle(new Rectangle(bounds), 2f);
+			if (defense.shield > 0) {
+				renderBar(camera, bounds, shieldColor, (defense.currentShield / defense.shield));
 			}
 		}
+	}
+
+	private void renderBar(PerspectiveCamera camera, Rectangle bounds, Color color, float current) {
+		Shapes.draw(EQRectangle.builder()
+				.projectionMatrix(camera.combined)
+				.bounds(new Rectangle(bounds.x + 1, bounds.y + 1, (bounds.width - 2) * current, bounds.height - 2))
+				.color(color)
+				.round(true)
+				.build());
+		
+		Shapes.draw(EQRectangle.builder()
+				.projectionMatrix(camera.combined)
+				.bounds(bounds)
+				.color(new Color(0.5f, 0.5f, 0.5f, 1f))
+				.thickness(2f)
+				.round(true)
+				.build());
 	}
 
 }

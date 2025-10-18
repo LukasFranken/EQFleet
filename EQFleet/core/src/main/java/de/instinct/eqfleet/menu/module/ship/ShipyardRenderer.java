@@ -22,7 +22,6 @@ import de.instinct.eqfleet.menu.module.ship.component.shippart.ShipPartType;
 import de.instinct.eqfleet.menu.module.ship.message.UnuseShipMessage;
 import de.instinct.eqfleet.menu.module.ship.message.UseShipMessage;
 import de.instinct.eqfleet.menu.module.workshop.message.BuildShipMessage;
-import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.grid.GridConfiguration;
 import de.instinct.eqlibgdxutils.rendering.model.ModelLoader;
@@ -60,11 +59,11 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 			if (shipButtons != null) {
 				renderUsedShips();
 				TextureManager.draw(TextureManager.createTexture(new Color(1f, 1f, 1f, 0.2f)), 
-						GraphicsUtil.scaleFactorAdjusted(new Rectangle(
+						new Rectangle(
 								MenuModel.moduleBounds.x + 20,
 								MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - 120,
 								MenuModel.moduleBounds.width - 40,
-								1)));
+								1));
 				renderUnusedShips();
 			}
 		}

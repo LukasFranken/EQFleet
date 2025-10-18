@@ -3,7 +3,6 @@ package de.instinct.eqlibgdxutils.rendering.ui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
@@ -14,8 +13,9 @@ import de.instinct.eqlibgdxutils.debug.metrics.NumberMetric;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.container.list.ElementList;
 import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.ComplexShapeType;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.shapes.EQRectangle;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.utility.EQGlowConfig;
 
 public class PopupRenderer {
 	
@@ -26,9 +26,6 @@ public class PopupRenderer {
 	private static final float MARGIN = 10f;
 	private static final float BG_DARKENING = 0.7f;
 	
-	private static final String BG_DARKENING_TAG = "popup_screenDarkening";
-	private static final String POPUP_BG_TAG = "popup_bg";
-	
 	private static boolean flagForDestroy;
 	private static boolean inCreationFrame;
 	
@@ -38,8 +35,6 @@ public class PopupRenderer {
         		.decimals(0)
         		.tag("current_layer")
         		.build());
-		TextureManager.createTexture(BG_DARKENING_TAG, Color.BLACK);
-		TextureManager.createTexture(POPUP_BG_TAG, Color.BLACK);
 	}
 	
 	public static void createMessageDialog(String title, String message) {
@@ -74,28 +69,16 @@ public class PopupRenderer {
 		}
 		newPopup.getContentContainer().update();
 		Rectangle popupBounds = new Rectangle(
-				(GraphicsUtil.baseScreenBounds().width / 2) - (newPopup.getContentContainer().getBounds().getWidth() / 2) - MARGIN,
-				(GraphicsUtil.baseScreenBounds().height / 2) - ((newPopup.getContentContainer().getBounds().getHeight() + TITLE_BAR_HEIGHT) / 2) - MARGIN,
+				(GraphicsUtil.screenBounds().width / 2) - (newPopup.getContentContainer().getBounds().getWidth() / 2) - MARGIN,
+				(GraphicsUtil.screenBounds().height / 2) - ((newPopup.getContentContainer().getBounds().getHeight() + TITLE_BAR_HEIGHT) / 2) - MARGIN,
 				newPopup.getContentContainer().getBounds().getWidth() + (MARGIN * 2),
 				newPopup.getContentContainer().getBounds().getHeight() + TITLE_BAR_HEIGHT + (MARGIN * 2));
-		String currentWindowTextureTag = "popup_" + newPopup.getTitle();
-		TextureManager.createShapeTexture(
-				currentWindowTextureTag, 
-				ComplexShapeType.ROUNDED_RECTANGLE,
-				popupBounds,
-				newPopup.getWindowColor() == null ? SkinManager.skinColor : newPopup.getWindowColor());
-		String currentWindowTitlebarTextureTag = currentWindowTextureTag + "_titlebar";
-		TextureManager.createShapeTexture(
-				currentWindowTitlebarTextureTag, 
-				ComplexShapeType.ROUNDED_RECTANGLE,
-				new Rectangle(popupBounds.x, popupBounds.y + popupBounds.height - TITLE_BAR_HEIGHT, popupBounds.width, 2),
-				newPopup.getWindowColor() == null ? SkinManager.skinColor : newPopup.getWindowColor());
+		
 		newPopupModel = PopupModel.builder()
 				.bounds(popupBounds)
 				.titleLabel(title)
 				.popup(newPopup)
-				.windowTextureTag(currentWindowTextureTag)
-				.windowTitlebarTextureTag(currentWindowTitlebarTextureTag)
+				.windowColor(newPopup.getWindowColor() == null ? SkinManager.skinColor : newPopup.getWindowColor())
 				.build();
 	}
 
@@ -107,10 +90,30 @@ public class PopupRenderer {
 			newPopupModel = null;
 		}
 		for (PopupModel popup : activePopups) {
-			TextureManager.draw(BG_DARKENING_TAG, new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), BG_DARKENING);
-			TextureManager.draw(POPUP_BG_TAG, GraphicsUtil.scaleFactorAdjusted(popup.getBounds()), 1f);
-			TextureManager.draw(popup.getWindowTextureTag());
-			TextureManager.draw(popup.getWindowTitlebarTextureTag());
+			Shapes.draw(EQRectangle.builder()
+					.bounds(GraphicsUtil.screenBounds())
+					.color(new Color(0f, 0f, 0f, BG_DARKENING))
+					.build());
+			
+			Shapes.draw(EQRectangle.builder()
+					.bounds(popup.getBounds())
+					.color(Color.BLACK)
+					.build());
+			
+			Shapes.draw(EQRectangle.builder()
+					.bounds(popup.getBounds())
+					.color(popup.getWindowColor())
+					.glowConfig(EQGlowConfig.builder().build())
+					.thickness(2f)
+					.build());
+			
+			Shapes.draw(EQRectangle.builder()
+					.bounds(new Rectangle(popup.getBounds().x, popup.getBounds().y + popup.getBounds().height - TITLE_BAR_HEIGHT, popup.getBounds().width, 2))
+					.color(popup.getWindowColor())
+					.glowConfig(EQGlowConfig.builder().build())
+					.thickness(2f)
+					.build());
+			
 			popup.getTitleLabel().setBounds(new Rectangle(
 					popup.getBounds().x + MARGIN,
 					popup.getBounds().y + popup.getBounds().height - TITLE_BAR_HEIGHT,
@@ -137,8 +140,6 @@ public class PopupRenderer {
 		if (flagForDestroy) {
 			PopupModel activePopup = activePopups.get(activePopups.size() - 1);
 			activePopup.getPopup().getContentContainer().dispose();
-			TextureManager.dispose(activePopup.getWindowTextureTag());
-			TextureManager.dispose(activePopup.getWindowTitlebarTextureTag());
 			activePopup.getTitleLabel().dispose();
 			activePopups.remove(activePopups.size() - 1);
 			flagForDestroy = false;

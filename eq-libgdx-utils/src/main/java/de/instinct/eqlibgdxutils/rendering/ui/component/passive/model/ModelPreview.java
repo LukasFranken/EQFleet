@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 
+import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.ViewportUtil;
 import de.instinct.eqlibgdxutils.rendering.grid.GridRenderer;
 import de.instinct.eqlibgdxutils.rendering.model.ModelRenderer;
@@ -53,14 +54,15 @@ public class ModelPreview extends Component {
 
 	@Override
 	protected void updateComponent() {
-		camera.viewportWidth = getScreenScaleAdjustedBounds().width;
-		camera.viewportHeight = getScreenScaleAdjustedBounds().height;
+		Rectangle bounds = GraphicsUtil.scaleFactorAdjusted(getBounds());
+		camera.viewportWidth = bounds.width;
+		camera.viewportHeight = bounds.height;
 		camera.update();
 	}
 
 	@Override
 	protected void renderComponent() {
-		Rectangle bounds = getScreenScaleAdjustedBounds();
+		Rectangle bounds = GraphicsUtil.scaleFactorAdjusted(getBounds());
 		if (bounds.width <= 0 || bounds.height <= 0) return;
 
 		ViewportUtil.apply(bounds);

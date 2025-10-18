@@ -35,7 +35,7 @@ public class ImageButton extends Button {
 
 	@Override
 	protected void updateButton() {
-		imageBounds = new Rectangle(getScreenScaleAdjustedBounds());
+		imageBounds = new Rectangle(getBounds());
 		imageBounds.x += margin;
 		imageBounds.y += margin;
 		imageBounds.width -= 2 * margin;

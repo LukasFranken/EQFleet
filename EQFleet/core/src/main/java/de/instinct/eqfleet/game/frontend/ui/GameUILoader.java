@@ -24,7 +24,8 @@ import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.subtypes.BoxedRectangularLoadingBar;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.subtypes.PlainRectangularLoadingBar;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.ComplexShapeType;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.shapes.EQRectangle;
 
 public class GameUILoader {
 	
@@ -65,7 +66,7 @@ public class GameUILoader {
 			
 			@Override
 			public void execute() {
-				createShape(timeElement.getTag(), bounds.getTime(), Color.GRAY);
+				
 			}
 			
 		});
@@ -87,7 +88,7 @@ public class GameUILoader {
 				timeLabel.setColor(remainingMS < 60_000 ? Color.RED : Color.WHITE);
 				timeLabel.setBounds(bounds.getTime());
 				timeLabel.render();
-				TextureManager.draw(tagPrefix + timeElement.getTag());
+				drawRectangle(bounds.getTime(), Color.GRAY);
 			}
 			
 		});
@@ -104,9 +105,7 @@ public class GameUILoader {
 			
 			@Override
 			public void execute() {
-				PlayerData playerData = UIDataUtility.getPlayerData(ownCPElement.getCurrentGameState());
-				createShape(ownCPElement.getTag(), bounds.getOwnCPBar(), GameConfig.getPlayerColor(playerData.getSelf().id));
-				createShape(ownCPElement.getTag() + "Label", bounds.getOwnCPBarLabel(), GameConfig.getPlayerColor(playerData.getSelf().id));
+				
 			}
 			
 		});
@@ -131,8 +130,8 @@ public class GameUILoader {
 				cpLabel.setColor(GameConfig.getPlayerColor(playerData.getSelf().id));
 				cpLabel.setBounds(bounds.getOwnCPBarLabel());
 				cpLabel.render();
-				TextureManager.draw(tagPrefix + ownCPElement.getTag() + "Label");
-				TextureManager.draw(tagPrefix + ownCPElement.getTag());
+				drawRectangle(bounds.getOwnCPBar(), GameConfig.getPlayerColor(playerData.getSelf().id));
+				drawRectangle(bounds.getOwnCPBarLabel(), GameConfig.getPlayerColor(playerData.getSelf().id));
 			}
 			
 		});
@@ -149,9 +148,7 @@ public class GameUILoader {
 			
 			@Override
 			public void execute() {
-				PlayerData playerData = UIDataUtility.getPlayerData(teammate1CPElement.getCurrentGameState());
-				createShape(teammate1CPElement.getTag(), bounds.getTeammate1CPBar(), GameConfig.getPlayerColor(playerData.getTeammate1().id));
-				createShape(teammate1CPElement.getTag() + "Label", bounds.getTeammate1CPBarLabel(), GameConfig.getPlayerColor(playerData.getTeammate1().id));
+				
 			}
 			
 		});
@@ -176,8 +173,8 @@ public class GameUILoader {
 				cpLabel.setColor(GameConfig.getPlayerColor(playerData.getTeammate1().id));
 				cpLabel.setBounds(bounds.getTeammate1CPBarLabel());
 				cpLabel.render();
-				TextureManager.draw(tagPrefix + teammate1CPElement.getTag() + "Label");
-				TextureManager.draw(tagPrefix + teammate1CPElement.getTag());
+				drawRectangle(bounds.getTeammate1CPBar(), GameConfig.getPlayerColor(playerData.getTeammate1().id));
+				drawRectangle(bounds.getTeammate1CPBarLabel(), GameConfig.getPlayerColor(playerData.getTeammate1().id));
 			}
 			
 		});
@@ -194,9 +191,7 @@ public class GameUILoader {
 			
 			@Override
 			public void execute() {
-				PlayerData playerData = UIDataUtility.getPlayerData(teammate2CPElement.getCurrentGameState());
-				createShape(teammate2CPElement.getTag(), bounds.getTeammate2CPBar(), GameConfig.getPlayerColor(playerData.getTeammate2().id));
-				createShape(teammate2CPElement.getTag() + "Label", bounds.getTeammate2CPBarLabel(), GameConfig.getPlayerColor(playerData.getTeammate2().id));
+				
 			}
 			
 		});
@@ -221,8 +216,8 @@ public class GameUILoader {
 				cpLabel.setColor(GameConfig.getPlayerColor(playerData.getTeammate2().id));
 				cpLabel.setBounds(bounds.getTeammate2CPBarLabel());
 				cpLabel.render();
-				TextureManager.draw(tagPrefix + teammate2CPElement.getTag() + "Label");
-				TextureManager.draw(tagPrefix + teammate2CPElement.getTag());
+				drawRectangle(bounds.getTeammate2CPBar(), GameConfig.getPlayerColor(playerData.getTeammate2().id));
+				drawRectangle(bounds.getTeammate2CPBarLabel(), GameConfig.getPlayerColor(playerData.getTeammate2().id));
 			}
 			
 		});
@@ -239,9 +234,7 @@ public class GameUILoader {
 			
 			@Override
 			public void execute() {
-				PlayerData playerData = UIDataUtility.getPlayerData(enemy1CPElement.getCurrentGameState());
-				createShape(enemy1CPElement.getTag(), bounds.getEnemy1CPBar(), GameConfig.getPlayerColor(playerData.getEnemy1().id));
-				createShape(enemy1CPElement.getTag() + "Label", bounds.getEnemy1CPBarLabel(), GameConfig.getPlayerColor(playerData.getEnemy1().id));
+				
 			}
 			
 		});
@@ -266,8 +259,8 @@ public class GameUILoader {
 				cpLabel.setColor(GameConfig.getPlayerColor(playerData.getEnemy1().id));
 				cpLabel.setBounds(bounds.getEnemy1CPBarLabel());
 				cpLabel.render();
-				TextureManager.draw(tagPrefix + enemy1CPElement.getTag() + "Label");
-				TextureManager.draw(tagPrefix + enemy1CPElement.getTag());
+				drawRectangle(bounds.getEnemy1CPBar(), GameConfig.getPlayerColor(playerData.getEnemy1().id));
+				drawRectangle(bounds.getEnemy1CPBarLabel(), GameConfig.getPlayerColor(playerData.getEnemy1().id));
 			}
 			
 		});
@@ -284,8 +277,7 @@ public class GameUILoader {
 			
 			@Override
 			public void execute() {
-				PlayerData playerData = UIDataUtility.getPlayerData(enemy2CPElement.getCurrentGameState());
-				createShape(enemy2CPElement.getTag(), bounds.getEnemy2CPBar(), GameConfig.getPlayerColor(playerData.getEnemy2().id));
+				
 			}
 			
 		});
@@ -305,7 +297,8 @@ public class GameUILoader {
 			
 			@Override
 			public void execute() {
-				TextureManager.draw(tagPrefix + enemy2CPElement.getTag());
+				PlayerData playerData = UIDataUtility.getPlayerData(enemy2CPElement.getCurrentGameState());
+				drawRectangle(bounds.getEnemy2CPBar(), GameConfig.getPlayerColor(playerData.getEnemy2().id));
 			}
 			
 		});
@@ -322,8 +315,7 @@ public class GameUILoader {
 			
 			@Override
 			public void execute() {
-				PlayerData playerData = UIDataUtility.getPlayerData(enemy3CPElement.getCurrentGameState());
-				createShape(enemy3CPElement.getTag(), bounds.getEnemy3CPBar(), GameConfig.getPlayerColor(playerData.getEnemy3().id));
+				
 			}
 			
 		});
@@ -343,7 +335,8 @@ public class GameUILoader {
 			
 			@Override
 			public void execute() {
-				TextureManager.draw(tagPrefix + enemy3CPElement.getTag());
+				PlayerData playerData = UIDataUtility.getPlayerData(enemy3CPElement.getCurrentGameState());
+				drawRectangle(bounds.getEnemy3CPBar(), GameConfig.getPlayerColor(playerData.getEnemy3().id));
 			}
 			
 		});
@@ -360,9 +353,6 @@ public class GameUILoader {
 			
 			@Override
 			public void execute() {
-				createShape(teamAPElement.getTag(), bounds.getTeamAPBar(), GameConfig.ancientColor);
-				createShape(teamAPElement.getTag() + "Label", bounds.getTeamAPBarLabel(), GameConfig.ancientColor);
-				createShape(teamAPElement.getTag() + "Glow", bounds.getTeamAPBar(), GameConfig.ancientColor, 0.7f);
 				teamAPElement.getElement().setCustomDescriptor("");
 				teamAPElement.getElement().setDirection(Direction.NORTH);
 			}
@@ -422,9 +412,9 @@ public class GameUILoader {
 				apLabel.setColor(GameConfig.ancientColor);
 				apLabel.setBounds(bounds.getTeamAPBarLabel());
 				apLabel.render();
-				TextureManager.draw(tagPrefix + teamAPElement.getTag() + "Label");
-				TextureManager.draw(tagPrefix + teamAPElement.getTag());
-				TextureManager.draw(tagPrefix + teamAPElement.getTag() + "Glow", glowAlpha);
+				drawRectangle(bounds.getTeamAPBar(), GameConfig.ancientColor);
+				drawRectangle(bounds.getTeamAPBarLabel(), GameConfig.ancientColor);
+				drawRectangle(bounds.getTeamAPBar(), GameConfig.ancientColor, glowAlpha);
 			}
 			
 		});
@@ -441,9 +431,6 @@ public class GameUILoader {
 			
 			@Override
 			public void execute() {
-				createShape("game_enemyAP", bounds.getEnemyAPBar(), GameConfig.ancientColor);
-				createShape("game_enemyAPLabel", bounds.getEnemyAPBarLabel(), GameConfig.ancientColor);
-				createShape("game_enemyAPGlow", bounds.getEnemyAPBar(), GameConfig.ancientColor, 0.7f);
 				enemyAPElement.getElement().setCustomDescriptor("");
 				enemyAPElement.getElement().setDirection(Direction.SOUTH);
 			}
@@ -471,25 +458,26 @@ public class GameUILoader {
 				TextureManager.draw(tagPrefix + "game_enemyAPLabel");
 				TextureManager.draw(tagPrefix + "game_enemyAP");
 				TextureManager.draw(tagPrefix + "game_enemyAPGlow", 0f);
+				drawRectangle(bounds.getEnemyAPBar(), GameConfig.ancientColor);
+				drawRectangle(bounds.getEnemyAPBarLabel(), GameConfig.ancientColor);
+				drawRectangle(bounds.getEnemyAPBar(), GameConfig.ancientColor, 0.7f);
 			}
 			
 		});
 		elements.add(enemyAPElement);
 	}
 	
-	private void createShape(String tag, Rectangle bounds, Color color) {
-		TextureManager.createShapeTexture(tagPrefix + tag,
-			    ComplexShapeType.ROUNDED_RECTANGLE,
-			    bounds,
-			    color);
+	private void drawRectangle(Rectangle bounds, Color color) {
+		drawRectangle(bounds, color, 1f);
 	}
 	
-	private void createShape(String tag, Rectangle bounds, Color color, float alpha) {
-		TextureManager.createShapeTexture(tagPrefix + tag,
-		    ComplexShapeType.ROUNDED_RECTANGLE,
-		    bounds,
-		    color,
-		    alpha);
+	private void drawRectangle(Rectangle bounds, Color color, float alpha) {
+		Color modifiedColor = new Color(color.r, color.g, color.b, color.a * alpha);
+		Shapes.draw(EQRectangle.builder()
+				.bounds(bounds)
+				.color(modifiedColor)
+				.thickness(2f)
+				.build());
 	}
 	
 	private PlainRectangularLoadingBar createAPBar() {

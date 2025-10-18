@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
+import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
@@ -59,9 +60,9 @@ public class Label extends Component {
 
 	@Override
 	protected void renderComponent() {
-		Rectangle bounds = getScreenScaleAdjustedBounds();
+		Rectangle bounds = GraphicsUtil.scaleFactorAdjusted(getBounds());
 		if (backgroundColor != null) {
-			TextureManager.draw(TextureManager.createTexture(backgroundColor), getScreenScaleAdjustedBounds(), getAlpha());
+			TextureManager.draw(TextureManager.createTexture(backgroundColor), bounds, getAlpha());
 		}
 		
 		Color finalColor = new Color(color);

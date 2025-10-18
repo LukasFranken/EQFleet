@@ -65,9 +65,9 @@ public class ColorButton extends Button {
 	@Override
 	public void renderComponent() {
 		if (glowAnimation && !isHovered() && !isDown()) {
-			TextureManager.draw(TextureManager.createTexture(new Color(downColor)), getScreenScaleAdjustedBounds(), getAlpha() * (0.6f * (float) Math.sin(currentGlow * Math.PI)));
+			TextureManager.draw(TextureManager.createTexture(new Color(downColor)), getBounds(), getAlpha() * (0.6f * (float) Math.sin(currentGlow * Math.PI)));
 		} else {
-			TextureManager.draw(TextureManager.createTexture(getButtonColor()), getScreenScaleAdjustedBounds(), getAlpha());
+			TextureManager.draw(TextureManager.createTexture(getButtonColor()), getBounds(), getAlpha());
 		}
 		label.render();
 	}

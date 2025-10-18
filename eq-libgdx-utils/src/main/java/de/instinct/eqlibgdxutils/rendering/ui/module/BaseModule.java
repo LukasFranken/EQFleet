@@ -26,7 +26,7 @@ public abstract class BaseModule extends UIElement {
 		elementMargin = 10f;
 		backgroundColor = Color.BLACK;
 		decorated = false;
-		setBounds(GraphicsUtil.baseScreenBounds());
+		setBounds(GraphicsUtil.screenBounds());
 		defaultBorder = new Border();
 		defaultBorder.setSize(2);
 		Color borderColor = new Color(SkinManager.skinColor);

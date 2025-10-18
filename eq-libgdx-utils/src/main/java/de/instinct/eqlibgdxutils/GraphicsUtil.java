@@ -14,7 +14,7 @@ public class GraphicsUtil {
 	
 	public static void init(Vector2 windowSize) {
 		baseWindowSize = windowSize;
-    	Logger.log(LOGTAG, "Running on display size: " + screenBounds(), ConsoleColor.YELLOW);
+    	Logger.log(LOGTAG, "Running on display size: " + physicalBounds(), ConsoleColor.YELLOW);
     	Logger.log(LOGTAG, "Base window size: " + baseWindowSize, ConsoleColor.YELLOW);
     	Logger.log(LOGTAG, "Horizontal display scale factor: " + getHorizontalDisplayScaleFactor(), ConsoleColor.YELLOW);
     	Logger.log(LOGTAG, "Vertical display scale factor: " + getVerticalDisplayScaleFactor(), ConsoleColor.YELLOW);
@@ -28,11 +28,11 @@ public class GraphicsUtil {
 		return (float) Gdx.graphics.getHeight() / (float) baseWindowSize.y;
 	}
 	
-	public static Rectangle screenBounds() {
+	public static Rectangle physicalBounds() {
 		return new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 	
-	public static Rectangle baseScreenBounds() {
+	public static Rectangle screenBounds() {
 		return new Rectangle(0, 0, baseWindowSize.x, baseWindowSize.y);
 	}
 	

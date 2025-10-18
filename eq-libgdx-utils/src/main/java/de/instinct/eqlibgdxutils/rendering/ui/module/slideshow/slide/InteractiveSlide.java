@@ -42,7 +42,7 @@ public abstract class InteractiveSlide extends Slide {
 
 	@Override
 	protected void updateSlide(float slideAlpha) {
-		backButton.setPosition(GraphicsUtil.baseScreenBounds().width / 2 - (backButton.getFixedWidth() / 2), 100);
+		backButton.setPosition(GraphicsUtil.screenBounds().width / 2 - (backButton.getFixedWidth() / 2), 100);
 		backButton.setAlpha(slideAlpha);
 		updateInteractiveSlide(slideAlpha);
 	}

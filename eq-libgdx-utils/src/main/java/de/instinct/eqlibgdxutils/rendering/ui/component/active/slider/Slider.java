@@ -11,7 +11,8 @@ import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
 import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.SimpleShapeRenderer;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.shapes.EQRectangle;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -80,10 +81,13 @@ public class Slider extends Component {
 	
 	@Override
 	protected void renderComponent() {
-		Rectangle sliderLineRect = new Rectangle(getScreenScaleAdjustedBounds().x, getScreenScaleAdjustedBounds().y + (getScreenScaleAdjustedBounds().height / 2) + 1, getScreenScaleAdjustedBounds().width, 2);
+		Rectangle sliderLineRect = new Rectangle(getBounds().x, getBounds().y + (getBounds().height / 2) + 1, getBounds().width, 2);
 		Color sliderLineColor = new Color(SkinManager.darkerSkinColor);
 		sliderLineColor.a *= getAlpha();
-		SimpleShapeRenderer.drawRectangle(sliderLineRect, sliderLineColor);
+		Shapes.draw(EQRectangle.builder()
+				.bounds(sliderLineRect)
+				.color(sliderLineColor)
+				.build());
 		sliderButton.render();
 	}
 

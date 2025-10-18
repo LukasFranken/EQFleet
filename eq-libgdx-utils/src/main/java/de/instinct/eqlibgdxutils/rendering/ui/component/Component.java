@@ -1,9 +1,7 @@
 package de.instinct.eqlibgdxutils.rendering.ui.component;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.Rectangle;
 
-import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
 import de.instinct.eqlibgdxutils.rendering.ui.core.UIElement;
 import lombok.Data;
@@ -14,11 +12,9 @@ import lombok.EqualsAndHashCode;
 public abstract class Component extends UIElement {
 	
 	private Border border;
-	private Rectangle screenScaleAdjustedBounds;
 
 	@Override
 	public void updateElement() {
-		screenScaleAdjustedBounds = GraphicsUtil.scaleFactorAdjusted(getBounds());
 		updateComponent();
 	}
 	

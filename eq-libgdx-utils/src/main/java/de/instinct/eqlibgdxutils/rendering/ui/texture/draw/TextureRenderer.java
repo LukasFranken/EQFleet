@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
+import de.instinct.eqlibgdxutils.GraphicsUtil;
+
 public class TextureRenderer {
 
 	private SpriteBatch batch;
@@ -13,8 +15,9 @@ public class TextureRenderer {
 		batch = new SpriteBatch();
 	}
 
-	public void draw(Texture texture, Rectangle bounds, TextureDrawMode drawMode) {
+	public void draw(Texture texture, Rectangle virtualBounds, TextureDrawMode drawMode) {
 		if (texture != null) {
+			Rectangle bounds = GraphicsUtil.scaleFactorAdjusted(virtualBounds);
 			batch.begin();
 			switch (drawMode) {
 			case LIGHT:
@@ -47,11 +50,12 @@ public class TextureRenderer {
 		}
 	}
 
-	public void draw(Texture texture, Rectangle rectangle, float alpha) {
+	public void draw(Texture texture, Rectangle virtualBounds, float alpha) {
+		Rectangle bounds = GraphicsUtil.scaleFactorAdjusted(virtualBounds);
 		batch.begin();
 		if (batch.isDrawing() && texture != null) {
 			batch.setColor(1f, 1f, 1f, alpha);
-			batch.draw(texture, rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+			batch.draw(texture, bounds.x, bounds.y, bounds.width, bounds.height);
 			batch.setColor(1, 1, 1, 1);
 		}
 		batch.end();

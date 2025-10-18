@@ -28,7 +28,9 @@ import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
 import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.ComplexShapeType;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.shapes.EQRectangle;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.utility.EQGlowConfig;
 
 public class MenuRenderer extends BaseModuleRenderer {
 	
@@ -48,6 +50,12 @@ public class MenuRenderer extends BaseModuleRenderer {
 	private ColorButton closeModuleButton;
 	private Image rankImage;
 	private Image creditsImage;
+	
+	private Rectangle titleDividerBounds;
+	private Rectangle rankBounds;
+	private Rectangle nameBounds;
+	private Rectangle expBounds;
+	private Rectangle creditsBounds;
 
 	public MenuRenderer() {
 		titleHeight = 40f;
@@ -81,14 +89,13 @@ public class MenuRenderer extends BaseModuleRenderer {
 		title.setHorizontalAlignment(HorizontalAlignment.LEFT);
 		
 		float margin = 20f;
-		menuBounds = new Rectangle(margin, margin + 20, GraphicsUtil.baseScreenBounds().width - (margin * 2), GraphicsUtil.baseScreenBounds().height - 150);
+		menuBounds = new Rectangle(margin, margin + 20, GraphicsUtil.screenBounds().width - (margin * 2), GraphicsUtil.screenBounds().height - 150);
 		
-		TextureManager.createShapeTexture("main_menuOutline", ComplexShapeType.ROUNDED_RECTANGLE, menuBounds, SkinManager.skinColor);
-		TextureManager.createShapeTexture("main_titleOutline", ComplexShapeType.ROUNDED_RECTANGLE, new Rectangle(menuBounds.x, menuBounds.y + menuBounds.height - titleHeight, menuBounds.width, 2), SkinManager.skinColor);
-		TextureManager.createShapeTexture("main_rankOutline", ComplexShapeType.ROUNDED_RECTANGLE, new Rectangle(menuBounds.x, menuBounds.y + menuBounds.height + 10, 35, 35), SkinManager.skinColor);
-		TextureManager.createShapeTexture("main_nameOutline", ComplexShapeType.ROUNDED_RECTANGLE, new Rectangle(menuBounds.x + 45, menuBounds.y + menuBounds.height + 20, 120, 25), SkinManager.skinColor);
-		TextureManager.createShapeTexture("main_expOutline", ComplexShapeType.ROUNDED_RECTANGLE, new Rectangle(menuBounds.x + 65, menuBounds.y + menuBounds.height + 10, 100, 7), Color.BLUE);
-		TextureManager.createShapeTexture("main_creditsOutline", ComplexShapeType.ROUNDED_RECTANGLE, new Rectangle(menuBounds.x + menuBounds.width - 103, menuBounds.y + menuBounds.height + 10, 85, 20), Color.GREEN);
+		titleDividerBounds = new Rectangle(menuBounds.x, menuBounds.y + menuBounds.height - titleHeight, menuBounds.width, 2);
+		rankBounds = new Rectangle(menuBounds.x, menuBounds.y + menuBounds.height + 10, 35, 35);
+		nameBounds = new Rectangle(menuBounds.x + 45, menuBounds.y + menuBounds.height + 20, 120, 25);
+		expBounds = new Rectangle(menuBounds.x + 65, menuBounds.y + menuBounds.height + 10, 100, 7);
+		creditsBounds = new Rectangle(menuBounds.x + menuBounds.width - 103, menuBounds.y + menuBounds.height + 10, 85, 20);
 		
 		tabButtons = new LinkedHashMap<>();
 		for (MenuModule module : MenuModel.buttons) {
@@ -136,7 +143,6 @@ public class MenuRenderer extends BaseModuleRenderer {
 		if (menuBounds != null) {
 			renderIntro();
 			renderHeader();
-			TextureManager.draw("main_menuOutline", MenuModel.alpha);
 			if (MenuModel.activeModule == null) {
 				renderModuleButtons();
 			} else {
@@ -158,7 +164,15 @@ public class MenuRenderer extends BaseModuleRenderer {
 		closeModuleButton.setFixedWidth(titleHeight);
 		closeModuleButton.setPosition(titleBounds.x + titleBounds.width - titleHeight, titleBounds.y + smallXFontAdjustment);
 		closeModuleButton.render();
-		TextureManager.draw("main_titleOutline", MenuModel.alpha);
+		
+		Color titleColor = new Color(SkinManager.skinColor);
+		titleColor.a = MenuModel.alpha;
+		Shapes.draw(EQRectangle.builder()
+				.bounds(titleDividerBounds)
+				.color(titleColor)
+				.glowConfig(EQGlowConfig.builder().build())
+				.thickness(2f)
+				.build());
 	}
 
 	private void renderIntro() {
@@ -204,9 +218,29 @@ public class MenuRenderer extends BaseModuleRenderer {
 				expBar.setAlpha(MenuModel.alpha);
 				expBar.render();
 		        
-		        TextureManager.draw("main_rankOutline", MenuModel.alpha);
-				TextureManager.draw("main_nameOutline", MenuModel.alpha);
-				TextureManager.draw("main_expOutline", MenuModel.alpha);
+				Color rankNameColor = new Color(SkinManager.skinColor);
+				rankNameColor.a = MenuModel.alpha;
+				Shapes.draw(EQRectangle.builder()
+						.bounds(rankBounds)
+						.color(rankNameColor)
+						.glowConfig(EQGlowConfig.builder().build())
+						.thickness(2f)
+						.build());
+				Shapes.draw(EQRectangle.builder()
+						.bounds(nameBounds)
+						.color(rankNameColor)
+						.glowConfig(EQGlowConfig.builder().build())
+						.thickness(2f)
+						.build());
+				
+				Color expColor = new Color(Color.BLUE);
+				expColor.a = MenuModel.alpha;
+				Shapes.draw(EQRectangle.builder()
+						.bounds(expBounds)
+						.color(expColor)
+						.glowConfig(EQGlowConfig.builder().build())
+						.thickness(2f)
+						.build());
 			}
 		}
 		if (InventoryModel.resources != null && MenuModel.unlockedModules.getEnabledModules().contains(MenuModule.INVENTORY)) {
@@ -217,7 +251,15 @@ public class MenuRenderer extends BaseModuleRenderer {
 		        creditsLabel.render();
 		        creditsImage.setAlpha(MenuModel.alpha);
 		        creditsImage.render();
-				TextureManager.draw("main_creditsOutline", MenuModel.alpha);
+		        
+		        Color creditsColor = new Color(Color.GREEN);
+		        creditsColor.a = MenuModel.alpha;
+		        Shapes.draw(EQRectangle.builder()
+						.bounds(creditsBounds)
+						.color(creditsColor)
+						.glowConfig(EQGlowConfig.builder().build())
+						.thickness(2f)
+						.build());
 			}
 		}
 	}

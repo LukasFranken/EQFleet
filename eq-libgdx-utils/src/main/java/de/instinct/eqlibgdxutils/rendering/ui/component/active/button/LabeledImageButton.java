@@ -51,7 +51,7 @@ public class LabeledImageButton extends Button {
 	
 	@Override
 	protected void updateButton() {
-		imageBounds = calculateImageBounds(getScreenScaleAdjustedBounds());
+		imageBounds = calculateImageBounds(getBounds());
 		messageLabel.setPosition(getBounds().x + getBounds().width + contentMargin + spacing, getBounds().y);
 		messageLabel.setFixedWidth(getBounds().width - getBounds().width - (contentMargin * 2) - spacing);
 		messageLabel.setFixedHeight(getBounds().height);
@@ -62,10 +62,10 @@ public class LabeledImageButton extends Button {
 		TextureManager.draw(imageTexture, imageBounds);
 		messageLabel.render();
 		if (isHovered()) {
-			TextureManager.draw(hoverTexture, getScreenScaleAdjustedBounds());
+			TextureManager.draw(hoverTexture, getBounds());
 		}
 		if (isDown()) {
-			TextureManager.draw(clickTexture, getScreenScaleAdjustedBounds());
+			TextureManager.draw(clickTexture, getBounds());
 		}
 	}
 

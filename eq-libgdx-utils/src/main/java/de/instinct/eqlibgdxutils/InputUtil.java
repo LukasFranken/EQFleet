@@ -32,7 +32,8 @@ public class InputUtil {
 	}
 	
 	public static boolean mouseIsOver(Rectangle rectangle) {
-		return rectangle.contains(getMouseX(), getMouseY());
+		Vector2 virtualMousePos = getNormalizedMousePosition();
+		return rectangle.contains(virtualMousePos.x, virtualMousePos.y);
 	}
 
 	public static boolean isClicked() {

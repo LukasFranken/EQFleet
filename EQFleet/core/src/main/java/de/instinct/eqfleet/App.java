@@ -30,6 +30,7 @@ import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.popup.PopupRenderer;
 import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
 
 public class App extends ApplicationAdapter {
 
@@ -46,7 +47,6 @@ public class App extends ApplicationAdapter {
     	PreferenceManager.init();
     	GraphicsUtil.init(new Vector2(400, 900));
     	TextureManager.init();
-    	TextureManager.setDefaultGlowRadius(1);
     	SkinManager.init();
     	AudioManager.init();
     	loadFonts();
@@ -144,6 +144,7 @@ public class App extends ApplicationAdapter {
         AudioManager.dispose();
         ModelRenderer.dispose();
         Console.dispose();
+        Shapes.dispose();
         Logger.log(LOGTAG, "EQFLEET TERMINATED", ConsoleColor.YELLOW);
     }
 

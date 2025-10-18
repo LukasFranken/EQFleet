@@ -61,7 +61,7 @@ public class MultiChoiceDialog extends InteractiveSlide {
 		buttons = new ArrayList<>();
 		for (SlideChoice choice : choices) {
 			ColorButton newChoiceButton = createSlideButton(choice.getLabelText());
-			newChoiceButton.setFixedWidth(GraphicsUtil.baseScreenBounds().width - (BUTTON_MARGIN * 2));
+			newChoiceButton.setFixedWidth(GraphicsUtil.screenBounds().width - (BUTTON_MARGIN * 2));
 			newChoiceButton.setAction(new SlideAction() {
 				boolean triggered = false;
 				
@@ -104,7 +104,7 @@ public class MultiChoiceDialog extends InteractiveSlide {
 		
 		int i = 0;
 		for (ColorButton button : buttons) {
-			button.setPosition(BUTTON_MARGIN, GraphicsUtil.baseScreenBounds().height / 2 - button.getFixedHeight() - (i * (button.getFixedHeight() + BUTTON_SPACING)));
+			button.setPosition(BUTTON_MARGIN, GraphicsUtil.screenBounds().height / 2 - button.getFixedHeight() - (i * (button.getFixedHeight() + BUTTON_SPACING)));
 			button.setAlpha(buttonAlpha);
 			i++;
 		}

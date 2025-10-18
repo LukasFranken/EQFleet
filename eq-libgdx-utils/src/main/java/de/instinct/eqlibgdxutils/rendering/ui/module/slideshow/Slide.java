@@ -36,7 +36,7 @@ public abstract class Slide {
 	public void init() {
 		stage = SlideLifeCycleStage.CREATED;
 		conditions.clear();
-		bounds = GraphicsUtil.baseScreenBounds();
+		bounds = GraphicsUtil.screenBounds();
 		fade = true;
 		stageElapsed = 0f;
 		alpha = 0f;

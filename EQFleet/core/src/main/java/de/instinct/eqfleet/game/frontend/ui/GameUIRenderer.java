@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -45,7 +44,9 @@ import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.ComplexShapeRenderer;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.shapes.EQArc;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.shapes.EQRectangle;
 
 public class GameUIRenderer {
 	
@@ -57,7 +58,6 @@ public class GameUIRenderer {
 	private UIBounds bounds;
 	
 	private ShapeRenderer shapeRenderer;
-	private ComplexShapeRenderer complexShapeRenderer;
 	private GameInputManager inputManager;
 	private DefenseUIRenderer defenseUIRenderer;
 	
@@ -78,7 +78,6 @@ public class GameUIRenderer {
 		ParticleRenderer.loadParticles("ancient", "ancient");
 		ParticleRenderer.stop("ancient");
 		shapeRenderer = new ShapeRenderer();
-		complexShapeRenderer = new ComplexShapeRenderer();
 		inputManager = new GameInputManager();
 		defenseUIRenderer = new DefenseUIRenderer();
 		bluroutColor = new Color(0f, 0f, 0f, 0.5f);
@@ -107,9 +106,9 @@ public class GameUIRenderer {
         	order.pause = false;
         	GameModel.outputMessageQueue.add(order);
     	});
-    	Rectangle surrenderBounds = new Rectangle((GraphicsUtil.baseScreenBounds().width / 2) - 60, 200, 120, 40);
+    	Rectangle surrenderBounds = new Rectangle((GraphicsUtil.screenBounds().width / 2) - 60, 200, 120, 40);
     	surrenderButton.setBounds(surrenderBounds);
-        Rectangle resumeBounds = new Rectangle((GraphicsUtil.baseScreenBounds().width / 2) - 60, 100, 120, 40);
+        Rectangle resumeBounds = new Rectangle((GraphicsUtil.screenBounds().width / 2) - 60, 100, 120, 40);
         resumeButton.setBounds(resumeBounds);
         
         unitControlButton = DefaultButtonFactory.colorButton("U", () -> {
@@ -118,7 +117,7 @@ public class GameUIRenderer {
         		AudioManager.playVoice("units");
         	}
 		});
-        unitControlButton.setBounds(new Rectangle(GraphicsUtil.baseScreenBounds().width - 60, 100, 40, 40));
+        unitControlButton.setBounds(new Rectangle(GraphicsUtil.screenBounds().width - 60, 100, 40, 40));
         
         constructionButton = DefaultButtonFactory.colorButton("C", () -> {
 			if (GameModel.mode != InteractionMode.CONSTRUCTION) {
@@ -126,7 +125,7 @@ public class GameUIRenderer {
         		AudioManager.playVoice("construction");
         	}
 		});
-        constructionButton.setBounds(new Rectangle(GraphicsUtil.baseScreenBounds().width - 60, 160, 40, 40));
+        constructionButton.setBounds(new Rectangle(GraphicsUtil.screenBounds().width - 60, 160, 40, 40));
         
         qLinkButton = DefaultButtonFactory.colorButton("Q", () -> {
 			if (GameModel.mode != InteractionMode.Q_LINK) {
@@ -134,7 +133,7 @@ public class GameUIRenderer {
         		AudioManager.playVoice("qlink");
         	}
 		});
-        qLinkButton.setBounds(new Rectangle(GraphicsUtil.baseScreenBounds().width - 60, 220, 40, 40));
+        qLinkButton.setBounds(new Rectangle(GraphicsUtil.screenBounds().width - 60, 220, 40, 40));
 	}
 
 	private void initializeElements() {
@@ -212,7 +211,7 @@ public class GameUIRenderer {
 			TextureManager.draw(TextureManager.createTexture(bluroutColor), GraphicsUtil.screenBounds());
 			Label pauseLabel = new Label(StringUtils.format(Math.min((state.resumeCountdownMS / 1000) + 1, 3), 0));
 			pauseLabel.setType(FontType.GIANT);
-			pauseLabel.setBounds(new Rectangle(100, (GraphicsUtil.baseScreenBounds().getHeight() / 2), GraphicsUtil.baseScreenBounds().getWidth() - 200, 60));
+			pauseLabel.setBounds(new Rectangle(100, (GraphicsUtil.screenBounds().getHeight() / 2), GraphicsUtil.screenBounds().getWidth() - 200, 60));
 			pauseLabel.render();
 		}
 	}
@@ -224,14 +223,14 @@ public class GameUIRenderer {
 			String teamName = self.teamId == state.teamPause ? "OWN" : "ENEMY";
 			Label pauseLabel = new Label("PAUSED - " + teamName + " TEAM");
 			pauseLabel.setType(FontType.LARGE);
-			pauseLabel.setBounds(new Rectangle(50, (GraphicsUtil.baseScreenBounds().getHeight() / 2) + 200, GraphicsUtil.baseScreenBounds().getWidth() - 100, 60));
+			pauseLabel.setBounds(new Rectangle(50, (GraphicsUtil.screenBounds().getHeight() / 2) + 200, GraphicsUtil.screenBounds().getWidth() - 100, 60));
 			pauseLabel.setBackgroundColor(Color.BLACK);
 			pauseLabel.render();
 			
 			long teamPauseMS = state.teamPausesMS.get(state.teamPause);
 			Label remainingTimeLabel = new Label("Remaining Time: " + StringUtils.format(((float)(state.maxPauseMS - teamPauseMS) / 1000f), 0) + "s");
 			remainingTimeLabel.setType(FontType.NORMAL);
-			remainingTimeLabel.setBounds(new Rectangle(100, (GraphicsUtil.baseScreenBounds().getHeight() / 2) + 100, GraphicsUtil.baseScreenBounds().getWidth() - 200, 30));
+			remainingTimeLabel.setBounds(new Rectangle(100, (GraphicsUtil.screenBounds().getHeight() / 2) + 100, GraphicsUtil.screenBounds().getWidth() - 200, 30));
 			remainingTimeLabel.setBackgroundColor(Color.BLACK);
 			remainingTimeLabel.render();
 			
@@ -246,14 +245,14 @@ public class GameUIRenderer {
 		int i = 1;
 		float labelHeight = 30;
 		Label header = new Label("NAME - CONNECTED - LOADED");
-		header.setBounds(new Rectangle(0, 500, GraphicsUtil.baseScreenBounds().getWidth(), labelHeight));
+		header.setBounds(new Rectangle(0, 500, GraphicsUtil.screenBounds().getWidth(), labelHeight));
 		header.render();
 		for (Player player : state.players) {
 			if (player.teamId == 0) continue;
 			for (PlayerConnectionStatus status : state.connectionStati) {
 				if (status.playerId == player.id) {
 					Label row = new Label(player.name + " - " + status.connected + " - " + status.loaded);
-					row.setBounds(new Rectangle(0, 500 - (i * labelHeight), GraphicsUtil.baseScreenBounds().getWidth(), labelHeight));
+					row.setBounds(new Rectangle(0, 500 - (i * labelHeight), GraphicsUtil.screenBounds().getWidth(), labelHeight));
 					row.render();
 					i++;
 				}
@@ -396,12 +395,15 @@ public class GameUIRenderer {
 			if (cpCost > 0f) {
 				double maxCP = owner.maxCommandPoints;
 				double currentCP = owner.currentCommandPoints;
-				float thickness = 3f;
-				Rectangle cpCostRectBounds = GraphicsUtil.scaleFactorAdjusted(new Rectangle(bounds.getOwnCPBar().x, bounds.getOwnCPBar().y, bounds.getOwnCPBar().width * (float)(cpCost / maxCP), bounds.getOwnCPBar().height));
+				float thickness = 2f;
+				Rectangle cpCostRectBounds = new Rectangle(bounds.getOwnCPBar().x, bounds.getOwnCPBar().y, bounds.getOwnCPBar().width * (float)(cpCost / maxCP), bounds.getOwnCPBar().height);
 				Color rectColor = cpCost > currentCP ? new Color(0.5f, 0.5f, 0.5f, 1f) : new Color(0f, 1f, 0f, 1f);
-				complexShapeRenderer.setProjectionMatrix(new Matrix4().setToOrtho2D(0, 0, GraphicsUtil.screenBounds().getWidth(), GraphicsUtil.screenBounds().getHeight()));
-				complexShapeRenderer.setColor(rectColor);
-				complexShapeRenderer.roundRectangle(cpCostRectBounds, thickness);
+				Shapes.draw(EQRectangle.builder()
+						.bounds(cpCostRectBounds)
+						.color(rectColor)
+						.thickness(thickness)
+						.round(true)
+						.build());
 			}
 		}
 	}
@@ -534,7 +536,7 @@ public class GameUIRenderer {
 		float y = planet.position.y;
 		Color unselectedColor = new Color(0.5f, 0.5f, 0.5f, 0.2f);
 		Color unselectedColorLabel = new Color(0.7f, 0.7f, 0.7f, 0.5f);
-		Color selectedColor = new Color(SkinManager.skinColor.r, SkinManager.skinColor.g, SkinManager.skinColor.b, 0.5f);
+		Color selectedColor = new Color(1f, 0f, 0f, 0.5f);
 		Color selectedAffordableColor = new Color(0f, 1f, 0f, 0.5f);
 		
 	    int shipCount = owner.ships.size();
@@ -699,11 +701,15 @@ public class GameUIRenderer {
 	private void renderResourceCircle(float x, float y, Color color, float value) {
 		float radius = EngineUtility.PLANET_RADIUS + 5f;
 		float thickness = 8f;
-		complexShapeRenderer.setProjectionMatrix(camera.combined);
-		complexShapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-		complexShapeRenderer.setColor(color);
-		complexShapeRenderer.cleanArc(x, y, radius, radius + thickness, 90 + (GameRenderer.isFlipped ? 180 : 0), value * 360f);
-		complexShapeRenderer.end();
+		Shapes.draw(EQArc.builder()
+				.position(new Vector2(x, y))
+				.innerRadius(radius)
+				.outerRadius(radius + thickness)
+				.color(color)
+				.startAngle(90 + (GameRenderer.isFlipped ? 180 : 0))
+				.degrees(value * 360f)
+				.projectionMatrix(camera.combined)
+				.build());
 	}
 
 	private void renderMessageText() {
@@ -723,7 +729,7 @@ public class GameUIRenderer {
 		Label messageLabel = new Label(message);
 		messageLabel.setColor(Color.WHITE);
 		messageLabel.setType(FontType.LARGE);
-		messageLabel.setBounds(GraphicsUtil.baseScreenBounds());
+		messageLabel.setBounds(GraphicsUtil.screenBounds());
 		messageLabel.render();
 	}
 

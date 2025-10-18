@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
-import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.HorizontalAlignment;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
@@ -82,13 +81,13 @@ public class LabeledModelButton extends Button {
 
 	@Override
 	protected void renderComponent() {
-		TextureManager.draw(modelPreviewBackgroundTexture, GraphicsUtil.scaleFactorAdjusted(modelBounds), getAlpha());
+		TextureManager.draw(modelPreviewBackgroundTexture, modelBounds, getAlpha());
 		modelPreview.render();
 		label.render();
 		if (noteLabel != null) {
 			noteLabel.render();
 		}
-		if (isHovered() || isDown()) TextureManager.draw(hoverTexture, GraphicsUtil.scaleFactorAdjusted(modelBounds), 0.3f);
+		if (isHovered() || isDown()) TextureManager.draw(hoverTexture, modelBounds, 0.3f);
 	}
 
 	@Override

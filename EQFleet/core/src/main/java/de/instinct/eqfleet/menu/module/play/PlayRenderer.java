@@ -288,7 +288,7 @@ public class PlayRenderer extends BaseModuleRenderer {
 				} else {
 					if (PlayModel.lobbyStatus.getCode() == LobbyStatusCode.MATCHING && PlayModel.currentMatchmakingStatus != null) {
 						renderQueueStatus();
-						cancelMatchmakingButton.setPosition((GraphicsUtil.baseScreenBounds().getWidth() - cancelMatchmakingButton.getFixedWidth()) / 2, 100);
+						cancelMatchmakingButton.setPosition((GraphicsUtil.screenBounds().getWidth() - cancelMatchmakingButton.getFixedWidth()) / 2, 100);
 						cancelMatchmakingButton.render();
 					} else {
 						renderLobbyOverview();
@@ -301,13 +301,13 @@ public class PlayRenderer extends BaseModuleRenderer {
 	}
 
 	private void renderPreLobbyView() {
-		createLobbyButton.setPosition(50, GraphicsUtil.baseScreenBounds().getHeight() - 400);
-		createLobbyButton.setFixedWidth(GraphicsUtil.baseScreenBounds().getWidth() - 100);
+		createLobbyButton.setPosition(50, GraphicsUtil.screenBounds().getHeight() - 400);
+		createLobbyButton.setFixedWidth(GraphicsUtil.screenBounds().getWidth() - 100);
 		createLobbyButton.setFixedHeight(40);
 		createLobbyButton.render();
 		
-		startCustomButton.setPosition(50, GraphicsUtil.baseScreenBounds().getHeight() - 300);
-		startCustomButton.setFixedWidth(GraphicsUtil.baseScreenBounds().getWidth() - 100);
+		startCustomButton.setPosition(50, GraphicsUtil.screenBounds().getHeight() - 300);
+		startCustomButton.setFixedWidth(GraphicsUtil.screenBounds().getWidth() - 100);
 		startCustomButton.setFixedHeight(40);
 		startCustomButton.render();
 		
@@ -319,12 +319,12 @@ public class PlayRenderer extends BaseModuleRenderer {
 						.label(invite.getFromUsername())
 						.build());
 			}
-			invites.setBounds(new Rectangle(50, 100, GraphicsUtil.baseScreenBounds().getWidth() - 100, GraphicsUtil.baseScreenBounds().getHeight() - 500));
+			invites.setBounds(new Rectangle(50, 100, GraphicsUtil.screenBounds().getWidth() - 100, GraphicsUtil.screenBounds().getHeight() - 500));
 			invites.update();
 			invites.render();
 		} else {
 			Label noPendingInvitesLabel = new Label("No pending invites");
-			noPendingInvitesLabel.setBounds(new Rectangle(0, GraphicsUtil.baseScreenBounds().getHeight() - 500, GraphicsUtil.baseScreenBounds().getWidth(), 100));
+			noPendingInvitesLabel.setBounds(new Rectangle(0, GraphicsUtil.screenBounds().getHeight() - 500, GraphicsUtil.screenBounds().getWidth(), 100));
 			noPendingInvitesLabel.render();
 		}
 	}
@@ -333,34 +333,34 @@ public class PlayRenderer extends BaseModuleRenderer {
 		float buttonWidth = 100f;
 		float buttonHeight = 40f;
 		
-		aiButton.setBounds(new Rectangle((GraphicsUtil.baseScreenBounds().getWidth() / 2) - buttonWidth - 10, GraphicsUtil.baseScreenBounds().getHeight() / 2 + 100 - buttonHeight, buttonWidth, buttonHeight));
+		aiButton.setBounds(new Rectangle((GraphicsUtil.screenBounds().getWidth() / 2) - buttonWidth - 10, GraphicsUtil.screenBounds().getHeight() / 2 + 100 - buttonHeight, buttonWidth, buttonHeight));
 		aiButton.setFixedWidth(buttonWidth);
 		aiButton.setFixedHeight(buttonHeight);
 		aiButton.render();
 		
-		pvpButton.setBounds(new Rectangle((GraphicsUtil.baseScreenBounds().getWidth() / 2) + 10, GraphicsUtil.baseScreenBounds().getHeight() / 2 + 100 - buttonHeight, buttonWidth, buttonHeight));
+		pvpButton.setBounds(new Rectangle((GraphicsUtil.screenBounds().getWidth() / 2) + 10, GraphicsUtil.screenBounds().getHeight() / 2 + 100 - buttonHeight, buttonWidth, buttonHeight));
 		pvpButton.setFixedWidth(buttonWidth);
 		pvpButton.setFixedHeight(buttonHeight);
 		pvpButton.render();
 		
 		if (selectedVersusMode != null) {
-			soloButton.setBounds(new Rectangle((GraphicsUtil.baseScreenBounds().getWidth() / 2) - (buttonWidth / 2) - 10 - buttonWidth, GraphicsUtil.baseScreenBounds().getHeight() / 2 - buttonHeight, buttonWidth, buttonHeight));
+			soloButton.setBounds(new Rectangle((GraphicsUtil.screenBounds().getWidth() / 2) - (buttonWidth / 2) - 10 - buttonWidth, GraphicsUtil.screenBounds().getHeight() / 2 - buttonHeight, buttonWidth, buttonHeight));
 			soloButton.setFixedWidth(buttonWidth);
 			soloButton.setFixedHeight(buttonHeight);
 			soloButton.render();
 			
-			duoButton.setBounds(new Rectangle((GraphicsUtil.baseScreenBounds().getWidth() / 2) - (buttonWidth / 2), GraphicsUtil.baseScreenBounds().getHeight() / 2 - buttonHeight, buttonWidth, buttonHeight));
+			duoButton.setBounds(new Rectangle((GraphicsUtil.screenBounds().getWidth() / 2) - (buttonWidth / 2), GraphicsUtil.screenBounds().getHeight() / 2 - buttonHeight, buttonWidth, buttonHeight));
 			duoButton.setFixedWidth(buttonWidth);
 			duoButton.setFixedHeight(buttonHeight);
 			duoButton.render();
 			
-			trioButton.setBounds(new Rectangle((GraphicsUtil.baseScreenBounds().getWidth() / 2) + (buttonWidth / 2) + 10, GraphicsUtil.baseScreenBounds().getHeight() / 2 - buttonHeight, buttonWidth, buttonHeight));
+			trioButton.setBounds(new Rectangle((GraphicsUtil.screenBounds().getWidth() / 2) + (buttonWidth / 2) + 10, GraphicsUtil.screenBounds().getHeight() / 2 - buttonHeight, buttonWidth, buttonHeight));
 			trioButton.setFixedWidth(buttonWidth);
 			trioButton.setFixedHeight(buttonHeight);
 			trioButton.render();
 			
 			buttonWidth = 120f;
-			setTypeButton.setBounds(new Rectangle((GraphicsUtil.baseScreenBounds().getWidth() / 2) - (buttonWidth / 2), GraphicsUtil.baseScreenBounds().getHeight() / 2 - 100 - buttonHeight, buttonWidth, buttonHeight));
+			setTypeButton.setBounds(new Rectangle((GraphicsUtil.screenBounds().getWidth() / 2) - (buttonWidth / 2), GraphicsUtil.screenBounds().getHeight() / 2 - 100 - buttonHeight, buttonWidth, buttonHeight));
 			setTypeButton.setFixedWidth(buttonWidth);
 			setTypeButton.setFixedHeight(buttonHeight);
 			if (selectedFactionMode != null) {
@@ -372,23 +372,23 @@ public class PlayRenderer extends BaseModuleRenderer {
 	private void renderLobbyOverview() {
 		GameType selectedGameType = PlayModel.lobbyStatus.getType();
 		Label gameTypeLabel = new Label(selectedGameType.getGameMode() + " - " + selectedGameType.getVersusMode() + " - " + selectedGameType.getFactionMode());
-		gameTypeLabel.setBounds(new Rectangle(0, 550, GraphicsUtil.baseScreenBounds().getWidth(), 30));
+		gameTypeLabel.setBounds(new Rectangle(0, 550, GraphicsUtil.screenBounds().getWidth(), 30));
 		gameTypeLabel.render();
 		
 		int i = 0;
 		for (String userName : PlayModel.lobbyStatus.getUserNames()) {
 			Label userNameLabel = new Label(userName == null ? "???" : userName);
-			userNameLabel.setBounds(new Rectangle(0, 500 - i, GraphicsUtil.baseScreenBounds().getWidth(), 30));
+			userNameLabel.setBounds(new Rectangle(0, 500 - i, GraphicsUtil.screenBounds().getWidth(), 30));
 			userNameLabel.render();
 			i += 30;
 		}
 		if (PlayModel.lobbyStatus.getUserNames().size() < selectedGameType.getFactionMode().teamPlayerCount) {
-			usernameTextField.setBounds(new Rectangle((GraphicsUtil.baseScreenBounds().getWidth() / 2) - 88, 340, 176, 40));
+			usernameTextField.setBounds(new Rectangle((GraphicsUtil.screenBounds().getWidth() / 2) - 88, 340, 176, 40));
 			usernameTextField.render();
 			
 			inviteButton.setFixedWidth(100f);
 			inviteButton.setFixedHeight(30f);
-			inviteButton.setPosition((GraphicsUtil.baseScreenBounds().getWidth() / 2) - (inviteButton.getFixedWidth() / 2), 300);
+			inviteButton.setPosition((GraphicsUtil.screenBounds().getWidth() / 2) - (inviteButton.getFixedWidth() / 2), 300);
 			inviteButton.render();
 			
 			if (PlayModel.inviteResponse != null) {
@@ -401,7 +401,7 @@ public class PlayRenderer extends BaseModuleRenderer {
 			if (inviteMessage != null) {
 				inviteMessageElapsed += Gdx.graphics.getDeltaTime();
 				Label inviteMessageLabel = new Label(inviteMessage);
-				inviteMessageLabel.setBounds(new Rectangle(0, 270, GraphicsUtil.baseScreenBounds().getWidth(), 30));
+				inviteMessageLabel.setBounds(new Rectangle(0, 270, GraphicsUtil.screenBounds().getWidth(), 30));
 				inviteMessageLabel.render();
 				if (inviteMessageElapsed >= inviteMessageDuration) {
 					inviteMessage = null;
@@ -410,17 +410,17 @@ public class PlayRenderer extends BaseModuleRenderer {
 			}
 		}
 		
-		startMatchmakingButton.setPosition(GraphicsUtil.baseScreenBounds().getWidth() - startMatchmakingButton.getFixedWidth() - 40, 100);
+		startMatchmakingButton.setPosition(GraphicsUtil.screenBounds().getWidth() - startMatchmakingButton.getFixedWidth() - 40, 100);
 		startMatchmakingButton.render();
 	}
 	
 	private void renderQueueStatus() {
 		Label statusLabel = new Label(PlayModel.currentMatchmakingStatus.getCode().toString());
-		statusLabel.setBounds(new Rectangle(0, 50, GraphicsUtil.baseScreenBounds().getWidth(), GraphicsUtil.baseScreenBounds().getHeight()));
+		statusLabel.setBounds(new Rectangle(0, 50, GraphicsUtil.screenBounds().getWidth(), GraphicsUtil.screenBounds().getHeight()));
 		statusLabel.render();
 		
 		Label playerLabel = new Label(PlayModel.currentMatchmakingStatus.getFoundPlayers() + " / " + PlayModel.currentMatchmakingStatus.getRequiredPlayers() + " players found");
-		playerLabel.setBounds(new Rectangle(0, -50, GraphicsUtil.baseScreenBounds().getWidth(), GraphicsUtil.baseScreenBounds().getHeight()));
+		playerLabel.setBounds(new Rectangle(0, -50, GraphicsUtil.screenBounds().getWidth(), GraphicsUtil.screenBounds().getHeight()));
 		playerLabel.render();
 	}
 

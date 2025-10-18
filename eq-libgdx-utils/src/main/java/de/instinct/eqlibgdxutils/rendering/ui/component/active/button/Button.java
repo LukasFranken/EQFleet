@@ -2,7 +2,6 @@ package de.instinct.eqlibgdxutils.rendering.ui.component.active.button;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector3;
 
 import de.instinct.eqlibgdxutils.InputUtil;
 import de.instinct.eqlibgdxutils.generic.Action;
@@ -32,8 +31,7 @@ public abstract class Button extends Component {
 	@Override
 	public void updateComponent() {
 		if (enabled && getLayer() >= PopupRenderer.getCurrentLayer()) {
-			Vector3 touchPoint = new Vector3(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY(), 0);
-	        if (getScreenScaleAdjustedBounds().contains(touchPoint.x, touchPoint.y)) {
+	        if (InputUtil.mouseIsOver(getBounds())) {
 	        	if (consoleBypass ? InputUtil.isPressedConsole() : InputUtil.isPressed()) {
 	    			if (!down) {
 	    				down = true;

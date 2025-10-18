@@ -7,11 +7,11 @@ import com.badlogic.gdx.math.Vector2;
 import de.instinct.api.game.dto.MapPreview;
 import de.instinct.api.game.dto.PreviewPlanet;
 import de.instinct.eqfleet.game.GameConfig;
-import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.MathUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.SimpleShapeRenderer;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.shapes.EQCircle;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -52,11 +52,15 @@ public class MapPreviewSection extends Component {
 
 	@Override
 	protected void renderComponent() {
-		float planetRadius = 3f * mapPreview.getZoomFactor() * GraphicsUtil.getVerticalDisplayScaleFactor();
+		float planetRadius = 3f * mapPreview.getZoomFactor();
 		for (PreviewPlanet planet : mapPreview.getPlanets()) {
 			Vector2 planetScreenPos = getScreenPosition(planet.getXPos(), planet.getYPos());
 			Color planetColor = planet.isAncient() && planet.getOwnerId() == 0 ? GameConfig.ancientColor : getPlayerColor(planet.getOwnerId());
-			SimpleShapeRenderer.drawCircle(planetScreenPos, planetRadius, planetColor);
+			Shapes.draw(EQCircle.builder()
+					.position(planetScreenPos)
+					.radius(planetRadius)
+					.color(planetColor)
+					.build());
 		}
 	}
 
@@ -68,7 +72,7 @@ public class MapPreviewSection extends Component {
 	}
 
 	private Vector2 getScreenPosition(float xPos, float yPos) {
-		return MathUtil.translate(new Vector2(xPos, yPos), new Rectangle(-1000 / mapPreview.getZoomFactor(), -1000 / mapPreview.getZoomFactor(), 2000 / mapPreview.getZoomFactor(), 2000 / mapPreview.getZoomFactor()), getScreenScaleAdjustedBounds());
+		return MathUtil.translate(new Vector2(xPos, yPos), new Rectangle(-1000 / mapPreview.getZoomFactor(), -1000 / mapPreview.getZoomFactor(), 2000 / mapPreview.getZoomFactor(), 2000 / mapPreview.getZoomFactor()), getBounds());
 	}
 
 }

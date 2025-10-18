@@ -119,7 +119,7 @@ public class Menu {
 	
 	private static void calculateMenuBounds() {
 		float margin = 20f;
-		MenuModel.moduleBounds = new Rectangle(margin, margin + 20, GraphicsUtil.baseScreenBounds().width - (margin * 2), GraphicsUtil.baseScreenBounds().height - 150 - 40f);
+		MenuModel.moduleBounds = new Rectangle(margin, margin + 20, GraphicsUtil.screenBounds().width - (margin * 2), GraphicsUtil.screenBounds().height - 150 - 40f);
 	}
 
 	

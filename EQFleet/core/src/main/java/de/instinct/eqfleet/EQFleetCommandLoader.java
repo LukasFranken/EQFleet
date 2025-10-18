@@ -18,9 +18,9 @@ import de.instinct.eqlibgdxutils.debug.console.CommandAction;
 import de.instinct.eqlibgdxutils.debug.console.CommandLoader;
 import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
+import de.instinct.eqlibgdxutils.rendering.GlobalRenderingConfiguration;
 import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinColor;
 import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 
 public class EQFleetCommandLoader implements CommandLoader {
 	
@@ -121,19 +121,19 @@ public class EQFleetCommandLoader implements CommandLoader {
 						switch (mode) {
 						case "off":
 							PreferenceManager.save("glow", "0");
-							TextureManager.setDefaultGlowRadius(0);
+							GlobalRenderingConfiguration.defaultGlowRadius = 0;
 							Menu.reload();
 							log("Glow effect disabled");
 							break;
 						case "low":
 							PreferenceManager.save("glow", "10");
-							TextureManager.setDefaultGlowRadius(10);
+							GlobalRenderingConfiguration.defaultGlowRadius = 10;
 							Menu.reload();
 							log("Glow effect set to low");
 							break;
 						case "high":
 							PreferenceManager.save("glow", "30");
-							TextureManager.setDefaultGlowRadius(30);
+							GlobalRenderingConfiguration.defaultGlowRadius = 30;
 							Menu.reload();
 							log("Glow effect set to high");
 							break;

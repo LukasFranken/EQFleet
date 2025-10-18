@@ -37,7 +37,7 @@ public class Image extends Component {
 	
 	@Override
 	public void renderComponent() {
-		TextureManager.draw(texture, getScreenScaleAdjustedBounds(), getAlpha());
+		TextureManager.draw(texture, getBounds(), getAlpha());
 	}
 
 	@Override

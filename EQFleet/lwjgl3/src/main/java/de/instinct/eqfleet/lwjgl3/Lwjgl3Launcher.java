@@ -22,7 +22,8 @@ public class Lwjgl3Launcher {
         configuration.setTitle("Equilibrium");
         configuration.setForegroundFPS(60);
         configuration.setResizable(false);
-        configuration.setWindowedMode(400, 900);
+        //configuration.setWindowedMode(400, 900);
+        configuration.setWindowedMode(500, 1125);
         //configuration.setWindowedMode(600, 1350);
         configuration.setHdpiMode(HdpiMode.Pixels);
         configuration.setBackBufferConfig(8, 8, 8, 8, 16, 8, 4);

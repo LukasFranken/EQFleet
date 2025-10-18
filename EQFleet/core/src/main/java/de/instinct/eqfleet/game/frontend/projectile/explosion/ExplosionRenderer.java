@@ -6,22 +6,19 @@ import java.util.List;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
 import de.instinct.eqfleet.audio.AudioManager;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.ComplexShapeRenderer;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.shapes.EQCircle;
 
 public class ExplosionRenderer {
 	
 	private List<Explosion> explosions;
 	private float explosionDuration = 0.2f;
-	private ComplexShapeRenderer shapeRenderer;
 	
 	public ExplosionRenderer() {
 		this.explosions = new ArrayList<>();
-		this.shapeRenderer = new ComplexShapeRenderer();
 	}
 	
 	public void renderExplosions(Camera camera) {
@@ -41,16 +38,14 @@ public class ExplosionRenderer {
 	}
 
 	private void drawExplosions(Camera camera) {
-		shapeRenderer.setProjectionMatrix(camera.combined);
-		Gdx.gl.glEnable(GL20.GL_BLEND);
-    	Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 		for (Explosion explosion : explosions) {
-			shapeRenderer.setColor(new Color(0.3f, 0f, 0f, 1f - (explosion.getElapsed() / explosionDuration)));
-			shapeRenderer.circle(explosion.getPosition().x, explosion.getPosition().y, explosion.getRadius());
+			Shapes.draw(EQCircle.builder()
+					.position(explosion.getPosition())
+					.radius(explosion.getRadius())
+					.color(new Color(0.3f, 0f, 0f, 1f - (explosion.getElapsed() / explosionDuration)))
+					.projectionMatrix(camera.combined)
+					.build());
 		}
-		shapeRenderer.end();
-        Gdx.gl.glDisable(GL20.GL_BLEND);
 	}
 
 	public void addExplosion(Vector2 position, float radius) {

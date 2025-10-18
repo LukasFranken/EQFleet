@@ -1,7 +1,5 @@
 package de.instinct.eqfleet.menu.module.profile.model;
 
-import java.util.UUID;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
@@ -13,7 +11,9 @@ import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.subtypes.PlainRectangularLoadingBar;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.ComplexShapeType;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.shapes.EQRectangle;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.utility.EQGlowConfig;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -36,14 +36,11 @@ public class ExperienceSection extends Component {
 	
 	private float margin = 20f;
 	
-	private String uuid;
-	
 	private boolean rankImagesEnabled;
 	
 	public ExperienceSection() {
 		super();
 		rankImagesEnabled = true;
-		uuid = UUID.randomUUID().toString();
 		currentRankNameLabel = new Label("");
 		currentRankNameLabel.setColor(Color.LIGHT_GRAY);
 		currentRankNameLabel.setType(FontType.SMALL);
@@ -75,7 +72,6 @@ public class ExperienceSection extends Component {
 		
 		expBarBounds = new Rectangle(getBounds().x, nameLabelBounds.y - margin - 10, getBounds().width, 20);
 		expLabelBounds = new Rectangle(expBarBounds.x, expBarBounds.y - 10 - margin, getBounds().width, 20);
-		TextureManager.createShapeTexture("profile_expOutline" + uuid, ComplexShapeType.ROUNDED_RECTANGLE, expBarBounds, Color.BLUE);
 	}
 	
 	public float getActualHeight() {
@@ -126,7 +122,12 @@ public class ExperienceSection extends Component {
 			nextRankImage.render();
 		}
 		expBar.render();
-		TextureManager.draw("profile_expOutline" + uuid);
+		Shapes.draw(EQRectangle.builder()
+				.bounds(expBarBounds)
+				.color(Color.BLUE)
+				.glowConfig(EQGlowConfig.builder().build())
+				.thickness(1f)
+				.build());
 		currentRankEXPLabel.render();
 		nextRankEXPLabel.render();
 	}

@@ -148,7 +148,7 @@ public class LimitedInputField extends Component {
 
 	@Override
 	protected void renderComponent() {
-		TextureManager.draw(TextureManager.createTexture(Color.BLACK), getScreenScaleAdjustedBounds(), getAlpha());
+		TextureManager.draw(TextureManager.createTexture(Color.BLACK), getBounds(), getAlpha());
 	    contentLabel.render();
 	    if (renderMaxCharsLabel) {
 	    	drawLimit();
@@ -209,7 +209,7 @@ public class LimitedInputField extends Component {
 
 	private void handleInputFocus() {
 	    if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-	        if (getScreenScaleAdjustedBounds().contains(InputUtil.getMousePosition())) {
+	        if (InputUtil.mouseIsOver(getBounds())) {
 	        	focus();
 	        } else {
 	        	unfocus();

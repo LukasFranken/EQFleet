@@ -89,13 +89,13 @@ public class GuideRenderer {
 				Label messageLabel = new Label(currentDialogGuideEvent.getMessage().getText());
 				switch (currentDialogGuideEvent.getMessage().getVerticalAlignment()) {
 				case TOP:
-					messageLabel.setBounds(new Rectangle(20, GraphicsUtil.baseScreenBounds().height - 180, GraphicsUtil.baseScreenBounds().width - 40, 70));
+					messageLabel.setBounds(new Rectangle(20, GraphicsUtil.screenBounds().height - 180, GraphicsUtil.screenBounds().width - 40, 70));
 					break;
 				case CENTER:
-					messageLabel.setBounds(new Rectangle(20, (GraphicsUtil.baseScreenBounds().height / 2) - 35, GraphicsUtil.baseScreenBounds().width - 40, 70));
+					messageLabel.setBounds(new Rectangle(20, (GraphicsUtil.screenBounds().height / 2) - 35, GraphicsUtil.screenBounds().width - 40, 70));
 					break;
 				case BOTTOM:
-					messageLabel.setBounds(new Rectangle(20, 20, GraphicsUtil.baseScreenBounds().width - 40, 70));
+					messageLabel.setBounds(new Rectangle(20, 20, GraphicsUtil.screenBounds().width - 40, 70));
 					break;
 					
 				}

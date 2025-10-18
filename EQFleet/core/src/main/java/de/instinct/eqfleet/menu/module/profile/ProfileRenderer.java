@@ -27,8 +27,9 @@ import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.container.list.ElementStack;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
 import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.ComplexShapeType;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.shapes.EQRectangle;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.utility.EQGlowConfig;
 
 public class ProfileRenderer extends BaseModuleRenderer {
 	
@@ -47,6 +48,7 @@ public class ProfileRenderer extends BaseModuleRenderer {
 	private Rectangle registrationResponseLabelBounds;
 	private Rectangle commanderSectionBounds;
 	private Rectangle usernameLabelBounds;
+	private Rectangle experienceSectionBounds;
 	
 	private ExperienceSection experienceSection;
 	
@@ -129,12 +131,9 @@ public class ProfileRenderer extends BaseModuleRenderer {
 		registrationResponseLabelBounds = new Rectangle(MenuModel.moduleBounds.x, ((MenuModel.moduleBounds.y + MenuModel.moduleBounds.height) / 2) - 50, MenuModel.moduleBounds.width, 30);
 		
 		usernameLabelBounds = new Rectangle(MenuModel.moduleBounds.x + margin, MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - margin - 30, MenuModel.moduleBounds.width - (margin * 2), 30);
-		Rectangle experienceSectionBounds = new Rectangle(MenuModel.moduleBounds.x + margin, usernameLabelBounds.y - experienceSection.getActualHeight() - margin, MenuModel.moduleBounds.width - (margin * 2), experienceSection.getActualHeight());
+		experienceSectionBounds = new Rectangle(MenuModel.moduleBounds.x + margin, usernameLabelBounds.y - experienceSection.getActualHeight() - margin, MenuModel.moduleBounds.width - (margin * 2), experienceSection.getActualHeight());
 		experienceSection.init(experienceSectionBounds.x + 20, experienceSectionBounds.y - 10, experienceSectionBounds.width - 40);
-		TextureManager.createShapeTexture("profile_experiencesection", ComplexShapeType.ROUNDED_RECTANGLE, experienceSectionBounds, new Color(SkinManager.skinColor));
 		commanderSectionBounds = new Rectangle(MenuModel.moduleBounds.x + margin, experienceSection.getBounds().y - 110 - margin, MenuModel.moduleBounds.width - (margin * 2), 110);
-		TextureManager.createShapeTexture("profile_commandersection", ComplexShapeType.ROUNDED_RECTANGLE, commanderSectionBounds, new Color(SkinManager.skinColor));
-		
 		inventoryRenderer.reload();
 	}
 
@@ -179,11 +178,21 @@ public class ProfileRenderer extends BaseModuleRenderer {
 		usernameLabel.setBounds(usernameLabelBounds);
 		usernameLabel.render();
 		
-		TextureManager.draw("profile_experiencesection");
+		Shapes.draw(EQRectangle.builder()
+				.bounds(experienceSectionBounds)
+				.color(new Color(SkinManager.skinColor))
+				.glowConfig(EQGlowConfig.builder().build())
+				.thickness(2f)
+				.build());
 		experienceSection.render();
 		
 		if (ProfileModel.commanderData != null) {
-			TextureManager.draw("profile_commandersection");
+			Shapes.draw(EQRectangle.builder()
+					.bounds(commanderSectionBounds)
+					.color(new Color(SkinManager.skinColor))
+					.glowConfig(EQGlowConfig.builder().build())
+					.thickness(2f)
+					.build());
 			float inModuleStackMargin = 20f;
 			ElementStack maxCPLabelStack = DefaultLabelFactory.createLabelStack("Max CP", StringUtils.format(ProfileModel.commanderData.getMaxCommandPoints(), 0), commanderSectionBounds.width - (inModuleStackMargin * 2));
 			maxCPLabelStack.setPosition(commanderSectionBounds.x + inModuleStackMargin, commanderSectionBounds.y + commanderSectionBounds.height - 30 - 10);

@@ -6,7 +6,6 @@ import java.util.List;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.eqlibgdxutils.GraphicsUtil;
@@ -24,8 +23,8 @@ import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.SimpleShapeRenderer;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.shapes.EQRectangle;
 
 @SuppressWarnings("rawtypes")
 public class Console {
@@ -40,7 +39,6 @@ public class Console {
 	private static int logLineHeight = 14;
 	
 	private static List<ActivationScreenTap> activationScreenTaps;
-	private static Texture backgroundTexture;
 	
 	private static LimitedInputField commandTextField;
 	
@@ -60,18 +58,13 @@ public class Console {
 	
 	public static void build() {
 		buildMetrics();
-		backgroundTexture = TextureManager.createTexture(new Color(0, 0, 0, 0.85f));
 		activationScreenTaps = new ArrayList<>();
 		activationScreenTaps.add(ActivationScreenTap.builder()
-				.region(new Rectangle(0, GraphicsUtil.baseScreenBounds().getHeight() - tapSize, tapSize, tapSize))
+				.region(new Rectangle(0, GraphicsUtil.screenBounds().getHeight() - tapSize, tapSize, tapSize))
 				.activated(false)
 				.build());
 		activationScreenTaps.add(ActivationScreenTap.builder()
-				.region(new Rectangle(GraphicsUtil.baseScreenBounds().getWidth() - tapSize, GraphicsUtil.baseScreenBounds().getHeight() - tapSize, tapSize, tapSize))
-				.activated(false)
-				.build());
-		activationScreenTaps.add(ActivationScreenTap.builder()
-				.region(new Rectangle(GraphicsUtil.baseScreenBounds().getWidth() - tapSize, 0, tapSize, tapSize))
+				.region(new Rectangle(GraphicsUtil.screenBounds().getWidth() - tapSize, GraphicsUtil.screenBounds().getHeight() - tapSize, tapSize, tapSize))
 				.activated(false)
 				.build());
 		
@@ -145,7 +138,10 @@ public class Console {
 	public static void render() {
 		pollForConsoleActivation();
 		if (active) {
-			TextureManager.draw(backgroundTexture, new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+			Shapes.draw(EQRectangle.builder()
+					.bounds(GraphicsUtil.screenBounds())
+					.color(new Color(0, 0, 0, 0.85f))
+					.build());
 			MetricUtil.render();
 			renderLogs();
 			renderConsoleInput();
@@ -173,9 +169,14 @@ public class Console {
 		Rectangle logsBounds = new Rectangle(
 				logPanelMargin, 
 				consoleInputHeight + logPanelMargin + borderMargin, 
-				GraphicsUtil.baseScreenBounds().getWidth() - (logPanelMargin * 2), 
-				GraphicsUtil.baseScreenBounds().getHeight() - consoleInputHeight - metricsHeight - (logPanelMargin * 2) - borderMargin);
-		SimpleShapeRenderer.drawRoundRectangle(GraphicsUtil.scaleFactorAdjusted(logsBounds), SkinManager.skinColor, 1);
+				GraphicsUtil.screenBounds().getWidth() - (logPanelMargin * 2), 
+				GraphicsUtil.screenBounds().getHeight() - consoleInputHeight - metricsHeight - (logPanelMargin * 2) - borderMargin);
+		Shapes.draw(EQRectangle.builder()
+				.bounds(logsBounds)
+				.color(SkinManager.skinColor)
+				.thickness(1)
+				.round(true)
+				.build());
 		
 		int logLineHorizontalMargin = 5;
 		List<LogLine> logLines = Logger.getLogs((int)(logsBounds.height / logLineHeight), tagFilter);
@@ -216,7 +217,7 @@ public class Console {
 		if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
 			commandTextField.setContent(commandProcessor.autocomplete(commandTextField.getContent()));
 		}
-		commandTextField.setBounds(new Rectangle(borderMargin, borderMargin, GraphicsUtil.baseScreenBounds().getWidth() - (borderMargin * 2), consoleInputHeight));
+		commandTextField.setBounds(new Rectangle(borderMargin, borderMargin, GraphicsUtil.screenBounds().getWidth() - (borderMargin * 2), consoleInputHeight));
 		commandTextField.render();
 	}
 
@@ -224,8 +225,8 @@ public class Console {
 		if (InputUtil.isClickedConsole()) {
 			boolean wasValidTap = false;
 			for (ActivationScreenTap screenTap : activationScreenTaps) {
-				if (!screenTap.isActivated()) {
-					if (InputUtil.mouseIsOver(GraphicsUtil.scaleFactorAdjusted(screenTap.getRegion()))) {
+				if (!screenTap.isActivated()) { 
+					if (InputUtil.mouseIsOver(screenTap.getRegion())) {
 						screenTap.setActivated(true);
 						wasValidTap = true;
 					} else {
@@ -253,7 +254,6 @@ public class Console {
 
 	public static void dispose() {
 		MetricUtil.dispose();
-		backgroundTexture.dispose();
 		commandTextField.dispose();
 	}
 

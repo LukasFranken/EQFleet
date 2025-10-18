@@ -184,10 +184,10 @@ public class StarmapRenderer extends BaseModuleRenderer {
 	            galaxy.getData().getMapPosX(), 
 	            galaxy.getData().getMapPosY(), 
 	            0));
-		galaxy.setScreenPos(MathUtil.translate(
+		galaxy.setScreenPos(GraphicsUtil.scaleFactorDeducted(MathUtil.translate(
 				new Vector2(renderingViewportScreenPos.x, renderingViewportScreenPos.y),
 				GraphicsUtil.screenBounds(),
-				MenuModel.moduleBounds));
+				MenuModel.moduleBounds)));
 	}
 	
 	private void renderGalaxyUI() {
@@ -209,21 +209,21 @@ public class StarmapRenderer extends BaseModuleRenderer {
 				Label galaxyNameLabel = new Label(galaxy.getData().getName().toUpperCase());
 				galaxyNameLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
 				galaxyNameLabel.setType(FontType.SMALL);
-				galaxyNameLabel.setFixedWidth(200f);
+				galaxyNameLabel.setFixedWidth(100f);
 				galaxyNameLabel.setFixedHeight(20f);
 				galaxyNameLabel.setColor(Color.GRAY);
 				galaxyNameLabel.setAlpha(MenuModel.alpha);
-				galaxyNameLabel.setPosition(galaxy.getScreenPos().x - (galaxyNameLabel.getFixedWidth() / 2), galaxy.getScreenPos().y + 30f);
+				galaxyNameLabel.setPosition(galaxy.getScreenPos().x - (galaxyNameLabel.getFixedWidth() / 2) + 5, galaxy.getScreenPos().y + 40f);
 				galaxyNameLabel.render();
 				
 				Label galaxyLevelLabel = new Label("Threat: " + getMinThreatLevel(galaxy) + "-" + getMaxThreatLevel(galaxy));
 				galaxyLevelLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
 				galaxyLevelLabel.setType(FontType.SMALL);
-				galaxyLevelLabel.setFixedWidth(200f);
+				galaxyLevelLabel.setFixedWidth(100f);
 				galaxyLevelLabel.setFixedHeight(20f);
 				galaxyLevelLabel.setColor(Color.GRAY);
 				galaxyLevelLabel.setAlpha(MenuModel.alpha);
-				galaxyLevelLabel.setPosition(galaxy.getScreenPos().x - (galaxyNameLabel.getFixedWidth() / 2), galaxy.getScreenPos().y - 50f);
+				galaxyLevelLabel.setPosition(galaxy.getScreenPos().x - (galaxyNameLabel.getFixedWidth() / 2) + 5, galaxy.getScreenPos().y - 40f);
 				galaxyLevelLabel.render();
 			}
 		}

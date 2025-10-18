@@ -18,7 +18,8 @@ import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
 import de.instinct.eqlibgdxutils.rendering.ui.popup.Popup;
 import de.instinct.eqlibgdxutils.rendering.ui.popup.PopupRenderer;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.SimpleShapeRenderer;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.shapes.EQRectangle;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -72,7 +73,11 @@ public class ShipPartOverview extends Component {
 	
 	@Override
 	protected void renderComponent() {
-		SimpleShapeRenderer.drawLabeledRectangle(new Rectangle(getBounds()), partType.name().toUpperCase(), getPartTypeColor());
+		Shapes.draw(EQRectangle.builder()
+				.bounds(getBounds())
+				.color(getPartTypeColor())
+				.label(partType.name().toUpperCase())
+				.build());
 		
 		Label partTypeLabel = new Label(getComponentType());
 		partTypeLabel.setType(FontType.TINY);

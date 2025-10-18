@@ -3,39 +3,37 @@ package de.instinct.eqlibgdxutils.rendering.ui.texture;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.PreferenceUtil;
+import de.instinct.eqlibgdxutils.rendering.GlobalRenderingConfiguration;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.draw.TextureDrawMode;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.draw.TextureRenderer;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.load.ColorTextureLoader;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.load.TextureLoader;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.ComplexShapeType;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.GlowShapeRenderer;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
 
 public class TextureManager {
 	
 	private static TextureRenderer textureRenderer;
 	private static TextureLoader textureLoader;
 	private static ColorTextureLoader colorTextureLoader;
-	private static GlowShapeRenderer glowShapeRenderer;
 	private static Map<String, Texture> textures = new HashMap<>();
 	
 	public static void init() {
 		textureRenderer = new TextureRenderer();
 		textureLoader = new TextureLoader();
 		colorTextureLoader = new ColorTextureLoader();
-		glowShapeRenderer = new GlowShapeRenderer();
 		String glowString = PreferenceUtil.load("glow");
-    	if (glowString.contentEquals("")) {
-    		TextureManager.setDefaultGlowRadius(0);
+		if (glowString.contentEquals("")) {
+    		GlobalRenderingConfiguration.defaultGlowRadius = 0;
     	} else {
-    		TextureManager.setDefaultGlowRadius(Float.parseFloat(glowString));
+    		GlobalRenderingConfiguration.defaultGlowRadius = Integer.parseInt(glowString);
     	}
+		Shapes.init();
 	}
 	
 	public static void draw(Texture texture, Rectangle bounds) {
@@ -51,11 +49,11 @@ public class TextureManager {
 	}
 	
 	public static void draw(String key) {
-		draw(key, new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), 1f);
+		draw(key, GraphicsUtil.screenBounds(), 1f);
 	}
 	
 	public static void draw(String key, float alpha) {
-		draw(key, new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), alpha);
+		draw(key,  GraphicsUtil.screenBounds(), alpha);
 	}
 	
 	public static void draw(String key, Rectangle bounds, float alpha) {
@@ -82,35 +80,6 @@ public class TextureManager {
 	
 	public static Texture createTexture(Color color) {
 		return colorTextureLoader.createTexture(color);
-	}
-	
-	public static void createTexture(String tag, Color color) {
-		textures.put(tag, colorTextureLoader.createTexture(color));
-	}
-	
-	public static void setDefaultGlowRadius(float radius) {
-		glowShapeRenderer.radius = radius;
-	}
-	
-	public static void createShapeTexture(String tag, ComplexShapeType type, Rectangle bounds, Color color) {
-		createShapeTexture(tag, type, bounds, color, glowShapeRenderer.defaultGlow);
-	}
-	
-	public static void createShapeTexture(String tag, ComplexShapeType type, Rectangle bounds, Color color, float glow) {
-		switch (type) {
-		case RECTANGLE:
-			
-			break;
-		case ROUNDED_RECTANGLE:
-			put(tag, glowShapeRenderer.getGlowTexture(GraphicsUtil.scaleFactorAdjusted(bounds), color, glow));
-			break;
-		case CIRCTANGLE:
-			
-			break;
-		case CIRCLE:
-			
-			break;
-		}
 	}
 	
 	public static void dispose() {
