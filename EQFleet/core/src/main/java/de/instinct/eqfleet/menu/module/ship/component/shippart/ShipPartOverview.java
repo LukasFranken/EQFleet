@@ -12,8 +12,10 @@ import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.HorizontalAlignment;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
+import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.subtypes.PlainRectangularLoadingBar;
 import de.instinct.eqlibgdxutils.rendering.ui.container.list.ElementList;
 import de.instinct.eqlibgdxutils.rendering.ui.container.list.ElementStack;
+import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
 import de.instinct.eqlibgdxutils.rendering.ui.popup.Popup;
 import de.instinct.eqlibgdxutils.rendering.ui.popup.PopupRenderer;
@@ -57,6 +59,21 @@ public class ShipPartOverview extends Component {
 	private void createPartLevelPopup() {
 		ElementList popupContent = new ElementList();
 		popupContent.setMargin(10f);
+		
+		Color partColor = getPartTypeColor();
+		PlainRectangularLoadingBar partProgressBar = new PlainRectangularLoadingBar();
+		partProgressBar.setBar(TextureManager.createTexture(partColor));
+		partProgressBar.setBackground(TextureManager.createTexture(new Color(0f, 0f, 0f, 0f)));
+		partProgressBar.setCurrentValue(50);
+		partProgressBar.setMaxValue(100);
+		Border barBorder = new Border();
+		barBorder.setSize(1f);
+		barBorder.setColor(partColor);
+		partProgressBar.setBorder(barBorder);
+		partProgressBar.setFixedWidth(200f);
+		partProgressBar.setFixedHeight(10f);
+		partProgressBar.setCustomDescriptor("");
+		popupContent.getElements().add(partProgressBar);
 		
 		PopupRenderer.create(Popup.builder()
 				.title(shipData.model.toUpperCase() + " - " + partType.name().toUpperCase())

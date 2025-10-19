@@ -69,7 +69,10 @@ public class MenuRenderer extends BaseModuleRenderer {
 		expBar = new PlainRectangularLoadingBar();
 		expBar.setBar(TextureManager.createTexture(Color.BLUE));
 		expBar.setCustomDescriptor("");
-		expBar.setBackground(TextureManager.createTexture(new Color(0f, 0f, 0f, 0f)));
+		Border barBorder = new Border();
+		barBorder.setSize(1f);
+		barBorder.setColor(Color.BLUE);
+		expBar.setBorder(barBorder);
 		
 		usernameLabel = new Label("???");
 		usernameLabel.setColor(Color.LIGHT_GRAY);
@@ -206,12 +209,13 @@ public class MenuRenderer extends BaseModuleRenderer {
 				usernameLabel.setBounds(new Rectangle(menuBounds.x + 50, menuBounds.y + menuBounds.height + 20, 100, 25));
 				usernameLabel.setAlpha(MenuModel.alpha);
 				usernameLabel.render();
-				expBar.setBounds(new Rectangle(menuBounds.x + 65, menuBounds.y + menuBounds.height + 10, 100, 7));
+				expBar.setBounds(expBounds);
 				Label expLabel = new Label("EXP");
 				expLabel.setColor(Color.BLUE);
 				expLabel.setType(FontType.TINY);
 				expLabel.setBounds(new Rectangle(menuBounds.x + 45, menuBounds.y + menuBounds.height + 10, 20, 7));
 				expLabel.setAlpha(MenuModel.alpha);
+				expLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
 				expLabel.render();
 				expBar.setMaxValue(ProfileModel.profile.getRank().getNextRequiredExp() - ProfileModel.profile.getRank().getRequiredExp());
 				expBar.setCurrentValue(ProfileModel.profile.getCurrentExp() - ProfileModel.profile.getRank().getRequiredExp());
@@ -229,15 +233,6 @@ public class MenuRenderer extends BaseModuleRenderer {
 				Shapes.draw(EQRectangle.builder()
 						.bounds(nameBounds)
 						.color(rankNameColor)
-						.glowConfig(EQGlowConfig.builder().build())
-						.thickness(2f)
-						.build());
-				
-				Color expColor = new Color(Color.BLUE);
-				expColor.a = MenuModel.alpha;
-				Shapes.draw(EQRectangle.builder()
-						.bounds(expBounds)
-						.color(expColor)
 						.glowConfig(EQGlowConfig.builder().build())
 						.thickness(2f)
 						.build());

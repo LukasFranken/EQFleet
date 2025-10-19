@@ -3,7 +3,6 @@ package de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.type
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 
-import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.LoadingBar;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
@@ -20,9 +19,8 @@ public abstract class RectangularLoadingBar extends LoadingBar {
 		super();
 		Border defaultBorder = new Border();
 		defaultBorder.setColor(new Color(Color.BLACK));
-		defaultBorder.setSize(2 * GraphicsUtil.getHorizontalDisplayScaleFactor());
+		defaultBorder.setSize(2f);
 		setBorder(defaultBorder);
-		background = TextureManager.createTexture(Color.GRAY);
 	}
 	
 	@Override
@@ -33,7 +31,7 @@ public abstract class RectangularLoadingBar extends LoadingBar {
 	}
 
 	private void renderBackground() {
-		TextureManager.draw(getBackground(), getBounds());
+		if (getBackground() != null) TextureManager.draw(getBackground(), getBounds());
 	}
 
 	protected abstract void renderContent();
