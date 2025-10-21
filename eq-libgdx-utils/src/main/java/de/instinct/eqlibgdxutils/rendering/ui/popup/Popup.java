@@ -18,5 +18,6 @@ public class Popup {
 	private ElementContainer contentContainer;
 	private boolean closeOnClickOutside;
 	private Color windowColor;
+	private Color titleColor;
 
 }

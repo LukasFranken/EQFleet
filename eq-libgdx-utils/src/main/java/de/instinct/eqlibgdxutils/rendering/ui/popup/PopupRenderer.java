@@ -63,7 +63,7 @@ public class PopupRenderer {
 	
 	private static void createWindow(Popup newPopup) {
 		Label title = new Label(newPopup.getTitle());
-		if (newPopup.getWindowColor() != null) title.setColor(newPopup.getWindowColor());
+		if (newPopup.getWindowColor() != null) title.setColor(newPopup.getTitleColor() != null ? newPopup.getTitleColor() : newPopup.getWindowColor());
 		if (newPopup.getContentContainer().calculateWidth() < title.calculateWidth()) {
 			newPopup.getContentContainer().setFixedWidth(title.calculateWidth());
 		}

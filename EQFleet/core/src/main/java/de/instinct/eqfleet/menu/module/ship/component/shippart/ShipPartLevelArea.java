@@ -36,7 +36,6 @@ public class ShipPartLevelArea extends Component {
 		
 		partProgressBar = new PlainRectangularLoadingBar();
 		partProgressBar.setBar(TextureManager.createTexture(partColor));
-		partProgressBar.setBackground(TextureManager.createTexture(new Color(0f, 0f, 0f, 0f)));
 		partProgressBar.setCurrentValue(currentValue);
 		partProgressBar.setMaxValue(maxValue);
 		Border barBorder = new Border();

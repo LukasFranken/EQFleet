@@ -40,6 +40,7 @@ public class ShipPartOverview extends Component {
 		super();
 		this.width = width;
 		this.partType = partType;
+		this.partType = partType;
 		this.playerShip = playerShip;
 		this.shipData = shipData;
 		
@@ -61,9 +62,18 @@ public class ShipPartOverview extends Component {
 		popupContent.setMargin(10f);
 		
 		Color partColor = getPartTypeColor();
+		
+		ElementStack partLevelLabelStack = DefaultLabelFactory.createLabelStack(LabelStackConfiguration.builder()
+				.type(FontType.SMALL)
+				.tag(StringUtils.format(50, 0))
+				.value(StringUtils.format(100, 0))
+				.width(200f)
+				.colorTag(partColor)
+				.colorValue(partColor)
+				.build());
+		popupContent.getElements().add(partLevelLabelStack);
 		PlainRectangularLoadingBar partProgressBar = new PlainRectangularLoadingBar();
 		partProgressBar.setBar(TextureManager.createTexture(partColor));
-		partProgressBar.setBackground(TextureManager.createTexture(new Color(0f, 0f, 0f, 0f)));
 		partProgressBar.setCurrentValue(50);
 		partProgressBar.setMaxValue(100);
 		Border barBorder = new Border();
@@ -71,15 +81,20 @@ public class ShipPartOverview extends Component {
 		barBorder.setColor(partColor);
 		partProgressBar.setBorder(barBorder);
 		partProgressBar.setFixedWidth(200f);
-		partProgressBar.setFixedHeight(10f);
+		partProgressBar.setFixedHeight(5f);
 		partProgressBar.setCustomDescriptor("");
 		popupContent.getElements().add(partProgressBar);
 		
+		Color windowColor = new Color(partColor);
+		windowColor.r *= 0.5f;
+		windowColor.g *= 0.5f;
+		windowColor.b *= 0.5f;
 		PopupRenderer.create(Popup.builder()
 				.title(shipData.model.toUpperCase() + " - " + partType.name().toUpperCase())
 				.contentContainer(popupContent)
 				.closeOnClickOutside(true)
-				.windowColor(getPartTypeColor())
+				.windowColor(windowColor)
+				.titleColor(partColor)
 				.build());
 	}
 
