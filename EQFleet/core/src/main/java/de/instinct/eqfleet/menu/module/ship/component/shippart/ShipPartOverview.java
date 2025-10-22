@@ -112,6 +112,14 @@ public class ShipPartOverview extends Component {
 								.levelUpInfos(levelUpInfos)
 								.color(partColor)
 								.build())
+						.levelUpAction(new Action() {
+							
+							@Override
+							public void execute() {
+								
+							}
+							
+						})
 						.build());
 		
 		partLevelOverviewArea.setFixedWidth(200f);

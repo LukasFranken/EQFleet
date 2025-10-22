@@ -84,6 +84,11 @@ public class ShipPartLevelOverviewArea extends Component {
 		if (config.getLevelUpAction() != null) {
 			levelUpButton = DefaultButtonFactory.colorButton("Upgrade", config.getLevelUpAction());
 			levelUpButton.getBorder().setColor(config.getPartColor());
+			levelUpButton.setAction(config.getLevelUpAction());
+			levelUpButton.setLayer(2);
+			levelUpButton.getLabel().setColor(config.getPartColor());
+			levelUpButton.setHoverColor(new Color(adjustedColor.r, adjustedColor.g, adjustedColor.b, 0.2f));
+			levelUpButton.setDownColor(adjustedColor);
 		}
 	}
 	
@@ -101,24 +106,29 @@ public class ShipPartLevelOverviewArea extends Component {
 		levelUpInfoSection.setPosition(getBounds().x + 10f, getBounds().y + getBounds().height - 100f - levelUpInfoSection.calculateHeight());
 		
 		tagLabel.setFixedWidth(getBounds().width);
-		tagLabel.setPosition(getBounds().x, getBounds().y + 10);
-		
 		minLabel.setFixedWidth(25f);
-		minLabel.setPosition(getBounds().x, getBounds().y);
-		
 		maxLabel.setFixedWidth(25f);
-		maxLabel.setPosition(getBounds().x + getBounds().width - 25f, getBounds().y);
-		
 		partProgressBar.setFixedWidth(getBounds().width - 60);
-		partProgressBar.setPosition(getBounds().x + 30, getBounds().y);
+		
+		if (levelUpButton != null) {
+			levelUpButton.setFixedWidth(getBounds().width);
+			levelUpButton.setFixedHeight(30f);
+			levelUpButton.setPosition(getBounds().x, getBounds().y);
+			
+			minLabel.setPosition(getBounds().x, getBounds().y + 40f);
+			maxLabel.setPosition(getBounds().x + getBounds().width - 25f, getBounds().y + 40f);
+			tagLabel.setPosition(getBounds().x, getBounds().y + 10 + 40f);
+			partProgressBar.setPosition(getBounds().x + 30, getBounds().y + 40f);
+		} else {
+			minLabel.setPosition(getBounds().x, getBounds().y);
+			maxLabel.setPosition(getBounds().x + getBounds().width - 25f, getBounds().y);
+			tagLabel.setPosition(getBounds().x, getBounds().y + 10);
+			partProgressBar.setPosition(getBounds().x + 30, getBounds().y);
+		}
 	}
 	
 	@Override
 	protected void renderComponent() {
-		Shapes.draw(EQRectangle.builder()
-				.bounds(new Rectangle(getBounds().x + 5f, getBounds().y + 25f, getBounds().width - 10, 1f))
-				.color(adjustedColor)
-				.build());
 		componentLabel.render();
 		componentDescriptionLabel.render();
 		levelUpInfoSection.render();
@@ -126,11 +136,23 @@ public class ShipPartLevelOverviewArea extends Component {
 		minLabel.render();
 		maxLabel.render();
 		partProgressBar.render();
+		if (levelUpButton != null) {
+			Shapes.draw(EQRectangle.builder()
+					.bounds(new Rectangle(getBounds().x + 5f, getBounds().y + 25f + 40f, getBounds().width - 10, 1f))
+					.color(adjustedColor)
+					.build());
+			levelUpButton.render();
+		} else {
+			Shapes.draw(EQRectangle.builder()
+					.bounds(new Rectangle(getBounds().x + 5f, getBounds().y + 25f, getBounds().width - 10, 1f))
+					.color(adjustedColor)
+					.build());
+		}
 	}
 
 	@Override
 	public float calculateHeight() {
-		return 130f + levelUpInfoSection.calculateHeight();
+		return 130f + levelUpInfoSection.calculateHeight() + (levelUpButton != null ? 40f : 0f);
 	}
 
 	@Override
