@@ -7,15 +7,16 @@ import de.instinct.api.shipyard.dto.PlayerShipData;
 import de.instinct.engine.model.ship.ShipData;
 import de.instinct.eqfleet.menu.common.components.label.DefaultLabelFactory;
 import de.instinct.eqfleet.menu.common.components.label.LabelStackConfiguration;
+import de.instinct.eqfleet.menu.module.ship.component.shippart.level.ShipPartLevelArea;
+import de.instinct.eqfleet.menu.module.ship.component.shippart.level.ShipPartLevelOverviewArea;
+import de.instinct.eqfleet.menu.module.ship.component.shippart.level.config.ShipPartLevelOverviewAreaConfig;
 import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.HorizontalAlignment;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
-import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.subtypes.PlainRectangularLoadingBar;
 import de.instinct.eqlibgdxutils.rendering.ui.container.list.ElementList;
 import de.instinct.eqlibgdxutils.rendering.ui.container.list.ElementStack;
-import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
 import de.instinct.eqlibgdxutils.rendering.ui.popup.Popup;
 import de.instinct.eqlibgdxutils.rendering.ui.popup.PopupRenderer;
@@ -62,35 +63,27 @@ public class ShipPartOverview extends Component {
 		popupContent.setMargin(10f);
 		
 		Color partColor = getPartTypeColor();
+		ShipPartLevelOverviewArea partLevelOverviewArea = 
+				new ShipPartLevelOverviewArea(ShipPartLevelOverviewAreaConfig.builder()
+						.tag("KILLS")
+						.partColor(partColor)
+						.componentType(getComponentType())
+						.currentValue(50)
+						.maxValue(100)
+						.minValue(0)
+						.minValueLabel("0")
+						.maxValueLabel("100")
+						.build());
 		
-		ElementStack partLevelLabelStack = DefaultLabelFactory.createLabelStack(LabelStackConfiguration.builder()
-				.type(FontType.SMALL)
-				.tag(StringUtils.format(50, 0))
-				.value(StringUtils.format(100, 0))
-				.width(200f)
-				.colorTag(partColor)
-				.colorValue(partColor)
-				.build());
-		popupContent.getElements().add(partLevelLabelStack);
-		PlainRectangularLoadingBar partProgressBar = new PlainRectangularLoadingBar();
-		partProgressBar.setBar(TextureManager.createTexture(partColor));
-		partProgressBar.setCurrentValue(50);
-		partProgressBar.setMaxValue(100);
-		Border barBorder = new Border();
-		barBorder.setSize(1f);
-		barBorder.setColor(partColor);
-		partProgressBar.setBorder(barBorder);
-		partProgressBar.setFixedWidth(200f);
-		partProgressBar.setFixedHeight(5f);
-		partProgressBar.setCustomDescriptor("");
-		popupContent.getElements().add(partProgressBar);
+		partLevelOverviewArea.setFixedWidth(200f);
+		popupContent.getElements().add(partLevelOverviewArea);
 		
 		Color windowColor = new Color(partColor);
 		windowColor.r *= 0.5f;
 		windowColor.g *= 0.5f;
 		windowColor.b *= 0.5f;
 		PopupRenderer.create(Popup.builder()
-				.title(shipData.model.toUpperCase() + " - " + partType.name().toUpperCase())
+				.title(partType.name().toUpperCase())
 				.contentContainer(popupContent)
 				.closeOnClickOutside(true)
 				.windowColor(windowColor)

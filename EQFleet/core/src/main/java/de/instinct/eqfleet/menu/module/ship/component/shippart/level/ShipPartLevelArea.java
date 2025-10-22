@@ -1,4 +1,4 @@
-package de.instinct.eqfleet.menu.module.ship.component.shippart;
+package de.instinct.eqfleet.menu.module.ship.component.shippart.level;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
