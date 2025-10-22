@@ -2,6 +2,8 @@ package de.instinct.eqfleet.menu.module.ship.component.shippart.level.config;
 
 import com.badlogic.gdx.graphics.Color;
 
+import de.instinct.eqfleet.menu.module.ship.component.shippart.level.levelupinfo.LevelUpInfoSectionConfig;
+import de.instinct.eqlibgdxutils.generic.Action;
 import lombok.Builder;
 import lombok.Data;
 
@@ -18,5 +20,7 @@ public class ShipPartLevelOverviewAreaConfig {
 	private String minValueLabel;
 	private float maxValue;
 	private String maxValueLabel;
+	private LevelUpInfoSectionConfig infoSectionConfig;
+	private Action levelUpAction;
 
 }

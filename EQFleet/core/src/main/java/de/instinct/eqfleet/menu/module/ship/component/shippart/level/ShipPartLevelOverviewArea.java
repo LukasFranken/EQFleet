@@ -3,8 +3,11 @@ package de.instinct.eqfleet.menu.module.ship.component.shippart.level;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
+import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
 import de.instinct.eqfleet.menu.module.ship.component.shippart.level.config.ShipPartLevelOverviewAreaConfig;
+import de.instinct.eqfleet.menu.module.ship.component.shippart.level.levelupinfo.LevelUpInfoSection;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
+import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.HorizontalAlignment;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.subtypes.PlainRectangularLoadingBar;
@@ -22,14 +25,39 @@ public class ShipPartLevelOverviewArea extends Component {
 	
 	private ShipPartLevelOverviewAreaConfig config;
 	
+	private Color adjustedColor;
+	private Label componentLabel;
+	private Label componentDescriptionLabel;
+	private LevelUpInfoSection levelUpInfoSection;
 	private Label tagLabel;
 	private Label minLabel;
 	private Label maxLabel;
 	private PlainRectangularLoadingBar partProgressBar;
+	private ColorButton levelUpButton;
 	
 	public ShipPartLevelOverviewArea(ShipPartLevelOverviewAreaConfig config) {
 		super();
 		this.config = config;
+		
+		adjustedColor = new Color(config.getPartColor());
+		adjustedColor.a = 0.5f;
+		
+		Border border = new Border();
+		border.setSize(1f);
+		border.setColor(adjustedColor);
+		
+		componentLabel = new Label(config.getComponentType());
+		componentLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
+		componentLabel.setType(FontType.NORMAL);
+		componentLabel.setColor(config.getPartColor());
+		
+		componentDescriptionLabel = new Label(config.getComponentDescription());
+		componentDescriptionLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
+		componentDescriptionLabel.setType(FontType.SMALL);
+		componentDescriptionLabel.setColor(config.getPartColor());
+		componentDescriptionLabel.setBorder(border);
+		
+		levelUpInfoSection = new LevelUpInfoSection(config.getInfoSectionConfig());
 		
 		tagLabel = new Label(config.getTag());
 		tagLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
@@ -49,34 +77,51 @@ public class ShipPartLevelOverviewArea extends Component {
 		partProgressBar.setBar(TextureManager.createTexture(config.getPartColor()));
 		partProgressBar.setCurrentValue(50);
 		partProgressBar.setMaxValue(100);
-		Border barBorder = new Border();
-		barBorder.setSize(1f);
-		barBorder.setColor(config.getPartColor());
-		partProgressBar.setBorder(barBorder);
+		partProgressBar.setBorder(border);
 		partProgressBar.setFixedHeight(5f);
 		partProgressBar.setCustomDescriptor("");
+		
+		if (config.getLevelUpAction() != null) {
+			levelUpButton = DefaultButtonFactory.colorButton("Upgrade", config.getLevelUpAction());
+			levelUpButton.getBorder().setColor(config.getPartColor());
+		}
 	}
 	
 	@Override
 	protected void updateComponent() {
+		componentLabel.setFixedWidth(getBounds().width);
+		componentLabel.setFixedHeight(20f);
+		componentLabel.setPosition(getBounds().x, getBounds().y + getBounds().height - 15f);
+		
+		componentDescriptionLabel.setFixedWidth(getBounds().width);
+		componentDescriptionLabel.setFixedHeight(70f);
+		componentDescriptionLabel.setPosition(getBounds().x, getBounds().y + getBounds().height - 90);
+		
+		levelUpInfoSection.setFixedWidth(getBounds().width - 20f);
+		levelUpInfoSection.setPosition(getBounds().x + 10f, getBounds().y + getBounds().height - 100f - levelUpInfoSection.calculateHeight());
+		
 		tagLabel.setFixedWidth(getBounds().width);
 		tagLabel.setPosition(getBounds().x, getBounds().y + 10);
+		
 		minLabel.setFixedWidth(25f);
 		minLabel.setPosition(getBounds().x, getBounds().y);
+		
 		maxLabel.setFixedWidth(25f);
 		maxLabel.setPosition(getBounds().x + getBounds().width - 25f, getBounds().y);
+		
 		partProgressBar.setFixedWidth(getBounds().width - 60);
 		partProgressBar.setPosition(getBounds().x + 30, getBounds().y);
 	}
 	
 	@Override
 	protected void renderComponent() {
-		Color adjustedColor = new Color(config.getPartColor());
-		adjustedColor.a = 0.5f;
 		Shapes.draw(EQRectangle.builder()
 				.bounds(new Rectangle(getBounds().x + 5f, getBounds().y + 25f, getBounds().width - 10, 1f))
 				.color(adjustedColor)
 				.build());
+		componentLabel.render();
+		componentDescriptionLabel.render();
+		levelUpInfoSection.render();
 		tagLabel.render();
 		minLabel.render();
 		maxLabel.render();
@@ -85,7 +130,7 @@ public class ShipPartLevelOverviewArea extends Component {
 
 	@Override
 	public float calculateHeight() {
-		return 200f;
+		return 130f + levelUpInfoSection.calculateHeight();
 	}
 
 	@Override
@@ -95,7 +140,13 @@ public class ShipPartLevelOverviewArea extends Component {
 
 	@Override
 	public void dispose() {
-		
+		componentLabel.dispose();
+		componentDescriptionLabel.dispose();
+		levelUpInfoSection.dispose();
+		tagLabel.dispose();
+		minLabel.dispose();
+		maxLabel.dispose();
+		partProgressBar.dispose();
 	}
 
 }

@@ -1,5 +1,8 @@
 package de.instinct.eqfleet.menu.module.ship.component.shippart;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
@@ -10,6 +13,8 @@ import de.instinct.eqfleet.menu.common.components.label.LabelStackConfiguration;
 import de.instinct.eqfleet.menu.module.ship.component.shippart.level.ShipPartLevelArea;
 import de.instinct.eqfleet.menu.module.ship.component.shippart.level.ShipPartLevelOverviewArea;
 import de.instinct.eqfleet.menu.module.ship.component.shippart.level.config.ShipPartLevelOverviewAreaConfig;
+import de.instinct.eqfleet.menu.module.ship.component.shippart.level.levelupinfo.LevelUpInfo;
+import de.instinct.eqfleet.menu.module.ship.component.shippart.level.levelupinfo.LevelUpInfoSectionConfig;
 import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
@@ -63,16 +68,50 @@ public class ShipPartOverview extends Component {
 		popupContent.setMargin(10f);
 		
 		Color partColor = getPartTypeColor();
+		
+		List<LevelUpInfo> levelUpInfos = new ArrayList<>();
+		levelUpInfos.add(LevelUpInfo.builder()
+				.tagValue("Damage")
+				.currentValue("10")
+				.changeValue("+2")
+				.nextValue("12")
+				.build());
+		levelUpInfos.add(LevelUpInfo.builder()
+				.tagValue("Range")
+				.currentValue("10")
+				.changeValue("+2")
+				.nextValue("12")
+				.build());
+		levelUpInfos.add(LevelUpInfo.builder()
+				.tagValue("Speed")
+				.currentValue("10")
+				.changeValue("+2")
+				.nextValue("12")
+				.build());
+		levelUpInfos.add(LevelUpInfo.builder()
+				.tagValue("AOE")
+				.currentValue("10")
+				.changeValue("+2")
+				.nextValue("12")
+				.build());
+		
 		ShipPartLevelOverviewArea partLevelOverviewArea = 
 				new ShipPartLevelOverviewArea(ShipPartLevelOverviewAreaConfig.builder()
 						.tag("KILLS")
 						.partColor(partColor)
 						.componentType(getComponentType())
+						.componentDescription("While lacking in firepower\nand durability, fighters\nare cheap and typically\nfaster than larger ships.")
 						.currentValue(50)
 						.maxValue(100)
 						.minValue(0)
 						.minValueLabel("0")
 						.maxValueLabel("100")
+						.infoSectionConfig(LevelUpInfoSectionConfig.builder()
+								.currentLevel(2)
+								.nextLevel(3)
+								.levelUpInfos(levelUpInfos)
+								.color(partColor)
+								.build())
 						.build());
 		
 		partLevelOverviewArea.setFixedWidth(200f);
