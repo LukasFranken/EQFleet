@@ -6,6 +6,12 @@ GENERAL:
 
 - slider logic change to screenwide drag and drop (especially for mobile)
 
+- support ships/buildings
+
+- ai chips = cards like in idle obelisk
+
+- support multi component type ships
+
 - antimatter shields blocking dmg instaces
 - hawk-2a
 - with deep tutorial, but tutorial gives rewards
