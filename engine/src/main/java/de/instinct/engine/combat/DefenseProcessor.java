@@ -1,14 +1,23 @@
 package de.instinct.engine.combat;
 
-import de.instinct.engine.model.ship.Defense;
+import de.instinct.engine.combat.unit.Unit;
+import de.instinct.engine.combat.unit.component.Shield;
 
 public class DefenseProcessor {
 	
-	public void updateDefense(Defense defense, float delta) {
-		if (defense != null) {
-			defense.currentShield += defense.shieldRegenerationSpeed * ((float) delta / 1000f);
-			if (defense.currentShield >= defense.shield) {
-				defense.currentShield = defense.shield;
+	public void updateDefense(Unit unit, float delta) {
+		if (unit.hull.currentStrength < unit.hull.data.strength) {
+			unit.hull.currentStrength += unit.hull.data.repairSpeed * (delta / 1000f);
+			if (unit.hull.currentStrength > unit.hull.data.strength) {
+				unit.hull.currentStrength = unit.hull.data.strength;
+			}
+		}
+		for (Shield shield : unit.shields) {
+			if (shield.currentStrength < shield.data.strength) {
+				shield.currentStrength += shield.data.generation * (delta / 1000f);
+				if (shield.currentStrength > shield.data.strength) {
+					shield.currentStrength = shield.data.strength;
+				}
 			}
 		}
 	}

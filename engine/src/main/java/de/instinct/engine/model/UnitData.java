@@ -1,30 +1,21 @@
 package de.instinct.engine.model;
 
-import de.instinct.engine.model.ship.Defense;
-import de.instinct.engine.model.ship.Weapon;
+import java.util.List;
+
+import de.instinct.engine.model.ship.components.HullData;
+import de.instinct.engine.model.ship.components.ShieldData;
+import de.instinct.engine.model.ship.components.WeaponData;
 import lombok.ToString;
 
 @ToString(callSuper = true)
 public class UnitData {
 	
 	public String model;
-	public int cost;
-	public int commandPointsCost;
-	public Defense defense;
-	public Weapon weapon;
+	public int cpCost;
+	public float resourceCost;
 	
-	public UnitData clone() {
-		UnitData clone = new UnitData();
-		clone.model = this.model;
-		clone.cost = this.cost;
-		clone.commandPointsCost = this.commandPointsCost;
-		if (this.defense != null) {
-			clone.defense = this.defense.clone();
-		}
-		if (this.weapon != null) {
-			clone.weapon = this.weapon.clone();
-		}
-		return clone;
-	}
+	public HullData hull;
+	public List<WeaponData> weapons;
+	public List<ShieldData> shields;
 
 }

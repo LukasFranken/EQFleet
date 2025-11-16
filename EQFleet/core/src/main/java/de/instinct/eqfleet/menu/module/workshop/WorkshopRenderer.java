@@ -11,12 +11,10 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 
 import de.instinct.api.meta.dto.ResourceAmount;
-import de.instinct.api.shipyard.dto.PlayerShipData;
-import de.instinct.api.shipyard.dto.ShipBlueprint;
 import de.instinct.api.shipyard.dto.ShipBuildResponse;
-import de.instinct.api.shipyard.dto.ShipLevel;
-import de.instinct.api.shipyard.dto.ShipStatChange;
 import de.instinct.api.shipyard.dto.ShipUpgradeResponse;
+import de.instinct.api.shipyard.dto.ship.PlayerShipData;
+import de.instinct.api.shipyard.dto.ship.ShipBlueprint;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
 import de.instinct.eqfleet.menu.common.components.label.DefaultLabelFactory;
@@ -109,7 +107,7 @@ public class WorkshopRenderer extends BaseModuleRenderer {
 						.playerShipData(playerShip)
 						.blueprint(getBlueprint(playerShip.getShipId()))
 						.build();
-				if (bundledShipData.getBlueprint().getLevels().size() > playerShip.getLevel()) shipButtons.add(createShipButton(bundledShipData));
+				//if (bundledShipData.getBlueprint().getLevels().size() > playerShip.getLevel()) shipButtons.add(createShipButton(bundledShipData));
 			}
 		}
 	}
@@ -150,7 +148,7 @@ public class WorkshopRenderer extends BaseModuleRenderer {
 		});
 		shipButton.setFixedWidth(50f);
 		shipButton.setFixedHeight(70f);
-		shipButton.setNoteLabel("Lv " + bundledShipData.getPlayerShipData().getLevel(), Color.GRAY);
+		//shipButton.setNoteLabel("Lv " + bundledShipData.getPlayerShipData().getLevel(), Color.GRAY);
 		shipButton.getModelPreview().getBorder().setColor(bundledShipData.getPlayerShipData().isBuilt() ? SkinManager.skinColor : Color.BLUE);
 		return shipButton;
 	}
@@ -177,7 +175,7 @@ public class WorkshopRenderer extends BaseModuleRenderer {
 		popupContent.setMargin(10f);
 		popupContent.getElements().add(shipModelPreview);
 		
-		int currentLevel = bundledShipData.getPlayerShipData().getLevel();
+		/*int currentLevel = bundledShipData.getPlayerShipData().getLevel();
 		ShipLevel level = bundledShipData.getBlueprint().getLevels().get(currentLevel);
 		if (level != null) {
 			popupContent.getElements().add(DefaultLabelFactory.createLabelStack("Lv. " + currentLevel, "->      Lv. " + (currentLevel + 1), popupWidth));
@@ -191,7 +189,7 @@ public class WorkshopRenderer extends BaseModuleRenderer {
 			for (ResourceAmount cost : level.getCost()) {
 				popupContent.getElements().add(DefaultLabelFactory.createCostStack(cost, popupWidth));
 			}
-		}
+		}*/
 		
 		ColorButton upgradeButton = DefaultButtonFactory.colorButton("Upgrade", new Action() {
 			
@@ -208,11 +206,11 @@ public class WorkshopRenderer extends BaseModuleRenderer {
 		upgradeButton.setFixedWidth(popupWidth);
 		popupContent.getElements().add(upgradeButton);
 		
-		PopupRenderer.create(Popup.builder()
+		/*PopupRenderer.create(Popup.builder()
 				.title(bundledShipData.getBlueprint().getModel() + " - Lv. " + bundledShipData.getPlayerShipData().getLevel())
 				.contentContainer(popupContent)
 				.closeOnClickOutside(true)
-				.build());
+				.build());*/
 	}
 	
 	private void createShipBuildPopup(BundledShipData bundledShipData) {

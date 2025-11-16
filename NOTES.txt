@@ -12,6 +12,9 @@ GENERAL:
 
 - support multi component type ships
 
+- start ships very simple components
+ -> maybe not even shields?
+
 - antimatter shields blocking dmg instaces
 - hawk-2a
 - with deep tutorial, but tutorial gives rewards

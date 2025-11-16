@@ -17,7 +17,7 @@ import de.instinct.engine.combat.projectile.Projectile;
 import de.instinct.engine.entity.Entity;
 import de.instinct.engine.entity.EntityManager;
 import de.instinct.engine.model.GameState;
-import de.instinct.engine.model.ship.WeaponType;
+import de.instinct.engine.model.ship.components.types.WeaponType;
 import de.instinct.eqfleet.audio.AudioManager;
 import de.instinct.eqfleet.game.frontend.projectile.explosion.ExplosionRenderer;
 import de.instinct.eqlibgdxutils.rendering.model.ModelLoader;

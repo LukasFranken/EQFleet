@@ -1,6 +1,7 @@
 package de.instinct.engine.combat;
 
 import de.instinct.engine.combat.unit.UnitProcessor;
+import de.instinct.engine.combat.unit.component.Shield;
 import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.Player;
 import de.instinct.engine.model.planet.Planet;
@@ -15,8 +16,8 @@ public class TurretProcessor extends UnitProcessor {
 	public void initializeTurrets(GameState state) {
 		for (Planet planet : state.planets) {
 			Player player = EngineUtility.getPlayer(state.players, planet.ownerId);
-			if (!planet.ancient && player.planetData.turret != null) {
-				createTurretInstance(planet.id, state, false);
+			if (!planet.ancient && player.turrets.size() > 0) {
+				createTurretInstance(planet.id, 0, state, false);
 			}
 		}
 	}
@@ -29,15 +30,17 @@ public class TurretProcessor extends UnitProcessor {
 		super.removeDestroyed(state.turrets.iterator());
 	}
 
-	public void createTurretInstance(int planetId, GameState state, boolean payCost) {
+	public void createTurretInstance(int planetId, int turretId, GameState state, boolean payCost) {
 		Planet planet = EngineUtility.getPlanet(state.planets, planetId);
 		Player player = EngineUtility.getPlayer(state.players, planet.ownerId);
 		Turret newTurret = new Turret();
-		super.initializeUnit(newTurret, player.planetData.turret, planetId, state, payCost);
-		newTurret.defense.currentShield = 0f;
+		super.initializeUnit(newTurret, player.turrets.get(turretId), planetId, state, payCost);
+		for (Shield shield : newTurret.shields) {
+			shield.currentStrength = 0f;
+		}
 		newTurret.position = planet.position;
 		newTurret.radius = EngineUtility.PLANET_RADIUS;
-		newTurret.rotationSpeed = player.planetData.turret.rotationSpeed;
+		newTurret.rotationSpeed = player.turrets.get(turretId).platform.rotationSpeed;
 		state.turrets.add(newTurret);
 	}
 

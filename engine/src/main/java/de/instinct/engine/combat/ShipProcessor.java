@@ -29,7 +29,7 @@ public class ShipProcessor extends UnitProcessor {
 	
 	private void updateShip(Ship ship, GameState state, long deltaTime) {
 		super.updateUnit(ship, state, deltaTime);
-		if (super.getClosestInRangeTarget(ship, ship.weapon.range, state) == null) {
+		if (super.getClosestInRangeTarget(ship, state) == null) {
 			moveShip(ship, state, deltaTime);
 		}
 	}
@@ -43,8 +43,6 @@ public class ShipProcessor extends UnitProcessor {
 		super.initializeUnit(newShip, shipData, movement.fromPlanetId, state, true);
 		newShip.position = VectorUtil.getTargetPosition(fromPlanet.position, toPlanet.position, EngineUtility.PLANET_RADIUS);
 		newShip.targetPlanetId = movement.toPlanetId;
-		newShip.type = shipData.type;
-		newShip.movementSpeed = shipData.movementSpeed;
 		newShip.radius = 3;
 		state.ships.add(newShip);
 	}
@@ -53,20 +51,21 @@ public class ShipProcessor extends UnitProcessor {
 		Player shipOwner = EngineUtility.getPlayer(state.players, ship.ownerId);
 		Planet targetPlanet = EngineUtility.getPlanet(state.planets, ship.targetPlanetId);
 		Player targetPlanetOwner = EngineUtility.getPlayer(state.players, targetPlanet.ownerId);
-		float distance = Math.min(((float)deltaTime / 1000f) * ship.movementSpeed, VectorUtil.dst(ship.position, targetPlanet.position));
+		ShipData shipData = (ShipData) ship.data;
+		float distance = Math.min(((float)deltaTime / 1000f) * shipData.engine.speed, VectorUtil.dst(ship.position, targetPlanet.position));
 		Vector2 targetPosition = VectorUtil.getTargetPosition(ship.position, targetPlanet.position, distance);
 		ship.position = targetPosition;
-		ShipStatistic shipStatistic = StatCollector.getPlayer(state.gameUUID, shipOwner.id).getShip(ship.model);
+		ShipStatistic shipStatistic = StatCollector.getPlayer(state.gameUUID, shipOwner.id).getShip(ship.data.model);
 		shipStatistic.setDistanceTraveled(shipStatistic.getDistanceTraveled() + distance);
 		if (EntityManager.entityDistance(ship, targetPlanet) <= 0.01) {
 			if (targetPlanetOwner.teamId == shipOwner.teamId) {
-				targetPlanet.currentResources += ship.cost;
+				targetPlanet.currentResources += shipData.resourceCost;
 				if (targetPlanet.currentResources > targetPlanet.maxResourceCapacity) {
 					targetPlanet.currentResources = targetPlanet.maxResourceCapacity;
 				}
 			} else {
 				conquerPlanet(targetPlanet, shipOwner);
-				targetPlanet.currentResources += ship.cost;
+				targetPlanet.currentResources += shipData.resourceCost;
 			}
 			ship.flaggedForDestroy = true;
 		}

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import de.instinct.engine.model.Player;
 import de.instinct.engine.model.ship.ShipData;
+import de.instinct.engine.model.turret.TurretData;
 import de.instinct.engine.stats.model.GameStatistic;
 import de.instinct.engine.stats.model.PlayerStatistic;
 import de.instinct.engine.stats.model.unit.ShipStatistic;
@@ -39,9 +40,9 @@ public class StatCollector {
 		}
 		
 		playerStatistic.setTurretStatistics(new ArrayList<>());
-		if (player.planetData.turret != null) {
+		for (TurretData turret : player.turrets) {
 			TurretStatistic turretStatistic = new TurretStatistic();
-			turretStatistic.setModel(player.planetData.turret.model);
+			turretStatistic.setModel(turret.model);
 			playerStatistic.getTurretStatistics().add(turretStatistic);
 		}
 		

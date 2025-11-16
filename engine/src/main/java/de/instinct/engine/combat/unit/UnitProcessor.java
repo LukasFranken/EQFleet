@@ -7,6 +7,9 @@ import de.instinct.engine.combat.DefenseProcessor;
 import de.instinct.engine.combat.Ship;
 import de.instinct.engine.combat.Turret;
 import de.instinct.engine.combat.WeaponProcessor;
+import de.instinct.engine.combat.unit.component.Hull;
+import de.instinct.engine.combat.unit.component.Shield;
+import de.instinct.engine.combat.unit.component.Weapon;
 import de.instinct.engine.entity.Entity;
 import de.instinct.engine.entity.EntityManager;
 import de.instinct.engine.entity.EntityProcessor;
@@ -14,6 +17,8 @@ import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.Player;
 import de.instinct.engine.model.UnitData;
 import de.instinct.engine.model.planet.Planet;
+import de.instinct.engine.model.ship.components.ShieldData;
+import de.instinct.engine.model.ship.components.WeaponData;
 import de.instinct.engine.stats.StatCollector;
 import de.instinct.engine.stats.model.PlayerStatistic;
 import de.instinct.engine.stats.model.unit.UnitStatistic;
@@ -32,20 +37,26 @@ public abstract class UnitProcessor extends EntityProcessor {
 	
 	public void updateUnit(Unit unit, GameState state, long deltaTime) {
 		super.updateEntity(unit, state, deltaTime);
-		if (unit.defense.currentArmor <= 0) {
+		if (unit.hull.currentStrength <= 0) {
 			unit.flaggedForDestroy = true;
 			return;
 		}
-		weaponProcessor.updateWeapon(unit.weapon, deltaTime);
-		defenseProcessor.updateDefense(unit.defense, deltaTime);
-		Unit closestInRangeTarget = getClosestInRangeTarget(unit, unit.weapon.range, state);
+		weaponProcessor.updateWeapons(unit, deltaTime);
+		defenseProcessor.updateDefense(unit, deltaTime);
+		Unit closestInRangeTarget = getClosestInRangeTarget(unit, state);
 		if (closestInRangeTarget != null) {
 			weaponProcessor.fireAtTarget(unit, closestInRangeTarget, state, deltaTime);
 		}
 	}
 	
+	public static Unit getClosestInRangeTarget(Unit origin, GameState state) {
+        WeaponData primaryShipWeapon = origin.data.weapons.get(0);
+        if (primaryShipWeapon == null) return null;
+        return getClosestInRangeTarget(origin, primaryShipWeapon.range, state);
+    }
+	
 	public static Unit getClosestInRangeTarget(Entity origin, float range, GameState state) {
-        List<Unit> potentialTargets = new ArrayList<>();
+		List<Unit> potentialTargets = new ArrayList<>();
         
         Player originPlayer = EngineUtility.getPlayer(state.players, origin.ownerId);
         for (Ship ship : state.ships) {
@@ -57,7 +68,7 @@ public abstract class UnitProcessor extends EntityProcessor {
         
         for (Turret turret : state.turrets) {
             Player planetPlayer = EngineUtility.getPlayer(state.players, turret.ownerId);
-            if (planetPlayer.teamId != originPlayer.teamId && turret.defense != null) {
+            if (planetPlayer.teamId != originPlayer.teamId && turret.hull != null) {
                 potentialTargets.add(turret);
             }
     	}
@@ -72,35 +83,54 @@ public abstract class UnitProcessor extends EntityProcessor {
             }
         }
         return closestTarget;
-    }
+	}
 	
 	public void initializeUnit(Unit unit, UnitData unitData, int planetId, GameState state, boolean payCost) {
 		super.initializeEntity(unit, state);
-		unit.planetId = planetId;
-		unit.model = unitData.model;
-		unit.cost = unitData.cost;
-		Planet planet = EngineUtility.getPlanet(state.planets, unit.planetId);
+		unit.originPlanetId = planetId;
+		unit.data = unitData;
+		
+		Planet planet = EngineUtility.getPlanet(state.planets, unit.originPlanetId);
 		unit.ownerId = planet.ownerId;
 		
 		Player player = EngineUtility.getPlayer(state.players, unit.ownerId);
         PlayerStatistic playerStat = StatCollector.getPlayer(state.gameUUID, player.id);
 		
-		if (payCost) {
-	        planet.currentResources -= unit.cost;
-	        player.currentCommandPoints -= unitData.commandPointsCost;
+		if (payCost) { 
+	        planet.currentResources -= unit.data.resourceCost;
+	        player.currentCommandPoints -= unit.data.cpCost;
 	        
-	        playerStat.setResourcesUsed(playerStat.getResourcesUsed() + unit.cost);
-			playerStat.setCpUsed(playerStat.getCpUsed() + unitData.commandPointsCost);
-		}
-        
-		if (unitData.weapon != null) unit.weapon = unitData.weapon.clone();
-		if (unitData.defense != null) {
-			unit.defense = unitData.defense.clone();
-			unit.defense.currentShield = unit.defense.shield;
-			unit.defense.currentArmor = unit.defense.armor;
+	        playerStat.setResourcesUsed(playerStat.getResourcesUsed() + unit.data.resourceCost);
+			playerStat.setCpUsed(playerStat.getCpUsed() + unit.data.cpCost);
 		}
 		
-		UnitStatistic unitStat = playerStat.getUnit(unit.model);
+		unit.hull = new Hull();
+		unit.hull.currentStrength = unit.data.hull.strength;
+		unit.hull.data = unit.data.hull;
+		
+		int shieldId = 0;
+		unit.shields = new ArrayList<>();
+		for (ShieldData shieldData : unit.data.shields) {
+			Shield shield = new Shield();
+			shield.data = shieldData;
+			shield.id = shieldId;
+			shield.currentStrength = shieldData.strength;
+			unit.shields.add(shield);
+			shieldId++;
+		}
+		
+		int weaponId = 0;
+		unit.weapons = new ArrayList<>();
+		for (WeaponData weaponData : unit.data.weapons) {
+			Weapon weapon = new Weapon();
+			weapon.data = weaponData;
+			weapon.id = weaponId;
+			weapon.currentCooldown = 0f;
+			unit.weapons.add(weapon);
+			weaponId++;
+		}
+		
+		UnitStatistic unitStat = playerStat.getUnit(unit.data.model);
 		unitStat.setTimesBuilt(unitStat.getTimesBuilt() + 1);
 	}
 

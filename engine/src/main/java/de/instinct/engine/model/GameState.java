@@ -1,7 +1,4 @@
 package de.instinct.engine.model;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -45,62 +42,5 @@ public class GameState {
 	public Map<Integer, Integer> teamPausesCount;
 	public int teamPause;
 	public String currentPauseReason;
-	
-	public GameState clone() {
-		GameState clone = new GameState();
-		clone.gameUUID = this.gameUUID;
-		clone.players = new ArrayList<>();
-		for (Player player : this.players) {
-			clone.players.add(player.clone());
-		}
-		clone.connectionStati = new ArrayList<>();
-		for (PlayerConnectionStatus connectionStatus : this.connectionStati) {
-			clone.connectionStati.add(connectionStatus.clone());
-		}
-		clone.planets = new ArrayList<>();
-		for (Planet planet : this.planets) {
-			clone.planets.add(planet.clone());
-		}
-		clone.ships = new ArrayList<>();
-		for (Ship ship : this.ships) {
-			clone.ships.add(ship.clone());
-		}
-		clone.turrets = new ArrayList<>();
-		for (Turret turret : this.turrets) {
-			clone.turrets.add(turret.clone());
-		}
-		clone.projectiles = new ArrayList<>();
-		for (Projectile projectile : this.projectiles) {
-			clone.projectiles.add(projectile.clone());
-		}
-		clone.unprocessedOrders = this.unprocessedOrders;
-		if (clone.unprocessedOrders != null) {
-			clone.unprocessedOrders = new ArrayDeque<>(this.unprocessedOrders);
-		}
-		clone.orders = new ArrayList<>();
-		for (GameOrder gameOrder : this.orders) {
-			clone.orders.add(gameOrder.clone());
-		}
-		clone.gameTimeMS = this.gameTimeMS;
-		clone.maxGameTimeMS = this.maxGameTimeMS;
-		clone.surrendered = this.surrendered;
-		clone.winner = this.winner;
-		clone.atpToWin = this.atpToWin;
-		clone.ancientPlanetResourceDegradationFactor = this.ancientPlanetResourceDegradationFactor;
-		clone.teamATPs = new HashMap<>(this.teamATPs);
-		clone.started = this.started;
-		clone.entityCounter = this.entityCounter;
-		clone.orderCounter = this.orderCounter;
-		clone.zoomFactor = this.zoomFactor;
-		clone.resumeCountdownMS = this.resumeCountdownMS;
-		clone.maxPauseMS = this.maxPauseMS;
-		clone.minPauseMS = this.minPauseMS;
-		clone.currentPauseElapsedMS = this.currentPauseElapsedMS;
-		clone.teamPausesMS = new HashMap<>(this.teamPausesMS);
-		clone.teamPausesCount = new HashMap<>(this.teamPausesCount);
-		clone.teamPause = this.teamPause;
-		clone.currentPauseReason = this.currentPauseReason;
-		return clone;
-	}
 
 }

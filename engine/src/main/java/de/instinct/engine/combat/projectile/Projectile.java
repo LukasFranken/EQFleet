@@ -1,7 +1,7 @@
 package de.instinct.engine.combat.projectile;
 
 import de.instinct.engine.entity.Entity;
-import de.instinct.engine.model.ship.WeaponType;
+import de.instinct.engine.model.ship.components.types.WeaponType;
 import lombok.ToString;
 
 @ToString(callSuper = true)

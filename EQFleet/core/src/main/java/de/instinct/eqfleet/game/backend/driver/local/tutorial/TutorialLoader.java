@@ -17,11 +17,16 @@ import de.instinct.engine.map.GameMap;
 import de.instinct.engine.model.AiPlayer;
 import de.instinct.engine.model.Player;
 import de.instinct.engine.model.planet.PlanetData;
-import de.instinct.engine.model.ship.Defense;
 import de.instinct.engine.model.ship.ShipData;
-import de.instinct.engine.model.ship.ShipType;
-import de.instinct.engine.model.ship.Weapon;
-import de.instinct.engine.model.ship.WeaponType;
+import de.instinct.engine.model.ship.components.CoreData;
+import de.instinct.engine.model.ship.components.EngineData;
+import de.instinct.engine.model.ship.components.HullData;
+import de.instinct.engine.model.ship.components.ShieldData;
+import de.instinct.engine.model.ship.components.WeaponData;
+import de.instinct.engine.model.ship.components.types.CoreType;
+import de.instinct.engine.model.ship.components.types.EngineType;
+import de.instinct.engine.model.ship.components.types.ShieldType;
+import de.instinct.engine.model.ship.components.types.WeaponType;
 import de.instinct.engine.net.message.types.FleetMovementMessage;
 import de.instinct.engine.util.EngineUtility;
 import de.instinct.eqfleet.audio.AudioManager;
@@ -68,67 +73,103 @@ public class TutorialLoader {
 		neutralPlayer.planetData = neutralPlanetData;
 		players.add(neutralPlayer);
 		
-		Player player1 = new Player();
-		player1.id = 1;
-		player1.teamId = 1;
-		player1.name = "Player 1";
-		player1.ships = new ArrayList<>();
+		Player player = new Player();
+		player.id = 1;
+		player.teamId = 1;
+		player.name = "Player 1";
+		player.maxCommandPoints = 10;
+		player.startCommandPoints = 1;
+		player.commandPointsGenerationSpeed = 0.2;
+		player.currentCommandPoints = player.startCommandPoints;
+		
+		PlanetData tutorialPlanetData = new PlanetData();
+		tutorialPlanetData.resourceGenerationSpeed = 1;
+		tutorialPlanetData.maxResourceCapacity = 10;
+		player.planetData = tutorialPlanetData;
+		players.add(player);
+		
+		player.ships = new ArrayList<>();
 		ShipData tutorialShip = new ShipData();
-		tutorialShip.type = ShipType.FIGHTER;
 		tutorialShip.model = "hawk";
-		tutorialShip.movementSpeed = 100f;
-		tutorialShip.cost = 3;
-		tutorialShip.commandPointsCost = 1;
-		Weapon tutorialShipWeapon = new Weapon();
+		tutorialShip.cpCost = 1;
+		tutorialShip.resourceCost = 3;
+		
+		CoreData tutorialShipCore = new CoreData();
+		tutorialShipCore.type = CoreType.FIGHTER;
+		tutorialShip.core = tutorialShipCore;
+		
+		EngineData tutorialShipEngine = new EngineData();
+		tutorialShipEngine.type = EngineType.ION;
+		tutorialShipEngine.speed = 100;
+		tutorialShipEngine.acceleration = 1f;
+		tutorialShip.engine = tutorialShipEngine;
+		
+		HullData tutorialShipHull = new HullData();
+		tutorialShipHull.strength = 9f;
+		tutorialShip.hull = tutorialShipHull;
+		
+		tutorialShip.weapons = new ArrayList<>();
+		WeaponData tutorialShipWeapon = new WeaponData();
 		tutorialShipWeapon.type = WeaponType.PROJECTILE;
 		tutorialShipWeapon.damage = 1;
 		tutorialShipWeapon.range = 80f;
 		tutorialShipWeapon.cooldown = 500;
 		tutorialShipWeapon.speed = 120f;
-		tutorialShip.weapon = tutorialShipWeapon;
-		Defense tutorialShipDefense = new Defense();
-		tutorialShipDefense.armor = 9;
-		tutorialShipDefense.shield = 3;
-		tutorialShipDefense.shieldRegenerationSpeed = 0.2f;
-		tutorialShip.defense = tutorialShipDefense;
-		player1.ships.add(tutorialShip);
-		player1.maxCommandPoints = 10;
-		player1.startCommandPoints = 1;
-		player1.commandPointsGenerationSpeed = 0.2;
-		player1.currentCommandPoints = player1.startCommandPoints;
-		PlanetData tutorialPlanetData = new PlanetData();
-		tutorialPlanetData.resourceGenerationSpeed = 1;
-		tutorialPlanetData.maxResourceCapacity = 10;
-		player1.planetData = tutorialPlanetData;
-		players.add(player1);
+		tutorialShip.weapons.add(tutorialShipWeapon);
+		
+		tutorialShip.shields = new ArrayList<>();
+		ShieldData tutorialShipShield = new ShieldData();
+		tutorialShipShield.type = ShieldType.PLASMA;
+		tutorialShipShield.strength = 3f;
+		tutorialShipShield.generation = 0.2f;
+		tutorialShip.shields.add(tutorialShipShield);
+		player.ships.add(tutorialShip);
+		
+		//------------------------------------------
 
 		AiPlayer aiPlayer = aiEngine.initialize(1);
 		aiPlayer.id = 2;
 		aiPlayer.teamId = 2;
-		aiPlayer.planetData.turret = null;
-		aiPlayer.ships.get(0).weapon.damage = 1;
-		aiPlayer.ships.get(0).defense.armor = 3;
-		aiPlayer.ships.get(0).defense.shield = 2;
-		aiPlayer.ships.get(0).movementSpeed = 100f;
+		aiPlayer.turrets = new ArrayList<>();
+		aiPlayer.ships.get(0).weapons.get(0).damage = 1;
+		aiPlayer.ships.get(0).hull.strength = 3;
+		aiPlayer.ships.get(0).shields.get(0).strength = 2;
+		aiPlayer.ships.get(0).engine.speed = 100f;
 		
 		ShipData aiSmartassShip = new ShipData();
-		aiSmartassShip.type = ShipType.FIGHTER;
 		aiSmartassShip.model = "hawk";
-		aiSmartassShip.movementSpeed = 100f;
-		aiSmartassShip.cost = 3;
-		aiSmartassShip.commandPointsCost = 1;
-		Weapon aiSmartassShipWeapon = new Weapon();
+		aiSmartassShip.cpCost = 1;
+		aiSmartassShip.resourceCost = 3;
+		
+		CoreData aiSmartassShipCore = new CoreData();
+		aiSmartassShipCore.type = CoreType.FIGHTER;
+		aiSmartassShip.core = aiSmartassShipCore;
+		
+		EngineData aiSmartassShipEngine = new EngineData();
+		aiSmartassShipEngine.type = EngineType.ION;
+		aiSmartassShipEngine.speed = 100;
+		aiSmartassShipEngine.acceleration = 1f;
+		aiSmartassShip.engine = aiSmartassShipEngine;
+		
+		HullData aiSmartassShipHull = new HullData();
+		aiSmartassShipHull.strength = 20f;
+		aiSmartassShip.hull = aiSmartassShipHull;
+		
+		aiSmartassShip.weapons = new ArrayList<>();
+		WeaponData aiSmartassShipWeapon = new WeaponData();
 		aiSmartassShipWeapon.type = WeaponType.LASER;
 		aiSmartassShipWeapon.damage = 12;
 		aiSmartassShipWeapon.range = 100f;
 		aiSmartassShipWeapon.cooldown = 500;
 		aiSmartassShipWeapon.speed = 220f;
-		aiSmartassShip.weapon = aiSmartassShipWeapon;
-		Defense aiSmartassShipDefense = new Defense();
-		aiSmartassShipDefense.armor = 20;
-		aiSmartassShipDefense.shield = 20;
-		aiSmartassShipDefense.shieldRegenerationSpeed = 0.2f;
-		aiSmartassShip.defense = aiSmartassShipDefense;
+		aiSmartassShip.weapons.add(aiSmartassShipWeapon);
+		
+		aiSmartassShip.shields = new ArrayList<>();
+		ShieldData aiSmartassShipShield = new ShieldData();
+		aiSmartassShipShield.type = ShieldType.PLASMA;
+		aiSmartassShipShield.strength = 20f;
+		aiSmartassShipShield.generation = 0.2f;
+		aiSmartassShip.shields.add(aiSmartassShipShield);
 		aiPlayer.ships.add(aiSmartassShip);
 		
 		players.add(aiPlayer);
@@ -1006,7 +1047,7 @@ public class TutorialLoader {
 				int targetId = 3;
 				for (Ship ship : GameModel.activeGameState.ships) {
 					if (ship.ownerId == 1) {
-						originId = ship.planetId;
+						originId = ship.originPlanetId;
 						targetId = ship.targetPlanetId;
 						if (targetId == 3) {
 							panToShipGuideEvent.setTargetCameraPos(new Vector3(300f, -450f, 1300f));

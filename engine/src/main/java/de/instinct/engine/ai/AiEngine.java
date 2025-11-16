@@ -12,9 +12,14 @@ import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.Player;
 import de.instinct.engine.model.planet.Planet;
 import de.instinct.engine.model.planet.PlanetData;
-import de.instinct.engine.model.planet.TurretData;
 import de.instinct.engine.model.ship.ShipData;
-import de.instinct.engine.model.ship.ShipType;
+import de.instinct.engine.model.ship.components.CoreData;
+import de.instinct.engine.model.ship.components.EngineData;
+import de.instinct.engine.model.ship.components.types.CoreType;
+import de.instinct.engine.model.ship.components.types.EngineType;
+import de.instinct.engine.model.turret.PlatformData;
+import de.instinct.engine.model.turret.PlatformType;
+import de.instinct.engine.model.turret.TurretData;
 import de.instinct.engine.order.GameOrder;
 import de.instinct.engine.order.types.BuildTurretOrder;
 import de.instinct.engine.order.types.ShipMovementOrder;
@@ -31,32 +36,16 @@ public class AiEngine {
 	public AiPlayer initialize(int threatLevel) {
 		AiPlayer newAiPlayer = new AiPlayer();
 		newAiPlayer.ships = new ArrayList<>();
-		ShipData aiShip = new ShipData();
-		aiShip.cost = 5;
-		aiShip.commandPointsCost = 1;
-		aiShip.model = "hawk";
+		newAiPlayer.ships.add(createAIShip(threatLevel));
 		
-		aiShip.movementSpeed = AiStatManager.getMovementSpeed(threatLevel);
-		aiShip.type = ShipType.FIGHTER;
-		
-		aiShip.weapon = AiStatManager.getShipWeapon(threatLevel);
-		aiShip.defense = AiStatManager.getShipDefense(threatLevel);
-		newAiPlayer.ships.add(aiShip);
+		newAiPlayer.turrets = new ArrayList<>();
+		if (threatLevel >= 10) {
+			newAiPlayer.turrets.add(createAITurret(threatLevel));
+		}
 		
 		PlanetData aiPlanetData = new PlanetData();
 		aiPlanetData.resourceGenerationSpeed = AiStatManager.getResourceGenerationSpeed(threatLevel);
 		aiPlanetData.maxResourceCapacity = AiStatManager.getMaxResourceCapacity(threatLevel);
-		
-		if (threatLevel >= 10) {
-			TurretData aiTurret = new TurretData();
-			aiTurret.model = "projectile";
-			aiTurret.weapon = AiStatManager.getPlanetWeapon(threatLevel);
-			aiTurret.defense = AiStatManager.getPlanetDefense(threatLevel);
-			aiTurret.commandPointsCost = 1;
-			aiTurret.cost = 10;
-			aiTurret.rotationSpeed = 0.1f;
-			aiPlanetData.turret = aiTurret;
-		}
 		
 		newAiPlayer.planetData = aiPlanetData;
 		newAiPlayer.commandPointsGenerationSpeed = AiStatManager.getCommandPointsGenerationSpeed(threatLevel);
@@ -68,7 +57,54 @@ public class AiEngine {
 		newAiPlayer.name = "AI (" + newAiPlayer.difficulty.toString() + ")";
 		return newAiPlayer;
 	}
+
+	private ShipData createAIShip(int threatLevel) {
+		ShipData aiShip = new ShipData();
+		aiShip.resourceCost = 5;
+		aiShip.cpCost = 1;
+		aiShip.model = "hawk";
+		
+		CoreData aiShipCore = new CoreData();
+		aiShipCore.type = CoreType.FIGHTER;
+		aiShip.core = aiShipCore;
+		
+		EngineData aiShipEngine = new EngineData();
+		aiShipEngine.type = EngineType.ION;
+		aiShipEngine.speed = AiStatManager.getMovementSpeed(threatLevel);
+		aiShipEngine.acceleration = 1f;
+		aiShip.engine = aiShipEngine;
+		
+		aiShip.weapons = new ArrayList<>();
+		aiShip.weapons.add(AiStatManager.getShipWeapon(threatLevel));
+		
+		aiShip.shields = new ArrayList<>();
+		aiShip.shields.add(AiStatManager.getShipShield(threatLevel));
+		
+		aiShip.hull = AiStatManager.getShipHull(threatLevel);
+		return aiShip;
+	}
 	
+	private TurretData createAITurret(int threatLevel) {
+		TurretData aiTurret = new TurretData();
+		aiTurret.resourceCost = 10;
+		aiTurret.cpCost = 1;
+		aiTurret.model = "projectile";
+		
+		PlatformData aiTurretPlatform = new PlatformData();
+		aiTurretPlatform.rotationSpeed = 1f;
+		aiTurretPlatform.type = PlatformType.SERVO;
+		aiTurret.platform = aiTurretPlatform;
+		
+		aiTurret.weapons = new ArrayList<>();
+		aiTurret.weapons.add(AiStatManager.getTurretWeapon(threatLevel));
+		
+		aiTurret.shields = new ArrayList<>();
+		aiTurret.shields.add(AiStatManager.getTurretShield(threatLevel));
+		
+		aiTurret.hull = AiStatManager.getTurretHull(threatLevel);
+		return aiTurret;
+	}
+
 	public List<GameOrder> act(AiPlayer aiPlayer, GameState state) {
 		List<GameOrder> newOrders = new ArrayList<>();
 		
@@ -86,11 +122,11 @@ public class AiEngine {
 	}
 
 	private GameOrder calculateBuildOrder(AiPlayer aiPlayer, GameState state) {
-		if (aiPlayer.currentCommandPoints >= 2 && aiPlayer.planetData.turret != null) {
+		if (aiPlayer.currentCommandPoints >= 2 && !aiPlayer.turrets.isEmpty()) {
 			for (Planet planet : state.planets) {
 				Turret turret = EngineUtility.getPlanetTurret(state.turrets, planet.id);
 				if (turret == null) {
-					if (planet.currentResources >= aiPlayer.planetData.turret.cost && planet.ownerId == aiPlayer.id) {
+					if (planet.currentResources >= aiPlayer.turrets.get(0).resourceCost && planet.ownerId == aiPlayer.id) {
 						BuildTurretOrder newBuildTurretOrder = new BuildTurretOrder();
 						newBuildTurretOrder.planetId = planet.id;
 						newBuildTurretOrder.playerId = aiPlayer.id;
@@ -125,7 +161,7 @@ public class AiEngine {
 			}
 		}
 		if (closestNeutralPlanet != null && closestOwnPlanet != null) {
-			if (closestOwnPlanet.currentResources >= aiPlayer.ships.get(0).cost) {
+			if (closestOwnPlanet.currentResources >= aiPlayer.ships.get(0).resourceCost) {
 				if (aiPlayer.currentCommandPoints >= 3 || state.maxGameTimeMS - state.gameTimeMS < 15000 && aiPlayer.currentCommandPoints >= 2) {
 					ShipMovementOrder newShipMovementOrder = new ShipMovementOrder();
 					newShipMovementOrder.fromPlanetId = closestOwnPlanet.id;
@@ -138,7 +174,7 @@ public class AiEngine {
 		}
 		if (state.maxGameTimeMS - state.gameTimeMS < 10000 && state.teamATPs.get(aiPlayer.teamId == 2 ? 1 : 2) == 0) {
 			for (Planet planet : state.planets) {
-				if (planet.ancient && closestOwnPlanet.currentResources >= aiPlayer.ships.get(0).cost) {
+				if (planet.ancient && closestOwnPlanet.currentResources >= aiPlayer.ships.get(0).resourceCost) {
 					ShipMovementOrder newShipMovementOrder = new ShipMovementOrder();
 					newShipMovementOrder.fromPlanetId = closestOwnPlanet.id;
 					newShipMovementOrder.toPlanetId = planet.id;
@@ -152,7 +188,7 @@ public class AiEngine {
 			for (Planet planet : state.planets) {
 				if (planet.ancient) {
 					Player planetOwner = EngineUtility.getPlayer(state.players, planet.ownerId);
-					if (planetOwner.teamId != aiPlayer.teamId && closestOwnPlanet.currentResources >= aiPlayer.ships.get(0).cost && aiPlayer.currentCommandPoints > 1) {
+					if (planetOwner.teamId != aiPlayer.teamId && closestOwnPlanet.currentResources >= aiPlayer.ships.get(0).resourceCost && aiPlayer.currentCommandPoints > 1) {
 						ShipMovementOrder newShipMovementOrder = new ShipMovementOrder();
 						newShipMovementOrder.fromPlanetId = closestOwnPlanet.id;
 						newShipMovementOrder.toPlanetId = planet.id;
@@ -179,10 +215,10 @@ public class AiEngine {
 				for (Planet ownPlanet : ownPlanets) {
 					if (ship.targetPlanetId == ownPlanet.id) {
 						if (ownPlanet.position.dst(ship.position) <= aiPlayer.behaviorParameters.defensiveShipDistanceThreshold) {
-							if (ownPlanet.currentResources >= aiPlayer.ships.get(0).cost) {
+							if (ownPlanet.currentResources >= aiPlayer.ships.get(0).resourceCost) {
 								ShipMovementOrder newShipMovementOrder = new ShipMovementOrder();
 								newShipMovementOrder.fromPlanetId = ownPlanet.id;
-								newShipMovementOrder.toPlanetId = ship.planetId;
+								newShipMovementOrder.toPlanetId = ship.originPlanetId;
 								newShipMovementOrder.playerId = aiPlayer.id;
 								newShipMovementOrder.playerShipId = 0;
 								return newShipMovementOrder;

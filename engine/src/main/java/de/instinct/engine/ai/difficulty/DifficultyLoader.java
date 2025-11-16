@@ -19,10 +19,10 @@ public class DifficultyLoader {
 			behaviorParameters.defensiveShipDistanceThreshold = 300f;
 			break;
 		case EASY:
-			behaviorParameters.defensiveShipDistanceThreshold = aiPlayer.planetData.turret.weapon.range;
+			behaviorParameters.defensiveShipDistanceThreshold = aiPlayer.turrets.get(0).weapons.get(0).range;
 			break;
 		case NORMAL:
-			behaviorParameters.defensiveShipDistanceThreshold = aiPlayer.planetData.turret.weapon.range;
+			behaviorParameters.defensiveShipDistanceThreshold = aiPlayer.turrets.get(0).weapons.get(0).range;
 			break;
 		}
 		aiPlayer.difficulty = difficulty;

@@ -6,7 +6,7 @@ import java.util.List;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
-import de.instinct.api.shipyard.dto.PlayerShipData;
+import de.instinct.api.shipyard.dto.ship.PlayerShipData;
 import de.instinct.engine.model.ship.ShipData;
 import de.instinct.eqfleet.menu.common.components.label.DefaultLabelFactory;
 import de.instinct.eqfleet.menu.common.components.label.LabelStackConfiguration;
@@ -306,9 +306,9 @@ public class ShipPartOverview extends Component {
 	private String getComponentType() {
 		switch (partType) {
 			case CORE:
-				return shipData.type.name().toUpperCase();
+				return shipData.core.type.name().toUpperCase();
 			case WEAPON:
-				return shipData.weapon.type.name().toUpperCase();
+				return shipData.weapons.get(0).type.name().toUpperCase();
 			case SHIELD:
 				return "GRAVITON";
 			case HULL:

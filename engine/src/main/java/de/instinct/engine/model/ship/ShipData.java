@@ -1,19 +1,14 @@
 package de.instinct.engine.model.ship;
 
 import de.instinct.engine.model.UnitData;
+import de.instinct.engine.model.ship.components.CoreData;
+import de.instinct.engine.model.ship.components.EngineData;
 import lombok.ToString;
 
 @ToString(callSuper = true)
 public class ShipData extends UnitData {
 	
-	public ShipType type;
-	public float movementSpeed;
-	
-	public ShipData clone() {
-		ShipData clone = (ShipData)super.clone();
-		clone.type = this.type;
-		clone.movementSpeed = this.movementSpeed;
-		return clone;
-	}
+	public CoreData core;
+	public EngineData engine;
 
 }

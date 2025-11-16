@@ -189,7 +189,7 @@ public class GameUIRenderer {
 	
 	private void renderModeButtons(GameState state) {
 		Player self = EngineUtility.getPlayer(state.players, GameModel.playerId);
-		if (self.planetData.turret != null) {
+		if (!self.turrets.isEmpty()) {
 			if (GameModel.mode == InteractionMode.UNIT_CONTROL) {
 				unitControlButton.getBorder().setColor(Color.GREEN);
 			} else {
@@ -380,12 +380,12 @@ public class GameUIRenderer {
 			switch (GameModel.mode) {
 			case UNIT_CONTROL:
 				if (inputManager.getSelectedShipId() != null || inputManager.getHoveredShipId() != null) {
-					cpCost = owner.ships.get(inputManager.getSelectedShipId() == null ? inputManager.getHoveredShipId() : inputManager.getSelectedShipId()).commandPointsCost;
+					cpCost = owner.ships.get(inputManager.getSelectedShipId() == null ? inputManager.getHoveredShipId() : inputManager.getSelectedShipId()).cpCost;
 				}
 				break;
 			case CONSTRUCTION:
 				if (inputManager.getHoveredBuildingId() != null) {
-					cpCost = owner.planetData.turret.commandPointsCost;
+					cpCost = owner.turrets.get(inputManager.getHoveredBuildingId()).cpCost;
 				}
 				break;
 			case Q_LINK:
@@ -439,16 +439,16 @@ public class GameUIRenderer {
 	}
 
 	private void renderResourceCost(Planet selected) {
-		int resourceCost = 0;
+		float resourceCost = 0;
 		Player owner = EngineUtility.getPlayer(state.players, selected.ownerId);
 		Integer shipIndex = inputManager.getSelectedShipId();
 		if (shipIndex == null) shipIndex = inputManager.getHoveredShipId();
 		if (owner.ships.size() == 1) shipIndex = 0;
 		if (shipIndex != null && GameModel.mode == InteractionMode.UNIT_CONTROL) {
-			resourceCost = owner.ships.get(shipIndex).cost;
+			resourceCost = owner.ships.get(shipIndex).resourceCost;
 		}
 		if (inputManager.getHoveredBuildingId() != null) {
-			resourceCost = owner.planetData.turret.cost;
+			resourceCost = owner.turrets.get(inputManager.getHoveredBuildingId()).resourceCost;
 		}
 		if (resourceCost > 0 && owner.planetData.maxResourceCapacity > 0) {
 			renderResourceCircle(selected.position.x, selected.position.y, resourceCost <= selected.currentResources ? Color.GREEN : Color.RED, (float)(resourceCost / owner.planetData.maxResourceCapacity));
@@ -476,7 +476,7 @@ public class GameUIRenderer {
 				Player owner = EngineUtility.getPlayer(state.players, selected.ownerId);
 				Player target = EngineUtility.getPlayer(state.players, hovered.ownerId);
 				if (owner != null && owner.ships != null) {
-					int fleetCost = owner.ships.get(inputManager.getSelectedShipId()).cost;
+					float fleetCost = owner.ships.get(inputManager.getSelectedShipId()).resourceCost;
 					if (owner.teamId == target.teamId) {
 						renderResourceCircle(hovered.position.x, hovered.position.y, Color.GREEN, (float)(fleetCost / target.planetData.maxResourceCapacity));
 					}
@@ -488,7 +488,7 @@ public class GameUIRenderer {
 				setDensityLineWidth();
 				shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 				shapeRenderer.setColor(GameConfig.getPlayerColor(hovered.ownerId));
-				shapeRenderer.circle(hovered.position.x, hovered.position.y, turret.weapon.range + EngineUtility.PLANET_RADIUS);
+				shapeRenderer.circle(hovered.position.x, hovered.position.y, turret.data.weapons.get(0).range + EngineUtility.PLANET_RADIUS);
 			}
 		}
 	}
@@ -522,7 +522,7 @@ public class GameUIRenderer {
 			ShipData ship = owner.ships.get(inputManager.getSelectedShipId());
 			String shipName = ship.model;
 	        float labelWidth = FontUtil.getFontTextWidthPx(shipName.length(), FontType.SMALL);
-	        Color labelColor = new Color(selected.currentResources >= ship.cost && owner.currentCommandPoints >= ship.commandPointsCost ? Color.GREEN : Color.RED);
+	        Color labelColor = new Color(selected.currentResources >= ship.resourceCost && owner.currentCommandPoints >= ship.cpCost ? Color.GREEN : Color.RED);
 	        Label shipLabel = new Label(shipName);
 	        shipLabel.setColor(labelColor);
 	        shipLabel.setBounds(new Rectangle(InputUtil.getNormalizedMousePosition().x - (labelWidth / 2), InputUtil.getNormalizedMousePosition().y - 10f + arrowLabelYOffset, labelWidth, 20f));
@@ -551,7 +551,7 @@ public class GameUIRenderer {
 	    	Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		    shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 	        boolean isSelected = (inputManager.getHoveredShipId() != null && inputManager.getHoveredShipId() == i);
-	        boolean isAffordable = owner.ships.get(i).cost <= planet.currentResources && owner.ships.get(i).commandPointsCost <= owner.currentCommandPoints;
+	        boolean isAffordable = owner.ships.get(i).resourceCost <= planet.currentResources && owner.ships.get(i).cpCost <= owner.currentCommandPoints;
 	        if (isSelected) {
 	        	shapeRenderer.setColor(selectedColor);
 	        	if (isAffordable) {
@@ -623,7 +623,7 @@ public class GameUIRenderer {
 	    	Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		    shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 	        boolean isSelected = (inputManager.getHoveredBuildingId() != null && inputManager.getHoveredBuildingId() == i);
-	        boolean isAffordable = owner.planetData.turret.cost <= planet.currentResources && owner.planetData.turret.commandPointsCost <= owner.currentCommandPoints;
+	        boolean isAffordable = owner.turrets.get(i).resourceCost <= planet.currentResources && owner.turrets.get(i).cpCost <= owner.currentCommandPoints;
 	        if (isSelected) {
 	        	shapeRenderer.setColor(selectedColor);
 	        	if (isAffordable) {
@@ -668,7 +668,7 @@ public class GameUIRenderer {
 	        float labelY = y + (50f + outerRadius) * (float) Math.sin(midAngle);
 	        Vector3 labelPos = camera.project(new Vector3(labelX, labelY, 0f));
 	        
-	        String buildingName = owner.planetData.turret.model + " Turret";
+	        String buildingName = owner.turrets.get(i).model + " Turret";
 	        float labelWidth = FontUtil.getFontTextWidthPx(buildingName.length(), FontType.SMALL);
 	        Label buildingLabel = new Label(buildingName);
 	        buildingLabel.setColor(isSelected ? (isAffordable ? selectedAffordableColor : selectedColor) : unselectedColorLabel);

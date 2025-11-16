@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 import de.instinct.engine.combat.Ship;
 import de.instinct.engine.combat.Turret;
 import de.instinct.engine.combat.projectile.Projectile;
+import de.instinct.engine.combat.unit.component.Shield;
 import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.planet.Planet;
 import de.instinct.engine.tools.core.EngineUtils;
@@ -50,13 +51,17 @@ public class GameVisualisationPanel extends JPanel {
 			Vector2 screenPosition = convertToScreenPosition(turret.position);
 			g.setColor(Color.GRAY);
 			g.drawRect((int)screenPosition.x - 7, (int)screenPosition.y + 18, 30, 3);
-			g.setColor(Color.BLUE);
-			g.drawRect((int)screenPosition.x - 6, (int)screenPosition.y + 19, (int)(28 * (turret.defense.currentShield / turret.defense.shield)), 1);
-			g.setColor(Color.GRAY);
-			g.drawRect((int)screenPosition.x - 7, (int)screenPosition.y + 21, 30, 3);
 			g.setColor(Color.YELLOW);
-			g.drawRect((int)screenPosition.x - 6, (int)screenPosition.y + 22, (int)(28 * (turret.defense.currentArmor / turret.defense.armor)), 1);
-			int radius = (int) (EngineUtility.PLANET_RADIUS * WORLD_TO_PIXEL_SCALE + turret.weapon.range * WORLD_TO_PIXEL_SCALE);
+			g.drawRect((int)screenPosition.x - 6, (int)screenPosition.y + 19, (int)(28 * (turret.hull.currentStrength / turret.data.hull.strength)), 1);
+			int shieldCounter = 0;
+			for (Shield shield : turret.shields) {
+				g.setColor(Color.GRAY);
+				g.drawRect((int)screenPosition.x - 7, (int)screenPosition.y + 21 + (shieldCounter * 3), 30, 3);
+				g.setColor(Color.BLUE);
+				g.drawRect((int)screenPosition.x - 6, (int)screenPosition.y + 22 + (shieldCounter * 3), (int)(28 * (shield.currentStrength / shield.data.strength)), 1);
+				shieldCounter++;
+			}
+			int radius = (int) (EngineUtility.PLANET_RADIUS * WORLD_TO_PIXEL_SCALE + turret.data.weapons.get(0).range * WORLD_TO_PIXEL_SCALE);
 			screenPosition = convertToScreenPosition(turret.position);
 			screenPosition.x -= radius;
 			screenPosition.y -= radius;
@@ -129,8 +134,8 @@ public class GameVisualisationPanel extends JPanel {
 		g.setColor(EngineUtils.getOwnerColor(ship.ownerId));
 		Vector2 screenPosition = convertToScreenPosition(ship.position);
 		g.drawRect((int)screenPosition.x - 1, (int)screenPosition.y - 1, 3, 3);
-		if (ship.weapon != null) {
-			int radius = (int) (ship.weapon.range * WORLD_TO_PIXEL_SCALE);
+		if (ship.weapons != null && !ship.weapons.isEmpty()) {
+			int radius = (int) (ship.weapons.get(0).data.range * WORLD_TO_PIXEL_SCALE);
 			g.drawOval((int) screenPosition.x + 1 - radius, 
 			           (int) screenPosition.y + 1 - radius, 
 			           radius * 2, 

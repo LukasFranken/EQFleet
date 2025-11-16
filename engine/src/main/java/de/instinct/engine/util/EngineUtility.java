@@ -69,7 +69,7 @@ public class EngineUtility {
 	
 	public static Turret getPlanetTurret(List<Turret> turrets, int planetId) {
 		for (Turret turret : turrets) {
-			if (turret.planetId == planetId) {
+			if (turret.originPlanetId == planetId) {
 				return turret;
 			}
 		}

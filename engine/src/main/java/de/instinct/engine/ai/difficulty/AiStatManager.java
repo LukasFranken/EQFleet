@@ -1,8 +1,10 @@
 package de.instinct.engine.ai.difficulty;
 
-import de.instinct.engine.model.ship.Defense;
-import de.instinct.engine.model.ship.Weapon;
-import de.instinct.engine.model.ship.WeaponType;
+import de.instinct.engine.model.ship.components.HullData;
+import de.instinct.engine.model.ship.components.ShieldData;
+import de.instinct.engine.model.ship.components.WeaponData;
+import de.instinct.engine.model.ship.components.types.ShieldType;
+import de.instinct.engine.model.ship.components.types.WeaponType;
 
 public class AiStatManager {
 	
@@ -14,8 +16,8 @@ public class AiStatManager {
 		return Math.min(minMoveSpeed + minMoveSpeed * (threatLevel/100), maxMoveSpeed);
 	}
 
-	public static Weapon getShipWeapon(int threatLevel) {
-		Weapon aiShipWeapon = new Weapon();
+	public static WeaponData getShipWeapon(int threatLevel) {
+		WeaponData aiShipWeapon = new WeaponData();
 		aiShipWeapon.type = WeaponType.LASER;
 		aiShipWeapon.damage = 3 + 3 * (threatLevel / descaleFactor);
 		
@@ -33,16 +35,22 @@ public class AiStatManager {
 		return aiShipWeapon;
 	}
 
-	public static Defense getShipDefense(int threatLevel) {
-		Defense aiShipDefense = new Defense();
-		aiShipDefense.shield = 5 + 5 * (threatLevel / descaleFactor);
-		aiShipDefense.armor = 8 + 8 * (threatLevel / descaleFactor);
-		aiShipDefense.shieldRegenerationSpeed = 0.3f + 0.3f * (threatLevel / descaleFactor);
-		return aiShipDefense;
+	public static ShieldData getShipShield(int threatLevel) {
+		ShieldData aiShipShield = new ShieldData();
+		aiShipShield.type = ShieldType.PLASMA;
+		aiShipShield.strength = 5 + 5 * (threatLevel / descaleFactor);
+		aiShipShield.generation = 0.3f + 0.3f * (threatLevel / descaleFactor);
+		return aiShipShield;
+	}
+	
+	public static HullData getShipHull(int threatLevel) {
+		HullData aiShipHull = new HullData();
+		aiShipHull.strength = 8 + 8 * (threatLevel / descaleFactor);
+		return aiShipHull;
 	}
 
-	public static Weapon getPlanetWeapon(int threatLevel) {
-		Weapon aiPlanetWeapon = new Weapon();
+	public static WeaponData getTurretWeapon(int threatLevel) {
+		WeaponData aiPlanetWeapon = new WeaponData();
 		aiPlanetWeapon.type = WeaponType.LASER;
 		aiPlanetWeapon.damage = 3 + 3 * (threatLevel / descaleFactor);
 		
@@ -60,12 +68,18 @@ public class AiStatManager {
 		return aiPlanetWeapon;
 	}
 	
-	public static Defense getPlanetDefense(int threatLevel) {
-		Defense aiPlanetDefense = new Defense();
-		aiPlanetDefense.shield = 15 + 15 * (threatLevel / descaleFactor);
-		aiPlanetDefense.armor = 20 + 20 * (threatLevel / descaleFactor);
-		aiPlanetDefense.shieldRegenerationSpeed = 0.5f + 0.5f * (threatLevel / descaleFactor);
-		return aiPlanetDefense;
+	public static ShieldData getTurretShield(int threatLevel) {
+		ShieldData aiTurretShield = new ShieldData();
+		aiTurretShield.type = ShieldType.PLASMA;
+		aiTurretShield.strength = 15 + 15 * (threatLevel / descaleFactor);
+		aiTurretShield.generation = 0.5f + 0.5f * (threatLevel / descaleFactor);
+		return aiTurretShield;
+	}
+	
+	public static HullData getTurretHull(int threatLevel) {
+		HullData aiShipHull = new HullData();
+		aiShipHull.strength = 20 + 20 * (threatLevel / descaleFactor);
+		return aiShipHull;
 	}
 
 	public static float getResourceGenerationSpeed(int threatLevel) {

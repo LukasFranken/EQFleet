@@ -1,28 +1,21 @@
 package de.instinct.engine.combat.unit;
 
+import java.util.List;
+
+import de.instinct.engine.combat.unit.component.Hull;
+import de.instinct.engine.combat.unit.component.Shield;
+import de.instinct.engine.combat.unit.component.Weapon;
 import de.instinct.engine.entity.Entity;
-import de.instinct.engine.model.ship.Defense;
-import de.instinct.engine.model.ship.Weapon;
+import de.instinct.engine.model.UnitData;
 import lombok.ToString;
 
 @ToString(callSuper = true)
 public class Unit extends Entity {
 
-	public String model;
-	public int planetId;
-	public int cost;
-	public Defense defense;
-	public Weapon weapon;
-	
-	public Unit clone() {
-		Unit clone = (Unit) super.clone();
-		if (this.defense != null) {
-			clone.defense = this.defense.clone();
-		}
-		if (this.weapon != null) {
-			clone.weapon = this.weapon.clone();
-		}
-		return clone;
-	}
+	public int originPlanetId;
+	public Hull hull;
+	public List<Weapon> weapons;
+	public List<Shield> shields;
+	public UnitData data;
 
 }

@@ -1,6 +1,7 @@
 package de.instinct.eqfleet.game.frontend.ui;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.Color;
@@ -9,8 +10,9 @@ import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.engine.combat.Ship;
 import de.instinct.engine.combat.Turret;
+import de.instinct.engine.combat.unit.Unit;
+import de.instinct.engine.combat.unit.component.Shield;
 import de.instinct.engine.model.GameState;
-import de.instinct.engine.model.ship.Defense;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.shapes.EQRectangle;
 
@@ -21,15 +23,15 @@ public class DefenseUIRenderer {
 	
 	public void render(GameState state, PerspectiveCamera camera) {
 		for (Turret turret : state.turrets) {
-			if (turret.defense != null) {
+			if (turret.hull != null) {
 				Rectangle defenseArea = new Rectangle(turret.position.x - 30, turret.position.y, 60, 14);
-				renderDefense(camera, turret.defense, defenseArea, true);
+				renderDefense(camera, turret, defenseArea, true);
 			}
 		}
 		
 		List<Rectangle> occupiedAreas = new ArrayList<>();
 	    for (Ship ship : state.ships) {
-	        if (ship.defense != null) {;
+	        if (ship.hull != null) {
 	            Rectangle defenseArea = new Rectangle(ship.position.x - 19, ship.position.y - 28, 40, 10);
 	            boolean overlapping = true;
 	            while (overlapping) {
@@ -43,21 +45,23 @@ public class DefenseUIRenderer {
 	                }
 	            }
 	            occupiedAreas.add(new Rectangle(defenseArea));
-	            renderDefense(camera, ship.defense, defenseArea, false);
+	            renderDefense(camera, ship, defenseArea, false);
 	        }
 	    }
 	}
 	
-	private void renderDefense(PerspectiveCamera camera, Defense defense, Rectangle bounds, boolean seperate) {
-		if (defense.currentArmor > 0) {
+	private void renderDefense(PerspectiveCamera camera, Unit unit, Rectangle bounds, boolean seperate) {
+		if (unit.hull.currentStrength > 0) {
 			Rectangle armorBounds = new Rectangle(bounds);
 			if (seperate) {
 				armorBounds.y = armorBounds.y - bounds.height;
 			}
-			renderBar(camera, armorBounds, armorColor, (defense.currentArmor / defense.armor));
+			renderBar(camera, armorBounds, armorColor, (unit.hull.currentStrength / unit.hull.data.strength));
 			
-			if (defense.shield > 0) {
-				renderBar(camera, bounds, shieldColor, (defense.currentShield / defense.shield));
+			List<Shield> reversedShields = new ArrayList<>(unit.shields);
+			Collections.reverse(reversedShields);
+			for (Shield shield : reversedShields) {
+				renderBar(camera, bounds, shieldColor, (shield.currentStrength / shield.data.strength));
 			}
 		}
 	}

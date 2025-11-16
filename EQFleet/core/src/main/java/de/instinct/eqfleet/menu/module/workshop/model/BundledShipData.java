@@ -1,7 +1,7 @@
 package de.instinct.eqfleet.menu.module.workshop.model;
 
-import de.instinct.api.shipyard.dto.PlayerShipData;
-import de.instinct.api.shipyard.dto.ShipBlueprint;
+import de.instinct.api.shipyard.dto.ship.PlayerShipData;
+import de.instinct.api.shipyard.dto.ship.ShipBlueprint;
 import lombok.Builder;
 import lombok.Data;
 

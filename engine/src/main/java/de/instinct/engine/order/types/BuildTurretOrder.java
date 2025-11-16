@@ -14,5 +14,6 @@ public class BuildTurretOrder extends GameOrder {
 	
 	public int playerId;
 	public int planetId;
+	public int turretId;
 	
 }

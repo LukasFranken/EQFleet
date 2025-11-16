@@ -11,7 +11,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 
 import de.instinct.api.game.engine.EngineInterface;
-import de.instinct.api.shipyard.dto.PlayerShipData;
+import de.instinct.api.shipyard.dto.ship.PlayerShipData;
 import de.instinct.engine.model.ship.ShipData;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
@@ -181,7 +181,7 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 		shipButton.setFixedWidth(50f);
 		shipButton.setFixedHeight(70f);
 		shipButton.getModelPreview().getBorder().setColor(SkinManager.skinColor);
-		shipButton.setNoteLabel("Lv " + playerShip.getLevel(), Color.GRAY);
+		shipButton.setNoteLabel("", Color.GRAY);
 		return shipButton;
 	}
 	

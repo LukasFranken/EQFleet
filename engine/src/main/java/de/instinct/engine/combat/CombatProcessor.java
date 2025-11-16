@@ -4,8 +4,8 @@ import de.instinct.engine.combat.projectile.ProjectileProcessor;
 import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.Player;
 import de.instinct.engine.model.planet.Planet;
-import de.instinct.engine.model.planet.TurretData;
 import de.instinct.engine.model.ship.ShipData;
+import de.instinct.engine.model.turret.TurretData;
 import de.instinct.engine.order.GameOrder;
 import de.instinct.engine.order.types.BuildTurretOrder;
 import de.instinct.engine.order.types.ShipMovementOrder;
@@ -44,7 +44,7 @@ public class CombatProcessor {
         if (order instanceof BuildTurretOrder) {
         	BuildTurretOrder buildTurretOrder = (BuildTurretOrder) order;
         	if (isValid(buildTurretOrder, state)) {
-        		turretProcessor.createTurretInstance(buildTurretOrder.planetId, state, true);
+        		turretProcessor.createTurretInstance(buildTurretOrder.planetId, buildTurretOrder.turretId, state, true);
         		return true;
         	}
         }
@@ -54,14 +54,14 @@ public class CombatProcessor {
 	private boolean isValid(BuildTurretOrder buildTurretOrder, GameState state) {
 		Planet buildPlanet = EngineUtility.getPlanet(state.planets, buildTurretOrder.planetId);
 		Player player = EngineUtility.getPlayer(state.players, buildTurretOrder.playerId);
-		TurretData playerTurret = player.planetData.turret;
+		TurretData playerTurret = player.turrets.get(buildTurretOrder.turretId);
 		
 		if (state.teamPause != 0) return false;
 		if (playerTurret == null) return false;
 		if (buildPlanet.ownerId != buildTurretOrder.playerId) return false;
-		if (buildPlanet.currentResources < playerTurret.cost) return false;
-		if (player.currentCommandPoints < playerTurret.commandPointsCost) return false;
-		for (Turret turret : state.turrets) if (turret.planetId == buildTurretOrder.planetId) return false;
+		if (buildPlanet.currentResources < playerTurret.resourceCost) return false;
+		if (player.currentCommandPoints < playerTurret.cpCost) return false;
+		for (Turret turret : state.turrets) if (turret.originPlanetId == buildTurretOrder.planetId) return false;
 		return true;
 	}
 
@@ -73,8 +73,8 @@ public class CombatProcessor {
 		if (state.teamPause != 0) return false;
 		if (fromPlanet.ownerId != shipMovementOrder.playerId) return false;
 		if (shipMovementOrder.fromPlanetId == shipMovementOrder.toPlanetId) return false;
-		if (fromPlanet.currentResources < playerShip.cost) return false;
-		if (player.currentCommandPoints < playerShip.commandPointsCost) return false;
+		if (fromPlanet.currentResources < playerShip.resourceCost) return false;
+		if (player.currentCommandPoints < playerShip.cpCost) return false;
 		return true;
 	}
     

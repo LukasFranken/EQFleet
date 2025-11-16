@@ -2,10 +2,10 @@ package de.instinct.eqfleet.menu.module.ship;
 
 import de.instinct.api.core.API;
 import de.instinct.api.core.modules.MenuModule;
-import de.instinct.api.shipyard.dto.PlayerShipData;
 import de.instinct.api.shipyard.dto.ShipBuildResponse;
 import de.instinct.api.shipyard.dto.UnuseShipResponseCode;
 import de.instinct.api.shipyard.dto.UseShipResponseCode;
+import de.instinct.api.shipyard.dto.ship.PlayerShipData;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.module.core.ModuleMessage;

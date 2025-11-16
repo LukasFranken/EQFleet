@@ -11,7 +11,7 @@ import com.badlogic.gdx.math.Vector3;
 
 import de.instinct.api.construction.dto.PlayerTurretData;
 import de.instinct.api.game.engine.EngineInterface;
-import de.instinct.engine.model.planet.TurretData;
+import de.instinct.engine.model.turret.TurretData;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
 import de.instinct.eqfleet.menu.common.components.label.DefaultLabelFactory;
@@ -64,8 +64,8 @@ private List<LabeledModelButton> turretButtons;
 		turretButtons = new ArrayList<>();
 		if (ConstructionModel.infrastructure != null && ConstructionModel.playerInfrastructure != null) {
 			for (PlayerTurretData playerTurretData : ConstructionModel.playerInfrastructure.getPlayerTurrets()) {
-				TurretData turretData = EngineInterface.getPlayerTurretData(playerTurretData, ConstructionModel.infrastructure);
-				turretButtons.add(createTurretButton(playerTurretData, turretData));
+				//TurretData turretData = EngineInterface.getPlayerTurretData(playerTurretData, ConstructionModel.infrastructure);
+				//turretButtons.add(createTurretButton(playerTurretData, turretData));
 			}
 		}
 	}
@@ -118,7 +118,7 @@ private List<LabeledModelButton> turretButtons;
 		ElementList popupContent = new ElementList();
 		popupContent.setMargin(10f);
 		popupContent.getElements().add(turretModelPreview);
-		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("RESOURCE COST", StringUtils.format(turretData.cost, 0), popupWidth));
+		/*popupContent.getElements().add(DefaultLabelFactory.createLabelStack("RESOURCE COST", StringUtils.format(turretData.cost, 0), popupWidth));
 		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("CP COST", StringUtils.format(turretData.commandPointsCost, 0), popupWidth));
 		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("ROTATION SPEED", StringUtils.format(turretData.rotationSpeed, 0), popupWidth));
 		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("--------", "--------", popupWidth));
@@ -132,7 +132,7 @@ private List<LabeledModelButton> turretButtons;
 		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("ARMOR", StringUtils.format(turretData.defense.armor, 0), popupWidth));
 		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("SHIELD", StringUtils.format(turretData.defense.shield, 0), popupWidth));
 		popupContent.getElements().add(DefaultLabelFactory.createLabelStack("SHIELD/SEC", StringUtils.format(turretData.defense.shieldRegenerationSpeed, 1), popupWidth));
-		
+		*/
 		ColorButton useButton = DefaultButtonFactory.colorButton("Use", new Action() {
 			
 			@Override
