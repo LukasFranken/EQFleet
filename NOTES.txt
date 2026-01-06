@@ -4,6 +4,8 @@ GENERAL:
 - appicon, ios loadscreen etc.
 - build apk
 
+- ships can collect meteorites for resources
+
 - slider logic change to screenwide drag and drop (especially for mobile)
 
 - support ships/buildings
