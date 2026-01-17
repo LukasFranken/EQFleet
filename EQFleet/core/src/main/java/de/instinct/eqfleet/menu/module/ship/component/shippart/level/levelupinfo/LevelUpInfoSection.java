@@ -20,18 +20,21 @@ import lombok.EqualsAndHashCode;
 public class LevelUpInfoSection extends Component {
 	
 	private float rowHeight = 15f;
-	private float tagWidth = 80f;
+	private float tagWidth = 120f;
 	
 	private List<LevelUpInfoRow> infoRows;
+	
+	private boolean maxLevel;
 	
 	public LevelUpInfoSection(LevelUpInfoSectionConfig config) {
 		super();
 		infoRows = new ArrayList<>();
+		maxLevel = config.getNextLevel() == -1;
 		LevelUpInfoRow headerRow = createRow(LevelUpInfo.builder()
 				.tagValue("")
 				.currentValue("Lv " + config.getCurrentLevel())
 				.changeValue("->")
-				.nextValue("Lv " + config.getNextLevel())
+				.nextValue(maxLevel ? "" : "Lv " + config.getNextLevel())
 				.build(), config.getColor());
 		headerRow.setHeader(true);
 		infoRows.add(headerRow);
@@ -49,7 +52,7 @@ public class LevelUpInfoSection extends Component {
 		
 		ElementStack currentValueLabel = DefaultLabelFactory.createLabelStack(LabelStackConfiguration.builder()
 				.tag(info.getCurrentValue())
-				.value(info.getNextValue())
+				.value(info.getNextValue() != null ? info.getNextValue() : null)
 				.colorTag(color)
 				.colorValue(color)
 				.type(FontType.SMALL)
@@ -76,13 +79,15 @@ public class LevelUpInfoSection extends Component {
 			row.getTagLabel().setFixedHeight(row.isHeader() ? rowHeight + 5f : rowHeight);
 			row.getTagLabel().setFixedWidth(tagWidth);
 			
-			row.getCurrentAndNextValueLabelStack().setPosition(getBounds().x + tagWidth, rowY);
-			row.getCurrentAndNextValueLabelStack().setFixedHeight(row.isHeader() ? rowHeight + 5f : rowHeight);
-			row.getCurrentAndNextValueLabelStack().setFixedWidth(calculateWidth() - tagWidth);
-			
-			row.getChangeValueLabel().setPosition(getBounds().x + tagWidth, rowY);
-			row.getChangeValueLabel().setFixedHeight(row.isHeader() ? rowHeight + 5f : rowHeight);
-			row.getChangeValueLabel().setFixedWidth(calculateWidth() - tagWidth);
+			if (!maxLevel) {
+				row.getCurrentAndNextValueLabelStack().setPosition(getBounds().x + tagWidth, rowY);
+				row.getCurrentAndNextValueLabelStack().setFixedHeight(row.isHeader() ? rowHeight + 5f : rowHeight);
+				row.getCurrentAndNextValueLabelStack().setFixedWidth(calculateWidth() - tagWidth);
+				
+				row.getChangeValueLabel().setPosition(getBounds().x + tagWidth, rowY);
+				row.getChangeValueLabel().setFixedHeight(row.isHeader() ? rowHeight + 5f : rowHeight);
+				row.getChangeValueLabel().setFixedWidth(calculateWidth() - tagWidth);
+			}
 			i++;
 		}
 	}

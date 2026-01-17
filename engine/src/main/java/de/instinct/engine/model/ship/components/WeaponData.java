@@ -3,8 +3,8 @@ package de.instinct.engine.model.ship.components;
 import de.instinct.engine.model.ship.components.types.WeaponType;
 import lombok.ToString;
 
-@ToString
-public class WeaponData {
+@ToString(callSuper = true)
+public class WeaponData extends ComponentData {
 	
 	public WeaponType type;
 	public float damage;

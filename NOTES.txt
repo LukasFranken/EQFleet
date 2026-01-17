@@ -1,6 +1,8 @@
 ALPHA RELEASE TODO:
 
 GENERAL:
+- DRASTICALLY IMPROVE GAME NETWORKING AND BUFFER SIZES
+
 - appicon, ios loadscreen etc.
 - build apk
 
@@ -8,11 +10,16 @@ GENERAL:
 
 - slider logic change to screenwide drag and drop (especially for mobile)
 
-- support ships/buildings
+- support-class ships/buildings
 
 - ai chips = cards like in idle obelisk
-
-- support multi component type ships
+ -> but instead through booster packs
+ -> SHIPS AS CARDS?
+ 
+- components need to be leveled up with resources
+ - maybe trigger model change animation?
+ 
+- postgame ship part progression screen
 
 - start ships very simple components
  -> maybe not even shields?

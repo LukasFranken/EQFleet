@@ -39,13 +39,13 @@ public class FleetEngine {
 	}
 	
 	public GameState initializeGameState(GameStateInitialization initialization) {
+		StatCollector.initialize(initialization.gameUUID, initialization.players);
 		GameState state = new GameState();
 		state.orders = new ArrayList<>();
 		state.unprocessedOrders = new ConcurrentLinkedQueue<>();
 		state.entityCounter = 0;
 		state.orderCounter = 0;
 		state.gameUUID = initialization.gameUUID;
-		StatCollector.initialize(state.gameUUID);
 		state.players = initializePlayers(state.gameUUID, initialization.players);
 		state.connectionStati = generateConnectionStati(initialization.players);
 		state.planets = generateInitialPlanets(initialization, state);
@@ -81,7 +81,6 @@ public class FleetEngine {
 	private List<Player> initializePlayers(String gameUUID, List<Player> players) {
 		for (Player player : players) {
 			player.currentCommandPoints = player.startCommandPoints;
-			StatCollector.initializePlayer(gameUUID, player);
 		}
 		return players;
 	}

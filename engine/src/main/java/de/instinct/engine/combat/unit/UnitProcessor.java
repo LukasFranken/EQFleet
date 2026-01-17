@@ -43,19 +43,20 @@ public abstract class UnitProcessor extends EntityProcessor {
 		}
 		weaponProcessor.updateWeapons(unit, deltaTime);
 		defenseProcessor.updateDefense(unit, deltaTime);
-		Unit closestInRangeTarget = getClosestInRangeTarget(unit, state);
-		if (closestInRangeTarget != null) {
-			weaponProcessor.fireAtTarget(unit, closestInRangeTarget, state, deltaTime);
-		}
+		Unit closestTarget = getClosestTarget(unit, state);
+		if (closestTarget != null) weaponProcessor.aimAtTarget(unit, closestTarget, state, deltaTime);
 	}
 	
-	public static Unit getClosestInRangeTarget(Unit origin, GameState state) {
-        WeaponData primaryShipWeapon = origin.data.weapons.get(0);
-        if (primaryShipWeapon == null) return null;
-        return getClosestInRangeTarget(origin, primaryShipWeapon.range, state);
-    }
+	public boolean isInCombatRange(Unit unit, GameState state) {
+		if (!unit.weapons.isEmpty()) {
+			if (EntityManager.entityDistance(unit, getClosestTarget(unit, state)) <= unit.weapons.get(0).data.range) {
+				return true;
+			}
+		}
+		return false;
+	}
 	
-	public static Unit getClosestInRangeTarget(Entity origin, float range, GameState state) {
+	public static Unit getClosestTarget(Entity origin, GameState state) {
 		List<Unit> potentialTargets = new ArrayList<>();
         
         Player originPlayer = EngineUtility.getPlayer(state.players, origin.ownerId);
@@ -77,7 +78,7 @@ public abstract class UnitProcessor extends EntityProcessor {
         float closestDistance = Float.MAX_VALUE;
         for (Unit candidate : potentialTargets) {
             float distance = EntityManager.entityDistance(origin, candidate);
-            if (distance <= range && distance < closestDistance) {
+            if (distance < closestDistance) {
                 closestDistance = distance;
                 closestTarget = candidate;
             }

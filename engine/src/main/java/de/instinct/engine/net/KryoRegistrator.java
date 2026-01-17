@@ -15,6 +15,9 @@ import de.instinct.engine.combat.Turret;
 import de.instinct.engine.combat.projectile.DirectionalProjectile;
 import de.instinct.engine.combat.projectile.HomingProjectile;
 import de.instinct.engine.combat.projectile.Projectile;
+import de.instinct.engine.combat.unit.component.Hull;
+import de.instinct.engine.combat.unit.component.Shield;
+import de.instinct.engine.combat.unit.component.Weapon;
 import de.instinct.engine.model.AiPlayer;
 import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.Player;
@@ -33,6 +36,8 @@ import de.instinct.engine.model.ship.components.types.EngineType;
 import de.instinct.engine.model.ship.components.types.HullType;
 import de.instinct.engine.model.ship.components.types.ShieldType;
 import de.instinct.engine.model.ship.components.types.WeaponType;
+import de.instinct.engine.model.turret.PlatformData;
+import de.instinct.engine.model.turret.PlatformType;
 import de.instinct.engine.model.turret.TurretData;
 import de.instinct.engine.net.message.NetworkMessage;
 import de.instinct.engine.net.message.types.BuildTurretMessage;
@@ -97,6 +102,11 @@ public class KryoRegistrator {
 		kryo.register(UnitData.class);
 		kryo.register(TurretData.class);
 		kryo.register(Turret.class);
+		kryo.register(PlatformData.class);
+		kryo.register(PlatformType.class);
+		kryo.register(Hull.class);
+		kryo.register(Shield.class);
+		kryo.register(Weapon.class);
 		kryo.register(ConcurrentLinkedQueue.class);
 	}
 

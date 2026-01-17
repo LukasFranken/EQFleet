@@ -135,6 +135,7 @@ public class CustomLoader {
 		newPlayer.maxCommandPoints = loadout.getCommander().getMaxCommandPoints();
 		newPlayer.planetData = EngineInterface.getPlanetData(loadout.getPlayerInfrastructure(), API.construction().construction());
 		newPlayer.ships = EngineInterface.getShips(loadout.getShips(), API.shipyard().shipyard());
+		newPlayer.turrets = EngineInterface.getPlayerTurretData(loadout.getPlayerInfrastructure().getPlayerTurrets().get(0), API.construction().construction());
 		return newPlayer;
 	}
 

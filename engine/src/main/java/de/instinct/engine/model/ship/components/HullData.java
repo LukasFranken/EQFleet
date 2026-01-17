@@ -3,8 +3,8 @@ package de.instinct.engine.model.ship.components;
 import de.instinct.engine.model.ship.components.types.HullType;
 import lombok.ToString;
 
-@ToString
-public class HullData {
+@ToString(callSuper = true)
+public class HullData extends ComponentData {
 	
 	public HullType type;
 	public float strength;

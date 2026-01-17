@@ -3,8 +3,8 @@ package de.instinct.engine.model.ship.components;
 import de.instinct.engine.model.ship.components.types.CoreType;
 import lombok.ToString;
 
-@ToString
-public class CoreData {
+@ToString(callSuper = true)
+public class CoreData extends ComponentData {
 	
 	public CoreType type;
 

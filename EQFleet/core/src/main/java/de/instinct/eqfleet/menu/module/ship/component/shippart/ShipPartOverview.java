@@ -6,8 +6,11 @@ import java.util.List;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
-import de.instinct.api.shipyard.dto.ship.PlayerShipData;
-import de.instinct.engine.model.ship.ShipData;
+import de.instinct.api.shipyard.dto.ship.PlayerShipComponentLevel;
+import de.instinct.api.shipyard.dto.ship.ShipComponent;
+import de.instinct.api.shipyard.dto.ship.component.ComponentAttribute;
+import de.instinct.api.shipyard.dto.ship.component.ComponentLevel;
+import de.instinct.api.shipyard.service.impl.ShipyardUtility;
 import de.instinct.eqfleet.menu.common.components.label.DefaultLabelFactory;
 import de.instinct.eqfleet.menu.common.components.label.LabelStackConfiguration;
 import de.instinct.eqfleet.menu.module.ship.component.shippart.level.ShipPartLevelArea;
@@ -37,22 +40,39 @@ public class ShipPartOverview extends Component {
 	
 	private float width;
 	private ShipPartType partType;
-	private PlayerShipData playerShip;
-	private ShipData shipData;
+	private PlayerShipComponentLevel shipComponentLevel;
+	private ShipComponent component;
 	
 	private ShipPartLevelArea levelArea;
+	private List<ElementStack> infoElements;
 	
-	public ShipPartOverview(float width, ShipPartType partType, PlayerShipData playerShip, ShipData shipData) {
+	public ShipPartOverview(float width, PlayerShipComponentLevel shipComponentLevel, ShipComponent component) {
 		super();
 		this.width = width;
-		this.partType = partType;
-		this.partType = partType;
-		this.playerShip = playerShip;
-		this.shipData = shipData;
+		this.shipComponentLevel = shipComponentLevel;
+		this.component = component;
+		this.partType = ShipPartType.valueOf(ShipyardUtility.getShipComponentType(component).toUpperCase());
 		
-		levelArea = new ShipPartLevelArea(2, getPartTypeColor(), 50, 100);
+		createLevelArea();
+		initializeInfoElements();
+	}
+
+	private void createLevelArea() {
+		ComponentLevel currentLevel = null;
+		ComponentLevel nextLevel = null;
+		
+		for (ComponentLevel componentLevel : component.getLevels()) {
+			if (componentLevel.getLevel() == shipComponentLevel.getLevel()) {
+				currentLevel = componentLevel;
+			}
+			if (componentLevel.getLevel() == shipComponentLevel.getLevel() + 1) {
+				nextLevel = componentLevel;
+			}
+		}
+		
+		levelArea = new ShipPartLevelArea(shipComponentLevel.getLevel(), getPartTypeColor(), shipComponentLevel.getProgress() - currentLevel.getRequirementValue(), nextLevel == null ? currentLevel.getRequirementValue() : nextLevel.getRequirementValue() - currentLevel.getRequirementValue());
 		levelArea.getColorButton().setLayer(1);
-		levelArea.getColorButton().setGlowAnimation(true);
+		levelArea.getColorButton().setGlowAnimation(false);
 		levelArea.getColorButton().setAction(new Action() {
 			
 			@Override
@@ -62,68 +82,77 @@ public class ShipPartOverview extends Component {
 			
 		});
 	}
-	
+
+	private void initializeInfoElements() {
+		infoElements = new ArrayList<>();
+		
+		for (ComponentLevel componentLevel : component.getLevels()) {
+			if (componentLevel.getLevel() == shipComponentLevel.getLevel()) {
+				for (ComponentAttribute attribute : componentLevel.getAttributes()) {
+					ElementStack infoElement = DefaultLabelFactory.createLabelStack(LabelStackConfiguration.builder()
+							.type(FontType.SMALL)
+							.tag(ShipyardUtility.getAttributeName(attribute).replaceAll("_", " "))
+							.value(StringUtils.format(attribute.getValue(), 1))
+							.width(width - 85)
+							.colorTag(getPartTypeColor())
+							.colorValue(getPartTypeColor())
+							.build());
+					infoElements.add(infoElement);
+				}
+			}
+		}
+	}
+
 	private void createPartLevelPopup() {
 		ElementList popupContent = new ElementList();
 		popupContent.setMargin(10f);
 		
 		Color partColor = getPartTypeColor();
+		ComponentLevel currentLevel = null;
+		ComponentLevel nextLevel = null;
+		
+		for (ComponentLevel componentLevel : component.getLevels()) {
+			if (componentLevel.getLevel() == shipComponentLevel.getLevel()) {
+				currentLevel = componentLevel;
+			}
+			if (componentLevel.getLevel() == shipComponentLevel.getLevel() + 1) {
+				nextLevel = componentLevel;
+			}
+		}
 		
 		List<LevelUpInfo> levelUpInfos = new ArrayList<>();
-		levelUpInfos.add(LevelUpInfo.builder()
-				.tagValue("Damage")
-				.currentValue("10")
-				.changeValue("+2")
-				.nextValue("12")
-				.build());
-		levelUpInfos.add(LevelUpInfo.builder()
-				.tagValue("Range")
-				.currentValue("10")
-				.changeValue("+2")
-				.nextValue("12")
-				.build());
-		levelUpInfos.add(LevelUpInfo.builder()
-				.tagValue("Speed")
-				.currentValue("10")
-				.changeValue("+2")
-				.nextValue("12")
-				.build());
-		levelUpInfos.add(LevelUpInfo.builder()
-				.tagValue("AOE")
-				.currentValue("10")
-				.changeValue("+2")
-				.nextValue("12")
-				.build());
-		
-		ShipPartLevelOverviewArea partLevelOverviewArea = 
-				new ShipPartLevelOverviewArea(ShipPartLevelOverviewAreaConfig.builder()
-						.tag("KILLS")
-						.partColor(partColor)
-						.componentType(getComponentType())
-						.componentDescription("While lacking in firepower\nand durability, fighters\nare cheap and typically\nfaster than larger ships.")
-						.currentValue(50)
-						.maxValue(100)
-						.minValue(0)
-						.minValueLabel("0")
-						.maxValueLabel("100")
-						.infoSectionConfig(LevelUpInfoSectionConfig.builder()
-								.currentLevel(2)
-								.nextLevel(3)
-								.levelUpInfos(levelUpInfos)
-								.color(partColor)
-								.build())
-						.levelUpAction(new Action() {
-							
-							@Override
-							public void execute() {
-								
-							}
-							
-						})
+		if (currentLevel != null) {
+			for (ComponentAttribute attribute : currentLevel.getAttributes()) {
+				double currentValue = attribute.getValue();
+				double nextValue = nextLevel != null ? ShipyardUtility.getAttribute(nextLevel, attribute.getId()).getValue() : 0;
+				levelUpInfos.add(LevelUpInfo.builder()
+						.tagValue(ShipyardUtility.getAttributeName(attribute).replaceAll("_", " "))
+						.currentValue(StringUtils.format(currentValue, 1))
+						.changeValue(nextLevel != null ? (nextValue - currentValue > 0 ? "+" : "") + StringUtils.format(nextValue - currentValue, 1) : "")
+						.nextValue(nextLevel != null ? StringUtils.format(nextValue, 1) : "")
 						.build());
-		
-		partLevelOverviewArea.setFixedWidth(200f);
-		popupContent.getElements().add(partLevelOverviewArea);
+			}
+			
+			ShipPartLevelOverviewArea partLevelOverviewArea = 
+					new ShipPartLevelOverviewArea(ShipPartLevelOverviewAreaConfig.builder()
+							.tag(ShipyardUtility.getComponentLevelType(currentLevel).replaceAll("_", " "))
+							.partColor(partColor)
+							.componentType(ShipyardUtility.getShipComponentSubtype(component).replaceAll("_", " "))
+							.componentDescription(getDescription(ShipyardUtility.getShipComponentSubtype(component)))
+							.currentValue(shipComponentLevel.getProgress())
+							.minValue(currentLevel.getRequirementValue())
+							.maxValue(nextLevel != null ? nextLevel.getRequirementValue() : -1)
+							.infoSectionConfig(LevelUpInfoSectionConfig.builder()
+									.currentLevel(currentLevel.getLevel())
+									.nextLevel(nextLevel != null ? nextLevel.getLevel() : -1)
+									.levelUpInfos(levelUpInfos)
+									.color(partColor)
+									.build())
+							.build());
+			
+			partLevelOverviewArea.setFixedWidth(width + 50f);
+			popupContent.getElements().add(partLevelOverviewArea);
+		}
 		
 		Color windowColor = new Color(partColor);
 		windowColor.r *= 0.5f;
@@ -138,9 +167,19 @@ public class ShipPartOverview extends Component {
 				.build());
 	}
 
+	private String getDescription(String subtype) {
+		return "While lacking in firepower\nand durability, fighters\nare cheap and fast.";
+	}
+
 	@Override
 	protected void updateComponent() {
 		levelArea.setBounds(new Rectangle(getBounds().x + 10, getBounds().y + 10, 45, 45));
+		
+		int i = 0;
+		for (ElementStack infoElement : infoElements) {
+			infoElement.setPosition(getBounds().x + 75, getBounds().y + 60 - (i * 13));
+			i++;
+		}
 	}
 	
 	@Override
@@ -151,7 +190,7 @@ public class ShipPartOverview extends Component {
 				.label(partType.name().toUpperCase())
 				.build());
 		
-		Label partTypeLabel = new Label(getComponentType());
+		Label partTypeLabel = new Label(ShipyardUtility.getShipComponentSubtype(component).toUpperCase());
 		partTypeLabel.setType(FontType.TINY);
 		partTypeLabel.setColor(getPartTypeColor());
 		partTypeLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
@@ -162,175 +201,23 @@ public class ShipPartOverview extends Component {
 		
 		TextureManager.draw(TextureManager.createTexture(getPartTypeColor()), new Rectangle(getBounds().x + 65, getBounds().y + 5, 1, getBounds().height - 30), 0.5f);
 		
-		switch (partType) {
-			case CORE:
-				ElementStack cpCostLabelStack = DefaultLabelFactory.createLabelStack(LabelStackConfiguration.builder()
-						.type(FontType.SMALL)
-						.tag("CP Cost")
-						.value(StringUtils.format(3, 0))
-						.width(getBounds().width - 85)
-						.colorTag(getPartTypeColor())
-						.colorValue(getPartTypeColor())
-						.build());
-				cpCostLabelStack.setPosition(getBounds().x + 75, getBounds().y + 60);
-				cpCostLabelStack.render();
-				
-				ElementStack costLabelStack = DefaultLabelFactory.createLabelStack(LabelStackConfiguration.builder()
-						.type(FontType.SMALL)
-						.tag("Resource Cost")
-						.value(StringUtils.format(7, 0))
-						.width(getBounds().width - 85)
-						.colorTag(getPartTypeColor())
-						.colorValue(getPartTypeColor())
-						.build());
-				costLabelStack.setPosition(getBounds().x + 75, getBounds().y + 47);
-				costLabelStack.render();
-				break;
-			case WEAPON:
-				ElementStack damageLabelStack = DefaultLabelFactory.createLabelStack(LabelStackConfiguration.builder()
-						.type(FontType.SMALL)
-						.tag("Damage")
-						.value(StringUtils.format(10, 0))
-						.width(getBounds().width - 85)
-						.colorTag(getPartTypeColor())
-						.colorValue(getPartTypeColor())
-						.build());
-				damageLabelStack.setPosition(getBounds().x + 75, getBounds().y + 60);
-				damageLabelStack.render();
-				
-				ElementStack rangeLabelStack = DefaultLabelFactory.createLabelStack(LabelStackConfiguration.builder()
-						.type(FontType.SMALL)
-						.tag("Range")
-						.value(StringUtils.format(200, 0))
-						.width(getBounds().width - 85)
-						.colorTag(getPartTypeColor())
-						.colorValue(getPartTypeColor())
-						.build());
-				rangeLabelStack.setPosition(getBounds().x + 75, getBounds().y + 47);
-				rangeLabelStack.render();
-				
-				ElementStack cooldownLabelStack = DefaultLabelFactory.createLabelStack(LabelStackConfiguration.builder()
-						.type(FontType.SMALL)
-						.tag("Cooldown")
-						.value(StringUtils.format(0.5, 1) + "s")
-						.width(getBounds().width - 85)
-						.colorTag(getPartTypeColor())
-						.colorValue(getPartTypeColor())
-						.build());
-				cooldownLabelStack.setPosition(getBounds().x + 75, getBounds().y + 34);
-				cooldownLabelStack.render();
-				
-				ElementStack speedLabelStack = DefaultLabelFactory.createLabelStack(LabelStackConfiguration.builder()
-						.type(FontType.SMALL)
-						.tag("Speed")
-						.value(StringUtils.format(100, 0))
-						.width(getBounds().width - 85)
-						.colorTag(getPartTypeColor())
-						.colorValue(getPartTypeColor())
-						.build());
-				speedLabelStack.setPosition(getBounds().x + 75, getBounds().y + 21);
-				speedLabelStack.render();
-				
-				ElementStack aoeLabelStack = DefaultLabelFactory.createLabelStack(LabelStackConfiguration.builder()
-						.type(FontType.SMALL)
-						.tag("Explosion")
-						.value(StringUtils.format(50, 0))
-						.width(getBounds().width - 85)
-						.colorTag(getPartTypeColor())
-						.colorValue(getPartTypeColor())
-						.build());
-				aoeLabelStack.setPosition(getBounds().x + 75, getBounds().y + 9);
-				aoeLabelStack.render();
-				break;
-			case SHIELD:
-				ElementStack shieldHitpointsLabelStack = DefaultLabelFactory.createLabelStack(LabelStackConfiguration.builder()
-						.type(FontType.SMALL)
-						.tag("Strength")
-						.value(StringUtils.format(20, 0))
-						.width(getBounds().width - 85)
-						.colorTag(getPartTypeColor())
-						.colorValue(getPartTypeColor())
-						.build());
-				shieldHitpointsLabelStack.setPosition(getBounds().x + 75, getBounds().y + 60);
-				shieldHitpointsLabelStack.render();
-				
-				ElementStack regenerationLabelStack = DefaultLabelFactory.createLabelStack(LabelStackConfiguration.builder()
-						.type(FontType.SMALL)
-						.tag("Generation")
-						.value(StringUtils.format(2.5, 1) + "/s")
-						.width(getBounds().width - 85)
-						.colorTag(getPartTypeColor())
-						.colorValue(getPartTypeColor())
-						.build());
-				regenerationLabelStack.setPosition(getBounds().x + 75, getBounds().y + 47);
-				regenerationLabelStack.render();
-				break;
-			case HULL:
-				ElementStack hullHitpointsLabelStack = DefaultLabelFactory.createLabelStack(LabelStackConfiguration.builder()
-						.type(FontType.SMALL)
-						.tag("Strength")
-						.value(StringUtils.format(10, 0))
-						.width(getBounds().width - 85)
-						.colorTag(getPartTypeColor())
-						.colorValue(getPartTypeColor())
-						.build());
-				hullHitpointsLabelStack.setPosition(getBounds().x + 75, getBounds().y + 60);
-				hullHitpointsLabelStack.render();
-				break;
-			case ENGINE:
-				ElementStack engineSpeedLabelStack = DefaultLabelFactory.createLabelStack(LabelStackConfiguration.builder()
-						.type(FontType.SMALL)
-						.tag("Speed")
-						.value(StringUtils.format(100, 0))
-						.width(getBounds().width - 85)
-						.colorTag(getPartTypeColor())
-						.colorValue(getPartTypeColor())
-						.build());
-				engineSpeedLabelStack.setPosition(getBounds().x + 75, getBounds().y + 60);
-				engineSpeedLabelStack.render();
-				
-				ElementStack accelerationLabelStack = DefaultLabelFactory.createLabelStack(LabelStackConfiguration.builder()
-						.type(FontType.SMALL)
-						.tag("Acceleration")
-						.value(StringUtils.format(5, 0) + "/s")
-						.width(getBounds().width - 85)
-						.colorTag(getPartTypeColor())
-						.colorValue(getPartTypeColor())
-						.build());
-				accelerationLabelStack.setPosition(getBounds().x + 75, getBounds().y + 47);
-				accelerationLabelStack.render();
-				break;
+		for (ElementStack infoElement : infoElements) {
+			infoElement.render();
 		}
-	}
-
-	private String getComponentType() {
-		switch (partType) {
-			case CORE:
-				return shipData.core.type.name().toUpperCase();
-			case WEAPON:
-				return shipData.weapons.get(0).type.name().toUpperCase();
-			case SHIELD:
-				return "GRAVITON";
-			case HULL:
-				return "CARBON";
-			case ENGINE:
-				return "ION";
-	}
-		return "";
 	}
 
 	private Color getPartTypeColor() {
 		switch (partType) {
 			case CORE:
 				return Color.PURPLE;
-			case WEAPON:
-				return Color.RED;
-			case SHIELD:
-				return Color.CYAN;
-			case HULL:
-				return Color.ORANGE;
 			case ENGINE:
 				return Color.YELLOW;
+			case HULL:
+				return Color.ORANGE;
+			case SHIELD:
+				return Color.CYAN;
+			case WEAPON:
+				return Color.RED;
 		}
 		return Color.GRAY;
 	}
@@ -347,7 +234,7 @@ public class ShipPartOverview extends Component {
 
 	@Override
 	public void dispose() {
-		
+		levelArea.dispose();
 	}
 
 }

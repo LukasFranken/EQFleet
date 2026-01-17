@@ -29,7 +29,7 @@ public class ShipProcessor extends UnitProcessor {
 	
 	private void updateShip(Ship ship, GameState state, long deltaTime) {
 		super.updateUnit(ship, state, deltaTime);
-		if (super.getClosestInRangeTarget(ship, state) == null) {
+		if (!super.isInCombatRange(ship, state)) {
 			moveShip(ship, state, deltaTime);
 		}
 	}
@@ -56,7 +56,7 @@ public class ShipProcessor extends UnitProcessor {
 		Vector2 targetPosition = VectorUtil.getTargetPosition(ship.position, targetPlanet.position, distance);
 		ship.position = targetPosition;
 		ShipStatistic shipStatistic = StatCollector.getPlayer(state.gameUUID, shipOwner.id).getShip(ship.data.model);
-		shipStatistic.setDistanceTraveled(shipStatistic.getDistanceTraveled() + distance);
+		shipStatistic.getEngineStatistic().setDistanceTraveled(shipStatistic.getEngineStatistic().getDistanceTraveled() + distance);
 		if (EntityManager.entityDistance(ship, targetPlanet) <= 0.01) {
 			if (targetPlanetOwner.teamId == shipOwner.teamId) {
 				targetPlanet.currentResources += shipData.resourceCost;

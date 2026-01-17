@@ -13,12 +13,12 @@ import de.instinct.engine.combat.Turret;
 import de.instinct.engine.combat.unit.Unit;
 import de.instinct.engine.combat.unit.component.Shield;
 import de.instinct.engine.model.GameState;
+import de.instinct.engine.model.ship.components.types.ShieldType;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.shapes.EQRectangle;
 
 public class DefenseUIRenderer {
 	
-	private Color shieldColor = new Color(0, 0.8f, 0.8f, 0.8f);
 	private Color armorColor = new Color(1f, 0.5f, 0f, 0.8f);
 	
 	public void render(GameState state, PerspectiveCamera camera) {
@@ -60,10 +60,33 @@ public class DefenseUIRenderer {
 			
 			List<Shield> reversedShields = new ArrayList<>(unit.shields);
 			Collections.reverse(reversedShields);
+			int i = 0;
 			for (Shield shield : reversedShields) {
-				renderBar(camera, bounds, shieldColor, (shield.currentStrength / shield.data.strength));
+				Rectangle shieldBounds = new Rectangle(bounds);
+				shieldBounds.y = shieldBounds.y + (i * (bounds.height));
+				switch (shield.data.type) {
+				case PLASMA:
+					renderBar(camera, shieldBounds, getShieldColor(shield.data.type), (shield.currentStrength / shield.data.strength));
+					break;
+				case NULLPOINT:
+					renderBar(camera, shieldBounds, getShieldColor(shield.data.type), ((int)shield.currentStrength / shield.data.strength));
+					break;
+				}
+				i++;
 			}
 		}
+	}
+	
+	private Color getShieldColor(ShieldType type) {
+		switch (type) {
+		case GRAVITON:
+			return new Color(0f, 0.8f, 0.8f, 0.9f);
+		case PLASMA:
+			return new Color(0f, 0.8f, 0.8f, 0.9f);
+		case NULLPOINT:
+			return new Color(0.8f, 0f, 0.8f, 0.9f);
+		}
+		return null;
 	}
 
 	private void renderBar(PerspectiveCamera camera, Rectangle bounds, Color color, float current) {

@@ -1,9 +1,13 @@
 package de.instinct.engine.combat.projectile;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.math.Vector2;
 
 import de.instinct.engine.combat.Ship;
 import de.instinct.engine.combat.Turret;
+import de.instinct.engine.combat.projectile.model.ShieldDamageInstance;
 import de.instinct.engine.combat.unit.Unit;
 import de.instinct.engine.combat.unit.UnitProcessor;
 import de.instinct.engine.combat.unit.component.Shield;
@@ -17,6 +21,8 @@ import de.instinct.engine.model.ship.ShipData;
 import de.instinct.engine.stats.StatCollector;
 import de.instinct.engine.stats.model.PlayerStatistic;
 import de.instinct.engine.stats.model.unit.UnitStatistic;
+import de.instinct.engine.stats.model.unit.component.types.ShieldStatistic;
+import de.instinct.engine.stats.model.unit.component.types.WeaponStatistic;
 import de.instinct.engine.util.EngineUtility;
 import de.instinct.engine.util.VectorUtil;
 
@@ -68,8 +74,7 @@ public class ProjectileProcessor extends EntityProcessor {
     }
 
     private Unit findNewTarget(HomingProjectile projectile, GameState state) {
-    	float remainingMissileRange = (projectile.lifetimeMS - projectile.elapsedMS) / 1000f * projectile.movementSpeed;
-		return UnitProcessor.getClosestInRangeTarget(projectile, remainingMissileRange, state);
+		return UnitProcessor.getClosestTarget(projectile, state);
 	}
 
 	private void calculateHit(Projectile projectile, GameState state) {
@@ -135,6 +140,9 @@ public class ProjectileProcessor extends EntityProcessor {
     private void dealDamage(Projectile projectile, Unit target, GameState state) {
     	float remainingDamage = projectile.damage;
 		
+    	List<ShieldDamageInstance> shieldDamageInstances = new ArrayList<>();
+    	
+    	float finalHullDamage = 0f;
 		for (Shield shield : target.shields) {
 			if (remainingDamage <= 0) break;
 			switch (shield.data.type) {
@@ -142,9 +150,17 @@ public class ProjectileProcessor extends EntityProcessor {
 				float shieldDamage = Math.min(shield.currentStrength, remainingDamage);
 				shield.currentStrength -= shieldDamage;
 				remainingDamage -= shieldDamage;
+				ShieldDamageInstance plasmaDamageInstance = new ShieldDamageInstance();
+				plasmaDamageInstance.setShieldId(shield.id);
+				plasmaDamageInstance.setDamage(shieldDamage);
+				shieldDamageInstances.add(plasmaDamageInstance);
 				break;
 			case NULLPOINT:
 				if (shield.currentStrength >= 1) {
+					ShieldDamageInstance nullpointDamageInstance = new ShieldDamageInstance();
+					nullpointDamageInstance.setShieldId(shield.id);
+					nullpointDamageInstance.setDamage(remainingDamage);
+					shieldDamageInstances.add(nullpointDamageInstance);
 					remainingDamage = 0f;
 					shield.currentStrength--;
 				}
@@ -157,22 +173,36 @@ public class ProjectileProcessor extends EntityProcessor {
 		
 		if (remainingDamage > 0) {
 			target.hull.currentStrength -= remainingDamage;
+			finalHullDamage = remainingDamage;
+		}
+		
+		if (target.hull.currentStrength <= 0) {
+			finalHullDamage = remainingDamage + target.hull.currentStrength;
+			target.hull.currentStrength = 0;
 		}
 		
 		PlayerStatistic originUnitOwnerStatistic = StatCollector.getPlayer(state.gameUUID, projectile.ownerId);
 		UnitStatistic unitStat = originUnitOwnerStatistic.getUnit(projectile.originModel);
-		unitStat.setDamageDealt(unitStat.getDamageDealt() + projectile.damage);
-		if (target.hull.currentStrength <= 0) {
-			unitStat.setKills(unitStat.getKills() + 1);
+		for (WeaponStatistic weaponStat : unitStat.getWeaponStatistics()) {
+			if (weaponStat.getId() == projectile.weaponId) {
+				weaponStat.setDamageDealt(weaponStat.getDamageDealt() + projectile.damage);
+				
+				if (target.hull.currentStrength <= 0) {
+					weaponStat.setKills(weaponStat.getKills() + 1);
+				}
+			}
 		}
 		
 		PlayerStatistic targetUnitOwnerStatistic = StatCollector.getPlayer(state.gameUUID, target.ownerId);
 		UnitStatistic targetUnitStat = targetUnitOwnerStatistic.getUnit(target.data.model);
-		if (target.hull.currentStrength <= 0) {
-			targetUnitStat.setDamageTaken(unitStat.getDamageTaken() + (projectile.damage + target.hull.currentStrength));
-			target.hull.currentStrength = 0;
-		} else {
-			targetUnitStat.setDamageTaken(unitStat.getDamageTaken() + projectile.damage);
+		targetUnitStat.getHullStatistic().setDamageTaken(targetUnitStat.getHullStatistic().getDamageTaken() + finalHullDamage);
+		for (ShieldDamageInstance shieldDamageInstance : shieldDamageInstances) {
+			for (ShieldStatistic shieldStat : targetUnitStat.getShieldStatistics()) {
+				if (shieldStat.getId() == shieldDamageInstance.getShieldId()) {
+					shieldStat.setDamageAbsorped(shieldStat.getDamageAbsorped() + shieldDamageInstance.getDamage());
+					shieldStat.setDamageInstancesBlocked(shieldStat.getDamageInstancesBlocked() + 1);
+				}
+			}
 		}
 	}
 
@@ -196,6 +226,7 @@ public class ProjectileProcessor extends EntityProcessor {
         
         super.initializeEntity(projectile, state);
         projectile.ownerId = origin.ownerId;
+        projectile.weaponId = weapon.id;
         projectile.originModel = origin.data.model;
         projectile.originId = origin.id;
         projectile.weaponType = weapon.data.type;
@@ -216,6 +247,14 @@ public class ProjectileProcessor extends EntityProcessor {
         	projectile.position = VectorUtil.getDirectionalTargetPosition(origin.position, VectorUtil.getDirection(origin.position, target.position), origin.radius);
         	((DirectionalProjectile)projectile).direction = calculateInterceptionDirection(projectile, target, state);
         }
+        
+        PlayerStatistic originUnitOwnerStatistic = StatCollector.getPlayer(state.gameUUID, origin.ownerId);
+		UnitStatistic unitStat = originUnitOwnerStatistic.getUnit(origin.data.model);
+		for (WeaponStatistic weaponStat : unitStat.getWeaponStatistics()) {
+			if (weaponStat.getId() == weapon.id) {
+				weaponStat.setShotsFired(weaponStat.getShotsFired() + 1);
+			}
+		}
         return projectile;
     }
     
@@ -224,7 +263,7 @@ public class ProjectileProcessor extends EntityProcessor {
         
         if (target instanceof Ship) {
             Ship ship = (Ship) target;
-            Unit closestInRangeTarget = UnitProcessor.getClosestInRangeTarget(ship, state);
+            Unit closestInRangeTarget = UnitProcessor.getClosestTarget(ship, state);
             if (closestInRangeTarget == null && ship.targetPlanetId > 0) {
                 Planet targetPlanet = EngineUtility.getPlanet(state.planets, ship.targetPlanetId);
                 if (targetPlanet != null) {

@@ -17,9 +17,7 @@ public class ShipPartLevelOverviewAreaConfig {
 	private Color partColor;
 	private float currentValue;
 	private float minValue;
-	private String minValueLabel;
 	private float maxValue;
-	private String maxValueLabel;
 	private LevelUpInfoSectionConfig infoSectionConfig;
 	private Action levelUpAction;
 

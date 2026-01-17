@@ -241,17 +241,25 @@ public class TestEngineManager {
 		playerShipHawk.engine = playerShipHawkEngine;
 		
 		HullData playerShipHawkHull = new HullData();
-		playerShipHawkHull.strength = 10;
+		playerShipHawkHull.strength = 1000;
 		playerShipHawk.hull = playerShipHawkHull;
 		
 		playerShipHawk.weapons = new ArrayList<>();
 		WeaponData playerShipWeaponHawk = new WeaponData();
-		playerShipWeaponHawk.type = WeaponType.LASER;
+		playerShipWeaponHawk.type = WeaponType.BEAM;
 		playerShipWeaponHawk.damage = 5;
-		playerShipWeaponHawk.range = 30f;
+		playerShipWeaponHawk.range = 120f;
 		playerShipWeaponHawk.cooldown = 2000;
 		playerShipWeaponHawk.speed = 80f;
 		playerShipHawk.weapons.add(playerShipWeaponHawk);
+		
+		WeaponData playerShipWeaponHawk2 = new WeaponData();
+		playerShipWeaponHawk2.type = WeaponType.PROJECTILE;
+		playerShipWeaponHawk2.damage = 5;
+		playerShipWeaponHawk2.range = 80f;
+		playerShipWeaponHawk2.cooldown = 1000;
+		playerShipWeaponHawk2.speed = 80f;
+		playerShipHawk.weapons.add(playerShipWeaponHawk2);
 		
 		playerShipHawk.shields = new ArrayList<>();
 		ShieldData playerShipShieldHawk = new ShieldData();

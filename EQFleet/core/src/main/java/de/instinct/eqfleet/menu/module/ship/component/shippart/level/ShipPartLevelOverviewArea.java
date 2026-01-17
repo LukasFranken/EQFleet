@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Rectangle;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
 import de.instinct.eqfleet.menu.module.ship.component.shippart.level.config.ShipPartLevelOverviewAreaConfig;
 import de.instinct.eqfleet.menu.module.ship.component.shippart.level.levelupinfo.LevelUpInfoSection;
+import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.HorizontalAlignment;
@@ -64,19 +65,21 @@ public class ShipPartLevelOverviewArea extends Component {
 		tagLabel.setType(FontType.SMALL);
 		tagLabel.setColor(config.getPartColor());
 		
-		minLabel = new Label(config.getMinValueLabel());
+		minLabel = new Label(StringUtils.format(config.getMinValue(), 1));
 		minLabel.setHorizontalAlignment(HorizontalAlignment.RIGHT);
 		minLabel.setType(FontType.TINY);
 		minLabel.setColor(config.getPartColor());
-		maxLabel = new Label(config.getMaxValueLabel());
-		maxLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
-		maxLabel.setType(FontType.TINY);
-		maxLabel.setColor(config.getPartColor());
+		if (config.getMaxValue() != -1) {
+			maxLabel = new Label(StringUtils.format(config.getMaxValue(), 1));
+			maxLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
+			maxLabel.setType(FontType.TINY);
+			maxLabel.setColor(config.getPartColor());
+		}
 		
 		partProgressBar = new PlainRectangularLoadingBar();
 		partProgressBar.setBar(TextureManager.createTexture(config.getPartColor()));
-		partProgressBar.setCurrentValue(50);
-		partProgressBar.setMaxValue(100);
+		partProgressBar.setCurrentValue(config.getCurrentValue() - config.getMinValue());
+		partProgressBar.setMaxValue(config.getMaxValue() == -1 ? config.getMinValue() : config.getMaxValue() - config.getMinValue());
 		partProgressBar.setBorder(border);
 		partProgressBar.setFixedHeight(5f);
 		partProgressBar.setCustomDescriptor("");
@@ -106,9 +109,9 @@ public class ShipPartLevelOverviewArea extends Component {
 		levelUpInfoSection.setPosition(getBounds().x + 10f, getBounds().y + getBounds().height - 100f - levelUpInfoSection.calculateHeight());
 		
 		tagLabel.setFixedWidth(getBounds().width);
-		minLabel.setFixedWidth(25f);
-		maxLabel.setFixedWidth(25f);
-		partProgressBar.setFixedWidth(getBounds().width - 60);
+		minLabel.setFixedWidth(40f);
+		if (maxLabel != null) maxLabel.setFixedWidth(40f);
+		partProgressBar.setFixedWidth(getBounds().width - 90);
 		
 		if (levelUpButton != null) {
 			levelUpButton.setFixedWidth(getBounds().width);
@@ -116,14 +119,14 @@ public class ShipPartLevelOverviewArea extends Component {
 			levelUpButton.setPosition(getBounds().x, getBounds().y);
 			
 			minLabel.setPosition(getBounds().x, getBounds().y + 40f);
-			maxLabel.setPosition(getBounds().x + getBounds().width - 25f, getBounds().y + 40f);
+			if (maxLabel != null) maxLabel.setPosition(getBounds().x + getBounds().width - 40f, getBounds().y + 40f);
 			tagLabel.setPosition(getBounds().x, getBounds().y + 10 + 40f);
-			partProgressBar.setPosition(getBounds().x + 30, getBounds().y + 40f);
+			partProgressBar.setPosition(getBounds().x + 45, getBounds().y + 40f);
 		} else {
 			minLabel.setPosition(getBounds().x, getBounds().y);
-			maxLabel.setPosition(getBounds().x + getBounds().width - 25f, getBounds().y);
+			if (maxLabel != null) maxLabel.setPosition(getBounds().x + getBounds().width - 40f, getBounds().y);
 			tagLabel.setPosition(getBounds().x, getBounds().y + 10);
-			partProgressBar.setPosition(getBounds().x + 30, getBounds().y);
+			partProgressBar.setPosition(getBounds().x + 45, getBounds().y);
 		}
 	}
 	
@@ -134,7 +137,7 @@ public class ShipPartLevelOverviewArea extends Component {
 		levelUpInfoSection.render();
 		tagLabel.render();
 		minLabel.render();
-		maxLabel.render();
+		if (maxLabel != null) maxLabel.render();
 		partProgressBar.render();
 		if (levelUpButton != null) {
 			Shapes.draw(EQRectangle.builder()
@@ -167,7 +170,7 @@ public class ShipPartLevelOverviewArea extends Component {
 		levelUpInfoSection.dispose();
 		tagLabel.dispose();
 		minLabel.dispose();
-		maxLabel.dispose();
+		if (maxLabel != null) maxLabel.dispose();
 		partProgressBar.dispose();
 	}
 

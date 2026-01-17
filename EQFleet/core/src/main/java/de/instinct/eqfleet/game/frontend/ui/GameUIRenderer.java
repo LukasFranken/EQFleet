@@ -483,7 +483,7 @@ public class GameUIRenderer {
 				}
 			}
 			Turret turret = EngineUtility.getPlanetTurret(state.turrets, hovered.id);
-			if (turret != null) {
+			if (turret != null && turret.data.weapons.size() > 0) {
 				shapeRenderer.end();
 				setDensityLineWidth();
 				shapeRenderer.begin(ShapeRenderer.ShapeType.Line);

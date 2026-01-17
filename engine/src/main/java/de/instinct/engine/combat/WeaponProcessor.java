@@ -3,6 +3,7 @@ package de.instinct.engine.combat;
 import de.instinct.engine.combat.projectile.ProjectileProcessor;
 import de.instinct.engine.combat.unit.Unit;
 import de.instinct.engine.combat.unit.component.Weapon;
+import de.instinct.engine.entity.EntityManager;
 import de.instinct.engine.model.GameState;
 
 public class WeaponProcessor {
@@ -23,11 +24,13 @@ public class WeaponProcessor {
 		}
 	}
     
-    public void fireAtTarget(Unit unit, Unit closestInRangeTarget, GameState state, long deltaTime) {
+    public void aimAtTarget(Unit unit, Unit closestTarget, GameState state, long deltaTime) {
         for (Weapon weapon : unit.weapons) {
         	if (weapon.currentCooldown == 0) {
-                state.projectiles.add(projectileProcessor.createProjectile(unit, weapon.id, closestInRangeTarget, state));
-                weapon.currentCooldown = weapon.data.cooldown;
+                if (EntityManager.entityDistance(unit, closestTarget) <= weapon.data.range) {
+                	state.projectiles.add(projectileProcessor.createProjectile(unit, weapon.id, closestTarget, state));
+                    weapon.currentCooldown = weapon.data.cooldown;
+                }
             }
         }
     }
