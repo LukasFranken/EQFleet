@@ -13,5 +13,6 @@ public class WeaponStatistic extends ComponentStatistic {
 	private float damageDealt;
 	private int shotsFired;
 	private int kills;
+	private float cooledDownSec;
 
 }

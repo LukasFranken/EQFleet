@@ -183,24 +183,28 @@ public class ProjectileProcessor extends EntityProcessor {
 		
 		PlayerStatistic originUnitOwnerStatistic = StatCollector.getPlayer(state.gameUUID, projectile.ownerId);
 		UnitStatistic unitStat = originUnitOwnerStatistic.getUnit(projectile.originModel);
-		for (WeaponStatistic weaponStat : unitStat.getWeaponStatistics()) {
-			if (weaponStat.getId() == projectile.weaponId) {
-				weaponStat.setDamageDealt(weaponStat.getDamageDealt() + projectile.damage);
-				
-				if (target.hull.currentStrength <= 0) {
-					weaponStat.setKills(weaponStat.getKills() + 1);
+		if (unitStat.getWeaponStatistics() != null) {
+			for (WeaponStatistic weaponStat : unitStat.getWeaponStatistics()) {
+				if (weaponStat.getId() == projectile.weaponId) {
+					weaponStat.setDamageDealt(weaponStat.getDamageDealt() + projectile.damage);
+					
+					if (target.hull.currentStrength <= 0) {
+						weaponStat.setKills(weaponStat.getKills() + 1);
+					}
 				}
 			}
 		}
 		
 		PlayerStatistic targetUnitOwnerStatistic = StatCollector.getPlayer(state.gameUUID, target.ownerId);
 		UnitStatistic targetUnitStat = targetUnitOwnerStatistic.getUnit(target.data.model);
-		targetUnitStat.getHullStatistic().setDamageTaken(targetUnitStat.getHullStatistic().getDamageTaken() + finalHullDamage);
-		for (ShieldDamageInstance shieldDamageInstance : shieldDamageInstances) {
-			for (ShieldStatistic shieldStat : targetUnitStat.getShieldStatistics()) {
-				if (shieldStat.getId() == shieldDamageInstance.getShieldId()) {
-					shieldStat.setDamageAbsorped(shieldStat.getDamageAbsorped() + shieldDamageInstance.getDamage());
-					shieldStat.setDamageInstancesBlocked(shieldStat.getDamageInstancesBlocked() + 1);
+		if (targetUnitStat.getHullStatistic() != null) targetUnitStat.getHullStatistic().setDamageTaken(targetUnitStat.getHullStatistic().getDamageTaken() + finalHullDamage);
+		if (targetUnitStat.getShieldStatistics() != null) {
+			for (ShieldDamageInstance shieldDamageInstance : shieldDamageInstances) {
+				for (ShieldStatistic shieldStat : targetUnitStat.getShieldStatistics()) {
+					if (shieldStat.getId() == shieldDamageInstance.getShieldId()) {
+						shieldStat.setDamageAbsorped(shieldStat.getDamageAbsorped() + shieldDamageInstance.getDamage());
+						shieldStat.setDamageInstancesBlocked(shieldStat.getDamageInstancesBlocked() + 1);
+					}
 				}
 			}
 		}
@@ -250,9 +254,11 @@ public class ProjectileProcessor extends EntityProcessor {
         
         PlayerStatistic originUnitOwnerStatistic = StatCollector.getPlayer(state.gameUUID, origin.ownerId);
 		UnitStatistic unitStat = originUnitOwnerStatistic.getUnit(origin.data.model);
-		for (WeaponStatistic weaponStat : unitStat.getWeaponStatistics()) {
-			if (weaponStat.getId() == weapon.id) {
-				weaponStat.setShotsFired(weaponStat.getShotsFired() + 1);
+		if (unitStat.getWeaponStatistics() != null) {
+			for (WeaponStatistic weaponStat : unitStat.getWeaponStatistics()) {
+				if (weaponStat.getId() == weapon.id) {
+					weaponStat.setShotsFired(weaponStat.getShotsFired() + 1);
+				}
 			}
 		}
         return projectile;

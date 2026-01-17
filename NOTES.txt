@@ -1,6 +1,11 @@
 ALPHA RELEASE TODO:
 
 GENERAL:
+- new stat adds:
+ -> weapon:cooled down MS
+ -> shield:damage instances blocked
+ -> core:times destroyed
+
 - DRASTICALLY IMPROVE GAME NETWORKING AND BUFFER SIZES
 
 - appicon, ios loadscreen etc.

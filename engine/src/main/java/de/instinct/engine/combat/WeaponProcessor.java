@@ -5,6 +5,10 @@ import de.instinct.engine.combat.unit.Unit;
 import de.instinct.engine.combat.unit.component.Weapon;
 import de.instinct.engine.entity.EntityManager;
 import de.instinct.engine.model.GameState;
+import de.instinct.engine.stats.StatCollector;
+import de.instinct.engine.stats.model.PlayerStatistic;
+import de.instinct.engine.stats.model.unit.UnitStatistic;
+import de.instinct.engine.stats.model.unit.component.types.WeaponStatistic;
 
 public class WeaponProcessor {
     
@@ -14,13 +18,24 @@ public class WeaponProcessor {
         projectileProcessor = new ProjectileProcessor();
     }
     
-    public void updateWeapons(Unit unit, long deltaTime) {
+    public void updateWeapons(GameState state, Unit unit, long deltaTime) {
     	for (Weapon weapon : unit.weapons) {
+    		float cooledDownMS = deltaTime;
     		if (weapon.currentCooldown <= deltaTime) {
+    			cooledDownMS = weapon.currentCooldown;
     			weapon.currentCooldown = 0;
     		} else {
     			weapon.currentCooldown -= deltaTime;
     		}
+    		PlayerStatistic originUnitOwnerStatistic = StatCollector.getPlayer(state.gameUUID, unit.ownerId);
+			UnitStatistic unitStat = originUnitOwnerStatistic.getUnit(unit.data.model);
+			if (unitStat.getWeaponStatistics() != null) {
+				for (WeaponStatistic weaponStat : unitStat.getWeaponStatistics()) {
+					if (weaponStat.getId() == weapon.id) {
+						weaponStat.setCooledDownSec(weaponStat.getCooledDownSec() + cooledDownMS);
+					}
+				}
+			}
 		}
 	}
     

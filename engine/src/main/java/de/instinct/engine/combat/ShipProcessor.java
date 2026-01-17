@@ -45,6 +45,11 @@ public class ShipProcessor extends UnitProcessor {
 		newShip.targetPlanetId = movement.toPlanetId;
 		newShip.radius = 3;
 		state.ships.add(newShip);
+		
+		ShipStatistic shipStatistic = StatCollector.getPlayer(state.gameUUID, newShip.ownerId).getShip(newShip.data.model);
+		shipStatistic.getCoreStatistic().setTimesBuilt(shipStatistic.getCoreStatistic().getTimesBuilt() + 1);
+		shipStatistic.getCoreStatistic().setResourcesUsed(shipStatistic.getCoreStatistic().getResourcesUsed() + shipData.resourceCost);
+		shipStatistic.getCoreStatistic().setCpUsed(shipStatistic.getCoreStatistic().getCpUsed() + shipData.cpCost);
 	}
 	
 	private void moveShip(Ship ship, GameState state, long deltaTime) {

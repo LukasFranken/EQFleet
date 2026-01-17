@@ -21,6 +21,7 @@ import de.instinct.engine.model.ship.components.ShieldData;
 import de.instinct.engine.model.ship.components.WeaponData;
 import de.instinct.engine.stats.StatCollector;
 import de.instinct.engine.stats.model.PlayerStatistic;
+import de.instinct.engine.stats.model.unit.ShipStatistic;
 import de.instinct.engine.stats.model.unit.UnitStatistic;
 import de.instinct.engine.util.EngineUtility;
 
@@ -39,17 +40,22 @@ public abstract class UnitProcessor extends EntityProcessor {
 		super.updateEntity(unit, state, deltaTime);
 		if (unit.hull.currentStrength <= 0) {
 			unit.flaggedForDestroy = true;
+			PlayerStatistic originUnitOwnerStatistic = StatCollector.getPlayer(state.gameUUID, unit.ownerId);
+			UnitStatistic unitStat = originUnitOwnerStatistic.getUnit(unit.data.model);
+			if (unitStat instanceof ShipStatistic) ((ShipStatistic)unitStat).getCoreStatistic().setTimesDestroyed(((ShipStatistic)unitStat).getCoreStatistic().getTimesDestroyed() + 1);
 			return;
 		}
-		weaponProcessor.updateWeapons(unit, deltaTime);
-		defenseProcessor.updateDefense(unit, deltaTime);
+		weaponProcessor.updateWeapons(state, unit, deltaTime);
+		defenseProcessor.updateDefense(state, unit, deltaTime);
 		Unit closestTarget = getClosestTarget(unit, state);
 		if (closestTarget != null) weaponProcessor.aimAtTarget(unit, closestTarget, state, deltaTime);
 	}
 	
 	public boolean isInCombatRange(Unit unit, GameState state) {
 		if (!unit.weapons.isEmpty()) {
-			if (EntityManager.entityDistance(unit, getClosestTarget(unit, state)) <= unit.weapons.get(0).data.range) {
+			Unit closestTarget = getClosestTarget(unit, state);
+			if (closestTarget == null) return false;
+			if (EntityManager.entityDistance(unit, closestTarget) <= unit.weapons.get(0).data.range) {
 				return true;
 			}
 		}
