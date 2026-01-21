@@ -243,7 +243,7 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 		popupContent.getElements().add(shipModelPreview);
 		
 		for (PlayerShipComponentLevel playerComponentLevel : playerShip.getComponentLevels()) {
-			ShipPartOverview partOverview = new ShipPartOverview(popupWidth, playerComponentLevel, getComponent(playerComponentLevel.getId(), shipBlueprint));
+			ShipPartOverview partOverview = new ShipPartOverview(popupWidth, playerComponentLevel, getComponent(playerComponentLevel.getComponentId(), shipBlueprint));
 			popupContent.getElements().add(partOverview);
 		}
 		

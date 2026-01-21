@@ -65,12 +65,12 @@ public class ShipPartLevelOverviewArea extends Component {
 		tagLabel.setType(FontType.SMALL);
 		tagLabel.setColor(config.getPartColor());
 		
-		minLabel = new Label(StringUtils.format(config.getMinValue(), 1));
+		minLabel = new Label(StringUtils.formatBigNumber((long)config.getCurrentValue(), 0));
 		minLabel.setHorizontalAlignment(HorizontalAlignment.RIGHT);
 		minLabel.setType(FontType.TINY);
 		minLabel.setColor(config.getPartColor());
 		if (config.getMaxValue() != -1) {
-			maxLabel = new Label(StringUtils.format(config.getMaxValue(), 1));
+			maxLabel = new Label(StringUtils.formatBigNumber((long)config.getMaxValue(), 0));
 			maxLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
 			maxLabel.setType(FontType.TINY);
 			maxLabel.setColor(config.getPartColor());
@@ -78,7 +78,7 @@ public class ShipPartLevelOverviewArea extends Component {
 		
 		partProgressBar = new PlainRectangularLoadingBar();
 		partProgressBar.setBar(TextureManager.createTexture(config.getPartColor()));
-		partProgressBar.setCurrentValue(config.getCurrentValue() - config.getMinValue());
+		partProgressBar.setCurrentValue(config.getCurrentValue());
 		partProgressBar.setMaxValue(config.getMaxValue() == -1 ? config.getMinValue() : config.getMaxValue() - config.getMinValue());
 		partProgressBar.setBorder(border);
 		partProgressBar.setFixedHeight(5f);
