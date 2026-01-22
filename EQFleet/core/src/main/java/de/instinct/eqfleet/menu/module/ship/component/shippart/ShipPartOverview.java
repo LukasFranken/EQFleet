@@ -1,7 +1,11 @@
 package de.instinct.eqfleet.menu.module.ship.component.shippart;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
@@ -120,19 +124,7 @@ public class ShipPartOverview extends Component {
 			}
 		}
 		
-		List<LevelUpInfo> levelUpInfos = new ArrayList<>();
 		if (currentLevel != null) {
-			for (ComponentAttribute attribute : currentLevel.getAttributes()) {
-				double currentValue = attribute.getValue();
-				double nextValue = nextLevel != null ? ShipyardUtility.getAttribute(nextLevel, attribute.getId()).getValue() : 0;
-				levelUpInfos.add(LevelUpInfo.builder()
-						.tagValue(ShipyardUtility.getAttributeName(attribute).replaceAll("_", " "))
-						.currentValue(StringUtils.format(currentValue, 1))
-						.changeValue(nextLevel != null ? (nextValue - currentValue > 0 ? "+" : "") + StringUtils.format(nextValue - currentValue, 1) : "")
-						.nextValue(nextLevel != null ? StringUtils.format(nextValue, 1) : "")
-						.build());
-			}
-			
 			ShipPartLevelOverviewArea partLevelOverviewArea = 
 					new ShipPartLevelOverviewArea(ShipPartLevelOverviewAreaConfig.builder()
 							.tag(ShipyardUtility.getComponentLevelType(currentLevel).replaceAll("_", " "))
@@ -145,7 +137,7 @@ public class ShipPartOverview extends Component {
 							.infoSectionConfig(LevelUpInfoSectionConfig.builder()
 									.currentLevel(currentLevel.getLevel())
 									.nextLevel(nextLevel != null ? nextLevel.getLevel() : -1)
-									.levelUpInfos(levelUpInfos)
+									.levelUpInfos(getLevelUpInfos(currentLevel, nextLevel))
 									.color(partColor)
 									.build())
 							.build());
@@ -165,6 +157,43 @@ public class ShipPartOverview extends Component {
 				.windowColor(windowColor)
 				.titleColor(partColor)
 				.build());
+	}
+
+	private List<LevelUpInfo> getLevelUpInfos(ComponentLevel currentLevel, ComponentLevel nextLevel) {
+		List<LevelUpInfo> levelUpInfos = new ArrayList<>();
+		Map<Integer, ComponentAttribute> currentAttrs = new HashMap<>();
+		if (currentLevel != null) {
+			for (ComponentAttribute attr : currentLevel.getAttributes()) {
+				currentAttrs.put(attr.getId(), attr);
+		    }
+		}
+
+		Map<Integer, ComponentAttribute> nextAttrs = new HashMap<>();
+		if (nextLevel != null) {
+			for (ComponentAttribute attr : nextLevel.getAttributes()) {
+				nextAttrs.put(attr.getId(), attr);
+			}
+		}
+
+		Set<Integer> allIds = new HashSet<>(currentAttrs.keySet());
+		allIds.addAll(nextAttrs.keySet());
+
+		for (Integer id : allIds) {
+			ComponentAttribute currAttr = currentAttrs.get(id);
+			ComponentAttribute nextAttr = nextAttrs.get(id);
+			ComponentAttribute attrForName = currAttr != null ? currAttr : nextAttr;
+
+			double currentValue = currAttr != null ? currAttr.getValue() : 0;
+			double nextValue = nextAttr != null ? nextAttr.getValue() : 0;
+
+		 	levelUpInfos.add(LevelUpInfo.builder()
+		                .tagValue(ShipyardUtility.getAttributeName(attrForName).replaceAll("_", " "))
+		                .currentValue(StringUtils.format(currentValue, 1))
+		                .changeValue(nextAttr != null ? (nextValue - currentValue > 0 ? "+" : "") + StringUtils.format(nextValue - currentValue, 1) : "")
+		                .nextValue(nextAttr != null ? StringUtils.format(nextValue, 1) : "")
+		                .build());
+		}
+		return levelUpInfos;
 	}
 
 	private String getDescription(String subtype) {

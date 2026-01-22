@@ -115,26 +115,22 @@ public abstract class UnitProcessor extends EntityProcessor {
 		unit.hull.currentStrength = unit.data.hull.strength;
 		unit.hull.data = unit.data.hull;
 		
-		int shieldId = 0;
 		unit.shields = new ArrayList<>();
 		for (ShieldData shieldData : unit.data.shields) {
 			Shield shield = new Shield();
 			shield.data = shieldData;
-			shield.id = shieldId;
+			shield.id = shieldData.id;
 			shield.currentStrength = shieldData.strength;
 			unit.shields.add(shield);
-			shieldId++;
 		}
 		
-		int weaponId = 0;
 		unit.weapons = new ArrayList<>();
 		for (WeaponData weaponData : unit.data.weapons) {
 			Weapon weapon = new Weapon();
 			weapon.data = weaponData;
-			weapon.id = weaponId;
+			weapon.id = weaponData.id;
 			weapon.currentCooldown = 0f;
 			unit.weapons.add(weapon);
-			weaponId++;
 		}
 		
 		UnitStatistic unitStat = playerStat.getUnit(unit.data.model);

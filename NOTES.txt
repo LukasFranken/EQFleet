@@ -1,15 +1,10 @@
 ALPHA RELEASE TODO:
 
 GENERAL:
-- new stat adds:
- -> weapon:cooled down MS
- -> shield:damage instances blocked
- -> core:times destroyed
- 
 - complexify the game through internal ai chip upgrade
  -> e.g. ship component complexity
   ->at start only speed,dmg,shield,hull
-  ->animation: download -> visible ship inspection 
+  ->animation: download -> visible ship inspection
 
 - DRASTICALLY IMPROVE GAME NETWORKING AND BUFFER SIZES
 
@@ -91,7 +86,7 @@ META:
  -> turret blueprints
 
 BUGS:
-- random amazon requests crash gameserver and maybe others
+- postgame rankup popup messed up
 - gameserver rubberbanding
 - console not typeable after name setting
 - doesnt leave lobby after conquest

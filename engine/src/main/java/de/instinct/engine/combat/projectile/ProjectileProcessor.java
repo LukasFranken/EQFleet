@@ -212,7 +212,13 @@ public class ProjectileProcessor extends EntityProcessor {
 
 	public Projectile createProjectile(Unit origin, int weaponId, Unit target, GameState state) {
         Projectile projectile = null;
-        Weapon weapon = origin.weapons.get(weaponId);
+        Weapon weapon = null;
+        for (Weapon w : origin.weapons) {
+			if (w.id == weaponId) {
+				weapon = w;
+				break;
+			}
+		}        
         switch (weapon.data.type) {
 		case PROJECTILE:
 			projectile = new DirectionalProjectile();
