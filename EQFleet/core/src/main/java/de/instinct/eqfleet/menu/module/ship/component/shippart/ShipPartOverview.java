@@ -130,7 +130,7 @@ public class ShipPartOverview extends Component {
 							.tag(ShipyardUtility.getComponentLevelType(currentLevel).replaceAll("_", " "))
 							.partColor(partColor)
 							.componentType(ShipyardUtility.getShipComponentSubtype(component).replaceAll("_", " "))
-							.componentDescription(getDescription(ShipyardUtility.getShipComponentSubtype(component)))
+							.componentDescription(ShipSubtypeDescription.get(ShipyardUtility.getShipComponentSubtype(component)))
 							.currentValue(shipComponentLevel.getProgress())
 							.minValue(currentLevel.getRequirementValue())
 							.maxValue(nextLevel != null ? nextLevel.getRequirementValue() : -1)
@@ -194,10 +194,6 @@ public class ShipPartOverview extends Component {
 		                .build());
 		}
 		return levelUpInfos;
-	}
-
-	private String getDescription(String subtype) {
-		return "While lacking in firepower\nand durability, fighters\nare cheap and fast.";
 	}
 
 	@Override

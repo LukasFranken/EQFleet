@@ -4,6 +4,9 @@ GENERAL:
 - fix aim prediction
 - fix cooled down sec
 - add bonus to level win by full elimination
+- type descriptions
+- better nullpoint shield bar visual (fragmentbar)
+- better distance travel values
 
 - complexify the game through internal ai chip upgrade
  -> e.g. ship component complexity
