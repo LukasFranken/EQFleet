@@ -7,6 +7,9 @@ GENERAL:
 - type descriptions
 - better nullpoint shield bar visual (fragmentbar)
 - better distance travel values
+- cp quest bug too many
+- add planets conquered ship core stat
+- change target priority to enemy over neutral
 
 - complexify the game through internal ai chip upgrade
  -> e.g. ship component complexity
