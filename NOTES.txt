@@ -1,6 +1,10 @@
 ALPHA RELEASE TODO:
 
 GENERAL:
+- fix aim prediction
+- fix cooled down sec
+- add bonus to level win by full elimination
+
 - complexify the game through internal ai chip upgrade
  -> e.g. ship component complexity
   ->at start only speed,dmg,shield,hull
