@@ -249,7 +249,7 @@ public class ProjectileProcessor extends EntityProcessor {
         	Vector2 startPosition = VectorUtil.getTargetPosition(origin.position, target.position, origin.radius);
         	projectile.position = startPosition;
 			((HomingProjectile) projectile).targetId = target.id;
-			projectile.lifetimeMS = 3000;
+			projectile.lifetimeMS = (int)((weapon.data.range / projectile.movementSpeed) * 1.2f) * 1000;
 			((HomingProjectile) projectile).lastDirection = VectorUtil.getDirection(projectile.position, target.position);
 		}
         if (projectile instanceof DirectionalProjectile) {

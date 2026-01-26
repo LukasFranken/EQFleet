@@ -28,7 +28,7 @@ public class ShipSubtypeDescription {
 			case "plasma":
 				return "Constant generation of high-\ntemperature plasma allows for\nregenerative matter and energy\nabsorption.";
 			case "nullpoint":
-				return "Nullpoint shields can fully absorb\nincoming damage by creating a\nshort-lived black hole.";
+				return "Nullpoint shields can fully\nabsorb incoming damage by\ncreating a short-lived\nblack hole.";
 			case "graviton":
 				return "Through short-burst gravitational\nwave emission, graviton shields\ncan reflect incoming projectiles.";
 				

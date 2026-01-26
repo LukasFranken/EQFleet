@@ -16,7 +16,7 @@ public class ModuleManager {
 		moduleOpenMessages = new ArrayList<>();
 		moduleOpenMessages.add(InitialModuleOpenMessage.builder()
 				.module(MenuModule.STARMAP)
-				.message("Prepare for battle\nand conquer the galaxy!\n\nRemember to regularly check the\nmenu for unlocked modules!")
+				.message("Prepare for battle\nand conquer the galaxy!\n\n ...and more.")
 				.opened(preferenceLoadedModules.contains(MenuModule.STARMAP.toString()))
 				.build());
 		moduleOpenMessages.add(InitialModuleOpenMessage.builder()
@@ -36,13 +36,8 @@ public class ModuleManager {
 				.build());
 		moduleOpenMessages.add(InitialModuleOpenMessage.builder()
 				.module(MenuModule.SHIPYARD)
-				.message("View your ships and select\nthem for use in battle")
+				.message("Manage and customize your fleet.\nYou can also view your ships\nupgrade process.")
 				.opened(preferenceLoadedModules.contains(MenuModule.SHIPYARD.toString()))
-				.build());
-		moduleOpenMessages.add(InitialModuleOpenMessage.builder()
-				.module(MenuModule.WORKSHOP)
-				.message("Upgrade ships and build new\nones from blueprints you own")
-				.opened(preferenceLoadedModules.contains(MenuModule.WORKSHOP.toString()))
 				.build());
 		moduleOpenMessages.add(InitialModuleOpenMessage.builder()
 				.module(MenuModule.SHOP)

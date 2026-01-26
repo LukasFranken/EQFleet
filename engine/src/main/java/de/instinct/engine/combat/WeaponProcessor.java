@@ -32,7 +32,7 @@ public class WeaponProcessor {
 			if (unitStat.getWeaponStatistics() != null) {
 				for (WeaponStatistic weaponStat : unitStat.getWeaponStatistics()) {
 					if (weaponStat.getId() == weapon.id) {
-						weaponStat.setCooledDownSec(weaponStat.getCooledDownSec() + cooledDownMS);
+						weaponStat.setCooledDownSec(weaponStat.getCooledDownSec() + ((float)cooledDownMS / 1000f));
 					}
 				}
 			}

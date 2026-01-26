@@ -79,7 +79,7 @@ public class ShipPartLevelOverviewArea extends Component {
 		partProgressBar = new PlainRectangularLoadingBar();
 		partProgressBar.setBar(TextureManager.createTexture(config.getPartColor()));
 		partProgressBar.setCurrentValue(config.getCurrentValue());
-		partProgressBar.setMaxValue(config.getMaxValue() == -1 ? config.getMinValue() : config.getMaxValue() - config.getMinValue());
+		partProgressBar.setMaxValue(config.getMaxValue() == -1 ? config.getMinValue() : config.getMaxValue());
 		partProgressBar.setBorder(border);
 		partProgressBar.setFixedHeight(5f);
 		partProgressBar.setCustomDescriptor("");

@@ -38,6 +38,7 @@ public class ShipPartLevelArea extends Component {
 		partProgressBar.setBar(TextureManager.createTexture(partColor));
 		partProgressBar.setCurrentValue(currentValue);
 		partProgressBar.setMaxValue(maxValue);
+		System.out.println("Current Value: " + currentValue + " / Max Value: " + maxValue);
 		Border barBorder = new Border();
 		barBorder.setSize(1f);
 		barBorder.setColor(partColor);

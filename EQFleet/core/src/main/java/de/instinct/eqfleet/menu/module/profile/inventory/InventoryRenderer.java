@@ -28,6 +28,7 @@ public class InventoryRenderer extends BaseModuleRenderer {
 
 	@Override
 	public void reload() {
+		resourceStacks.clear();
 		if (InventoryModel.resources != null) {
 			float step = 20f;
 			int i = 1;
