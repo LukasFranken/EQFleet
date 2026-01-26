@@ -2,23 +2,18 @@ ALPHA RELEASE TODO:
 
 GENERAL:
 - fix aim prediction
-- fix cooled down sec
 - add bonus to level win by full elimination
-- type descriptions
 - better nullpoint shield bar visual (fragmentbar)
-- better distance travel values
-- cp quest bug too many
 - add planets conquered ship core stat
-- change target priority to enemy over neutral
-- implement full gamestatusship logs but remove from main log
+- implement full game logs to control and remove from main log
 - starmap ui fix
 - fix explosion ui and sound
 - fix iphone sound lag
-- fix missile lifetime to dynamic for slow missiles
-- add fallout to shop
 - add control shop
 - fix partial games giving full exp reward
 - fix shippart maxlevel ui bug
+- add glow logic to shipyard
+- add glow logic as menu tutorial
 
 - complexify the game through internal ai chip upgrade
  -> e.g. ship component complexity
@@ -45,10 +40,6 @@ GENERAL:
  
 - postgame ship part progression screen
 
-- start ships very simple components
- -> maybe not even shields?
-
-- antimatter shields blocking dmg instaces
 - hawk-2a
 - with deep tutorial, but tutorial gives rewards
 

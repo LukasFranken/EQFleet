@@ -37,9 +37,16 @@ public class Shop extends BaseModule {
 	public boolean process(ModuleMessage message) {
 		if (message instanceof ReloadShopMessage) {
 			WebManager.enqueue(
-					() -> API.shop().data(API.authKey),
+					() -> API.shop().shop(),
 				    result -> {
 				    	ShopModel.shopData = result;
+				    	super.requireUIReload();
+				    }
+			);
+			WebManager.enqueue(
+					() -> API.shop().data(API.authKey),
+				    result -> {
+				    	ShopModel.playerShopData = result;
 				    	super.requireUIReload();
 				    }
 			);

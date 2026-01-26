@@ -151,7 +151,7 @@ public class ShopRenderer extends BaseModuleRenderer {
 
 	private ShopItemStage getCurrentStage(ShopItem item) {
 		int currentStageId = 0;
-		for (Purchase purchase : ShopModel.shopData.getPurchaseHistory()) {
+		for (Purchase purchase : ShopModel.playerShopData.getPurchaseHistory()) {
 			if (purchase.getItemId() == item.getId()) {
 				currentStageId++;
 			}
