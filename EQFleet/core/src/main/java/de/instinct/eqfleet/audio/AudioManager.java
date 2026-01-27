@@ -17,7 +17,7 @@ import de.instinct.eqlibgdxutils.generic.cache.Cache;
 import de.instinct.eqlibgdxutils.generic.cache.model.LoadSequence;
 
 public class AudioManager {
-	
+
 	private static final String LOGTAG = "AUDIO";
 
 	private static Music currentMusic;
@@ -30,11 +30,11 @@ public class AudioManager {
 	private static float targetMusicVolume = 0.5f;
 	private static final float swapDuration = 5f;
 	private static float currentSwapElapsed = 0f;
-	
+
 	private static float userMusicVolume = 0.5f;
 	private static float userVoiceVolume = 0.5f;
 	private static float userSfxVolume = 0.5f;
-	
+
 	private static boolean radioMode;
 
 	public static void init() {
@@ -92,7 +92,7 @@ public class AudioManager {
 			}
 		}
 	}
-	
+
 	public static void startRadio() {
 		radioMode = true;
 	}
@@ -151,16 +151,20 @@ public class AudioManager {
 	}
 
 	public static void stopAllSfx() {
-		for (Sound sfx : sfxs.getAllLoadedElements()) sfx.stop();
+		for (Sound sfx : sfxs.getAllLoadedElements())
+			sfx.stop();
 	}
-	
+
 	public static void stopAllVoices() {
-		for (Music voice : voices.getAllLoadedElements()) voice.stop();
+		for (Music voice : voices.getAllLoadedElements())
+			voice.stop();
 	}
 
 	public static void dispose() {
-		for (Sound sfx : sfxs.getAllLoadedElements()) sfx.dispose();
-		for (Music voice : voices.getAllLoadedElements()) voice.dispose();
+		for (Sound sfx : sfxs.getAllLoadedElements())
+			sfx.dispose();
+		for (Music voice : voices.getAllLoadedElements())
+			voice.dispose();
 	}
 
 	public static void updateUserMusicVolume(float newValue) {
@@ -169,11 +173,11 @@ public class AudioManager {
 			currentMusic.setVolume(targetMusicVolume * userMusicVolume);
 		}
 	}
-	
+
 	public static void updateUserVoiceVolume(float newValue) {
 		userVoiceVolume = newValue;
 	}
-	
+
 	public static void updateUserSfxVolume(float newValue) {
 		userSfxVolume = newValue;
 	}
@@ -181,11 +185,11 @@ public class AudioManager {
 	public static float getUserMusicVolume() {
 		return userMusicVolume;
 	}
-	
+
 	public static float getUserVoiceVolume() {
 		return userVoiceVolume;
 	}
-	
+
 	public static float getUserSfxVolume() {
 		return userSfxVolume;
 	}
@@ -193,11 +197,11 @@ public class AudioManager {
 	public static void saveUserMusicVolume(float currentValue) {
 		PreferenceManager.save("musicvolume", StringUtils.format(currentValue, 2));
 	}
-	
+
 	public static void saveUserVoiceVolume(float currentValue) {
 		PreferenceManager.save("voicevolume", StringUtils.format(currentValue, 2));
 	}
-	
+
 	public static void saveUserSfxVolume(float currentValue) {
 		PreferenceManager.save("sfxvolume", StringUtils.format(currentValue, 2));
 	}

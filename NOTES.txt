@@ -6,14 +6,14 @@ GENERAL:
 - better nullpoint shield bar visual (fragmentbar)
 - add planets conquered ship core stat
 - implement full game logs to control and remove from main log
-- starmap ui fix
 - fix explosion ui and sound
-- fix iphone sound lag
-- add control shop
+- fix iphone sound stutter
+- add item edit modal logic to control shop
+ -> generalize effect handling
 - fix partial games giving full exp reward
-- fix shippart maxlevel ui bug
-- add glow logic to shipyard
-- add glow logic as menu tutorial
+- add glow buttonlogic to shipyard
+- add glow buttonlogic as menu tutorial
+- remove nullpoint from weaker neutrals
 
 - complexify the game through internal ai chip upgrade
  -> e.g. ship component complexity
@@ -82,14 +82,13 @@ ship part: flash if level up ready
 - after game, move to main menu and highlight unlocks
 - reward cash with digital number up sound
  -> make rewards more appealing
- 
-- shipyard rework
- -> upgrade parts individually: weapon, defense, engine
- -> seperate parts visually
- -> unlock ship levels with use (weapon damage, engine traveled, defense tanked)
- -> postgame screen show progress with 3 colored bars
- 
 GAME:
+
+ability ideas
+-> called flagship (appears visually on screen, origin of casts)
+ -> use skilltree from eqidle with alternative paths based on use
+  -> eg ion beam: boost friendly planet shield regen by 3x for 5 sec
+  -> OR disable enemy planet shield regen for 3 seconds
 
 META:
 - shop

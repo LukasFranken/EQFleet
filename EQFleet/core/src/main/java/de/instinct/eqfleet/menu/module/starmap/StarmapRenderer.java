@@ -71,7 +71,7 @@ public class StarmapRenderer extends BaseModuleRenderer {
 
 	private DecalBatch decalBatch;
 	private ColorButton backButton;
-	
+
 	private boolean isLoading;
 	private Rectangle screenAdjustedModuleBounds;
 
@@ -100,9 +100,7 @@ public class StarmapRenderer extends BaseModuleRenderer {
 			loadingLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
 			loadingLabel.setFixedHeight(100f);
 			loadingLabel.setFixedWidth(MenuModel.moduleBounds.width);
-			loadingLabel.setPosition(
-					MenuModel.moduleBounds.x,
-					MenuModel.moduleBounds.y + (MenuModel.moduleBounds.height / 2) - (100 / 2));
+			loadingLabel.setPosition(MenuModel.moduleBounds.x, MenuModel.moduleBounds.y + (MenuModel.moduleBounds.height / 2) - (100 / 2));
 			loadingLabel.setColor(Color.WHITE);
 			loadingLabel.render();
 		}
@@ -116,15 +114,11 @@ public class StarmapRenderer extends BaseModuleRenderer {
 				galaxyZoomElapsed -= Gdx.graphics.getDeltaTime();
 			}
 			galaxyZoomElapsed = MathUtil.clamp(galaxyZoomElapsed, 0, zoomDuration);
-			
-			galaxyZoomFactor = MathUtil.easeInOut(0, 1, galaxyZoomElapsed / zoomDuration);
-		    Vector3 targetPos = new Vector3(BASE_CAM_POS);
 
-		    targetPos.lerp(
-		      new Vector3(selectedGalaxy.getData().getMapPosX(), 
-		                  selectedGalaxy.getData().getMapPosY(), 
-		                  15f),
-		      galaxyZoomFactor);
+			galaxyZoomFactor = MathUtil.easeInOut(0, 1, galaxyZoomElapsed / zoomDuration);
+			Vector3 targetPos = new Vector3(BASE_CAM_POS);
+
+			targetPos.lerp(new Vector3(selectedGalaxy.getData().getMapPosX(), selectedGalaxy.getData().getMapPosY(), 15f), galaxyZoomFactor);
 			camera.position.set(targetPos);
 			camera.update();
 			if (galaxyZoomFactor >= 1f) {
@@ -166,68 +160,75 @@ public class StarmapRenderer extends BaseModuleRenderer {
 			renderGalaxy(galaxy);
 		}
 		decalBatch.flush();
-		
-		if (galaxyZoomElapsed > zoomDuration - darkeningDuration) 
-			TextureManager.draw(TextureManager.createTexture(Color.BLACK),
-				GraphicsUtil.screenBounds(),
-				MathUtil.linear(0, 0.5f, (galaxyZoomElapsed - (zoomDuration - darkeningDuration)) / darkeningDuration));
+
+		if (galaxyZoomElapsed > zoomDuration - darkeningDuration)
+			TextureManager.draw(TextureManager.createTexture(Color.BLACK), GraphicsUtil.screenBounds(),
+					MathUtil.linear(0, 0.5f, (galaxyZoomElapsed - (zoomDuration - darkeningDuration)) / darkeningDuration));
 	}
 
 	private void renderGalaxy(Galaxy galaxy) {
-		Decal decal = galaxy.getDecal();
-		Color currentColor = decal.getColor();
-	    decal.setColor(currentColor.r, currentColor.g, currentColor.b, MenuModel.alpha);
-		decal.lookAt(camera.position, camera.up);
-		decalBatch.add(decal);
-		
-		Vector3 renderingViewportScreenPos = camera.project(new Vector3(
-	            galaxy.getData().getMapPosX(), 
-	            galaxy.getData().getMapPosY(), 
-	            0));
-		galaxy.setScreenPos(GraphicsUtil.scaleFactorDeducted(MathUtil.translate(
-				new Vector2(renderingViewportScreenPos.x, renderingViewportScreenPos.y),
-				GraphicsUtil.screenBounds(),
-				MenuModel.moduleBounds)));
-	}
-	
-	private void renderGalaxyUI() {
-		if (galaxyZoomFactor < 0.05f) {
-			String campaignLabelString = "SOLO CONQUEST";
-			Label campaignLabel = new Label(campaignLabelString);
-			Border campaignBorder = new Border();
-			campaignBorder.setColor(new Color(SkinManager.skinColor));
-			campaignBorder.setSize(2f);
-			campaignLabel.setType(FontType.LARGE);
-			campaignLabel.setFixedWidth(FontUtil.getFontTextWidthPx(campaignLabelString.length(), FontType.LARGE) + 20f);
-			campaignLabel.setFixedHeight(40f);
-			campaignLabel.setPosition(MenuModel.moduleBounds.x + (MenuModel.moduleBounds.width / 2) - (campaignLabel.getFixedWidth() / 2), MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - 70f);
-			campaignLabel.setBorder(campaignBorder);
-			campaignLabel.setBackgroundColor(Color.BLACK);
-			campaignLabel.setAlpha(MenuModel.alpha);
-			campaignLabel.render();
-			for (Galaxy galaxy : galaxies) {
-				Label galaxyNameLabel = new Label(galaxy.getData().getName().toUpperCase());
-				galaxyNameLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
-				galaxyNameLabel.setType(FontType.SMALL);
-				galaxyNameLabel.setFixedWidth(100f);
-				galaxyNameLabel.setFixedHeight(20f);
-				galaxyNameLabel.setColor(Color.GRAY);
-				galaxyNameLabel.setAlpha(MenuModel.alpha);
-				galaxyNameLabel.setPosition(galaxy.getScreenPos().x - (galaxyNameLabel.getFixedWidth() / 2) + 5, galaxy.getScreenPos().y + 40f);
-				galaxyNameLabel.render();
-				
-				Label galaxyLevelLabel = new Label("Threat: " + getMinThreatLevel(galaxy) + "-" + getMaxThreatLevel(galaxy));
-				galaxyLevelLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
-				galaxyLevelLabel.setType(FontType.SMALL);
-				galaxyLevelLabel.setFixedWidth(100f);
-				galaxyLevelLabel.setFixedHeight(20f);
-				galaxyLevelLabel.setColor(Color.GRAY);
-				galaxyLevelLabel.setAlpha(MenuModel.alpha);
-				galaxyLevelLabel.setPosition(galaxy.getScreenPos().x - (galaxyNameLabel.getFixedWidth() / 2) + 5, galaxy.getScreenPos().y - 40f);
-				galaxyLevelLabel.render();
-			}
-		}
-	}
+        Decal decal = galaxy.getDecal();
+        Color currentColor = decal.getColor();
+        decal.setColor(currentColor.r, currentColor.g, currentColor.b, MenuModel.alpha);
+        decal.lookAt(camera.position, camera.up);
+        decalBatch.add(decal);
+
+        Vector3 projectedPhysical = camera.project(
+                new Vector3(galaxy.getData().getMapPosX(), galaxy.getData().getMapPosY(), 0f),
+                screenAdjustedModuleBounds.x,
+                screenAdjustedModuleBounds.y,
+                screenAdjustedModuleBounds.width,
+                screenAdjustedModuleBounds.height
+        );
+
+        Vector2 projectedBaseScreen = GraphicsUtil.scaleFactorDeducted(new Vector2(projectedPhysical.x, projectedPhysical.y));
+        galaxy.setScreenPos(projectedBaseScreen);
+    }
+
+    private void renderGalaxyUI() {
+        if (galaxyZoomFactor < 0.05f) {
+            String campaignLabelString = "SOLO CONQUEST";
+            Label campaignLabel = new Label(campaignLabelString);
+            Border campaignBorder = new Border();
+            campaignBorder.setColor(new Color(SkinManager.skinColor));
+            campaignBorder.setSize(2f);
+            campaignLabel.setType(FontType.LARGE);
+            campaignLabel.setFixedWidth(FontUtil.getFontTextWidthPx(campaignLabelString.length(), FontType.LARGE) + 20f);
+            campaignLabel.setFixedHeight(40f);
+            campaignLabel.setPosition(
+                    MenuModel.moduleBounds.x + (MenuModel.moduleBounds.width / 2) - (campaignLabel.getFixedWidth() / 2),
+                    MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - 70f
+            );
+            campaignLabel.setBorder(campaignBorder);
+            campaignLabel.setBackgroundColor(Color.BLACK);
+            campaignLabel.setAlpha(MenuModel.alpha);
+            campaignLabel.render();
+
+            for (Galaxy galaxy : galaxies) {
+                Vector2 centerBaseScreen = galaxy.getScreenPos();
+
+                Label galaxyNameLabel = new Label(galaxy.getData().getName().toUpperCase());
+                galaxyNameLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
+                galaxyNameLabel.setType(FontType.SMALL);
+                galaxyNameLabel.setFixedWidth(100f);
+                galaxyNameLabel.setFixedHeight(20f);
+                galaxyNameLabel.setColor(Color.GRAY);
+                galaxyNameLabel.setAlpha(MenuModel.alpha);
+                galaxyNameLabel.setPosition(centerBaseScreen.x - (galaxyNameLabel.getFixedWidth() / 2f), centerBaseScreen.y + 20f);
+                galaxyNameLabel.render();
+
+                Label galaxyLevelLabel = new Label("Threat: " + getMinThreatLevel(galaxy) + "-" + getMaxThreatLevel(galaxy));
+                galaxyLevelLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
+                galaxyLevelLabel.setType(FontType.SMALL);
+                galaxyLevelLabel.setFixedWidth(100f);
+                galaxyLevelLabel.setFixedHeight(20f);
+                galaxyLevelLabel.setColor(Color.GRAY);
+                galaxyLevelLabel.setAlpha(MenuModel.alpha);
+                galaxyLevelLabel.setPosition(centerBaseScreen.x - (galaxyLevelLabel.getFixedWidth() / 2f), centerBaseScreen.y - 40f);
+                galaxyLevelLabel.render();
+            }
+        }
+    }
 
 	private int getMaxThreatLevel(Galaxy galaxy) {
 		int maxThreat = Integer.MIN_VALUE;
@@ -248,7 +249,7 @@ public class StarmapRenderer extends BaseModuleRenderer {
 		}
 		return minThreat;
 	}
-	
+
 	private void createCombatInfoPopup(StarsystemData starsystem) {
 		float popupWidth = 200;
 		ColorButton travelButton = DefaultButtonFactory.colorButton("Combat", new Action() {
@@ -270,7 +271,8 @@ public class StarmapRenderer extends BaseModuleRenderer {
 		mapPreviewSection.setFixedWidth(popupWidth);
 		mapPreviewSection.setFixedHeight(popupWidth * 1.5f);
 		systemInfoElements.getElements().add(mapPreviewSection);
-		if (hasAncient(starsystem.getMapPreview())) systemInfoElements.getElements().add(DefaultLabelFactory.createLabelStack("Req. AP", (int)starsystem.getAncientPoints() + "", popupWidth));
+		if (hasAncient(starsystem.getMapPreview()))
+			systemInfoElements.getElements().add(DefaultLabelFactory.createLabelStack("Req. AP", (int) starsystem.getAncientPoints() + "", popupWidth));
 		systemInfoElements.getElements().add(DefaultLabelFactory.createLabelStack("Threat Level", StringUtils.formatBigNumber(starsystem.getThreatLevel(), 0), popupWidth));
 		systemInfoElements.getElements().add(DefaultLabelFactory.createLabelStack("Duration", StringUtils.generateCountdownLabel(starsystem.getDuration(), false), popupWidth));
 		systemInfoElements.getElements().add(DefaultLabelFactory.createLabelStack("-------------", "-------------", popupWidth));
@@ -280,17 +282,14 @@ public class StarmapRenderer extends BaseModuleRenderer {
 			systemInfoElements.getElements().add(DefaultLabelFactory.createLabelStack(resource.getType().toString(), StringUtils.formatBigNumber(resource.getAmount()), popupWidth));
 		}
 		systemInfoElements.getElements().add(travelButton);
-		Popup systemInfoPopup = Popup.builder()
-				.closeOnClickOutside(true)
-				.title(starsystem.getName())
-				.contentContainer(systemInfoElements)
-				.build();
+		Popup systemInfoPopup = Popup.builder().closeOnClickOutside(true).title(starsystem.getName()).contentContainer(systemInfoElements).build();
 		PopupRenderer.create(systemInfoPopup);
 	}
 
 	private boolean hasAncient(MapPreview mapPreview) {
 		for (PreviewPlanet planet : mapPreview.getPlanets()) {
-			if (planet.isAncient()) return true;
+			if (planet.isAncient())
+				return true;
 		}
 		return false;
 	}
@@ -318,21 +317,16 @@ public class StarmapRenderer extends BaseModuleRenderer {
 	}
 
 	private Vector2 getStarsystemBaseScreenPosition(StarsystemData starsystem) {
-		return MathUtil.translate(new Vector2(starsystem.getMapPosX(), starsystem.getMapPosY()),
-				MAP_BOUNDS, getBaseMapPreviewSectionBounds());
+		return MathUtil.translate(new Vector2(starsystem.getMapPosX(), starsystem.getMapPosY()), MAP_BOUNDS, getBaseMapPreviewSectionBounds());
 	}
-	
+
 	private Rectangle getBaseMapPreviewSectionBounds() {
-		return new Rectangle(
-				MenuModel.moduleBounds.x,
-				MenuModel.moduleBounds.y + (MenuModel.moduleBounds.height / 2) - (MenuModel.moduleBounds.width / 2),
-				MenuModel.moduleBounds.width,
+		return new Rectangle(MenuModel.moduleBounds.x, MenuModel.moduleBounds.y + (MenuModel.moduleBounds.height / 2) - (MenuModel.moduleBounds.width / 2), MenuModel.moduleBounds.width,
 				MenuModel.moduleBounds.width);
 	}
 
 	private Vector2 getStarsystemActualScreenPosition(StarsystemData starsystem) {
-		return MathUtil.translate(new Vector2(starsystem.getMapPosX(), starsystem.getMapPosY()),
-				MAP_BOUNDS, GraphicsUtil.scaleFactorAdjusted(getBaseMapPreviewSectionBounds()));
+		return MathUtil.translate(new Vector2(starsystem.getMapPosX(), starsystem.getMapPosY()), MAP_BOUNDS, GraphicsUtil.scaleFactorAdjusted(getBaseMapPreviewSectionBounds()));
 	}
 
 	@Override
@@ -345,15 +339,13 @@ public class StarmapRenderer extends BaseModuleRenderer {
 			public void execute() {
 				zoomIn = false;
 			}
-			
+
 		});
 		zoomIn = false;
 		backButton.setFixedHeight(30);
 		backButton.setFixedWidth(100);
-		backButton.setPosition(
-				MenuModel.moduleBounds.x + (MenuModel.moduleBounds.width / 2) - (backButton.getFixedWidth() / 2),
-				MenuModel.moduleBounds.y + 20);
-		
+		backButton.setPosition(MenuModel.moduleBounds.x + (MenuModel.moduleBounds.width / 2) - (backButton.getFixedWidth() / 2), MenuModel.moduleBounds.y + 20);
+
 		camera = new PerspectiveCamera(60, screenAdjustedModuleBounds.width, screenAdjustedModuleBounds.height);
 		camera.position.set(BASE_CAM_POS);
 		camera.lookAt(0f, 0f, 0f);
@@ -363,7 +355,7 @@ public class StarmapRenderer extends BaseModuleRenderer {
 		camera.update();
 
 		gridRenderer = new GridRenderer(GridConfiguration.builder().step(2).build());
-		
+
 		decalBatch = new DecalBatch(new CameraGroupStrategy(camera));
 
 		StarmapModel.selectedGalaxyId = -1;
@@ -385,8 +377,8 @@ public class StarmapRenderer extends BaseModuleRenderer {
 	}
 
 	private Galaxy getClickedGalaxy() {
-		Ray ray = camera.getPickRay(InputUtil.getMouseX(), Gdx.input.getY(), screenAdjustedModuleBounds.x, screenAdjustedModuleBounds.y,
-				screenAdjustedModuleBounds.width, screenAdjustedModuleBounds.height);
+		Ray ray = camera.getPickRay(InputUtil.getMouseX(), Gdx.input.getY(), screenAdjustedModuleBounds.x, screenAdjustedModuleBounds.y, screenAdjustedModuleBounds.width,
+				screenAdjustedModuleBounds.height);
 
 		float t = -ray.origin.z / ray.direction.z;
 
@@ -409,7 +401,7 @@ public class StarmapRenderer extends BaseModuleRenderer {
 
 		return closest;
 	}
-	
+
 	private StarsystemData getClickedStarsystem() {
 		float selectionRadius = 30f * GraphicsUtil.getHorizontalDisplayScaleFactor();
 		for (StarsystemData starsystem : selectedGalaxy.getData().getStarsystems()) {

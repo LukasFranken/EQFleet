@@ -40,14 +40,13 @@ public class Shop extends BaseModule {
 					() -> API.shop().shop(),
 				    result -> {
 				    	ShopModel.shopData = result;
-				    	super.requireUIReload();
-				    }
-			);
-			WebManager.enqueue(
-					() -> API.shop().data(API.authKey),
-				    result -> {
-				    	ShopModel.playerShopData = result;
-				    	super.requireUIReload();
+				    	WebManager.enqueue(
+								() -> API.shop().data(API.authKey),
+							    result2 -> {
+							    	ShopModel.playerShopData = result2;
+							    	super.requireUIReload();
+							    }
+						);
 				    }
 			);
 			return true;

@@ -108,22 +108,37 @@ public class MetricUtil {
 		if (active) {
 			batch.begin();
 			float panelWidth = calculatePanelWidth();
-			float panelHeight = fixedHeight == 0 ? elementMargin + (metrics.size() * (FontUtil.getFontHeightPx(panelFontType) + elementMargin)) : fixedHeight;
+			float panelHeight = fixedHeight == 0
+					? elementMargin + (metrics.size() * (FontUtil.getFontHeightPx(panelFontType) + elementMargin))
+					: fixedHeight;
+
 			Rectangle panelBounds = new Rectangle(0, GraphicsUtil.screenBounds().getHeight() - panelHeight, panelWidth, panelHeight);
+
 			batch.setColor(1f, 1f, 1f, 0.5f);
 			batch.draw(backgroundColorTexture, panelBounds.x, panelBounds.y, panelBounds.width, panelBounds.height);
 			batch.end();
+
+			float labelHeight = FontUtil.getFontHeightPx(panelFontType) + elementMargin;
+			float buttonsTopY = panelBounds.y + scrollButtonButtonHeight;
+			float startY = buttonsTopY + elementMargin;
+
 			for (int i = 0; i < metrics.size(); i++) {
-				if (i + itemOffset < metrics.size()) {
-					float labelHeight = FontUtil.getFontHeightPx(panelFontType) + elementMargin;
-					Rectangle metricBounds = new Rectangle(horizontalPanelOffset, GraphicsUtil.screenBounds().getHeight() - topsidePanelOffset - ((i + 1) * (labelHeight + elementMargin)), calculatePanelWidth() - (horizontalPanelOffset * 2), labelHeight);
-					if (metricBounds.y > panelBounds.y) {
-						render(metrics.get(i + itemOffset), metricBounds, i + itemOffset);
+				int index = i + itemOffset;
+				if (index < metrics.size()) {
+					float itemY = startY + (i * (labelHeight + elementMargin));
+					Rectangle metricBounds = new Rectangle(
+							horizontalPanelOffset,
+							itemY,
+							calculatePanelWidth() - (horizontalPanelOffset * 2),
+							labelHeight
+					);
+					if (metricBounds.y + metricBounds.height < panelBounds.y + panelBounds.height) {
+						render(metrics.get(index), metricBounds, index);
 					}
 				}
 			}
 			renderScrollButtons(panelBounds);
- 		}
+		}
 	}
 	
 	private static void render(Metric metric, Rectangle metricBounds, int i) {

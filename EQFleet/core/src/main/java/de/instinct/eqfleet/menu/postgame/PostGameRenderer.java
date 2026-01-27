@@ -161,15 +161,17 @@ public class PostGameRenderer extends BaseModuleRenderer {
 							rankUpElementList.getElements().add(newRankImage);
 							
 							Label newRankLabel = new Label(ProfileModel.profile.getRank().getLabel());
-							newRankLabel.setFixedHeight(30);
+							newRankLabel.setFixedHeight(20);
 							newRankLabel.setFixedWidth(120);
 							newRankLabel.setType(FontType.SMALL);
 							rankUpElementList.getElements().add(newRankLabel);
 							
 							for (CommanderUpgrade upgrade : rankUpCommanderUpgrade.getUpgrades()) {
-								rankUpElementList.getElements().add(DefaultLabelFactory.createLabelStack(upgrade.getStat().getLabel(), "+" + (upgrade.getStat() == CommanderStat.CP_PER_SECOND ? StringUtils.format(upgrade.getValue(), 2) : StringUtils.format(upgrade.getValue(), 0))));
-								rankUpElementList.setFixedWidth(140);
+								ElementStack stack = DefaultLabelFactory.createLabelStack(upgrade.getStat().getLabel(), "+" + (upgrade.getStat() == CommanderStat.CP_PER_SECOND ? StringUtils.format(upgrade.getValue(), 2) : StringUtils.format(upgrade.getValue(), 0)));
+								stack.setFixedWidth(120);
+								rankUpElementList.getElements().add(stack);
 							}
+							rankUpElementList.setFixedWidth(120);
 							
 							ColorButton acceptButton = DefaultButtonFactory.colorButton("Accept", new Action() {
 								
@@ -180,8 +182,9 @@ public class PostGameRenderer extends BaseModuleRenderer {
 								}
 								
 							});
-							acceptButton.setFixedWidth(100);
+							acceptButton.setFixedWidth(120);
 							acceptButton.setFixedHeight(30);
+							acceptButton.setLayer(1);
 							rankUpElementList.getElements().add(acceptButton);
 							
 							PopupRenderer.create(Popup.builder()

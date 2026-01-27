@@ -30,12 +30,12 @@ import de.instinct.eqlibgdxutils.rendering.ui.popup.PopupRenderer;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 
 public class ShopRenderer extends BaseModuleRenderer {
-	
+
 	private List<ShopCategoryElement> categoryElements;
-	
+
 	private int categoryCount;
 	private int itemCount;
-	
+
 	private float categoryHeight = 40f;
 	private float itemHeight = 20f;
 
@@ -52,8 +52,7 @@ public class ShopRenderer extends BaseModuleRenderer {
 	}
 
 	private void createBuyResponsePopup() {
-		PopupRenderer.createMessageDialog("Purchase Failed", 
-				ShopModel.buyResponse.getMessage() == null ? ShopModel.buyResponse.getCode().toString() : ShopModel.buyResponse.getMessage());
+		PopupRenderer.createMessageDialog("Purchase Failed", ShopModel.buyResponse.getMessage() == null ? ShopModel.buyResponse.getCode().toString() : ShopModel.buyResponse.getMessage());
 	}
 
 	private void renderElements() {
@@ -62,36 +61,24 @@ public class ShopRenderer extends BaseModuleRenderer {
 		itemCount = 0;
 		for (ShopCategoryElement category : categoryElements) {
 			categoryCount++;
-			category.getNameLabel().setPosition(
-					MenuModel.moduleBounds.x + 10f, 
-					getElementYPos());
+			category.getNameLabel().setPosition(MenuModel.moduleBounds.x + 10f, getElementYPos());
 			category.getNameLabel().render();
 			for (ShopItemElement item : category.getItemElements()) {
 				itemCount++;
 				float elementYPos = getElementYPos();
-				item.getNameLabel().setPosition(
-						MenuModel.moduleBounds.x + horizontalOffset, 
-						elementYPos);
+				item.getNameLabel().setPosition(MenuModel.moduleBounds.x + horizontalOffset, elementYPos);
 				item.getNameLabel().render();
-				
-				item.getBuyButton().setPosition(
-						MenuModel.moduleBounds.x + MenuModel.moduleBounds.width - horizontalOffset - item.getBuyButton().getFixedWidth(), 
-						elementYPos);
+
+				item.getBuyButton().setPosition(MenuModel.moduleBounds.x + MenuModel.moduleBounds.width - horizontalOffset - item.getBuyButton().getFixedWidth(), elementYPos);
 				item.getBuyButton().render();
-				
-				item.getCreditsIcon().setPosition(
-						item.getBuyButton().getBounds().x - 18f,
-						elementYPos + 2);
+
+				item.getCreditsIcon().setPosition(item.getBuyButton().getBounds().x - 18f, elementYPos + 2);
 				item.getCreditsIcon().render();
-				
-				item.getPriceLabel().setPosition(
-						item.getBuyButton().getBounds().x - item.getPriceLabel().getFixedWidth() - 20f, 
-						elementYPos);
+
+				item.getPriceLabel().setPosition(item.getBuyButton().getBounds().x - item.getPriceLabel().getFixedWidth() - 20f, elementYPos);
 				item.getPriceLabel().render();
-				
-				item.getDescriptionLabel().setPosition(
-						MenuModel.moduleBounds.x + horizontalOffset + item.getNameLabel().getFixedWidth(), 
-						elementYPos);
+
+				item.getDescriptionLabel().setPosition(MenuModel.moduleBounds.x + horizontalOffset + item.getNameLabel().getFixedWidth(), elementYPos);
 				item.getDescriptionLabel().setFixedWidth(item.getPriceLabel().getBounds().x - item.getDescriptionLabel().getBounds().x);
 				item.getDescriptionLabel().render();
 			}
@@ -110,7 +97,8 @@ public class ShopRenderer extends BaseModuleRenderer {
 		if (ShopModel.shopData != null && ShopModel.shopData.getCategories() != null) {
 			for (ShopCategory category : ShopModel.shopData.getCategories()) {
 				ShopCategoryElement categoryElement = createCategoryElement(category);
-				if (categoryElement.getItemElements().size() > 0) categoryElements.add(categoryElement);
+				if (categoryElement.getItemElements().size() > 0)
+					categoryElements.add(categoryElement);
 			}
 		}
 	}
@@ -121,32 +109,25 @@ public class ShopRenderer extends BaseModuleRenderer {
 		nameLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
 		nameLabel.setFixedHeight(categoryHeight);
 		nameLabel.setFixedWidth(MenuModel.moduleBounds.getWidth() - 20f);
-		
+
 		List<ShopItemElement> itemElements = new ArrayList<>();
 		if (category.getItems() != null) {
 			for (ShopItem item : category.getItems()) {
 				ShopItemElement itemElement = createItemElement(item);
-				if (itemElement != null) itemElements.add(itemElement);
+				if (itemElement != null)
+					itemElements.add(itemElement);
 			}
 		}
-		
-		return ShopCategoryElement.builder()
-				.nameLabel(nameLabel)
-				.itemElements(itemElements)
-				.build();
+
+		return ShopCategoryElement.builder().nameLabel(nameLabel).itemElements(itemElements).build();
 	}
 
 	private ShopItemElement createItemElement(ShopItem item) {
 		ShopItemStage currentStage = getCurrentStage(item);
-		if (currentStage == null) return null;
-		return ShopItemElement.builder()
-				.item(item)
-				.nameLabel(createItemNameLabel(item.getName()))
-				.descriptionLabel(createDescriptionLabel(currentStage.getDescription()))
-				.priceLabel(createPriceLabel(currentStage.getPrice()))
-				.creditsIcon(createCreditsIcon(currentStage.getPrice()))
-				.buyButton(createBuyButton(item.getId()))
-				.build();
+		if (currentStage == null)
+			return null;
+		return ShopItemElement.builder().item(item).nameLabel(createItemNameLabel(item.getName())).descriptionLabel(createDescriptionLabel(currentStage.getDescription()))
+				.priceLabel(createPriceLabel(currentStage.getPrice())).creditsIcon(createCreditsIcon(currentStage.getPrice())).buyButton(createBuyButton(item.getId())).build();
 	}
 
 	private ShopItemStage getCurrentStage(ShopItem item) {
@@ -156,7 +137,8 @@ public class ShopRenderer extends BaseModuleRenderer {
 				currentStageId++;
 			}
 		}
-		if (currentStageId >= item.getStages().size()) return null;
+		if (currentStageId >= item.getStages().size())
+			return null;
 		return item.getStages().get(currentStageId);
 	}
 
@@ -168,7 +150,7 @@ public class ShopRenderer extends BaseModuleRenderer {
 		nameLabel.setFixedHeight(itemHeight);
 		return nameLabel;
 	}
-	
+
 	private Label createDescriptionLabel(String description) {
 		Label descriptionLabel = new Label(description);
 		descriptionLabel.setType(FontType.SMALL);
@@ -176,7 +158,7 @@ public class ShopRenderer extends BaseModuleRenderer {
 		descriptionLabel.setFixedHeight(itemHeight);
 		return descriptionLabel;
 	}
-	
+
 	private Label createPriceLabel(long price) {
 		Label priceLabel = new Label(StringUtils.formatBigNumber(price));
 		priceLabel.setType(FontType.SMALL);
@@ -186,7 +168,7 @@ public class ShopRenderer extends BaseModuleRenderer {
 		priceLabel.setFixedHeight(itemHeight);
 		return priceLabel;
 	}
-	
+
 	private Image createCreditsIcon(long price) {
 		Image creditsIcon = new Image(TextureManager.getTexture("ui/image", price > Inventory.getResource(Resource.CREDITS) ? "credits_red" : "credits"));
 		creditsIcon.setFixedWidth(16f);
@@ -196,14 +178,12 @@ public class ShopRenderer extends BaseModuleRenderer {
 
 	private ColorButton createBuyButton(int id) {
 		ColorButton buyButton = DefaultButtonFactory.colorButton("Buy", new Action() {
-			
+
 			@Override
 			public void execute() {
-				Menu.queue(BuyMessage.builder()
-						.itemId(id)
-						.build());
+				Menu.queue(BuyMessage.builder().itemId(id).build());
 			}
-			
+
 		});
 		buyButton.setFixedWidth(40f);
 		buyButton.setFixedHeight(20f);

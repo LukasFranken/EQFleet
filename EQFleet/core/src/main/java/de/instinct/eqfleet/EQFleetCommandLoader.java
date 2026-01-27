@@ -13,6 +13,7 @@ import de.instinct.api.meta.dto.ResourceData;
 import de.instinct.api.meta.dto.ResourceUpdateResponseCode;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.net.WebManager;
+import de.instinct.eqlibgdxutils.ClipboardUtil;
 import de.instinct.eqlibgdxutils.debug.console.Command;
 import de.instinct.eqlibgdxutils.debug.console.CommandAction;
 import de.instinct.eqlibgdxutils.debug.console.CommandLoader;
@@ -85,12 +86,14 @@ public class EQFleetCommandLoader implements CommandLoader {
 		configCommands.add(Command.builder()
 				.method("config.key")
 				.logMethod("config.key")
-				.description("show the auth key for the EQFleet API")
+				.description("show and copy the auth key for the EQFleet API")
 				.action(new CommandAction() {
 					
 					@Override
 					public void execute(String message) {
-						log("saved authkey: " + PreferenceManager.load("authkey"));
+						String authKey = PreferenceManager.load("authkey");
+						ClipboardUtil.setContent(authKey);
+						log("saved authkey: " + authKey);
 					}
 					
 				})

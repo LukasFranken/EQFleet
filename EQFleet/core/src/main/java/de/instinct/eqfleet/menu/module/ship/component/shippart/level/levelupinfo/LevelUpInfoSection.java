@@ -33,7 +33,7 @@ public class LevelUpInfoSection extends Component {
 		LevelUpInfoRow headerRow = createRow(LevelUpInfo.builder()
 				.tagValue("")
 				.currentValue("Lv " + config.getCurrentLevel())
-				.changeValue("->")
+				.changeValue(maxLevel ? "MAX" : "->")
 				.nextValue(maxLevel ? "" : "Lv " + config.getNextLevel())
 				.build(), config.getColor());
 		headerRow.setHeader(true);
@@ -79,15 +79,13 @@ public class LevelUpInfoSection extends Component {
 			row.getTagLabel().setFixedHeight(row.isHeader() ? rowHeight + 5f : rowHeight);
 			row.getTagLabel().setFixedWidth(tagWidth);
 			
-			if (!maxLevel) {
-				row.getCurrentAndNextValueLabelStack().setPosition(getBounds().x + tagWidth, rowY);
-				row.getCurrentAndNextValueLabelStack().setFixedHeight(row.isHeader() ? rowHeight + 5f : rowHeight);
-				row.getCurrentAndNextValueLabelStack().setFixedWidth(calculateWidth() - tagWidth);
-				
-				row.getChangeValueLabel().setPosition(getBounds().x + tagWidth, rowY);
-				row.getChangeValueLabel().setFixedHeight(row.isHeader() ? rowHeight + 5f : rowHeight);
-				row.getChangeValueLabel().setFixedWidth(calculateWidth() - tagWidth);
-			}
+			row.getCurrentAndNextValueLabelStack().setPosition(getBounds().x + tagWidth, rowY);
+			row.getCurrentAndNextValueLabelStack().setFixedHeight(row.isHeader() ? rowHeight + 5f : rowHeight);
+			row.getCurrentAndNextValueLabelStack().setFixedWidth(calculateWidth() - tagWidth);
+			
+			row.getChangeValueLabel().setPosition(getBounds().x + tagWidth, rowY);
+			row.getChangeValueLabel().setFixedHeight(row.isHeader() ? rowHeight + 5f : rowHeight);
+			row.getChangeValueLabel().setFixedWidth(calculateWidth() - tagWidth);
 			i++;
 		}
 	}

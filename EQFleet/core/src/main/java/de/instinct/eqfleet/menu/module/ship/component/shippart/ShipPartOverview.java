@@ -74,7 +74,7 @@ public class ShipPartOverview extends Component {
 			}
 		}
 		
-		levelArea = new ShipPartLevelArea(shipComponentLevel.getLevel(), getPartTypeColor(), shipComponentLevel.getProgress(), nextLevel == null ? currentLevel.getRequirementValue() : nextLevel.getRequirementValue());
+		levelArea = new ShipPartLevelArea(shipComponentLevel.getLevel(), getPartTypeColor(), shipComponentLevel.getProgress(), nextLevel == null ? shipComponentLevel.getProgress() : nextLevel.getRequirementValue());
 		levelArea.getColorButton().setLayer(1);
 		levelArea.getColorButton().setGlowAnimation(false);
 		levelArea.getColorButton().setAction(new Action() {
