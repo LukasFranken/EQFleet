@@ -1,4 +1,4 @@
-package de.instinct.eqfleet.menu.module.workshop.message;
+package de.instinct.eqfleet.menu.module.ship.message;
 
 import de.instinct.api.core.modules.MenuModule;
 import de.instinct.eqfleet.menu.module.core.ModuleMessage;
@@ -9,13 +9,13 @@ import lombok.EqualsAndHashCode;
 @Data
 @Builder
 @EqualsAndHashCode(callSuper = false)
-public class UpgradeShipMessage extends ModuleMessage {
+public class BuildShipMessage extends ModuleMessage {
 	
 	private String shipUUID;
 
 	@Override
 	public MenuModule getMenuModule() {
-		return MenuModule.WORKSHOP;
+		return MenuModule.SHIPYARD;
 	}
 	
 }

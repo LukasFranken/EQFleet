@@ -125,19 +125,19 @@ public class EQFleetCommandLoader implements CommandLoader {
 						case "off":
 							PreferenceManager.save("glow", "0");
 							GlobalRenderingConfiguration.defaultGlowRadius = 0;
-							Menu.reload();
+							Menu.reloadAll();
 							log("Glow effect disabled");
 							break;
 						case "low":
 							PreferenceManager.save("glow", "10");
 							GlobalRenderingConfiguration.defaultGlowRadius = 10;
-							Menu.reload();
+							Menu.reloadAll();
 							log("Glow effect set to low");
 							break;
 						case "high":
 							PreferenceManager.save("glow", "30");
 							GlobalRenderingConfiguration.defaultGlowRadius = 30;
-							Menu.reload();
+							Menu.reloadAll();
 							log("Glow effect set to high");
 							break;
 
@@ -175,7 +175,7 @@ public class EQFleetCommandLoader implements CommandLoader {
 						try {
 							SkinManager.setSkinColor(SkinColor.valueOf(color));
 							PreferenceManager.save("skin", color);
-							Menu.reload();
+							Menu.reloadAll();
 							log("Skin color set to " + color);
 						} catch (Exception e) {
 							log("Error setting skin color: " + color);

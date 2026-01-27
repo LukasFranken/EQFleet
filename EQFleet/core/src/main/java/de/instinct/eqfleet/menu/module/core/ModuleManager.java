@@ -30,13 +30,8 @@ public class ModuleManager {
 				.opened(preferenceLoadedModules.contains(MenuModule.SETTINGS.toString()))
 				.build());
 		moduleOpenMessages.add(InitialModuleOpenMessage.builder()
-				.module(MenuModule.INVENTORY)
-				.message("View and manage your\nresources and items")
-				.opened(preferenceLoadedModules.contains(MenuModule.INVENTORY.toString()))
-				.build());
-		moduleOpenMessages.add(InitialModuleOpenMessage.builder()
 				.module(MenuModule.SHIPYARD)
-				.message("Manage and customize your fleet.\nYou can also view your ships\nupgrade process.")
+				.message("Manage and customize your fleet.\nYou can also view your ships\ncomponents upgrade process.")
 				.opened(preferenceLoadedModules.contains(MenuModule.SHIPYARD.toString()))
 				.build());
 		moduleOpenMessages.add(InitialModuleOpenMessage.builder()

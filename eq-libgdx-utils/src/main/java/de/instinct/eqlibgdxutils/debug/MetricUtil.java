@@ -34,7 +34,6 @@ public class MetricUtil {
 
 	private static final float elementMargin = 4f;
 	private static Texture backgroundColorTexture;
-	private static float topsidePanelOffset = 20f;
 	private static float horizontalPanelOffset = 20f;
 	
 	private static boolean spanHorizontal;

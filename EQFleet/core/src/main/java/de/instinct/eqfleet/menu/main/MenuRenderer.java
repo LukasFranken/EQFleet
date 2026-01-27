@@ -74,7 +74,7 @@ public class MenuRenderer extends BaseModuleRenderer {
 		barBorder.setColor(Color.BLUE);
 		expBar.setBorder(barBorder);
 		
-		usernameLabel = new Label("???");
+		usernameLabel = new Label(ProfileModel.profile != null && ProfileModel.profile.getUsername() != null ? ProfileModel.profile.getUsername() : "???");
 		usernameLabel.setColor(Color.LIGHT_GRAY);
 		usernameLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
 		
@@ -100,9 +100,59 @@ public class MenuRenderer extends BaseModuleRenderer {
 		expBounds = new Rectangle(menuBounds.x + 65, menuBounds.y + menuBounds.height + 10, 100, 7);
 		creditsBounds = new Rectangle(menuBounds.x + menuBounds.width - 103, menuBounds.y + menuBounds.height + 10, 85, 20);
 		
-		tabButtons = new LinkedHashMap<>();
-		for (MenuModule module : MenuModel.buttons) {
-			createModuleButton(module);
+		if (tabButtons.size() != MenuModel.buttons.size()) {
+			tabButtons = new LinkedHashMap<>();
+			for (MenuModule module : MenuModel.buttons) {
+				createModuleButton(module);
+			}
+		}
+		
+		rankImage = new Image(TextureManager.getTexture("ui/image/rank",  ProfileModel.profile != null ? ProfileModel.profile.getRank().getFileName() : "recruit1"));
+		rankImage.setBounds(new Rectangle(menuBounds.x + 5, menuBounds.y + menuBounds.height + 15, 25, 25));
+		creditsImage = new Image(TextureManager.getTexture("ui/image", "credits"));
+        creditsImage.setBounds(new Rectangle(menuBounds.x + menuBounds.width - 16, menuBounds.y + menuBounds.height + 12, 16, 16));
+	}
+	
+	public void reloadContent() {
+		expBar = new PlainRectangularLoadingBar();
+		expBar.setBar(TextureManager.createTexture(Color.BLUE));
+		expBar.setCustomDescriptor("");
+		Border barBorder = new Border();
+		barBorder.setSize(1f);
+		barBorder.setColor(Color.BLUE);
+		expBar.setBorder(barBorder);
+		
+		usernameLabel = new Label(ProfileModel.profile != null && ProfileModel.profile.getUsername() != null ? ProfileModel.profile.getUsername() : "???");
+		usernameLabel.setColor(Color.LIGHT_GRAY);
+		usernameLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
+		
+		creditsLabel = new Label("");
+		creditsLabel.setColor(Color.GREEN);
+		creditsLabel.setHorizontalAlignment(HorizontalAlignment.RIGHT);
+		
+		menuBackground = new Label("");
+		Border backgroundBorder = new Border();
+		backgroundBorder.setColor(SkinManager.skinColor);
+		backgroundBorder.setSize(2f);
+		menuBackground.setBorder(backgroundBorder);
+		
+		title = new Label("");
+		title.setHorizontalAlignment(HorizontalAlignment.LEFT);
+		
+		float margin = 20f;
+		menuBounds = new Rectangle(margin, margin + 20, GraphicsUtil.screenBounds().width - (margin * 2), GraphicsUtil.screenBounds().height - 150);
+		
+		titleDividerBounds = new Rectangle(menuBounds.x, menuBounds.y + menuBounds.height - titleHeight, menuBounds.width, 2);
+		rankBounds = new Rectangle(menuBounds.x, menuBounds.y + menuBounds.height + 10, 35, 35);
+		nameBounds = new Rectangle(menuBounds.x + 45, menuBounds.y + menuBounds.height + 20, 120, 25);
+		expBounds = new Rectangle(menuBounds.x + 65, menuBounds.y + menuBounds.height + 10, 100, 7);
+		creditsBounds = new Rectangle(menuBounds.x + menuBounds.width - 103, menuBounds.y + menuBounds.height + 10, 85, 20);
+		
+		if (tabButtons.size() != MenuModel.buttons.size()) {
+			tabButtons = new LinkedHashMap<>();
+			for (MenuModule module : MenuModel.buttons) {
+				createModuleButton(module);
+			}
 		}
 		
 		rankImage = new Image(TextureManager.getTexture("ui/image/rank",  ProfileModel.profile != null ? ProfileModel.profile.getRank().getFileName() : "recruit1"));
@@ -205,7 +255,6 @@ public class MenuRenderer extends BaseModuleRenderer {
 			if (MenuModel.activeModule != MenuModule.PROFILE) {
 				rankImage.setAlpha(MenuModel.alpha);
 				rankImage.render();
-				if (ProfileModel.profile.getUsername() != null) usernameLabel.setText(ProfileModel.profile.getUsername());
 				usernameLabel.setBounds(new Rectangle(menuBounds.x + 50, menuBounds.y + menuBounds.height + 20, 100, 25));
 				usernameLabel.setAlpha(MenuModel.alpha);
 				usernameLabel.render();
@@ -238,8 +287,8 @@ public class MenuRenderer extends BaseModuleRenderer {
 						.build());
 			}
 		}
-		if (InventoryModel.resources != null && MenuModel.unlockedModules.getEnabledModules().contains(MenuModule.INVENTORY)) {
-			if (MenuModel.activeModule != MenuModule.INVENTORY) {
+		if (InventoryModel.resources != null && MenuModel.unlockedModules.getEnabledModules().contains(MenuModule.PROFILE)) {
+			if (MenuModel.activeModule != MenuModule.PROFILE) {
 				creditsLabel.setBounds(new Rectangle(menuBounds.x + menuBounds.width - 95, menuBounds.y + menuBounds.height + 10, 70, 20));
 				creditsLabel.setText(StringUtils.formatBigNumber(Inventory.getResource(Resource.CREDITS)));
 				creditsLabel.setAlpha(MenuModel.alpha);

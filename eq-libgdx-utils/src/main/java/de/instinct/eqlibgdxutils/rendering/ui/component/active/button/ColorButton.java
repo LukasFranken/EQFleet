@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
+import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
@@ -31,13 +32,17 @@ public class ColorButton extends Button {
 
 	public ColorButton(String text) {
 		super();
+		Border buttonBorder = new Border();
+		buttonBorder.setColor(new Color(SkinManager.skinColor));
+		buttonBorder.setSize(2);
+		setBorder(buttonBorder);
 		label = new Label(text);
-		labelColor = Color.GRAY;
-		color = Color.DARK_GRAY;
-		downColor = new Color(SkinManager.darkestSkinColor);
+		labelColor = new Color(SkinManager.skinColor);
+		color = Color.BLACK;
+		downColor = new Color(SkinManager.lighterSkinColor);
 		downActiveColor = new Color(SkinManager.darkerSkinColor);
 		activeColor = Color.BLACK;
-		hoverColor = Color.LIGHT_GRAY;
+		hoverColor = new Color(SkinManager.darkerSkinColor);
 		hoverActiveColor = new Color(SkinManager.skinColor);
 		contentMargin = 5;
 	}

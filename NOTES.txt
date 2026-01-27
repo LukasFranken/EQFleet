@@ -1,6 +1,7 @@
 ALPHA RELEASE TODO:
 
 GENERAL:
+- add delete category and item to shop control
 - fix aim prediction
 - add bonus to level win by full elimination
 - better nullpoint shield bar visual (fragmentbar)
@@ -8,110 +9,87 @@ GENERAL:
 - implement full game logs to control and remove from main log
 - fix explosion ui and sound
 - fix iphone sound stutter
-- add item edit modal logic to control shop
- -> generalize effect handling
 - fix partial games giving full exp reward
 - add glow buttonlogic to shipyard
 - add glow buttonlogic as menu tutorial
 - remove nullpoint from weaker neutrals
-
-- complexify the game through internal ai chip upgrade
- -> e.g. ship component complexity
-  ->at start only speed,dmg,shield,hull
-  ->animation: download -> visible ship inspection
-
+- fix tutorial
+- short zoom in at start of game
+- minimal map editor and modify current galaxy maps
+- rework postgame design
+ -> show resource number increase on current instead of just added
+ -> panel to show ships components progress
+ -> speed up/skip/next button
 - DRASTICALLY IMPROVE GAME NETWORKING AND BUFFER SIZES
-
-- appicon, ios loadscreen etc.
-- build apk
-
-- ships can collect meteorites for resources
-
 - slider logic change to screenwide drag and drop (especially for mobile)
-
-- support-class ships/buildings
-
-- ai chips = cards like in idle obelisk
- -> but instead through booster packs
- -> SHIPS AS CARDS?
+- custom desktop window frame
+- randomly pitch/volume sound fx
+ -> makes often occuring sounds more pleasant
+- multi-language compatibility
+ -> add german
+- remove ap and sun from tutorial/early maps (until abilities)
+- reward cash with digital number up sound
+ -> make rewards more appealing
  
-- components need to be leveled up with resources
- - maybe trigger model change animation?
- 
-- postgame ship part progression screen
-
-- hawk-2a
-- with deep tutorial, but tutorial gives rewards
-
-- if payment: global bonus and perks (idle obelisk system)
-- button needs a flashing animation system
-
-ship part: flash if level up ready
-
-- settings via meta module (show grid, show fleet lines)
-- account security
- -> optional email provision
- -> authkey regeneration via mail
- -> optional 2-factor with mail on new device
+GAME:
+- deeper tutorial, but tutorial gives rewards
+- button needs a general flashing animation system
 - radio: show track, skip track, previous track
+ -> add/remove tracks from playlist
 - settings tabs (audio, video, gameplay, account)
- 
-- planet resource upgrades part of construction
-
-- stats in profile like gametime, furthest in each campaign
 - scrollable console log
 - make beam actual beam
 
-- duo, trio campaign via social group
-- social module, squad and alliance with vault
-- replace money label with other squad player names (if in group), but remove click-on
-
-- custom desktop window frame
-
-- all resource labels colored
-
-- rewards: show total with adding animation
-
-- inventory part of profile
-
-- randomly pitch/volume sound fx
- -> makes often occuring sounds more pleasant
-
-- german
-- remove ap and sun from tutorial/early maps (until abilities)
-- after game, move to main menu and highlight unlocks
-- reward cash with digital number up sound
- -> make rewards more appealing
-GAME:
-
-ability ideas
--> called flagship (appears visually on screen, origin of casts)
- -> use skilltree from eqidle with alternative paths based on use
-  -> eg ion beam: boost friendly planet shield regen by 3x for 5 sec
-  -> OR disable enemy planet shield regen for 3 seconds
-
-META:
-- shop
- -> turret blueprints
-
 BUGS:
-- postgame rankup popup messed up
-- gameserver rubberbanding
-- console not typeable after name setting
+- fix gameserver rubberbanding
 - doesnt leave lobby after conquest
-- menu rank icon doesnt update after rankup
 - surrender sometimes grants extreme amount of exp?
 - hangar space needed for build blueprint, not buy blueprint
-- ios crashes after a while
-- prevent all shutdown crashes
+- fix stupid certificate issue for web ui
 
 REFACTIORING:
 - externalize planet resource bar to circularloadingbar component
 - remove calculate widht/height from all component except dynamiccomponent
 
+LAST STEPS:
+- build all as binary
+- test and live environments
+- appicon
+- build apk
+
 ---------------------------------------------------------------------
 FUTURE RELEASES TODO:
+- MAKE ALL P2W COMMUNITY BENEFIT
+- e.g.: every time someone buys something, everyone gets 1 gem or something
+ -> (permanent withdrawable community fund)
+ 
+- planet resource upgrades part of construction
+- stats in profile like gametime, furthest in each campaign
+
+- Turrets/Construction (could be its own big update)
+- shop
+ -> turret blueprints
+ 
+- ships can collect meteorites for resources
+
+- duo, trio campaign via social group
+- social module, squad and alliance with vault
+- replace money label with other squad player names (if in group), but remove click-on
+
+- settings (show grid, show fleet lines)
+- account security
+ -> optional email provision
+ -> authkey regeneration via mail
+ -> optional 2-factor with mail on new device
+
+- support-class ships/buildings
+- ai chips = cards like in idle obelisk
+ -> but instead through booster packs
+ -> SHIPS AS CARDS?
+
 GENERAL:
+- if payment: global bonus and perks (idle obelisk system)
+
 - playtab overhaul
 - building build time
 - void run = coop dungeoncrawler
@@ -126,6 +104,11 @@ META:
 
 - Technology module to unlock abilities and stuff like range and defensebar
 
+ability ideas
+-> called flagship (appears visually on screen, origin of casts)
+ -> use skilltree from eqidle with alternative paths based on use
+  -> eg ion beam: boost friendly planet shield regen by 3x for 5 sec
+  -> OR disable enemy planet shield regen for 3 seconds
 - abilities 
  -> techtree advances with ability usage exp gain
    -> usage depends on ability effect e.g. damage dealt / units slowed etc.
@@ -160,7 +143,7 @@ META:
 - market 
  -> open to trade resources
  
-- casino with slight win for generating stuff
+- casino with free daily tokens for generating stuff by playing
 ---------------------------------------------------------------------
 ./gradlew ios:launchIPhoneSimulator -P robovm.device.name='iPhone 16 Pro Max'
 ./gradlew lwjgl3:dist

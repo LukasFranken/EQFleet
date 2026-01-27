@@ -1,6 +1,6 @@
 package de.instinct.eqfleet.menu.module.shop.model;
 
-import de.instinct.api.shop.dto.ShopItem;
+import de.instinct.api.shop.dto.item.ShopItem;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.image.Image;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;

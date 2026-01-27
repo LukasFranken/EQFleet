@@ -16,7 +16,6 @@ import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ImageButto
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.LabeledModelButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.model.ModelPreviewConfiguration;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
-import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.popup.PopupRenderer;
 import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
@@ -73,20 +72,8 @@ public class DefaultButtonFactory {
 	}
 	
 	public static ColorButton colorButton(String label, Action clickAction) {
-		Border buttonBorder = new Border();
-		buttonBorder.setColor(new Color(SkinManager.skinColor));
-		buttonBorder.setSize(2);
-
 		ColorButton colorButton = new ColorButton(label);
-		colorButton.setBorder(buttonBorder);
-		colorButton.setColor(Color.BLACK);
-		colorButton.setLabelColor(new Color(SkinManager.skinColor));
-		colorButton.setHoverColor(new Color(SkinManager.darkerSkinColor));
-		colorButton.setDownColor(new Color(SkinManager.lighterSkinColor));
 		colorButton.setAction(clickAction);
-		colorButton.setFixedHeight(30);
-		colorButton.setFixedWidth(FontUtil.getFontTextWidthPx(label.length()) + 20f);
-		
 		return colorButton;
 	}
 	

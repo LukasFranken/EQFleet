@@ -22,7 +22,7 @@ import de.instinct.engine.util.VictoryCalculator;
 
 public class FleetEngine {
 	
-	private final int UPDATE_INTERVAL_MS = 10;
+	private final int UPDATE_INTERVAL_MS = 20;
 	
 	private PlanetProcessor planetProcessor;
 	private PlayerProcessor playerProcessor;

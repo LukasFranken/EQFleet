@@ -122,6 +122,11 @@ public class PreferenceManager {
 	}
 
 	public static void delete(String key) {
+		String value = PreferenceUtil.load(key);
+		if (value.contentEquals("")) {
+			Logger.log(LOGTAG, "Preference '" + key + "' does not exist", ConsoleColor.YELLOW);
+			return;
+		}
 		String registry = PreferenceUtil.load(PREFERENCE_KEYS_REGISTRY);
 		PreferenceUtil.delete(key);
 		String newRegistry = "";

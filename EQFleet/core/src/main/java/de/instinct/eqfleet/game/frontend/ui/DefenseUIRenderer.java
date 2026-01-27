@@ -71,6 +71,8 @@ public class DefenseUIRenderer {
 				case NULLPOINT:
 					renderBar(camera, shieldBounds, getShieldColor(shield.data.type), ((int)shield.currentStrength / shield.data.strength));
 					break;
+				case GRAVITON:
+					break;
 				}
 				i++;
 			}

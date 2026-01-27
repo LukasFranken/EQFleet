@@ -9,12 +9,11 @@ import de.instinct.api.shipyard.dto.ship.PlayerShipData;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.module.core.ModuleMessage;
-import de.instinct.eqfleet.menu.module.profile.inventory.message.LoadResourcesMessage;
+import de.instinct.eqfleet.menu.module.profile.inventory.Inventory;
+import de.instinct.eqfleet.menu.module.ship.message.BuildShipMessage;
 import de.instinct.eqfleet.menu.module.ship.message.ReloadShipyardMessage;
 import de.instinct.eqfleet.menu.module.ship.message.UnuseShipMessage;
 import de.instinct.eqfleet.menu.module.ship.message.UseShipMessage;
-import de.instinct.eqfleet.menu.module.workshop.WorkshopModel;
-import de.instinct.eqfleet.menu.module.workshop.message.BuildShipMessage;
 import de.instinct.eqfleet.net.WebManager;
 
 public class Shipyard extends BaseModule {
@@ -91,9 +90,8 @@ public class Shipyard extends BaseModule {
 			WebManager.enqueue(
 					() -> API.shipyard().build(buildShipMessage.getShipUUID()),
 				    result -> {
-				    	WorkshopModel.shipBuildResponse = result;
 				    	if (result == ShipBuildResponse.SUCCESS) {
-				    		Menu.queue(LoadResourcesMessage.builder().build());
+				    		Inventory.loadData();
 				    		loadData();
 				    	} else {
 				    		super.requireUIReload();

@@ -32,8 +32,6 @@ import de.instinct.eqfleet.menu.module.play.PlayRenderer;
 import de.instinct.eqfleet.menu.module.play.message.UpdateLobbyStatusMessage;
 import de.instinct.eqfleet.menu.module.profile.Profile;
 import de.instinct.eqfleet.menu.module.profile.ProfileRenderer;
-import de.instinct.eqfleet.menu.module.profile.inventory.Inventory;
-import de.instinct.eqfleet.menu.module.profile.inventory.message.LoadResourcesMessage;
 import de.instinct.eqfleet.menu.module.profile.message.LoadProfileMessage;
 import de.instinct.eqfleet.menu.module.settings.Settings;
 import de.instinct.eqfleet.menu.module.settings.SettingsRenderer;
@@ -45,7 +43,6 @@ import de.instinct.eqfleet.menu.module.shop.ShopRenderer;
 import de.instinct.eqfleet.menu.module.starmap.Starmap;
 import de.instinct.eqfleet.menu.module.starmap.StarmapRenderer;
 import de.instinct.eqfleet.menu.module.starmap.message.ReloadStarmapMessage;
-import de.instinct.eqfleet.menu.module.workshop.Workshop;
 import de.instinct.eqfleet.menu.postgame.PostGameModel;
 import de.instinct.eqfleet.menu.postgame.PostGameRenderer;
 import de.instinct.eqfleet.net.WebManager;
@@ -90,8 +87,6 @@ public class Menu {
 		MenuModel.modules.put(MenuModule.CONSTRUCTION, new Construction());
 		MenuModel.modules.put(MenuModule.SHOP, new Shop());
 		MenuModel.modules.put(MenuModule.STARMAP, new Starmap());
-		MenuModel.modules.put(MenuModule.INVENTORY, new Inventory());
-		MenuModel.modules.put(MenuModule.WORKSHOP, new Workshop());
 		
 		for (BaseModule module : MenuModel.modules.values()) {
 			module.init();
@@ -149,7 +144,6 @@ public class Menu {
 		queue(ReloadConstructionMessage.builder().build());
 		if (PostGameModel.reward == null) {
 			queue(LoadProfileMessage.builder().build());
-			queue(LoadResourcesMessage.builder().build());
 			queue(UpdateLobbyStatusMessage.builder().build());
 		}
 	}
@@ -223,7 +217,7 @@ public class Menu {
 			    		}
 			    		loadLockedModuleInfo(lockedModules);
 			    		loadButtons();
-			    		reload();
+			    		reloadAll();
 					} else {
 						Logger.log("Menu", "ModuleData couldn't be loaded!", ConsoleColor.RED);
 					}
@@ -256,8 +250,14 @@ public class Menu {
 			    }
 		);
 	}
+	
+	public static void reloadContent() {
+		Gdx.app.postRunnable(() -> {
+			menuRenderer.reloadContent();
+		});
+	}
 
-	public static void reload() {
+	public static void reloadAll() {
 		Gdx.app.postRunnable(() -> {
 			menuRenderer.reload();
 			for (BaseModuleRenderer renderer : MenuModel.renderers.values()) {

@@ -10,6 +10,8 @@ import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.InputUtil;
 import de.instinct.eqlibgdxutils.debug.console.Console;
 import de.instinct.eqlibgdxutils.debug.metrics.NumberMetric;
+import de.instinct.eqlibgdxutils.generic.Action;
+import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.container.list.ElementList;
 import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
@@ -41,6 +43,22 @@ public class PopupRenderer {
 		Label messageLabel = new Label(message);
 		ElementList popupContent = new ElementList();
 		popupContent.getElements().add(messageLabel);
+		
+		ColorButton acceptButton = new ColorButton("Accept");
+		acceptButton.setAction(new Action() {
+			
+			@Override
+			public void execute() {
+				PopupRenderer.close();
+			}
+			
+		});
+		acceptButton.setFixedWidth(messageLabel.calculateWidth());
+		acceptButton.setFixedHeight(30f);
+		acceptButton.setLayer(getCurrentLayer() + 1);
+		popupContent.getElements().add(acceptButton);
+		popupContent.setMargin(10f);
+		
 		create(Popup.builder()
 				.title(title)
 				.contentContainer(popupContent)
