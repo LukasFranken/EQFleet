@@ -62,13 +62,9 @@ public class ShipPartOverview extends Component {
 	}
 
 	private void createLevelArea() {
-		ComponentLevel currentLevel = null;
 		ComponentLevel nextLevel = null;
 		
 		for (ComponentLevel componentLevel : component.getLevels()) {
-			if (componentLevel.getLevel() == shipComponentLevel.getLevel()) {
-				currentLevel = componentLevel;
-			}
 			if (componentLevel.getLevel() == shipComponentLevel.getLevel() + 1) {
 				nextLevel = componentLevel;
 			}

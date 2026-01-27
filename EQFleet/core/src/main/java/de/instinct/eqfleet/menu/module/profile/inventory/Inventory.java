@@ -82,5 +82,9 @@ public class Inventory extends BaseModule {
 		}
 		return Color.WHITE;
 	}
+	
+	public static boolean canAfford(ResourceAmount cost) {
+		return getResource(cost.getType()) >= Math.abs(cost.getAmount());
+	}
 
 }
