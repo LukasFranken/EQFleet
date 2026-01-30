@@ -275,8 +275,7 @@ public class ProjectileProcessor extends EntityProcessor {
         
         if (target instanceof Ship) {
             Ship ship = (Ship) target;
-            Unit closestInRangeTarget = UnitProcessor.getClosestTarget(ship, state);
-            if (closestInRangeTarget == null && ship.targetPlanetId > 0) {
+            if (!UnitProcessor.isInCombatRange(ship, state)) {
                 Planet targetPlanet = EngineUtility.getPlanet(state.planets, ship.targetPlanetId);
                 if (targetPlanet != null) {
                     Vector2 shipDirection = VectorUtil.getDirection(ship.position, targetPlanet.position);
@@ -292,7 +291,7 @@ public class ProjectileProcessor extends EntityProcessor {
                         new Vector2(shipVelocity).scl(estimatedTime)
                     );
                     
-                    for (int i = 0; i < 3; i++) {
+                    for (int i = 0; i < 5; i++) {
                         float distance = projectile.position.dst(predictedPosition);
                         float timeToImpact = distance / projectileSpeed;
                         

@@ -1,0 +1,14 @@
+[
+{
+    "name": "com.badlogic.gdx.math.Vector2",
+    "allDeclaredConstructors":true
+},
+{
+    "name": "de.instinct.engine.net.message.types.NetworkMessage$JoinMessage",
+    "allDeclaredConstructors":true
+},
+{
+    "name": "de.instinct.engine.net.message.types.NetworkMessage",
+    "allDeclaredConstructors":true
+}
+]

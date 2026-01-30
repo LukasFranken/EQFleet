@@ -5,7 +5,6 @@ import java.util.List;
 import de.instinct.api.core.API;
 import de.instinct.api.meta.dto.LoadoutData;
 import de.instinct.engine.ai.AiEngine;
-import de.instinct.engine.initialization.GameStateInitialization;
 import de.instinct.engine.model.AiPlayer;
 import de.instinct.engine.model.Player;
 import de.instinct.engine.net.message.NetworkMessage;
@@ -21,6 +20,8 @@ import de.instinct.engine.order.types.ShipMovementOrder;
 import de.instinct.engine.order.types.SurrenderOrder;
 import de.instinct.engine.stats.StatCollector;
 import de.instinct.engine.util.EngineUtility;
+import de.instinct.engine_api.core.model.GameStateInitialization;
+import de.instinct.engine_api.core.service.GameStateInitializer;
 import de.instinct.eqfleet.audio.AudioManager;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.GameModel;
@@ -32,11 +33,13 @@ public class CustomDriver extends LocalDriver {
 	private CustomLoader customLoader;
 	private AiEngine aiEngine;
 	private boolean finished;
+	private GameStateInitializer gameStateInitializer;
 	
 	public CustomDriver() {
 		super();
 		customLoader = new CustomLoader();
 		aiEngine = new AiEngine();
+		gameStateInitializer = new GameStateInitializer();
 	}
 
 	@Override
@@ -44,7 +47,7 @@ public class CustomDriver extends LocalDriver {
 		LoadoutData loadout = API.meta().loadout(API.authKey);
 		GameModel.playerId = 1;
 		GameStateInitialization initialGameState = customLoader.generateInitialGameState(loadout, 10);
-		GameModel.activeGameState = engine.initializeGameState(initialGameState);
+		GameModel.activeGameState = gameStateInitializer.initialize(initialGameState);
 		GameModel.lastUpdateTimestampMS = System.currentTimeMillis();
 		finished = false;
 	}

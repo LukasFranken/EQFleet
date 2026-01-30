@@ -1,23 +1,11 @@
 package de.instinct.engine;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 import de.instinct.engine.combat.CombatProcessor;
-import de.instinct.engine.initialization.GameStateInitialization;
-import de.instinct.engine.initialization.PlanetInitialization;
 import de.instinct.engine.meta.MetaProcessor;
 import de.instinct.engine.model.GameState;
-import de.instinct.engine.model.Player;
-import de.instinct.engine.model.PlayerConnectionStatus;
-import de.instinct.engine.model.planet.Planet;
 import de.instinct.engine.order.GameOrder;
 import de.instinct.engine.planet.PlanetProcessor;
 import de.instinct.engine.player.PlayerProcessor;
-import de.instinct.engine.stats.StatCollector;
-import de.instinct.engine.util.EngineUtility;
 import de.instinct.engine.util.VictoryCalculator;
 
 public class FleetEngine {
@@ -36,78 +24,6 @@ public class FleetEngine {
 		playerProcessor = new PlayerProcessor();
 		combatProcessor = new CombatProcessor();
 		metaProcessor = new MetaProcessor();
-	}
-	
-	public GameState initializeGameState(GameStateInitialization initialization) {
-		StatCollector.initialize(initialization.gameUUID, initialization.players);
-		GameState state = new GameState();
-		state.orders = new ArrayList<>();
-		state.unprocessedOrders = new ConcurrentLinkedQueue<>();
-		state.entityCounter = 0;
-		state.orderCounter = 0;
-		state.gameUUID = initialization.gameUUID;
-		state.players = initializePlayers(state.gameUUID, initialization.players);
-		state.connectionStati = generateConnectionStati(initialization.players);
-		state.planets = generateInitialPlanets(initialization, state);
-		state.zoomFactor = initialization.map.zoomFactor;
-		state.ships = new ArrayList<>();
-		state.turrets = new ArrayList<>();
-		state.projectiles = new ArrayList<>();
-		state.gameTimeMS = 0;
-		state.maxGameTimeMS = initialization.gameTimeLimitMS;
-		state.winner = 0;
-		state.atpToWin = initialization.atpToWin;
-		state.teamATPs = new HashMap<>();
-		state.teamATPs.put(0, 0D);
-		state.teamATPs.put(1, 0D);
-		state.teamATPs.put(2, 0D);
-		state.ancientPlanetResourceDegradationFactor = initialization.ancientPlanetResourceDegradationFactor;
-		state.started = false;
-		state.maxPauseMS = initialization.pauseTimeLimitMS;
-		state.minPauseMS = 1000L;
-		state.resumeCountdownMS = 3000L;
-		state.teamPausesMS = new HashMap<>();
-		state.teamPausesMS.put(0, 0L);
-		state.teamPausesMS.put(1, 0L);
-		state.teamPausesMS.put(2, 0L);
-		state.teamPausesCount = new HashMap<>();
-		state.teamPausesCount.put(0, 0);
-		state.teamPausesCount.put(1, initialization.pauseCountLimit);
-		state.teamPausesCount.put(2, initialization.pauseCountLimit);
-		combatProcessor.initialize(state);
-		return state;
-	}
-	
-	private List<Player> initializePlayers(String gameUUID, List<Player> players) {
-		for (Player player : players) {
-			player.currentCommandPoints = player.startCommandPoints;
-		}
-		return players;
-	}
-
-	private List<PlayerConnectionStatus> generateConnectionStati(List<Player> players) {
-		List<PlayerConnectionStatus> connectionStati = new ArrayList<>();
-		for (Player player : players) {
-			PlayerConnectionStatus status = new PlayerConnectionStatus();
-			status.playerId = player.id;
-			connectionStati.add(status);
-		}
-		return connectionStati;
-	}
-
-	private List<Planet> generateInitialPlanets(GameStateInitialization initialization, GameState state) {
-		List<Planet> initialPlanets = new ArrayList<>();
-		for (PlanetInitialization init : initialization.map.planets) {
-			Player planetOwner = EngineUtility.getPlayer(initialization.players, init.ownerId);
-			Planet initialPlanet = planetProcessor.createPlanet(planetOwner.planetData, state);
-			initialPlanet.ownerId = init.ownerId;
-			initialPlanet.position = init.position;
-			if (init.ancient) {
-				initialPlanet.ancient = true;
-			}
-			initialPlanets.add(initialPlanet);
-		}
-		return initialPlanets;
 	}
 
 	public void update(GameState state, long progressionMS) {

@@ -11,9 +11,6 @@ import com.badlogic.gdx.math.Vector3;
 
 import de.instinct.engine.ai.AiEngine;
 import de.instinct.engine.combat.Ship;
-import de.instinct.engine.initialization.GameStateInitialization;
-import de.instinct.engine.initialization.PlanetInitialization;
-import de.instinct.engine.map.GameMap;
 import de.instinct.engine.model.AiPlayer;
 import de.instinct.engine.model.Player;
 import de.instinct.engine.model.planet.PlanetData;
@@ -29,6 +26,9 @@ import de.instinct.engine.model.ship.components.types.ShieldType;
 import de.instinct.engine.model.ship.components.types.WeaponType;
 import de.instinct.engine.net.message.types.FleetMovementMessage;
 import de.instinct.engine.util.EngineUtility;
+import de.instinct.engine_api.core.model.GameMap;
+import de.instinct.engine_api.core.model.GameStateInitialization;
+import de.instinct.engine_api.core.model.PlanetInitialization;
 import de.instinct.eqfleet.audio.AudioManager;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.GameModel;
@@ -51,14 +51,13 @@ public class TutorialLoader {
 
 	public GameStateInitialization generateInitialGameState() {
 		GameStateInitialization initialGameState = new GameStateInitialization();
-		initialGameState.gameUUID = UUID.randomUUID().toString();
-		initialGameState.players = loadPlayers();
-		initialGameState.map = generateMap();
-		initialGameState.gameTimeLimitMS = 600_000;
-		initialGameState.ancientPlanetResourceDegradationFactor = 0.5f;
-		initialGameState.atpToWin = 30;
-		initialGameState.pauseTimeLimitMS = 20_000;
-		initialGameState.pauseCountLimit = 0;
+		initialGameState.setGameUUID(UUID.randomUUID().toString());
+		initialGameState.setPlayers(loadPlayers());
+		initialGameState.setAncientPlanetResourceDegradationFactor(0.5f);;
+		initialGameState.setGameTimeLimitMS(600_000);
+		initialGameState.setAtpToWin(30);
+		initialGameState.setPauseTimeLimitMS(20_000);
+		initialGameState.setPauseCountLimit(0);
 		return initialGameState;
 	}
 
@@ -179,39 +178,34 @@ public class TutorialLoader {
 
 	private GameMap generateMap() {
 		GameMap map = new GameMap();
-		map.zoomFactor = 1f;
+		map.setZoomFactor(1f);
 		List<PlanetInitialization> planets = new ArrayList<>();
 		PlanetInitialization startPlanetPlayerOne = new PlanetInitialization();
-    	startPlanetPlayerOne.ownerId = 1;
-    	startPlanetPlayerOne.position = new Vector2(0, -(EngineUtility.MAP_BOUNDS.y / 2) + EngineUtility.PLANET_RADIUS + 150);
-    	startPlanetPlayerOne.startArmorPercent = 0f;
+		startPlanetPlayerOne.setOwnerId(1);
+		startPlanetPlayerOne.setPosition(new Vector2(0, -(EngineUtility.MAP_BOUNDS.y / 2) + EngineUtility.PLANET_RADIUS + 150));
     	planets.add(startPlanetPlayerOne);
     	
     	PlanetInitialization startPlanetPlayerTwo = new PlanetInitialization();
-    	startPlanetPlayerTwo.ownerId = 2;
-    	startPlanetPlayerTwo.position = new Vector2(350, -(EngineUtility.MAP_BOUNDS.y / 2) + EngineUtility.PLANET_RADIUS + 150);
-    	startPlanetPlayerTwo.startArmorPercent = 0f;
+    	startPlanetPlayerTwo.setOwnerId(2);
+    	startPlanetPlayerTwo.setPosition(new Vector2(350, -(EngineUtility.MAP_BOUNDS.y / 2) + EngineUtility.PLANET_RADIUS + 150));
     	planets.add(startPlanetPlayerTwo);
     	
     	PlanetInitialization ancientPlanet = new PlanetInitialization();
-    	ancientPlanet.ownerId = 0;
-    	ancientPlanet.position = new Vector2(0, 200);
-    	ancientPlanet.startArmorPercent = 0f;
-    	ancientPlanet.ancient = true;
+    	ancientPlanet.setOwnerId(0);
+    	ancientPlanet.setPosition(new Vector2(0, 200));
+    	ancientPlanet.setAncient(true);
     	planets.add(ancientPlanet);
     	
     	PlanetInitialization neutralPlanet1 = new PlanetInitialization();
-    	neutralPlanet1.ownerId = 0;
-    	neutralPlanet1.position = new Vector2(400, -400);
-    	neutralPlanet1.startArmorPercent = 0f;
+    	neutralPlanet1.setOwnerId(0);
+    	neutralPlanet1.setPosition(new Vector2(400, -400));
     	planets.add(neutralPlanet1);
     	
     	PlanetInitialization neutralPlanet2 = new PlanetInitialization();
-    	neutralPlanet2.ownerId = 0;
-    	neutralPlanet2.position = new Vector2(-150, -500);
-    	neutralPlanet2.startArmorPercent = 0f;
+    	neutralPlanet2.setOwnerId(0);
+    	neutralPlanet2.setPosition(new Vector2(-150, -500));
     	planets.add(neutralPlanet2);
-		map.planets = planets;
+		map.setPlanets(planets);
 		return map;
 	}
 

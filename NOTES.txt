@@ -1,8 +1,7 @@
 ALPHA RELEASE TODO:
 
 GENERAL:
-- add delete category and item to shop control
-- fix aim prediction
+- fix map preview
 - add bonus to level win by full elimination
 - better nullpoint shield bar visual (fragmentbar)
 - add planets conquered ship core stat
@@ -52,11 +51,25 @@ REFACTIORING:
 - remove calculate widht/height from all component except dynamiccomponent
 
 LAST STEPS:
-- build all as binary
 - test and live environments
 - appicon
 - build apk
 
+- build all as binary 
+  CHECKLIST
+  o discovery
+  o auth
+  o meta
+  o commander
+  o construction
+  o shipyard
+  o shop
+  o starmap
+  x game
+  o matchmaking
+  o control
+  - finalize game
+  - create linux command to see status of all fleet services
 ---------------------------------------------------------------------
 FUTURE RELEASES TODO:
 - MAKE ALL P2W COMMUNITY BENEFIT

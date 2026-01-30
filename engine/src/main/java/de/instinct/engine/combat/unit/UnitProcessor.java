@@ -51,7 +51,7 @@ public abstract class UnitProcessor extends EntityProcessor {
 		if (closestTarget != null) weaponProcessor.aimAtTarget(unit, closestTarget, state, deltaTime);
 	}
 	
-	public boolean isInCombatRange(Unit unit, GameState state) {
+	public static boolean isInCombatRange(Unit unit, GameState state) {
 		if (!unit.weapons.isEmpty()) {
 			Unit closestTarget = getClosestTarget(unit, state);
 			if (closestTarget == null) return false;
