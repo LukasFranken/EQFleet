@@ -26,7 +26,6 @@ GENERAL:
  -> speed up/skip/next button
 - DRASTICALLY IMPROVE GAME NETWORKING AND BUFFER SIZES
 - slider logic change to screenwide drag and drop (especially for mobile)
-- custom desktop window frame
 - randomly pitch/volume sound fx
  -> makes often occuring sounds more pleasant
 - multi-language compatibility
@@ -91,6 +90,7 @@ LAST STEPS:
   - create linux command to see status of all fleet services
 ---------------------------------------------------------------------
 FUTURE RELEASES TODO:
+- custom desktop window frame
 - make ai send ship from ancient to defend it
 - 1v multi ai conquest
 
