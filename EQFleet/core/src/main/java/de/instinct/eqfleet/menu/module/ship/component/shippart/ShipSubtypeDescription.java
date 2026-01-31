@@ -33,7 +33,7 @@ public class ShipSubtypeDescription {
 				return "Through short-burst gravitational\nwave emission, graviton shields\ncan reflect incoming projectiles.";
 				
 			case "projectile":
-				return "Slower moving than other\nweapon types, projectile weapons\ntypically hit harder.";
+				return "Slower moving than other\ntypes, projectile weapons\ntypically hit harder.";
 			case "laser":
 				return "Quick to recharge and fire,\nlaser weapons are designed\nfor quantity over quality.";
 			case "missile":

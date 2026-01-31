@@ -52,7 +52,7 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 	private Label spaceLabel;
 	private Label activeLabel;
 
-	private final float popupWidth = 200f;
+	private final float popupWidth = 220f;
 
 	private Color blueprintColor = new Color(0f, 0f, 0.5f, 1f);
 

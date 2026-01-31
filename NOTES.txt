@@ -1,6 +1,12 @@
 ALPHA RELEASE TODO:
 
 GENERAL:
+[01:35, 1/31/2026] Lukas Franken: double steps for upgrades
+[01:45, 1/31/2026] Lukas Franken: hawk slower speed scale
+
+[01:55, 1/31/2026] Lukas Franken: make shipyard update upon open
+[08:59, 1/31/2026] Lukas Franken: all projectile lifetime longer than range
+
 - add bonus to level win by full elimination
 - better nullpoint shield bar visual (fragmentbar)
 - add planets conquered ship core stat
@@ -85,6 +91,9 @@ LAST STEPS:
   - create linux command to see status of all fleet services
 ---------------------------------------------------------------------
 FUTURE RELEASES TODO:
+- make ai send ship from ancient to defend it
+- 1v multi ai conquest
+
 - MAKE ALL P2W COMMUNITY BENEFIT
 - e.g.: every time someone buys something, everyone gets 1 gem or something
  -> (permanent withdrawable community fund)
