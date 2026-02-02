@@ -7,7 +7,6 @@ GENERAL:
 - make solo conquest offline (with online verification)
 - if you survive -> partial credits reward aswell
 - one minute remaining/10 sec remaining sound
-- add starmap to webcontrol
 - fix error message not updating after failed username setting
  -> e.g. after username taken, it doenst show invalid character
 - only predict shot if not on same lane
@@ -38,6 +37,8 @@ GENERAL:
 - remove ap and sun from tutorial/early maps (until abilities)
 - reward cash with digital number up sound
  -> make rewards more appealing
+- add starmap to webcontrol
+- add meta to webcontrol
 
 - random amazon requests killing apis
 Jan 30 21:46:58 ip-172-30-0-159.eu-central-1.compute.internal bash[10704]: Note: further occurrences of HTTP request parsing errors will be logged at DEBUG level.
