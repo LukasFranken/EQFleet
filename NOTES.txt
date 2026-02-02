@@ -1,12 +1,14 @@
 ALPHA RELEASE TODO:
 
 GENERAL:
-[01:35, 1/31/2026] Lukas Franken: double steps for upgrades
-[01:45, 1/31/2026] Lukas Franken: hawk slower speed scale
-
 [01:55, 1/31/2026] Lukas Franken: make shipyard update upon open
 [08:59, 1/31/2026] Lukas Franken: all projectile lifetime longer than range
 
+- if you survive -> partial credits reward aswell
+- one minute remaining/10 sec remaining sound
+- fix ap win req isnt dynamic
+- galaxy time increase smaller steps
+- archive = money unlockable tips?
 - fix error message not updating after failed username setting
  -> e.g. after username taken, it doenst show invalid character
 - only predict shot if not on same lane

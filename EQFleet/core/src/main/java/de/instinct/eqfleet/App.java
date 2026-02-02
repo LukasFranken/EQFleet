@@ -64,6 +64,7 @@ public class App extends ApplicationAdapter {
         		.decimals(2)
         		.tag("this_frame_time_MS")
         		.build());
+        GlobalStaticData.backgroundParticles = !PreferenceManager.load("bgparticles").contentEquals("false");
         Logger.log(LOGTAG, "Initialization completed", ConsoleColor.YELLOW);
     }
 
@@ -118,8 +119,10 @@ public class App extends ApplicationAdapter {
 			if (!halted) {
 				AudioManager.update();
 				ScreenUtils.clear(0f, 0f, 0f, 1f);
-				ParticleRenderer.updateParticles();
-		        ParticleRenderer.renderParticles("stars");
+				if (GlobalStaticData.backgroundParticles) {
+					ParticleRenderer.updateParticles();
+			        ParticleRenderer.renderParticles("stars");
+				}
 		        Intro.render();
 		        Menu.render();
 		        Game.render();

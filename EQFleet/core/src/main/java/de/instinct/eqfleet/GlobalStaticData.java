@@ -7,5 +7,6 @@ public class GlobalStaticData {
 	public static ApplicationMode mode = ApplicationMode.PRODUCTION;
 	public static APIConfiguration configuration = APIConfiguration.CLIENT;
 	public static boolean debugIntro = false;
+	public static boolean backgroundParticles = true;
 
 }

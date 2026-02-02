@@ -93,7 +93,7 @@ public class EQFleetCommandLoader implements CommandLoader {
 					public void execute(String message) {
 						String authKey = PreferenceManager.load("authkey");
 						ClipboardUtil.setContent(authKey);
-						log("saved authkey: " + authKey);
+						log("loaded authkey to clipboard: " + authKey);
 					}
 					
 				})
@@ -194,6 +194,36 @@ public class EQFleetCommandLoader implements CommandLoader {
 					@Override
 					public void execute(String message) {
 						log("red, blue, purple, pink, orange, yellow, gray, white");
+					}
+					
+				})
+				.build());
+		configCommands.add(Command.builder()
+				.method("config.bgparticles=")
+				.logMethod("config.bgparticles=<true/false>")
+				.description("enable/disable background particles")
+				.action(new CommandAction() {
+					
+					@Override
+					public void execute(String message) {
+						String value = message.replace("config.bgparticles=", "").trim().toLowerCase();
+						try {
+							if (value.contentEquals("true") || value.contentEquals("false")) {
+								PreferenceManager.save("bgparticles", "true");
+								GlobalStaticData.backgroundParticles = Boolean.parseBoolean(value);
+								if (value.contentEquals("true")) {
+									log("background particles enabled");
+								} else {
+									log("background particles disabled");
+								}
+							} else {
+								throw new Exception("only values 'true' and 'false' are allowed");
+							}
+							
+						} catch (Exception e) {
+							log("Error setting bgparticles to: " + value);
+							log(e.getMessage());
+						}
 					}
 					
 				})

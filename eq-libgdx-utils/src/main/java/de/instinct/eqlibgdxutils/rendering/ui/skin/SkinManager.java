@@ -3,22 +3,27 @@ package de.instinct.eqlibgdxutils.rendering.ui.skin;
 import com.badlogic.gdx.graphics.Color;
 
 import de.instinct.eqlibgdxutils.PreferenceUtil;
+import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
+import de.instinct.eqlibgdxutils.debug.logging.Logger;
 
 public class SkinManager {
 	
 	public static SkinColor skin;
 	
-	public static Color skinColor = new Color(0.7f, 0f, 0f, 1f);
-	public static Color darkerSkinColor = new Color(0.5f, 0f, 0f, 1f);
+	public static Color skinColor = new Color(0.8f, 0f, 0f, 1f);
+	public static Color darkerSkinColor = new Color(0.6f, 0f, 0f, 1f);
 	public static Color lighterSkinColor = new Color(0.9f, 0f, 0f, 1f);
-	public static Color darkestSkinColor = new Color(0.2f, 0f, 0f, 1f);
+	public static Color darkestSkinColor = new Color(0.3f, 0f, 0f, 1f);
 	
 	public static void init() {
 		String skinString = PreferenceUtil.load("skin");
-    	if (skinString.contentEquals("")) {
-    		skin = SkinColor.RED;
-    	} else {
-    		skin = SkinColor.valueOf(skinString);
+		skin = SkinColor.RED;
+    	if (!skinString.contentEquals("")) {
+    		try {
+    			skin = SkinColor.valueOf(skinString);
+    		} catch (Exception e) {
+				Logger.log("SkinManager", "ERROR: Cannot parse skin value of: " + skinString + " to enum.", ConsoleColor.RED);
+			}
     	}
 		setValuesForSkinColor(skin.getColor());
 	}
