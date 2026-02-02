@@ -1,45 +1,77 @@
 ALPHA RELEASE TODO:
-
-GENERAL:
-[01:55, 1/31/2026] Lukas Franken: make shipyard update upon open
-[08:59, 1/31/2026] Lukas Franken: all projectile lifetime longer than range
-
-- make solo conquest offline (with online verification)
-- if you survive -> partial credits reward aswell
-- one minute remaining/10 sec remaining sound
+VERIFY:
+- only predict shot if not on same lane
+- all projectiles 30% longer lifespan than range
 - fix error message not updating after failed username setting
  -> e.g. after username taken, it doenst show invalid character
-- only predict shot if not on same lane
-- mapmaker part of control
+
+GENERAL:
+- adjust all maps
+ -> GALAXY CHECKLIST
+  ? 1
+  ? 2
+  x 3
+  x 4
+  x 5
+- adjust all ships
+ -> SHIP CHECKLIST
+  o hawk
+  o turtle
+  x shark
+  x eel (after beam rework)
+  x shellshock
+  x fallout
+
+SERVER:
+- DRASTICALLY IMPROVE GAME NETWORKING AND BUFFER SIZES
+- fix surrender sometimes grants extreme amount of exp?
+- if you survive -> partial credits reward aswell
 - add bonus to level win by full elimination
-- better nullpoint shield bar visual (fragmentbar)
-- add planets conquered ship core stat
-- implement full game logs to control and remove from main log
-- fix explosion ui and sound
-- fix iphone sound stutter
-- fix partial games giving full exp reward
-- add glow buttonlogic to shipyard
-- add glow buttonlogic as menu tutorial
-- remove nullpoint from weaker neutrals
-- fix tutorial
-- short zoom in at start of game
-- minimal map editor and modify current galaxy maps
+
+UI:
 - rework postgame design
  -> show resource number increase on current instead of just added
  -> panel to show ships components progress
  -> speed up/skip/next button
-- DRASTICALLY IMPROVE GAME NETWORKING AND BUFFER SIZES
-- slider logic change to screenwide drag and drop (especially for mobile)
-- randomly pitch/volume sound fx
- -> makes often occuring sounds more pleasant
-- multi-language compatibility
- -> add german
-- remove ap and sun from tutorial/early maps (until abilities)
+- settings tabs (audio, video, gameplay, account)
 - reward cash with digital number up sound
  -> make rewards more appealing
+- slider logic change to screenwide drag and drop (especially for mobile)
+- multi-language compatibility
+ -> add german
+- better nullpoint shield bar visual (fragmentbar)
+- change hangar space needed for build blueprint, not buy blueprint
+- fix doesnt leave lobby after conquest
+
+TUTORAL:
+- deeper tutorial, but tutorial gives rewards
+- add glow buttonlogic to shipyard
+- add glow buttonlogic as menu tutorial
+- fix tutorial
+
+AUDIO:
+- radio: show track, skip track, previous track
+ -> add/remove tracks from playlist
+- fix iphone sound stutter
+- fix explosion sound for non missiles?
+- randomly pitch/volume sound fx
+ -> makes often occuring sounds more pleasant
+- more sound fx (like in menu)
+- one minute remaining/10 sec remaining sound
+
+CONTROL:
+- mapmaker part of control
 - add starmap to webcontrol
 - add meta to webcontrol
+- fix stupid certificate issue for web ui
 
+GAME:
+- make solo conquest offline (with online verification)
+- short zoom in at start of game
+- make beam actual beam
+- fix explosion ui, add effect for non missile explosion
+
+LAST STEPS:
 - random amazon requests killing apis
 Jan 30 21:46:58 ip-172-30-0-159.eu-central-1.compute.internal bash[10704]: Note: further occurrences of HTTP request parsing errors will be logged at DEBUG level.
 Jan 30 21:46:58 ip-172-30-0-159.eu-central-1.compute.internal bash[10704]: java.lang.IllegalArgumentException: Invalid character found in method name [0x160x030x010x000xee0x010x000x000xea0x030x030x940x9cb0xf4B20x040x1a0xde0xa30xbf0xb00xd4>ybs0xafi0xe00xf30xca;80x990xff0xf8;jI7p ]. HTTP method names must be tokens
@@ -53,28 +85,7 @@ Jan 30 21:46:58 ip-172-30-0-159.eu-central-1.compute.internal bash[10704]: at or
 Jan 30 21:46:58 ip-172-30-0-159.eu-central-1.compute.internal bash[10704]: at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[na:na]
 Jan 30 21:46:58 ip-172-30-0-159.eu-central-1.compute.internal bash[10704]: at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[na:na]
 Jan 30 21:46:58 ip-172-30-0-159.eu-central-1.compute.internal bash[10704]: at java.base@17.0.9/java.lang.Thread.run(Thread.java:840) ~[starmap:na]
- 
-GAME:
-- deeper tutorial, but tutorial gives rewards
-- button needs a general flashing animation system
-- radio: show track, skip track, previous track
- -> add/remove tracks from playlist
-- settings tabs (audio, video, gameplay, account)
-- scrollable console log
-- make beam actual beam
 
-BUGS:
-- fix gameserver rubberbanding
-- doesnt leave lobby after conquest
-- surrender sometimes grants extreme amount of exp?
-- hangar space needed for build blueprint, not buy blueprint
-- fix stupid certificate issue for web ui
-
-REFACTIORING:
-- externalize planet resource bar to circularloadingbar component
-- remove calculate widht/height from all component except dynamiccomponent
-
-LAST STEPS:
 - test and live environments
 - appicon
 - build apk
@@ -96,6 +107,14 @@ LAST STEPS:
   - create linux command to see status of all fleet services
 ---------------------------------------------------------------------
 FUTURE RELEASES TODO:
+- scrollable console log
+
+REFACTIORING:
+- externalize planet resource bar to circularloadingbar component
+
+- add planets conquered ship core stat
+- implement full game logs to control and remove from main log
+
 - ai with different playstyles
 access via 1 month membership (credits or rl money)
 - market 

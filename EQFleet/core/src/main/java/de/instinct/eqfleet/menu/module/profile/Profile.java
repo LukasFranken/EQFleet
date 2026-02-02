@@ -53,6 +53,8 @@ public class Profile extends BaseModule {
 			    	ProfileModel.nameRegisterResponseCode = result;
 			    	if (result == NameRegisterResponseCode.SUCCESS) {
 			    		loadData();
+			    	} else {
+			    		super.requireUIReload();
 			    	}
 			    }
 		);
@@ -63,15 +65,14 @@ public class Profile extends BaseModule {
 			    () -> API.meta().profile(API.authKey),
 			    result -> {
 			    	ProfileModel.profile = result;
-			    	super.requireUIReload();
 			    	Menu.reloadContent();
-			    }
-		);
-		WebManager.enqueue(
-			    () -> API.commander().data(API.authKey),
-			    result -> {
-			    	ProfileModel.commanderData = result;
-			    	super.requireUIReload();
+			    	WebManager.enqueue(
+						    () -> API.commander().data(API.authKey),
+						    result2 -> {
+						    	ProfileModel.commanderData = result2;
+						    	super.requireUIReload();
+						    }
+					);
 			    }
 		);
 		Inventory.loadData();

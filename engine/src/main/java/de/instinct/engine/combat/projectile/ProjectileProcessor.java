@@ -249,13 +249,13 @@ public class ProjectileProcessor extends EntityProcessor {
         	Vector2 startPosition = VectorUtil.getTargetPosition(origin.position, target.position, origin.radius);
         	projectile.position = startPosition;
 			((HomingProjectile) projectile).targetId = target.id;
-			projectile.lifetimeMS = (int)((weapon.data.range / projectile.movementSpeed) * 1.2f) * 1000;
+			projectile.lifetimeMS = (int)((weapon.data.range / projectile.movementSpeed) * 1.3f) * 1000;
 			((HomingProjectile) projectile).lastDirection = VectorUtil.getDirection(projectile.position, target.position);
 		}
         if (projectile instanceof DirectionalProjectile) {
-        	projectile.lifetimeMS = (int)(weapon.data.range / projectile.movementSpeed * 1000);
+        	projectile.lifetimeMS = (int)(weapon.data.range / projectile.movementSpeed * 1.3f * 1000);
         	projectile.position = VectorUtil.getDirectionalTargetPosition(origin.position, VectorUtil.getDirection(origin.position, target.position), origin.radius);
-        	((DirectionalProjectile)projectile).direction = calculateInterceptionDirection(projectile, target, state);
+        	((DirectionalProjectile)projectile).direction = calculateInterceptionDirection(origin, projectile, target, state);
         }
         
         PlayerStatistic originUnitOwnerStatistic = StatCollector.getPlayer(state.gameUUID, origin.ownerId);
@@ -270,12 +270,12 @@ public class ProjectileProcessor extends EntityProcessor {
         return projectile;
     }
     
-    private Vector2 calculateInterceptionDirection(Projectile projectile, Unit target, GameState state) {
+    private Vector2 calculateInterceptionDirection(Unit origin, Projectile projectile, Unit target, GameState state) {
         Vector2 directAim = VectorUtil.getDirection(projectile.position, target.position);
         
         if (target instanceof Ship) {
             Ship ship = (Ship) target;
-            if (!UnitProcessor.isInCombatRange(ship, state)) {
+            if (!UnitProcessor.isInCombatRange(ship, state) && origin.originPlanetId != ship.targetPlanetId) {
                 Planet targetPlanet = EngineUtility.getPlanet(state.planets, ship.targetPlanetId);
                 if (targetPlanet != null) {
                     Vector2 shipDirection = VectorUtil.getDirection(ship.position, targetPlanet.position);
