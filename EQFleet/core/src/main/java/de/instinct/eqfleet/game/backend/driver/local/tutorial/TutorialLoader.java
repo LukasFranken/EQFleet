@@ -9,7 +9,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import de.instinct.engine.ai.AiEngine;
 import de.instinct.engine.combat.Ship;
 import de.instinct.engine.model.AiPlayer;
 import de.instinct.engine.model.Player;
@@ -26,6 +25,7 @@ import de.instinct.engine.model.ship.components.types.ShieldType;
 import de.instinct.engine.model.ship.components.types.WeaponType;
 import de.instinct.engine.net.message.types.FleetMovementMessage;
 import de.instinct.engine.util.EngineUtility;
+import de.instinct.engine_api.ai.service.AIPlayerLoader;
 import de.instinct.engine_api.core.model.GameMap;
 import de.instinct.engine_api.core.model.GameStateInitialization;
 import de.instinct.engine_api.core.model.PlanetInitialization;
@@ -43,10 +43,10 @@ import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.VerticalAl
 
 public class TutorialLoader {
 
-	private AiEngine aiEngine;
+	private AIPlayerLoader aiPlayerLoader;
 
 	public TutorialLoader() {
-		aiEngine = new AiEngine();
+		aiPlayerLoader = new AIPlayerLoader();
 	}
 
 	public GameStateInitialization generateInitialGameState() {
@@ -58,6 +58,7 @@ public class TutorialLoader {
 		initialGameState.setAtpToWin(30);
 		initialGameState.setPauseTimeLimitMS(20_000);
 		initialGameState.setPauseCountLimit(0);
+		initialGameState.setMap(generateMap());
 		return initialGameState;
 	}
 
@@ -126,7 +127,7 @@ public class TutorialLoader {
 		
 		//------------------------------------------
 
-		AiPlayer aiPlayer = aiEngine.initialize(1);
+		AiPlayer aiPlayer = aiPlayerLoader.initialize(1);
 		aiPlayer.id = 2;
 		aiPlayer.teamId = 2;
 		aiPlayer.turrets = new ArrayList<>();

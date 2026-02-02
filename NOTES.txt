@@ -7,6 +7,10 @@ GENERAL:
 [01:55, 1/31/2026] Lukas Franken: make shipyard update upon open
 [08:59, 1/31/2026] Lukas Franken: all projectile lifetime longer than range
 
+- fix error message not updating after failed username setting
+ -> e.g. after username taken, it doenst show invalid character
+- only predict shot if not on same lane
+- mapmaker part of control
 - add bonus to level win by full elimination
 - better nullpoint shield bar visual (fragmentbar)
 - add planets conquered ship core stat
@@ -90,6 +94,15 @@ LAST STEPS:
   - create linux command to see status of all fleet services
 ---------------------------------------------------------------------
 FUTURE RELEASES TODO:
+- ai with different playstyles
+access via 1 month membership (credits or rl money)
+- market 
+ -> open to trade resources
+- casino with free daily tokens for generating stuff by playing
+
+- after all components are max level
+ -> reset levels for permanent stat boost
+- externalize ai/neutral stat load and calc to control
 - custom desktop window frame
 - make ai send ship from ancient to defend it
 - 1v multi ai conquest
@@ -174,11 +187,6 @@ ability ideas
  -> grants bonus based on loyalty
  -> malus for changing, but still worth it long term
  -> mostly affects economy and CP and ship/build/ability slots
- 
-- market 
- -> open to trade resources
- 
-- casino with free daily tokens for generating stuff by playing
 ---------------------------------------------------------------------
 ./gradlew ios:launchIPhoneSimulator -P robovm.device.name='iPhone 16 Pro Max'
 ./gradlew lwjgl3:dist

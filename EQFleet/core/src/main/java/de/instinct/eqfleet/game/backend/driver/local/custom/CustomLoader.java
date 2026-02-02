@@ -12,7 +12,6 @@ import de.instinct.api.matchmaking.model.GameMode;
 import de.instinct.api.matchmaking.model.GameType;
 import de.instinct.api.matchmaking.model.VersusMode;
 import de.instinct.api.meta.dto.LoadoutData;
-import de.instinct.engine.ai.AiEngine;
 import de.instinct.engine.model.AiPlayer;
 import de.instinct.engine.model.Player;
 import de.instinct.engine.model.planet.PlanetData;
@@ -25,6 +24,7 @@ import de.instinct.engine.model.turret.PlatformData;
 import de.instinct.engine.model.turret.PlatformType;
 import de.instinct.engine.model.turret.TurretData;
 import de.instinct.engine.util.EngineUtility;
+import de.instinct.engine_api.ai.service.AIPlayerLoader;
 import de.instinct.engine_api.core.model.GameMap;
 import de.instinct.engine_api.core.model.GameStateInitialization;
 import de.instinct.engine_api.core.model.PlanetInitialization;
@@ -32,10 +32,10 @@ import de.instinct.engine_api.core.service.EngineDataInterface;
 
 public class CustomLoader {
 
-	private AiEngine aiEngine;
-	
+	private AIPlayerLoader aiPlayerLoader;
+
 	public CustomLoader() {
-		aiEngine = new AiEngine();
+		aiPlayerLoader = new AIPlayerLoader();
 	}
 	
 	public GameStateInitialization generateInitialGameState(LoadoutData loadout, int threatLevel) {
@@ -69,7 +69,7 @@ public class CustomLoader {
 		userPlayer.teamId = 1;
 		players.add(userPlayer);
 		
-		AiPlayer aiPlayer = aiEngine.initialize(threatLevel);
+		AiPlayer aiPlayer = aiPlayerLoader.initialize(threatLevel);
 		aiPlayer.id = 4;
 		aiPlayer.teamId = 2;
 		players.add(aiPlayer);

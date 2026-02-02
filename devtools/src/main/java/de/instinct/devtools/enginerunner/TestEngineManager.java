@@ -28,6 +28,7 @@ import de.instinct.engine.model.turret.TurretData;
 import de.instinct.engine.order.GameOrder;
 import de.instinct.engine.stats.StatCollector;
 import de.instinct.engine.stats.model.GameStatistic;
+import de.instinct.engine_api.ai.service.AIPlayerLoader;
 import de.instinct.engine_api.core.model.GameMap;
 import de.instinct.engine_api.core.model.GameStateInitialization;
 import de.instinct.engine_api.core.model.PlanetInitialization;
@@ -39,10 +40,12 @@ public class TestEngineManager {
 	
 	private static FleetEngine engine;
 	private static AiEngine aiEngine;
+	private static AIPlayerLoader aiPlayerLoader;
 	private static GameStateInitializer gameStateInitializer;
 	
 	public static void init() {
 		aiEngine = new AiEngine();
+		aiPlayerLoader = new AIPlayerLoader();
 		engine = new FleetEngine();
 		engine.initialize();
 		gameStateInitializer = new GameStateInitializer();
@@ -99,8 +102,7 @@ public class TestEngineManager {
 		player.name = "Player 1";
 		players.add(player);
 		
-		AiEngine aiEngine = new AiEngine();
-		Player aiPlayer = aiEngine.initialize(100);
+		Player aiPlayer = aiPlayerLoader.initialize(100);
 		aiPlayer.id = 4;
 		aiPlayer.teamId = 2;
 		players.add(aiPlayer);
@@ -112,7 +114,7 @@ public class TestEngineManager {
 			player2.name = "Player 2";
 			players.add(player2);
 			
-			Player aiPlayer2 = aiEngine.initialize(500);
+			Player aiPlayer2 = aiPlayerLoader.initialize(500);
 			aiPlayer2.id = 5;
 			aiPlayer2.teamId = 2;
 			players.add(aiPlayer2);
@@ -125,7 +127,7 @@ public class TestEngineManager {
 			player3.name = "Player 3";
 			players.add(player3);
 			
-			Player aiPlayer3 = aiEngine.initialize(10);
+			Player aiPlayer3 = aiPlayerLoader.initialize(10);
 			aiPlayer3.id = 6;
 			aiPlayer3.teamId = 2;
 			players.add(aiPlayer3);

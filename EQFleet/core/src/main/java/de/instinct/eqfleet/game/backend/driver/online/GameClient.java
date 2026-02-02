@@ -29,7 +29,8 @@ public class GameClient {
 	public boolean active;
 	
 	public GameClient() {
-		final LoggingKryoSerialization loggingSerialization = new LoggingKryoSerialization();
+		//final LoggingKryoSerialization loggingSerialization = new LoggingKryoSerialization();
+		//client = new Client(65536, 65536, loggingSerialization);
 		client = new Client(65536, 65536);
         Kryo kryo = client.getKryo();
         KryoRegistrator.registerAll(kryo);
