@@ -5,7 +5,6 @@ GENERAL:
 [08:59, 1/31/2026] Lukas Franken: all projectile lifetime longer than range
 
 - make solo conquest offline (with online verification)
-- solo conquest label black bg
 - if you survive -> partial credits reward aswell
 - one minute remaining/10 sec remaining sound
 - add starmap to webcontrol
