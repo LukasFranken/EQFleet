@@ -61,6 +61,11 @@ public class Label extends Component {
 	@Override
 	protected void renderComponent() {
 		Rectangle bounds = GraphicsUtil.scaleFactorAdjusted(getBounds());
+		if (text.contentEquals("SOLO CONQUEST")) {
+			System.out.println("color " + backgroundColor);
+			System.out.println(bounds);
+			System.out.println("alpha " + getAlpha());
+		}
 		if (backgroundColor != null) {
 			TextureManager.draw(TextureManager.createTexture(backgroundColor), bounds, getAlpha());
 		}

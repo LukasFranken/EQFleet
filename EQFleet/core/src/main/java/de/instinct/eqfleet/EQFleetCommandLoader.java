@@ -209,8 +209,8 @@ public class EQFleetCommandLoader implements CommandLoader {
 						String value = message.replace("config.bgparticles=", "").trim().toLowerCase();
 						try {
 							if (value.contentEquals("true") || value.contentEquals("false")) {
-								PreferenceManager.save("bgparticles", "true");
 								GlobalStaticData.backgroundParticles = Boolean.parseBoolean(value);
+								PreferenceManager.save("bgparticles", value);
 								if (value.contentEquals("true")) {
 									log("background particles enabled");
 								} else {
