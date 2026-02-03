@@ -4,6 +4,8 @@ VERIFY:
 - all projectiles 30% longer lifespan than range
 - fix error message not updating after failed username setting
  -> e.g. after username taken, it doenst show invalid character
+- if you survive -> partial credits reward aswell
+- add bonus to level win by full elimination
 
 GENERAL:
 - adjust all maps
@@ -25,8 +27,6 @@ GENERAL:
 SERVER:
 - DRASTICALLY IMPROVE GAME NETWORKING AND BUFFER SIZES
 - fix surrender sometimes grants extreme amount of exp?
-- if you survive -> partial credits reward aswell
-- add bonus to level win by full elimination
 
 UI:
 - rework postgame design
@@ -58,6 +58,7 @@ AUDIO:
  -> makes often occuring sounds more pleasant
 - more sound fx (like in menu)
 - one minute remaining/10 sec remaining sound
+- wiped out/dominated sound after game
 
 CONTROL:
 - mapmaker part of control
@@ -67,7 +68,6 @@ CONTROL:
 
 GAME:
 - make solo conquest offline (with online verification)
-- short zoom in at start of game
 - make beam actual beam
 - fix explosion ui, add effect for non missile explosion
 

@@ -13,6 +13,7 @@ import de.instinct.eqfleet.game.frontend.planet.PlanetRenderer;
 import de.instinct.eqfleet.game.frontend.projectile.ProjectileRenderer;
 import de.instinct.eqfleet.game.frontend.ships.ShipRenderer;
 import de.instinct.eqfleet.game.frontend.ui.GameUIRenderer;
+import de.instinct.eqlibgdxutils.MathUtil;
 import de.instinct.eqlibgdxutils.rendering.grid.GridConfiguration;
 import de.instinct.eqlibgdxutils.rendering.grid.GridRenderer;
 
@@ -30,6 +31,10 @@ public class GameRenderer {
 	private ProjectileRenderer projectileRenderer;
 	
 	private GuideRenderer guideRenderer;
+	
+	private float startZoomOutFactor = 1.5f;
+	private float zoomInTime = 3f;
+	private float zoomInElapsed;
 	
 	public static boolean isFlipped;
 
@@ -52,15 +57,20 @@ public class GameRenderer {
 		shipRenderer = new ShipRenderer();
 		
 		guideRenderer = new GuideRenderer();
+		
+		zoomInElapsed = 0f;
 	}
 
 	public void render(GameState state) {
 		if (!uiRenderer.initialized) {
-			camera.position.set(new Vector3(BASE_CAM_POS.x, BASE_CAM_POS.y, BASE_CAM_POS.z / state.zoomFactor));
 			uiRenderer.init();
 		}
 		camera.update();
 		if (GameModel.visible) {
+			if (zoomInElapsed < zoomInTime) {
+				zoomInElapsed += Gdx.graphics.getDeltaTime();
+				calculateZoomInStart(state);
+			}
 			uiRenderer.setCamera(camera);
 			uiRenderer.setState(state);
 			if (state != null && state.winner == 0) {
@@ -76,6 +86,11 @@ public class GameRenderer {
 			uiRenderer.render();
 		}
 		guideRenderer.renderEvents(camera);
+	}
+
+	private void calculateZoomInStart(GameState state) {
+		float currentZoomOutFactor = MathUtil.easeInOut(startZoomOutFactor, 1f, zoomInElapsed / zoomInTime);
+		camera.position.set(new Vector3(BASE_CAM_POS.x, BASE_CAM_POS.y, (BASE_CAM_POS.z / state.zoomFactor) * currentZoomOutFactor));
 	}
 
 	private void checkFlip() {

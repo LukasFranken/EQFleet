@@ -84,5 +84,15 @@ public class EngineUtility {
 		}
 		return false;
 	}
+	
+	public static boolean winIsWiped(GameState state) {
+		if (state.winner != 0 && state.gameTimeMS < state.maxGameTimeMS) {
+			for (double atp : state.teamATPs.values()) {
+				if (atp >= state.atpToWin) return false;
+			}
+			return true;
+		}
+		return false;
+	}
 
 }
