@@ -1,11 +1,7 @@
 ALPHA RELEASE TODO:
 VERIFY:
-- only predict shot if not on same lane
-- all projectiles 30% longer lifespan than range
-- fix error message not updating after failed username setting
+- fix error message not updating after failed username setting (on mobile)
  -> e.g. after username taken, it doenst show invalid character
-- if you survive -> partial credits reward aswell
-- add bonus to level win by full elimination
 
 GENERAL:
 - adjust all maps
