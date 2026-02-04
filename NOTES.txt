@@ -25,6 +25,7 @@ SERVER:
 - fix surrender sometimes grants extreme amount of exp?
 
 UI:
+- check which modules dont update on open (shop doesnt)
 - rework postgame design
  -> show resource number increase on current instead of just added
  -> panel to show ships components progress

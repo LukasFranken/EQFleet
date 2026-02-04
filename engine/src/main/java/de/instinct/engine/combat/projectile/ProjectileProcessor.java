@@ -245,15 +245,16 @@ public class ProjectileProcessor extends EntityProcessor {
 		projectile.aoeRadius = weapon.data.aoeRadius;
 		projectile.radius = 1f;
         
+		int lifetime = (int)((weapon.data.range / projectile.movementSpeed) * 1000f * 1.5f);
         if (projectile instanceof HomingProjectile) {
         	Vector2 startPosition = VectorUtil.getTargetPosition(origin.position, target.position, origin.radius);
         	projectile.position = startPosition;
 			((HomingProjectile) projectile).targetId = target.id;
-			projectile.lifetimeMS = (int)((weapon.data.range / projectile.movementSpeed) * 1.3f) * 1000;
+			projectile.lifetimeMS = lifetime;
 			((HomingProjectile) projectile).lastDirection = VectorUtil.getDirection(projectile.position, target.position);
 		}
         if (projectile instanceof DirectionalProjectile) {
-        	projectile.lifetimeMS = (int)(weapon.data.range / projectile.movementSpeed * 1.3f * 1000);
+        	projectile.lifetimeMS = lifetime;
         	projectile.position = VectorUtil.getDirectionalTargetPosition(origin.position, VectorUtil.getDirection(origin.position, target.position), origin.radius);
         	((DirectionalProjectile)projectile).direction = calculateInterceptionDirection(origin, projectile, target, state);
         }
