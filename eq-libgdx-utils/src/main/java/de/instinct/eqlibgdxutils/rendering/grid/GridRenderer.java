@@ -6,8 +6,11 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.eqlibgdxutils.GraphicsUtil;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.shapes.EQRectangle;
 
 public class GridRenderer {
 
@@ -83,6 +86,24 @@ public class GridRenderer {
 
 		Gdx.gl.glLineWidth(1f);
 		Gdx.gl.glDisable(GL20.GL_BLEND);
+	}
+	
+	public void drawGrid() {
+		for (float x = 0; x <= GraphicsUtil.screenBounds().getWidth(); x += config.getStep()) {
+			Shapes.draw(EQRectangle.builder()
+					.color(config.getLineColor())
+					.bounds(new Rectangle(x, 0, config.getLineThickness(), GraphicsUtil.screenBounds().getHeight()))
+					.thickness(config.getLineThickness())
+					.build());
+		}
+
+		for (float y = 0; y <= GraphicsUtil.screenBounds().getHeight(); y += config.getStep()) {
+			Shapes.draw(EQRectangle.builder()
+					.color(config.getLineColor())
+					.bounds(new Rectangle(0, y, GraphicsUtil.screenBounds().getWidth(), config.getLineThickness()))
+					.thickness(config.getLineThickness())
+					.build());
+		}
 	}
 	
 	public void setAlpha(float alpha) {

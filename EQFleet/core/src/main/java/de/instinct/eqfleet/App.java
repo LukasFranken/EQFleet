@@ -34,7 +34,7 @@ import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
 
 public class App extends ApplicationAdapter {
 
-    public static final String VERSION = "0.1.3";
+    public static final String VERSION = "0.1.4";
     private final String LOGTAG = "APP";
 
     private boolean halted;
@@ -65,6 +65,7 @@ public class App extends ApplicationAdapter {
         		.tag("this_frame_time_MS")
         		.build());
         GlobalStaticData.backgroundParticles = !PreferenceManager.load("bgparticles").contentEquals("false");
+        GlobalStaticData.showDebugGrid = PreferenceManager.load("debuggrid").contentEquals("true");
         Logger.log(LOGTAG, "Initialization completed", ConsoleColor.YELLOW);
     }
 
@@ -103,7 +104,7 @@ public class App extends ApplicationAdapter {
 		fontTypes.add(FontTypeConfiguration.builder()
 				.type(FontType.MICRO)
 				.name("source")
-				.size(6)
+				.size(7)
 				.build());
 
 		FontUtil.init(FontConfiguration.builder()

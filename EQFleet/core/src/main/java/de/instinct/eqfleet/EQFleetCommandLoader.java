@@ -78,6 +78,29 @@ public class EQFleetCommandLoader implements CommandLoader {
 					
 				})
 				.build());
+		
+		menuCommands.add(Command.builder()
+				.method("menu.debug")
+				.logMethod("menu.debug")
+				.description("enables/disables the debug grid in the menu")
+				.action(new CommandAction() {
+					
+					@Override
+					public void execute(String message) {
+						String debugGrid = PreferenceManager.load("debuggrid");
+						if (debugGrid.contentEquals("true")) {
+							PreferenceManager.save("debuggrid", "false");
+							GlobalStaticData.showDebugGrid = false;
+							log("debuggrid disabled");
+						} else {
+							PreferenceManager.save("debuggrid", "true");
+							GlobalStaticData.showDebugGrid = true;
+							log("debuggrid enabled");
+						}
+					}
+					
+				})
+				.build());
 		return menuCommands;
 	}
 	

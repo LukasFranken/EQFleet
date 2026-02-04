@@ -25,13 +25,14 @@ SERVER:
 
 UI:
 - rework postgame design
-- rework play logic
  -> show resource number increase on current instead of just added
  -> panel to show ships components progress
  -> speed up/skip/next button
+
+- fix arrow draw while losing planet crash
+- fix hover selection above another planet crash
+ -> probably by just disabling selecting another planet
 - settings tabs (audio, video, gameplay, account)
-- reward cash with digital number up sound
- -> make rewards more appealing
 - slider logic change to screenwide drag and drop (especially for mobile)
 - multi-language compatibility
  -> add german
@@ -45,6 +46,7 @@ TUTORAL:
 - fix tutorial
 
 AUDIO:
+- reward cash with digital number up sound
 - radio: show track, skip track, previous track
  -> add/remove tracks from playlist
 - fix iphone sound stutter
@@ -62,6 +64,7 @@ CONTROL:
 - fix stupid certificate issue for web ui
 
 GAME:
+- add wiped out/domination to victory screen
 - make solo conquest offline (with online verification)
 - make beam actual beam
 - fix explosion ui, add effect for non missile explosion
@@ -105,6 +108,7 @@ FUTURE RELEASES TODO:
 - scrollable console log
 
 REFACTIORING:
+- port all shaping over to EQShapes
 - externalize planet resource bar to circularloadingbar component
 
 - add planets conquered ship core stat

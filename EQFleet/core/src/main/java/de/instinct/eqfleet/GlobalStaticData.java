@@ -8,5 +8,6 @@ public class GlobalStaticData {
 	public static APIConfiguration configuration = APIConfiguration.CLIENT;
 	public static boolean debugIntro = false;
 	public static boolean backgroundParticles = true;
+	public static boolean showDebugGrid = false;
 
 }

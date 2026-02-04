@@ -178,12 +178,6 @@ public class ProfileRenderer extends BaseModuleRenderer {
 		usernameLabel.setBounds(usernameLabelBounds);
 		usernameLabel.render();
 		
-		Shapes.draw(EQRectangle.builder()
-				.bounds(experienceSectionBounds)
-				.color(new Color(SkinManager.skinColor))
-				.glowConfig(EQGlowConfig.builder().build())
-				.thickness(2f)
-				.build());
 		experienceSection.render();
 		
 		if (ProfileModel.commanderData != null) {

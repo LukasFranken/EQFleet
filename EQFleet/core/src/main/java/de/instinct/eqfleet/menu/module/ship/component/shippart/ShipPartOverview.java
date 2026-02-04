@@ -12,11 +12,13 @@ import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.api.shipyard.dto.ship.PlayerShipComponentLevel;
 import de.instinct.api.shipyard.dto.ship.ShipComponent;
+import de.instinct.api.shipyard.dto.ship.ShipPartType;
 import de.instinct.api.shipyard.dto.ship.component.ComponentAttribute;
 import de.instinct.api.shipyard.dto.ship.component.ComponentLevel;
 import de.instinct.api.shipyard.service.impl.ShipyardUtility;
 import de.instinct.eqfleet.menu.common.components.label.DefaultLabelFactory;
 import de.instinct.eqfleet.menu.common.components.label.LabelStackConfiguration;
+import de.instinct.eqfleet.menu.module.ship.Shipyard;
 import de.instinct.eqfleet.menu.module.ship.component.shippart.level.ShipPartLevelArea;
 import de.instinct.eqfleet.menu.module.ship.component.shippart.level.ShipPartLevelOverviewArea;
 import de.instinct.eqfleet.menu.module.ship.component.shippart.level.config.ShipPartLevelOverviewAreaConfig;
@@ -70,7 +72,7 @@ public class ShipPartOverview extends Component {
 			}
 		}
 		
-		levelArea = new ShipPartLevelArea(shipComponentLevel.getLevel(), getPartTypeColor(), shipComponentLevel.getProgress(), nextLevel == null ? shipComponentLevel.getProgress() : nextLevel.getRequirementValue());
+		levelArea = new ShipPartLevelArea(shipComponentLevel.getLevel(), Shipyard.getPartTypeColor(partType), shipComponentLevel.getProgress(), nextLevel == null ? shipComponentLevel.getProgress() : nextLevel.getRequirementValue());
 		levelArea.getColorButton().setLayer(1);
 		levelArea.getColorButton().setGlowAnimation(false);
 		levelArea.getColorButton().setAction(new Action() {
@@ -94,8 +96,8 @@ public class ShipPartOverview extends Component {
 							.tag(ShipyardUtility.getAttributeName(attribute).replaceAll("_", " "))
 							.value(StringUtils.format(attribute.getValue(), 1))
 							.width(width - 85)
-							.colorTag(getPartTypeColor())
-							.colorValue(getPartTypeColor())
+							.colorTag(Shipyard.getPartTypeColor(partType))
+							.colorValue(Shipyard.getPartTypeColor(partType))
 							.build());
 					infoElements.add(infoElement);
 				}
@@ -107,7 +109,7 @@ public class ShipPartOverview extends Component {
 		ElementList popupContent = new ElementList();
 		popupContent.setMargin(10f);
 		
-		Color partColor = getPartTypeColor();
+		Color partColor = Shipyard.getPartTypeColor(partType);
 		ComponentLevel currentLevel = null;
 		ComponentLevel nextLevel = null;
 		
@@ -207,40 +209,24 @@ public class ShipPartOverview extends Component {
 	protected void renderComponent() {
 		Shapes.draw(EQRectangle.builder()
 				.bounds(getBounds())
-				.color(getPartTypeColor())
+				.color(Shipyard.getPartTypeColor(partType))
 				.label(partType.name().toUpperCase())
 				.build());
 		
 		Label partTypeLabel = new Label(ShipyardUtility.getShipComponentSubtype(component).toUpperCase());
 		partTypeLabel.setType(FontType.TINY);
-		partTypeLabel.setColor(getPartTypeColor());
+		partTypeLabel.setColor(Shipyard.getPartTypeColor(partType));
 		partTypeLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
 		partTypeLabel.setBounds(new Rectangle(getBounds().x, getBounds().y + 60, 65, 10));
 		partTypeLabel.render();
 		
 		levelArea.render();
 		
-		TextureManager.draw(TextureManager.createTexture(getPartTypeColor()), new Rectangle(getBounds().x + 65, getBounds().y + 5, 1, getBounds().height - 30), 0.5f);
+		TextureManager.draw(TextureManager.createTexture(Shipyard.getPartTypeColor(partType)), new Rectangle(getBounds().x + 65, getBounds().y + 5, 1, getBounds().height - 30), 0.5f);
 		
 		for (ElementStack infoElement : infoElements) {
 			infoElement.render();
 		}
-	}
-
-	private Color getPartTypeColor() {
-		switch (partType) {
-			case CORE:
-				return Color.PURPLE;
-			case ENGINE:
-				return Color.YELLOW;
-			case HULL:
-				return Color.ORANGE;
-			case SHIELD:
-				return Color.CYAN;
-			case WEAPON:
-				return Color.RED;
-		}
-		return Color.GRAY;
 	}
 
 	@Override

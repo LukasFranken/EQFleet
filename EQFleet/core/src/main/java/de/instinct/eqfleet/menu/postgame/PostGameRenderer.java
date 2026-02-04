@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 
 import de.instinct.api.commander.dto.CommanderStat;
 import de.instinct.api.commander.dto.CommanderUpgrade;
@@ -29,6 +30,7 @@ import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.image.Image;
+import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.HorizontalAlignment;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.container.list.ElementList;
 import de.instinct.eqlibgdxutils.rendering.ui.container.list.ElementStack;
@@ -39,7 +41,7 @@ import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 
 public class PostGameRenderer extends BaseModuleRenderer {
 	
-	private final float PER_ITEM_DURATION_MS = 1f;
+	private final float PER_ITEM_DURATION_MS = 0.8f;
 	
 	private ColorButton claimButton;
 	
@@ -105,30 +107,32 @@ public class PostGameRenderer extends BaseModuleRenderer {
 			elements = new ArrayList<>();
 			
 			elements.add(PostGameElement.builder()
-					.duration(PER_ITEM_DURATION_MS / 2)
+					.duration(PER_ITEM_DURATION_MS)
 					.build());
 			
-			Label header = new Label("Results");
+			Label header = new Label(PostGameModel.reward.getVictoryType().toString());
 			header.setType(FontType.LARGE);
 			header.setFixedHeight(50);
 			header.setFixedWidth(GraphicsUtil.screenBounds().width);
-			header.setPosition(0, GraphicsUtil.screenBounds().getHeight() - 100);
+			header.setPosition(0, GraphicsUtil.screenBounds().getHeight() - 60);
 			elements.add(PostGameElement.builder()
-					.duration(PER_ITEM_DURATION_MS / 2)
+					.duration(PER_ITEM_DURATION_MS)
 					.uiElement(header)
 					.build());
 			
 			ExperienceSection experienceSection = new ExperienceSection();
-			experienceSection.setRankImagesEnabled(false);
-			experienceSection.init(50, GraphicsUtil.screenBounds().getHeight() / 2 + 50, GraphicsUtil.screenBounds().getWidth() - 100);
+			experienceSection.init(50, GraphicsUtil.screenBounds().getHeight() - 150, GraphicsUtil.screenBounds().getWidth() - 100);
 			
-			ElementStack experienceLabels = DefaultLabelFactory.createLabelStack("EXP", StringUtils.formatBigNumber(PostGameModel.reward.getExperience()));
-			experienceLabels.setFixedWidth(GraphicsUtil.screenBounds().width / 2);
-			experienceLabels.setPosition(GraphicsUtil.screenBounds().width / 4, experienceSection.getBounds().y + experienceSection.getActualHeight() + 20);
+			Label experienceLabel = new Label("+" + StringUtils.formatBigNumber(PostGameModel.reward.getExperience()) + " EXP");
+			experienceLabel.setFixedWidth(GraphicsUtil.screenBounds().width / 2);
+			experienceLabel.setPosition(GraphicsUtil.screenBounds().width / 4, experienceSection.getBounds().y + experienceSection.getActualHeight());
+			experienceLabel.setType(FontType.SMALL);
+			experienceLabel.setColor(Color.BLUE);
+			experienceLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
 			
 			elements.add(PostGameElement.builder()
-					.duration(PER_ITEM_DURATION_MS)
-					.uiElement(experienceLabels)
+					.duration(0)
+					.uiElement(experienceLabel)
 					.build());
 			
 			elements.add(PostGameElement.builder()
@@ -202,10 +206,18 @@ public class PostGameRenderer extends BaseModuleRenderer {
 				for (ResourceAmount resource : PostGameModel.reward.getResources()) {
 					ElementStack resourceLabels = DefaultLabelFactory.createResourceStack(resource);
 					resourceLabels.setFixedWidth(GraphicsUtil.screenBounds().width / 2);
-					resourceLabels.setPosition(GraphicsUtil.screenBounds().width / 4, (GraphicsUtil.screenBounds().getHeight() / 2) - 50 - (30 * i));
+					resourceLabels.setPosition(GraphicsUtil.screenBounds().width / 4, GraphicsUtil.screenBounds().getHeight() - 200 - (20 * i));
 					elements.add(PostGameElement.builder()
-							.duration(PER_ITEM_DURATION_MS)
+							.duration(PER_ITEM_DURATION_MS * 2f)
 							.uiElement(resourceLabels)
+							.animationAction(new AnimationAction() {
+								
+								@Override
+								public void update(float progression) {
+									Inventory.getResource(resource.getType());
+								}
+								
+							})
 							.build());
 					i++;
 				}
@@ -217,10 +229,11 @@ public class PostGameRenderer extends BaseModuleRenderer {
 						.uiElement(noResourcesLabel)
 						.build());
 			}
-			
-			claimButton.setPosition((GraphicsUtil.screenBounds().width / 2) - (claimButton.getFixedWidth() / 2), 70);
+			claimButton.setFixedWidth(90);
+			claimButton.setFixedHeight(30);
+			claimButton.setPosition((GraphicsUtil.screenBounds().width / 2) - (claimButton.getFixedWidth() / 2), 50);
 			elements.add(PostGameElement.builder()
-					.duration(PER_ITEM_DURATION_MS)
+					.duration(0)
 					.uiElement(claimButton)
 					.build());
 		}

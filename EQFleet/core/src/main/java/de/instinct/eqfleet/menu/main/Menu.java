@@ -17,6 +17,7 @@ import de.instinct.api.core.API;
 import de.instinct.api.core.modules.MenuModule;
 import de.instinct.api.matchmaking.model.GameMode;
 import de.instinct.api.meta.dto.modules.ModuleInfoRequest;
+import de.instinct.eqfleet.GlobalStaticData;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
@@ -49,11 +50,14 @@ import de.instinct.eqfleet.net.WebManager;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
+import de.instinct.eqlibgdxutils.rendering.grid.GridConfiguration;
+import de.instinct.eqlibgdxutils.rendering.grid.GridRenderer;
 
 public class Menu {
 	
 	private static PostGameRenderer postGameRenderer;
 	private static MenuRenderer menuRenderer;
+	private static GridRenderer gridRenderer;
 	
 	private static ScheduledExecutorService scheduler;
 	private static long UPDATE_CLOCK_MS = 20;
@@ -65,6 +69,11 @@ public class Menu {
 		ModuleManager.init();
 		postGameRenderer = new PostGameRenderer();
 		menuRenderer = new MenuRenderer();
+		
+		gridRenderer = new GridRenderer(GridConfiguration.builder()
+				.step(10f)
+				.build());
+		
 		reloadRequired = new ConcurrentLinkedQueue<>();
 		
 		MenuModel.modules = new HashMap<>();
@@ -172,6 +181,7 @@ public class Menu {
 			MenuModel.renderers.get(reloadRequired.poll()).reload();
 		}
 		if (MenuModel.active) {
+			if (GlobalStaticData.showDebugGrid) gridRenderer.drawGrid();
 			if (PostGameModel.reward != null) {
 				postGameRenderer.render();
 			} else {

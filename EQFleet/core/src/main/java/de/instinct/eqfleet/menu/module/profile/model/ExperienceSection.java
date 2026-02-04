@@ -34,44 +34,44 @@ public class ExperienceSection extends Component {
 	private Image rankImage;
 	private Image nextRankImage;
 	
-	private float margin = 20f;
+	private float margin = 10f;
 	
 	private boolean rankImagesEnabled;
+	private boolean rankNamesEnabled;
 	
 	public ExperienceSection() {
 		super();
 		rankImagesEnabled = true;
+		rankNamesEnabled = true;
 		currentRankNameLabel = new Label("");
 		currentRankNameLabel.setColor(Color.LIGHT_GRAY);
-		currentRankNameLabel.setType(FontType.SMALL);
+		currentRankNameLabel.setType(FontType.MICRO);
 		currentRankNameLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
 		nextRankNameLabel = new Label("");
-		nextRankNameLabel.setType(FontType.SMALL);
+		nextRankNameLabel.setType(FontType.MICRO);
 		nextRankNameLabel.setColor(Color.LIGHT_GRAY);
 		nextRankNameLabel.setHorizontalAlignment(HorizontalAlignment.RIGHT);
 		
 		expBar = new PlainRectangularLoadingBar();
 		expBar.setBar(TextureManager.createTexture(Color.BLUE));
 		expBar.setBackground(TextureManager.createTexture(new Color(0f, 0f, 0f, 0f)));
+		expBar.setCustomDescriptor("");
 		
 		currentRankEXPLabel = new Label("");
 		currentRankEXPLabel.setColor(Color.BLUE);
 		currentRankEXPLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
+		currentRankEXPLabel.setType(FontType.SMALL);
 		nextRankEXPLabel = new Label("");
 		nextRankEXPLabel.setColor(Color.BLUE);
 		nextRankEXPLabel.setHorizontalAlignment(HorizontalAlignment.RIGHT);
+		nextRankEXPLabel.setType(FontType.SMALL);
 	}
 	
 	public void init(float x, float y, float width) {
 		super.setBounds(new Rectangle(x, y, width, calculateHeight()));
-		if (rankImagesEnabled) {
-			nameLabelBounds = new Rectangle(getBounds().x + 45, getBounds().y + getBounds().height - 40, getBounds().width - 90, 40);
-		} else {
-			nameLabelBounds = new Rectangle(getBounds().x, getBounds().y + getBounds().height - 20, getBounds().width, 20);
-		}
-		
-		expBarBounds = new Rectangle(getBounds().x, nameLabelBounds.y - margin - 10, getBounds().width, 20);
-		expLabelBounds = new Rectangle(expBarBounds.x, expBarBounds.y - 10 - margin, getBounds().width, 20);
+		nameLabelBounds = new Rectangle(getBounds().x + (rankImagesEnabled ? 45 : 0), getBounds().y + getBounds().height - 10, getBounds().width - (rankImagesEnabled ? 90 : 0), 10);
+		expBarBounds = new Rectangle(nameLabelBounds.x , nameLabelBounds.y - margin - 3, nameLabelBounds.width, 10);
+		expLabelBounds = new Rectangle(expBarBounds.x, expBarBounds.y - 3 - margin, expBarBounds.width, 10);
 	}
 	
 	public float getActualHeight() {
@@ -80,11 +80,7 @@ public class ExperienceSection extends Component {
 	
 	@Override
 	public float calculateHeight() {
-		if (rankImagesEnabled) {
-			return 40 + 20 + 20 + (margin * 2);
-		} else {
-			return 20 + 20 + 20 + (margin * 2);
-		}
+		return 20 + 20 + (margin * 2);
 	}
 
 	@Override
@@ -95,28 +91,29 @@ public class ExperienceSection extends Component {
 	@Override
 	protected void updateComponent() {
 		currentRankNameLabel.setBounds(nameLabelBounds);
-		currentRankNameLabel.setText(formatRankLabel(ProfileModel.profile.getRank().getLabel()));
+		currentRankNameLabel.setText(ProfileModel.profile.getRank().getLabel());
 		nextRankNameLabel.setBounds(nameLabelBounds);
-		nextRankNameLabel.setText(formatRankLabel(ProfileModel.profile.getRank().getNextRank().getLabel()));
+		nextRankNameLabel.setText(ProfileModel.profile.getRank().getNextRank().getLabel());
 		expBar.setBounds(expBarBounds);
 		expBar.setMaxValue(ProfileModel.profile.getRank().getNextRequiredExp() - ProfileModel.profile.getRank().getRequiredExp());
 		expBar.setCurrentValue(ProfileModel.profile.getCurrentExp() - ProfileModel.profile.getRank().getRequiredExp());
-		expBar.setCustomDescriptor(ProfileModel.profile.getCurrentExp() + "");
 		currentRankEXPLabel.setBounds(expLabelBounds);
 		currentRankEXPLabel.setText(ProfileModel.profile.getRank().getRequiredExp() + "");
 		nextRankEXPLabel.setBounds(expLabelBounds);
 		nextRankEXPLabel.setText(ProfileModel.profile.getRank().getNextRequiredExp() + "");
 		
 		rankImage = new Image(TextureManager.getTexture("ui/image/rank", ProfileModel.profile.getRank().getFileName()));
-		rankImage.setBounds(new Rectangle(getBounds().x, nameLabelBounds.y, 40, 40));
 		nextRankImage = new Image(TextureManager.getTexture("ui/image/rank", ProfileModel.profile.getRank().getNextRank().getFileName()));
-		nextRankImage.setBounds(new Rectangle(getBounds().x + getBounds().width - 40f, nameLabelBounds.y, 40, 40));
+		rankImage.setBounds(new Rectangle(getBounds().x, expLabelBounds.y, 40, 40));
+		nextRankImage.setBounds(new Rectangle(getBounds().x + getBounds().width - 40f, expLabelBounds.y, 40, 40));
 	}
 
 	@Override
 	protected void renderComponent() {
-		currentRankNameLabel.render();
-		nextRankNameLabel.render();
+		if (rankNamesEnabled) {
+			currentRankNameLabel.render();
+			nextRankNameLabel.render();
+		}
 		if (rankImagesEnabled) {
 			rankImage.render();
 			nextRankImage.render();
@@ -130,14 +127,6 @@ public class ExperienceSection extends Component {
 				.build());
 		currentRankEXPLabel.render();
 		nextRankEXPLabel.render();
-	}
-	
-	private String formatRankLabel(String label) {
-		int maxChars = 12;
-		if (label.length() > maxChars) {
-			return label.replaceFirst(" ", "\n");
-		}
-		return label;
 	}
 	
 	@Override

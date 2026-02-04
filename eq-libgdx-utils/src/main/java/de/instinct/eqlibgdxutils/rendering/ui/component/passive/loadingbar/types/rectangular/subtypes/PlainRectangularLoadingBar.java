@@ -8,6 +8,7 @@ import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.Direction;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.RectangularLoadingBar;
+import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -24,6 +25,7 @@ public class PlainRectangularLoadingBar extends RectangularLoadingBar {
 	public PlainRectangularLoadingBar() {
 		super();
 		descriptorLabel = new Label(customDescriptor);
+		descriptorLabel.setType(FontType.BOLD);
 		bar = TextureManager.createTexture(Color.BLACK);
 		direction = Direction.EAST;
 	}

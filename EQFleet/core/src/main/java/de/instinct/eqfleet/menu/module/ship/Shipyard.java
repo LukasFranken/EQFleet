@@ -1,11 +1,14 @@
 package de.instinct.eqfleet.menu.module.ship;
 
+import com.badlogic.gdx.graphics.Color;
+
 import de.instinct.api.core.API;
 import de.instinct.api.core.modules.MenuModule;
 import de.instinct.api.shipyard.dto.ShipBuildResponse;
 import de.instinct.api.shipyard.dto.UnuseShipResponseCode;
 import de.instinct.api.shipyard.dto.UseShipResponseCode;
 import de.instinct.api.shipyard.dto.ship.PlayerShipData;
+import de.instinct.api.shipyard.dto.ship.ShipPartType;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.module.core.ModuleMessage;
@@ -112,6 +115,22 @@ public class Shipyard extends BaseModule {
 			}
 		}
 		return hasActiveShip;
+	}
+	
+	public static Color getPartTypeColor(ShipPartType partType) {
+		switch (partType) {
+			case CORE:
+				return Color.PURPLE;
+			case ENGINE:
+				return Color.YELLOW;
+			case HULL:
+				return Color.ORANGE;
+			case SHIELD:
+				return Color.CYAN;
+			case WEAPON:
+				return Color.RED;
+		}
+		return Color.GRAY;
 	}
 
 	@Override
