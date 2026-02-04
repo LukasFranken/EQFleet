@@ -65,12 +65,12 @@ public class ShipPartLevelOverviewArea extends Component {
 		tagLabel.setType(FontType.SMALL);
 		tagLabel.setColor(config.getPartColor());
 		
-		minLabel = new Label(StringUtils.formatBigNumber((long)config.getCurrentValue(), 0));
+		minLabel = new Label(StringUtils.formatBigNumber((long)config.getCurrentValue(), 1));
 		minLabel.setHorizontalAlignment(HorizontalAlignment.RIGHT);
 		minLabel.setType(FontType.TINY);
 		minLabel.setColor(config.getPartColor());
 		
-		maxLabel = new Label(StringUtils.formatBigNumber((long)config.getMaxValue() == -1 ? (long)config.getCurrentValue() : (long)config.getMaxValue(), 0));
+		maxLabel = new Label(StringUtils.formatBigNumber((long)config.getMaxValue() == -1 ? (long)config.getCurrentValue() : (long)config.getMaxValue(), 1));
 		maxLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
 		maxLabel.setType(FontType.TINY);
 		maxLabel.setColor(config.getPartColor());

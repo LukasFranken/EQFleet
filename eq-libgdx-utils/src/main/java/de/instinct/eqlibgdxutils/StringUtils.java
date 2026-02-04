@@ -147,8 +147,16 @@ public class StringUtils {
 	    if (value < 1_000_000_000_000L) {
 	        return cleanDecimal(String.format("%." + decimals + "f B", value / 1_000_000_000.0).replace(',', '.'));
 	    }
+	    
+	    if (value < 1_000_000_000_000_000L) {
+	        return cleanDecimal(String.format("%." + decimals + "f T", value / 1_000_000_000_000.0).replace(',', '.'));
+	    }
+	    
+	    if (value < 1_000_000_000_000_000_000L) {
+	        return cleanDecimal(String.format("%." + decimals + "f Q", value / 1_000_000_000_000_000.0).replace(',', '.'));
+	    }
 
-	    return cleanDecimal(String.format("%." + decimals + "f T", value / 1_000_000_000_000.0).replace(',', '.'));
+	    return "";
 	}
 
 	private static String cleanDecimal(String number) {

@@ -1,7 +1,5 @@
 ALPHA RELEASE TODO:
 VERIFY:
-- fix error message not updating after failed username setting (on mobile)
- -> e.g. after username taken, it doenst show invalid character
 
 GENERAL:
 - adjust all maps
@@ -23,10 +21,11 @@ GENERAL:
 SERVER:
 - DRASTICALLY IMPROVE GAME NETWORKING AND BUFFER SIZES
 - fix surrender sometimes grants extreme amount of exp?
+- actual dbs for data
 
 UI:
-- check which modules dont update on open (shop doesnt)
 - rework postgame design
+- rework play logic
  -> show resource number increase on current instead of just added
  -> panel to show ships components progress
  -> speed up/skip/next button
@@ -38,7 +37,6 @@ UI:
  -> add german
 - better nullpoint shield bar visual (fragmentbar)
 - change hangar space needed for build blueprint, not buy blueprint
-- fix doesnt leave lobby after conquest
 
 TUTORAL:
 - deeper tutorial, but tutorial gives rewards

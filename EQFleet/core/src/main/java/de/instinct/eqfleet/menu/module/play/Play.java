@@ -22,7 +22,7 @@ import de.instinct.eqfleet.net.WebManager;
 public class Play extends BaseModule {
 	
 	private static ScheduledExecutorService scheduler;
-	private static int QUEUE_UPDATE_CLOCK_MS = 500;
+	private static int QUEUE_UPDATE_CLOCK_MS = 1000;
 
 	@Override
 	public MenuModule getMenuModule() {
