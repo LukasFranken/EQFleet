@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.eqfleet.menu.module.profile.ProfileModel;
+import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.image.Image;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.HorizontalAlignment;
@@ -30,6 +31,7 @@ public class ExperienceSection extends Component {
 	private Label currentRankEXPLabel;
 	private Label nextRankEXPLabel;
 	private PlainRectangularLoadingBar expBar;
+	private Label experienceGainedLabel;
 	
 	private Image rankImage;
 	private Image nextRankImage;
@@ -65,6 +67,11 @@ public class ExperienceSection extends Component {
 		nextRankEXPLabel.setColor(Color.BLUE);
 		nextRankEXPLabel.setHorizontalAlignment(HorizontalAlignment.RIGHT);
 		nextRankEXPLabel.setType(FontType.SMALL);
+		
+		experienceGainedLabel = new Label("");
+		experienceGainedLabel.setType(FontType.TINY);
+		experienceGainedLabel.setColor(Color.BLUE);
+		experienceGainedLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
 	}
 	
 	public void init(float x, float y, float width) {
@@ -98,14 +105,17 @@ public class ExperienceSection extends Component {
 		expBar.setMaxValue(ProfileModel.profile.getRank().getNextRequiredExp() - ProfileModel.profile.getRank().getRequiredExp());
 		expBar.setCurrentValue(ProfileModel.profile.getCurrentExp() - ProfileModel.profile.getRank().getRequiredExp());
 		currentRankEXPLabel.setBounds(expLabelBounds);
-		currentRankEXPLabel.setText(ProfileModel.profile.getRank().getRequiredExp() + "");
+		currentRankEXPLabel.setText(StringUtils.formatBigNumber(ProfileModel.profile.getRank().getRequiredExp(), 1));
 		nextRankEXPLabel.setBounds(expLabelBounds);
-		nextRankEXPLabel.setText(ProfileModel.profile.getRank().getNextRequiredExp() + "");
+		nextRankEXPLabel.setText(StringUtils.formatBigNumber(ProfileModel.profile.getRank().getNextRequiredExp(), 1));
 		
 		rankImage = new Image(TextureManager.getTexture("ui/image/rank", ProfileModel.profile.getRank().getFileName()));
 		nextRankImage = new Image(TextureManager.getTexture("ui/image/rank", ProfileModel.profile.getRank().getNextRank().getFileName()));
 		rankImage.setBounds(new Rectangle(getBounds().x, expLabelBounds.y, 40, 40));
 		nextRankImage.setBounds(new Rectangle(getBounds().x + getBounds().width - 40f, expLabelBounds.y, 40, 40));
+		
+		experienceGainedLabel.setFixedWidth(getBounds().width);
+		experienceGainedLabel.setPosition(getBounds().x, getBounds().y + getActualHeight() - 10);
 	}
 
 	@Override
@@ -118,6 +128,7 @@ public class ExperienceSection extends Component {
 			rankImage.render();
 			nextRankImage.render();
 		}
+		experienceGainedLabel.render();
 		expBar.render();
 		Shapes.draw(EQRectangle.builder()
 				.bounds(expBarBounds)
@@ -132,6 +143,10 @@ public class ExperienceSection extends Component {
 	@Override
 	public void dispose() {
 		
+	}
+
+	public void setCurrentGainedExperience(long currentExperience) {
+		experienceGainedLabel.setText("+" + StringUtils.formatBigNumber(currentExperience, 1) + " EXP");
 	}
 
 }

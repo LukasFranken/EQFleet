@@ -22,13 +22,9 @@ SERVER:
 - DRASTICALLY IMPROVE GAME NETWORKING AND BUFFER SIZES
 - fix surrender sometimes grants extreme amount of exp?
 - actual dbs for data
+- treat surrender as wiped out with new enum message
 
 UI:
-- rework postgame design
- -> show resource number increase on current instead of just added
- -> panel to show ships components progress
- -> speed up/skip/next button
-
 - fix arrow draw while losing planet crash
 - fix hover selection above another planet crash
  -> probably by just disabling selecting another planet
@@ -46,6 +42,7 @@ TUTORAL:
 - fix tutorial
 
 AUDIO:
+- add cool copyright music for test purposes
 - reward cash with digital number up sound
 - radio: show track, skip track, previous track
  -> add/remove tracks from playlist

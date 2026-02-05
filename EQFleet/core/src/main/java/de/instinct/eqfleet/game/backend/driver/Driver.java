@@ -65,7 +65,7 @@ public abstract class Driver {
 				e.printStackTrace();
 			}
 			
-		}, 3000, TimeUnit.MILLISECONDS);
+		}, 2000, TimeUnit.MILLISECONDS);
 	}
 	
 	public abstract void finish();

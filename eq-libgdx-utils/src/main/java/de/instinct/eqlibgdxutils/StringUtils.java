@@ -137,23 +137,23 @@ public class StringUtils {
 	    }
 
 	    if (value < 1_000_000) {
-	    	return cleanDecimal(String.format("%." + decimals + "f K", value / 1_000.0).replace(',', '.'));
+	    	return cleanDecimal(String.format("%." + decimals + "f K", value / 1_000.0).replace(',', '.')).replace(" ", "");
 	    }
 
 	    if (value < 1_000_000_000) {
-	        return cleanDecimal(String.format("%." + decimals + "f M", value / 1_000_000.0).replace(',', '.'));
+	        return cleanDecimal(String.format("%." + decimals + "f M", value / 1_000_000.0).replace(',', '.')).replace(" ", "");
 	    }
 
 	    if (value < 1_000_000_000_000L) {
-	        return cleanDecimal(String.format("%." + decimals + "f B", value / 1_000_000_000.0).replace(',', '.'));
+	        return cleanDecimal(String.format("%." + decimals + "f B", value / 1_000_000_000.0).replace(',', '.')).replace(" ", "");
 	    }
 	    
 	    if (value < 1_000_000_000_000_000L) {
-	        return cleanDecimal(String.format("%." + decimals + "f T", value / 1_000_000_000_000.0).replace(',', '.'));
+	        return cleanDecimal(String.format("%." + decimals + "f T", value / 1_000_000_000_000.0).replace(',', '.')).replace(" ", "");
 	    }
 	    
 	    if (value < 1_000_000_000_000_000_000L) {
-	        return cleanDecimal(String.format("%." + decimals + "f Q", value / 1_000_000_000_000_000.0).replace(',', '.'));
+	        return cleanDecimal(String.format("%." + decimals + "f Q", value / 1_000_000_000_000_000.0).replace(',', '.')).replace(" ", "");
 	    }
 
 	    return "";

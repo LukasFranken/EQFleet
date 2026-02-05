@@ -12,9 +12,9 @@ import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.api.shipyard.dto.ship.PlayerShipComponentLevel;
 import de.instinct.api.shipyard.dto.ship.ShipComponent;
-import de.instinct.api.shipyard.dto.ship.ShipPartType;
 import de.instinct.api.shipyard.dto.ship.component.ComponentAttribute;
 import de.instinct.api.shipyard.dto.ship.component.ComponentLevel;
+import de.instinct.api.shipyard.dto.ship.component.ShipComponentType;
 import de.instinct.api.shipyard.service.impl.ShipyardUtility;
 import de.instinct.eqfleet.menu.common.components.label.DefaultLabelFactory;
 import de.instinct.eqfleet.menu.common.components.label.LabelStackConfiguration;
@@ -45,7 +45,7 @@ import lombok.EqualsAndHashCode;
 public class ShipPartOverview extends Component {
 	
 	private float width;
-	private ShipPartType partType;
+	private ShipComponentType partType;
 	private PlayerShipComponentLevel shipComponentLevel;
 	private ShipComponent component;
 	
@@ -57,7 +57,7 @@ public class ShipPartOverview extends Component {
 		this.width = width;
 		this.shipComponentLevel = shipComponentLevel;
 		this.component = component;
-		this.partType = ShipPartType.valueOf(ShipyardUtility.getShipComponentType(component).toUpperCase());
+		this.partType = ShipComponentType.valueOf(ShipyardUtility.getShipComponentType(component).toUpperCase());
 		
 		createLevelArea();
 		initializeInfoElements();

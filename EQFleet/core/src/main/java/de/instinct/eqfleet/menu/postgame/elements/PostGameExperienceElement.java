@@ -33,21 +33,18 @@ public class PostGameExperienceElement implements PostGameElement {
 	private boolean halted;
 	private float elapsed;
 	private ExperienceSection uiElement;
+	private AnimationAction animationAction;
 	
 	public PostGameExperienceElement(float itemDuration) {
 		uiElement = new ExperienceSection();
 		uiElement.init(50, GraphicsUtil.screenBounds().getHeight() - 150, GraphicsUtil.screenBounds().getWidth() - 100);
 		this.itemDuration = itemDuration;
+		
+		buildAnimationAction();
 	}
 
-	@Override
-	public float getDuration() {
-		return itemDuration * (PostGameModel.reward.getExperience() > 10 ? 3 : 1);
-	}
-
-	@Override
-	public AnimationAction getAnimationAction() {
-		return new AnimationAction() {
+	private void buildAnimationAction() {
+		animationAction = new AnimationAction() {
 			
 			private long startExperience = ProfileModel.profile.getCurrentExp();
 			private long targetExperience = startExperience + PostGameModel.reward.getExperience();
@@ -56,6 +53,7 @@ public class PostGameExperienceElement implements PostGameElement {
 			public void update(float progression) {
 				long currentExperience = (long)MathUtil.easeInOut(startExperience, targetExperience, progression);
 				ProfileModel.profile.setCurrentExp(currentExperience);
+				uiElement.setCurrentGainedExperience(currentExperience - startExperience);
 				while (ProfileModel.profile.getRank().getNextRequiredExp() <= ProfileModel.profile.getCurrentExp()) {
 					ProfileModel.profile.setRank(ProfileModel.profile.getRank().getNextRank());
 					halted = true;
@@ -111,8 +109,8 @@ public class PostGameExperienceElement implements PostGameElement {
 	}
 
 	@Override
-	public boolean isHalted() {
-		return halted;
+	public float getDuration() {
+		return itemDuration * (PostGameModel.reward.getExperience() > 10 ? 3 : 1);
 	}
 
 }

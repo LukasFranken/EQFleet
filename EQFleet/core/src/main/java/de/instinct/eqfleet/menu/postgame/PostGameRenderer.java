@@ -4,42 +4,48 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 
+import de.instinct.api.matchmaking.dto.ShipResult;
 import de.instinct.api.matchmaking.model.GameMode;
-import de.instinct.api.meta.dto.ResourceAmount;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
-import de.instinct.eqfleet.menu.common.components.label.DefaultLabelFactory;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.module.play.Play;
 import de.instinct.eqfleet.menu.module.play.PlayModel;
 import de.instinct.eqfleet.menu.module.profile.inventory.Inventory;
 import de.instinct.eqfleet.menu.module.profile.message.LoadProfileMessage;
 import de.instinct.eqfleet.menu.postgame.elements.PostGameExperienceElement;
-import de.instinct.eqfleet.menu.postgame.model.AnimationAction;
+import de.instinct.eqfleet.menu.postgame.elements.PostGameResourceElement;
+import de.instinct.eqfleet.menu.postgame.elements.PostGameShipProgressOverview;
 import de.instinct.eqfleet.menu.postgame.model.DynamicPostGameElement;
 import de.instinct.eqfleet.menu.postgame.model.PostGameElement;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
-import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
-import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.HorizontalAlignment;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
-import de.instinct.eqlibgdxutils.rendering.ui.container.list.ElementStack;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
 
 public class PostGameRenderer extends BaseModuleRenderer {
 	
-	private final float PER_ITEM_DURATION_MS = 0.8f;
+	private float PER_ITEM_DURATION_MS = 0.8f;
+	private boolean skipped = false;
 	
 	private ColorButton claimButton;
+	private ColorButton skipButton;
 	
 	private List<PostGameElement> elements;
 	
 	private boolean halted;
 	
 	public PostGameRenderer() {
+		skipButton = DefaultButtonFactory.colorButton("Skip", new Action() {
+			
+			@Override
+			public void execute() {
+				skipped = true;
+			}
+			
+		});
 		claimButton = DefaultButtonFactory.colorButton("Continue", new Action() {
 			
 			@Override
@@ -71,14 +77,19 @@ public class PostGameRenderer extends BaseModuleRenderer {
 			if (thisFrameDelta <= 0) break;
 			if (element.getElapsed() < element.getDuration()) {
 				if (!halted) {
-					if (thisFrameDelta > element.getDuration() - element.getElapsed()) {
-						float difference = element.getDuration() - element.getElapsed();
-						element.setElapsed(element.getElapsed() + difference);
-						thisFrameDelta -= difference;
+					if (skipped) {
+						element.setElapsed(element.getDuration());
 					} else {
-						element.setElapsed(element.getElapsed() + thisFrameDelta);
-						thisFrameDelta = 0;
+						if (thisFrameDelta > element.getDuration() - element.getElapsed()) {
+							float difference = element.getDuration() - element.getElapsed();
+							element.setElapsed(element.getElapsed() + difference);
+							thisFrameDelta -= difference;
+						} else {
+							element.setElapsed(element.getElapsed() + thisFrameDelta);
+							thisFrameDelta = 0;
+						}
 					}
+					
 					if (element.getAnimationAction() != null) {
 						float progression = element.getElapsed() / element.getDuration();
 						element.getAnimationAction().update(progression);
@@ -99,6 +110,14 @@ public class PostGameRenderer extends BaseModuleRenderer {
 					.duration(PER_ITEM_DURATION_MS)
 					.build());
 			
+			skipButton.setFixedWidth(90);
+			skipButton.setFixedHeight(30);
+			skipButton.setPosition((GraphicsUtil.screenBounds().width / 2) - (skipButton.getFixedWidth() / 2), 50);
+			elements.add(DynamicPostGameElement.builder()
+					.duration(1f)
+					.uiElement(skipButton)
+					.build());
+			
 			Label header = new Label(PostGameModel.reward.getVictoryType().toString());
 			header.setType(FontType.LARGE);
 			header.setFixedHeight(50);
@@ -109,50 +128,15 @@ public class PostGameRenderer extends BaseModuleRenderer {
 					.uiElement(header)
 					.build());
 			
-			
-			
-			Label experienceLabel = new Label("+" + StringUtils.formatBigNumber(PostGameModel.reward.getExperience()) + " EXP");
-			experienceLabel.setFixedWidth(GraphicsUtil.screenBounds().width / 2);
-			experienceLabel.setPosition(GraphicsUtil.screenBounds().width / 4, experienceSection.getBounds().y + experienceSection.getActualHeight());
-			experienceLabel.setType(FontType.SMALL);
-			experienceLabel.setColor(Color.BLUE);
-			experienceLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
-			
-			elements.add(DynamicPostGameElement.builder()
-					.duration(PER_ITEM_DURATION_MS)
-					.uiElement(experienceLabel)
-					.build());
-			
 			elements.add(new PostGameExperienceElement(PER_ITEM_DURATION_MS));
-			
-			if (PostGameModel.reward.getResources().size() > 0) {
-				int i = 0;
-				for (ResourceAmount resource : PostGameModel.reward.getResources()) {
-					ElementStack resourceLabels = DefaultLabelFactory.createResourceStack(resource);
-					resourceLabels.setFixedWidth(GraphicsUtil.screenBounds().width / 2);
-					resourceLabels.setPosition(GraphicsUtil.screenBounds().width / 4, GraphicsUtil.screenBounds().getHeight() - 200 - (15 * i));
-					elements.add(DynamicPostGameElement.builder()
-							.duration(PER_ITEM_DURATION_MS * 2f)
-							.uiElement(resourceLabels)
-							.animationAction(new AnimationAction() {
-								
-								@Override
-								public void update(float progression) {
-									
-								}
-								
-							})
-							.build());
-					i++;
-				}
-			} else {
-				Label noResourcesLabel = new Label("No resources gained");
-				noResourcesLabel.setPosition(GraphicsUtil.screenBounds().width / 4, (GraphicsUtil.screenBounds().getHeight() / 2) - 50);
-				elements.add(DynamicPostGameElement.builder()
-						.duration(PER_ITEM_DURATION_MS)
-						.uiElement(noResourcesLabel)
-						.build());
+			elements.add(new PostGameResourceElement(PER_ITEM_DURATION_MS));
+			int offset = 0;
+			for (ShipResult shipResult : PostGameModel.reward.getShipResults()) {
+				PostGameShipProgressOverview postGameShipProgressOverview = new PostGameShipProgressOverview(PER_ITEM_DURATION_MS, shipResult, offset);
+				elements.add(postGameShipProgressOverview);
+				offset += postGameShipProgressOverview.getHeight() + 20;
 			}
+			
 			claimButton.setFixedWidth(90);
 			claimButton.setFixedHeight(30);
 			claimButton.setPosition((GraphicsUtil.screenBounds().width / 2) - (claimButton.getFixedWidth() / 2), 50);

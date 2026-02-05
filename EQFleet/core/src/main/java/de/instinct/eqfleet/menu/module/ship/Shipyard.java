@@ -8,7 +8,7 @@ import de.instinct.api.shipyard.dto.ShipBuildResponse;
 import de.instinct.api.shipyard.dto.UnuseShipResponseCode;
 import de.instinct.api.shipyard.dto.UseShipResponseCode;
 import de.instinct.api.shipyard.dto.ship.PlayerShipData;
-import de.instinct.api.shipyard.dto.ship.ShipPartType;
+import de.instinct.api.shipyard.dto.ship.component.ShipComponentType;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.module.core.ModuleMessage;
@@ -117,8 +117,8 @@ public class Shipyard extends BaseModule {
 		return hasActiveShip;
 	}
 	
-	public static Color getPartTypeColor(ShipPartType partType) {
-		switch (partType) {
+	public static Color getPartTypeColor(ShipComponentType type) {
+		switch (type) {
 			case CORE:
 				return Color.PURPLE;
 			case ENGINE:
