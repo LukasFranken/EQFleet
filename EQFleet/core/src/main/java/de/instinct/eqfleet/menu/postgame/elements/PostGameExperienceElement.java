@@ -37,7 +37,7 @@ public class PostGameExperienceElement implements PostGameElement {
 	
 	public PostGameExperienceElement(float itemDuration) {
 		uiElement = new ExperienceSection();
-		uiElement.init(50, GraphicsUtil.screenBounds().getHeight() - 150, GraphicsUtil.screenBounds().getWidth() - 100);
+		uiElement.init(50, GraphicsUtil.screenBounds().getHeight() - 200, GraphicsUtil.screenBounds().getWidth() - 100);
 		this.itemDuration = itemDuration;
 		
 		buildAnimationAction();

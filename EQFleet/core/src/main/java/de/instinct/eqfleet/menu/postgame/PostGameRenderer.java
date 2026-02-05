@@ -28,7 +28,6 @@ import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
 public class PostGameRenderer extends BaseModuleRenderer {
 	
 	private float PER_ITEM_DURATION_MS = 0.8f;
-	private boolean skipped = false;
 	
 	private ColorButton claimButton;
 	private ColorButton skipButton;
@@ -36,6 +35,7 @@ public class PostGameRenderer extends BaseModuleRenderer {
 	private List<PostGameElement> elements;
 	
 	private boolean halted;
+	private boolean skipped;
 	
 	public PostGameRenderer() {
 		skipButton = DefaultButtonFactory.colorButton("Skip", new Action() {
@@ -73,6 +73,7 @@ public class PostGameRenderer extends BaseModuleRenderer {
 
 	private void update() {
 		float thisFrameDelta = Gdx.graphics.getDeltaTime();
+		boolean anyHalted = false;
 		for (PostGameElement element : elements) {
 			if (thisFrameDelta <= 0) break;
 			if (element.getElapsed() < element.getDuration()) {
@@ -95,15 +96,20 @@ public class PostGameRenderer extends BaseModuleRenderer {
 						element.getAnimationAction().update(progression);
 					}
 				}
-				halted = element.isHalted();
+				if (element.isHalted()) {
+					anyHalted = true;
+					break;
+				}
 			}
 		}
+		halted = anyHalted;
 	}
 
 	@Override
 	public void reload() {
 		if (PostGameModel.reward != null) {
 			halted = false;
+			skipped = false;
 			elements = new ArrayList<>();
 			
 			elements.add(DynamicPostGameElement.builder()
@@ -122,7 +128,7 @@ public class PostGameRenderer extends BaseModuleRenderer {
 			header.setType(FontType.LARGE);
 			header.setFixedHeight(50);
 			header.setFixedWidth(GraphicsUtil.screenBounds().width);
-			header.setPosition(0, GraphicsUtil.screenBounds().getHeight() - 60);
+			header.setPosition(0, GraphicsUtil.screenBounds().getHeight() - 110);
 			elements.add(DynamicPostGameElement.builder()
 					.duration(PER_ITEM_DURATION_MS)
 					.uiElement(header)

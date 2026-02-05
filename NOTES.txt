@@ -17,6 +17,9 @@ GENERAL:
   x eel (after beam rework)
   x shellshock
   x fallout
+  
+- multi-language compatibility
+ -> add german
 
 SERVER:
 - DRASTICALLY IMPROVE GAME NETWORKING AND BUFFER SIZES
@@ -24,14 +27,9 @@ SERVER:
 - actual dbs for data
 - treat surrender as wiped out with new enum message
 
-UI:
-- fix arrow draw while losing planet crash
-- fix hover selection above another planet crash
- -> probably by just disabling selecting another planet
+MENU:
 - settings tabs (audio, video, gameplay, account)
 - slider logic change to screenwide drag and drop (especially for mobile)
-- multi-language compatibility
- -> add german
 - better nullpoint shield bar visual (fragmentbar)
 - change hangar space needed for build blueprint, not buy blueprint
 
@@ -59,8 +57,12 @@ CONTROL:
 - add starmap to webcontrol
 - add meta to webcontrol
 - fix stupid certificate issue for web ui
+- add user management to web ui
 
 GAME:
+ -> probably by just disabling selecting another planet
+- fix arrow draw while losing planet crash
+- fix hover selection above another planet crash
 - add wiped out/domination to victory screen
 - make solo conquest offline (with online verification)
 - make beam actual beam
@@ -81,7 +83,7 @@ Jan 30 21:46:58 ip-172-30-0-159.eu-central-1.compute.internal bash[10704]: at or
 Jan 30 21:46:58 ip-172-30-0-159.eu-central-1.compute.internal bash[10704]: at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[na:na]
 Jan 30 21:46:58 ip-172-30-0-159.eu-central-1.compute.internal bash[10704]: at java.base@17.0.9/java.lang.Thread.run(Thread.java:840) ~[starmap:na]
 
-- test and live environments
+- test and live environment
 - appicon
 - build apk
 

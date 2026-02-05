@@ -49,7 +49,7 @@ public class PostGameResourceElement implements PostGameElement {
 					currentResources.add(currentResource);
 				}
 				uiElement.setResources(currentResources);
-				uiElement.setPosition(GraphicsUtil.screenBounds().width / 4, GraphicsUtil.screenBounds().getHeight() - 180 - uiElement.calculateHeight());
+				uiElement.setPosition(GraphicsUtil.screenBounds().width / 4, GraphicsUtil.screenBounds().getHeight() - 230 - uiElement.calculateHeight());
 				uiElement.update();
 			}
 			
