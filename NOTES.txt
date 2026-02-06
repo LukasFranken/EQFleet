@@ -21,6 +21,9 @@ GENERAL:
   
 - multi-language compatibility
  -> add german
+ 
+- make appicons black background
+- intro: remove back button from language select or make it not break the game
 
 SERVER:
 - DRASTICALLY IMPROVE GAME NETWORKING AND BUFFER SIZES
