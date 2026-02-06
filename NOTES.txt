@@ -24,6 +24,10 @@ GENERAL:
  
 - make appicons black background
 - intro: remove back button from language select or make it not break the game
+- first level easier
+- postgame screen resources placement
+- shark early stronger
+- tutorial not updated postgame sometimes
 
 SERVER:
 - DRASTICALLY IMPROVE GAME NETWORKING AND BUFFER SIZES
@@ -38,6 +42,7 @@ MENU:
 
 TUTORAL:
 - longer post-tutorial scene
+- full menu tutorial optional
 
 AUDIO:
 - implement last track id to prevent same track being played twice
