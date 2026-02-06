@@ -11,6 +11,7 @@ import de.instinct.api.meta.dto.Resource;
 import de.instinct.api.meta.dto.ResourceAmount;
 import de.instinct.api.meta.dto.ResourceData;
 import de.instinct.api.meta.dto.ResourceUpdateResponseCode;
+import de.instinct.eqfleet.game.backend.driver.local.tutorial.TutorialModel;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.net.WebManager;
 import de.instinct.eqlibgdxutils.ClipboardUtil;
@@ -373,6 +374,20 @@ public class EQFleetCommandLoader implements CommandLoader {
 						} catch (NumberFormatException e) {
 							Logger.log(LOG_TAG, "malformed command. experience is not a number", LOG_COLOR);
 						}
+					}
+					
+				})
+				.build());
+		gameCommands.add(Command.builder()
+				.method("skip")
+				.logMethod("skip")
+				.description("skips the tutorial")
+				.action(new CommandAction() {
+					
+					@Override
+					public void execute(String message) {
+						TutorialModel.skipped = true;
+						log("Skipped tutorial");
 					}
 					
 				})

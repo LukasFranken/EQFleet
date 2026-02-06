@@ -6,14 +6,9 @@ import java.util.List;
 import com.badlogic.gdx.Gdx;
 
 import de.instinct.api.matchmaking.dto.ShipResult;
-import de.instinct.api.matchmaking.model.GameMode;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
 import de.instinct.eqfleet.menu.main.Menu;
-import de.instinct.eqfleet.menu.module.play.Play;
-import de.instinct.eqfleet.menu.module.play.PlayModel;
-import de.instinct.eqfleet.menu.module.profile.inventory.Inventory;
-import de.instinct.eqfleet.menu.module.profile.message.LoadProfileMessage;
 import de.instinct.eqfleet.menu.postgame.elements.PostGameExperienceElement;
 import de.instinct.eqfleet.menu.postgame.elements.PostGameResourceElement;
 import de.instinct.eqfleet.menu.postgame.elements.PostGameShipProgressOverview;
@@ -36,6 +31,7 @@ public class PostGameRenderer extends BaseModuleRenderer {
 	
 	private boolean halted;
 	private boolean skipped;
+	private boolean loaded;
 	
 	public PostGameRenderer() {
 		skipButton = DefaultButtonFactory.colorButton("Skip", new Action() {
@@ -50,10 +46,9 @@ public class PostGameRenderer extends BaseModuleRenderer {
 			
 			@Override
 			public void execute() {
+				Menu.load();
 				PostGameModel.reward = null;
-				if (PlayModel.lobbyStatus.getType().getGameMode() == GameMode.CONQUEST) Play.leaveLobby();
-				Menu.queue(LoadProfileMessage.builder().build());
-				Inventory.loadData();
+				loaded = false;
 			}
 			
 		});
@@ -61,11 +56,13 @@ public class PostGameRenderer extends BaseModuleRenderer {
 
 	@Override
 	public void render() {
-		update();
-		for (PostGameElement element : elements) {
-			if (element.getElapsed() > 0) {
-				if (element.getUiElement() != null) {
-					element.getUiElement().render();
+		if (loaded) {
+			update();
+			for (PostGameElement element : elements) {
+				if (element.getElapsed() > 0) {
+					if (element.getUiElement() != null) {
+						element.getUiElement().render();
+					}
 				}
 			}
 		}
@@ -150,6 +147,7 @@ public class PostGameRenderer extends BaseModuleRenderer {
 					.duration(PER_ITEM_DURATION_MS)
 					.uiElement(claimButton)
 					.build());
+			loaded = true;
 		}
 	}
 

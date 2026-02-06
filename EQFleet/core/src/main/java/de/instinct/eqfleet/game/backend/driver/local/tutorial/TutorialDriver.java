@@ -8,10 +8,10 @@ import de.instinct.engine.order.types.ShipMovementOrder;
 import de.instinct.engine_api.core.model.GameStateInitialization;
 import de.instinct.engine_api.core.service.GameStateInitializer;
 import de.instinct.eqfleet.audio.AudioManager;
+import de.instinct.eqfleet.cover.CoverManager;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.backend.driver.local.LocalDriver;
-import de.instinct.eqfleet.menu.main.Menu;
 
 public class TutorialDriver extends LocalDriver {
 
@@ -66,6 +66,9 @@ public class TutorialDriver extends LocalDriver {
 
 	@Override
 	protected void postEngineUpdate() {
+		if (TutorialModel.skipped) {
+			GameModel.activeGameState.winner = 1;
+		}
 		if (GameModel.activeGameState != null && GameModel.activeGameState.started && !finished) {
         	if (GameModel.activeGameState.winner != 0) {
     			GameModel.guidedEvents = null;
@@ -76,12 +79,12 @@ public class TutorialDriver extends LocalDriver {
 	}
 
 	@Override
-	public void finish() {
-		GameModel.activeGameState.winner = 1;
+	public long finish() {
 		GameModel.guidedEvents = null;
 		mode = null;
 		finished = true;
-		Menu.load();
+		CoverManager.start();
+		return CoverManager.getDuration() + 500;
 	}
 
 	@Override

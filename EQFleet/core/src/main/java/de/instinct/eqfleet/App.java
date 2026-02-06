@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import de.instinct.eqfleet.audio.AudioManager;
+import de.instinct.eqfleet.cover.CoverManager;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.intro.Intro;
 import de.instinct.eqfleet.menu.main.Menu;
@@ -124,6 +125,7 @@ public class App extends ApplicationAdapter {
 					ParticleRenderer.updateParticles();
 			        ParticleRenderer.renderParticles("stars");
 				}
+				CoverManager.update();
 		        Intro.render();
 		        Menu.render();
 		        Game.render();

@@ -16,6 +16,7 @@ import de.instinct.api.shipyard.dto.ship.component.ComponentAttribute;
 import de.instinct.api.shipyard.dto.ship.component.ComponentLevel;
 import de.instinct.api.shipyard.dto.ship.component.ShipComponentType;
 import de.instinct.api.shipyard.service.impl.ShipyardUtility;
+import de.instinct.eqfleet.PreferenceManager;
 import de.instinct.eqfleet.menu.common.components.label.DefaultLabelFactory;
 import de.instinct.eqfleet.menu.common.components.label.LabelStackConfiguration;
 import de.instinct.eqfleet.menu.module.ship.Shipyard;
@@ -74,12 +75,17 @@ public class ShipPartOverview extends Component {
 		
 		levelArea = new ShipPartLevelArea(shipComponentLevel.getLevel(), Shipyard.getPartTypeColor(partType), shipComponentLevel.getProgress(), nextLevel == null ? shipComponentLevel.getProgress() : nextLevel.getRequirementValue());
 		levelArea.getColorButton().setLayer(1);
-		levelArea.getColorButton().setGlowAnimation(false);
+		boolean componentButtonClicked = PreferenceManager.load("shipyardglow").contentEquals("true");
+		levelArea.getColorButton().setGlowAnimation(!componentButtonClicked);
 		levelArea.getColorButton().setAction(new Action() {
 			
 			@Override
 			public void execute() {
 				createPartLevelPopup();
+				if (!componentButtonClicked) {
+					levelArea.getColorButton().setGlowAnimation(false);
+					PreferenceManager.save("shipyardglow", "false");
+				}
 			}
 			
 		});

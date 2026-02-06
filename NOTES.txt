@@ -1,6 +1,6 @@
 ALPHA RELEASE TODO:
 VERIFY:
-- fix tutorial sporadically crashes on ios gamerenderer:65
+
 
 GENERAL:
 - adjust all maps
@@ -27,6 +27,7 @@ SERVER:
 - actual dbs for data
 
 MENU:
+- fix postgame exp section by making it dynamic for playerreward
 - settings tabs (audio, video, gameplay, account)
 - slider logic change to screenwide drag and drop (especially for mobile)
 - better nullpoint shield bar visual (fragmentbar)
@@ -34,9 +35,10 @@ MENU:
 
 TUTORAL:
 - longer post-tutorial scene
-- add first glow to buttonlogic to shipyard modules
 
 AUDIO:
+- implement last track id to prevent same track being played twice
+ -> last message shorter
 - ios audio issues still exist on loudspeaker
 - better tutorial ai voice (its annoying)
 - reward cash with digital number up sound
@@ -54,11 +56,13 @@ CONTROL:
 - add user management to web ui
 
 GAME:
+- make cp/ap bars borders as thick for ios as on pc
 - fix arrow draw while losing planet crash
  -> probably by just disabling selecting another planet
 - fix hover selection above another planet crash
 - make beam actual beam
 - fix explosion ui, add effect for non missile explosion
+- remove construction for the player for now
 
 LAST STEPS:
 - random amazon requests killing apis
@@ -76,7 +80,6 @@ Jan 30 21:46:58 ip-172-30-0-159.eu-central-1.compute.internal bash[10704]: at or
 Jan 30 21:46:58 ip-172-30-0-159.eu-central-1.compute.internal bash[10704]: at java.base@17.0.9/java.lang.Thread.run(Thread.java:840) ~[starmap:na]
 
 - test and live environment
-- appicon
 - build apk
 
 - build all as binary 

@@ -21,6 +21,7 @@ public class AudioManager {
 	private static final String LOGTAG = "AUDIO";
 
 	private static Music currentMusic;
+	private static Music transitionedInMusic;
 	private static Music queuedInMusic;
 	private static Music currentVoice;
 
@@ -49,6 +50,7 @@ public class AudioManager {
 		availableRadioTracks.add("eqspace3");
 		availableRadioTracks.add("eqspace4");
 		availableRadioTracks.add("infinite_future");
+		availableRadioTracks.add("infinite_future_short");
 
 		musics = new Cache<>(new LoadSequence<Music>() {
 			@Override
@@ -101,18 +103,28 @@ public class AudioManager {
 			return;
 		}
 
-		queuedInMusic = next;
-		queuedInMusic.setVolume(0f);
+		transitionedInMusic = next;
+		transitionedInMusic.setVolume(0f);
 
 		currentSwapElapsed = 0f;
 
 		try {
-			queuedInMusic.play();
+			transitionedInMusic.play();
 			Logger.log(LOGTAG, "Playing queued music: " + tag, ConsoleColor.YELLOW);
 		} catch (Exception e) {
 			Gdx.app.error("AudioManager", "Failed to play queued music: " + tag, e);
 			Logger.log(LOGTAG, "Failed to play queued music: " + tag, ConsoleColor.YELLOW);
 		}
+	}
+	
+	public static void queueMusic(String tag) {
+		Logger.log(LOGTAG, "Queuing music: " + tag, ConsoleColor.YELLOW);
+
+		Music next = musics.get(tag);
+		if (next == null) return;
+
+		queuedInMusic = next;
+		queuedInMusic.setVolume(0f);
 	}
 
 	public static void startRadio() {
@@ -121,9 +133,9 @@ public class AudioManager {
 
 	public static void stop() {
 		radioMode = false;
-		if (queuedInMusic != null) {
-			queuedInMusic.stop();
-			queuedInMusic = null;
+		if (transitionedInMusic != null) {
+			transitionedInMusic.stop();
+			transitionedInMusic = null;
 		}
 		if (currentMusic != null) {
 			currentMusic.stop();
@@ -135,10 +147,19 @@ public class AudioManager {
 	public static void update() {
 		if (radioMode) {
 			if (currentMusic == null || !currentMusic.isPlaying()) {
-				int idx = RNG.nextInt(availableRadioTracks.size());
-				String tag = availableRadioTracks.get(idx);
-
-				Music next = musics.get(tag);
+				Music next = null;
+				
+				if (queuedInMusic != null) {
+					next = queuedInMusic;
+					queuedInMusic = null;
+					Logger.log(LOGTAG, "Updating music to queued in", ConsoleColor.YELLOW);
+				} else {
+					int idx = RNG.nextInt(availableRadioTracks.size());
+					String tag = availableRadioTracks.get(idx);
+					next = musics.get(tag);
+					Logger.log(LOGTAG, "Updating music to random: " + tag, ConsoleColor.YELLOW);
+				}
+				
 				if (next == null) return;
 
 				currentMusic = next;
@@ -146,22 +167,22 @@ public class AudioManager {
 				currentMusic.setLooping(false);
 				currentMusic.play();
 
-				Logger.log(LOGTAG, "Loading music: " + tag, ConsoleColor.YELLOW);
+				
 			}
 		}
 
-		if (queuedInMusic != null && currentMusic != null) {
+		if (transitionedInMusic != null && currentMusic != null) {
 			float ratioQueued = (currentSwapElapsed - (swapDuration / 2)) / (swapDuration / 2f);
 			float queuedVolume = MathUtil.linear(0f, targetMusicVolume * userMusicVolume, ratioQueued);
 			float ratioCurrent = (currentSwapElapsed / swapDuration) * 2f;
 			float currentVolume = MathUtil.linear(targetMusicVolume * userMusicVolume, 0f, ratioCurrent);
-			queuedInMusic.setVolume(queuedVolume);
+			transitionedInMusic.setVolume(queuedVolume);
 			currentMusic.setVolume(currentVolume);
 
 			if (currentSwapElapsed >= swapDuration) {
 				currentMusic.stop();
-				currentMusic = queuedInMusic;
-				queuedInMusic = null;
+				currentMusic = transitionedInMusic;
+				transitionedInMusic = null;
 				currentSwapElapsed = 0f;
 			}
 

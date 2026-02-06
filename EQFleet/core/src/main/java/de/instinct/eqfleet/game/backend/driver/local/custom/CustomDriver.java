@@ -24,7 +24,6 @@ import de.instinct.engine_api.core.service.GameStateInitializer;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.backend.driver.local.LocalDriver;
-import de.instinct.eqfleet.menu.main.Menu;
 
 public class CustomDriver extends LocalDriver {
 	
@@ -127,10 +126,10 @@ public class CustomDriver extends LocalDriver {
 	}
 
 	@Override
-	public void finish() {
+	public long finish() {
 		System.out.println(StatCollector.grab(GameModel.activeGameState.gameUUID));
 		finished = true;
-		Menu.load();
+		return 2000;
 	}
 
 	@Override

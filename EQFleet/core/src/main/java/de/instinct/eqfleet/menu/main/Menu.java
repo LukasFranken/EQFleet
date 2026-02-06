@@ -18,7 +18,6 @@ import de.instinct.api.core.modules.MenuModule;
 import de.instinct.api.matchmaking.model.GameMode;
 import de.instinct.api.meta.dto.modules.ModuleInfoRequest;
 import de.instinct.eqfleet.GlobalStaticData;
-import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
@@ -43,7 +42,6 @@ import de.instinct.eqfleet.menu.module.shop.Shop;
 import de.instinct.eqfleet.menu.module.shop.ShopRenderer;
 import de.instinct.eqfleet.menu.module.starmap.Starmap;
 import de.instinct.eqfleet.menu.module.starmap.StarmapRenderer;
-import de.instinct.eqfleet.menu.module.starmap.message.ReloadStarmapMessage;
 import de.instinct.eqfleet.menu.postgame.PostGameModel;
 import de.instinct.eqfleet.menu.postgame.PostGameRenderer;
 import de.instinct.eqfleet.net.WebManager;
@@ -114,38 +112,34 @@ public class Menu {
 		}, 0, UPDATE_CLOCK_MS, TimeUnit.MILLISECONDS);
 	}
 	
+	private static void calculateMenuBounds() {
+		float margin = 20f;
+		MenuModel.moduleBounds = new Rectangle(margin, margin + 20, GraphicsUtil.screenBounds().width - (margin * 2), GraphicsUtil.screenBounds().height - 150 - 40f);
+	}
+	
+	public static void open() {
+		MenuModel.active = true;
+		if (GameModel.lastGameUUID == null || GameModel.lastGameUUID.contentEquals("custom") || GameModel.lastGameUUID.contentEquals("tutorial")) {
+			load();
+		} else {
+			WebManager.enqueue(
+				    () -> API.matchmaking().result(GameModel.lastGameUUID),
+				    result -> {
+				    	PostGameModel.reward = result;
+				    	Gdx.app.postRunnable(() -> {
+				    		postGameRenderer.reload();
+				    	});
+				    }
+			);
+		}
+	}
+	
 	public static void load() {
 		MenuModel.loaded = false;
 		calculateMenuBounds();
 		updateBaseInfo();
 		loadModules();
-	}
-	
-	private static void calculateMenuBounds() {
-		float margin = 20f;
-		MenuModel.moduleBounds = new Rectangle(margin, margin + 20, GraphicsUtil.screenBounds().width - (margin * 2), GraphicsUtil.screenBounds().height - 150 - 40f);
-	}
-
-	
-	public static void loadPostGame() {
-		if (PlayModel.lobbyStatus.getType().getGameMode() == GameMode.CONQUEST) {
-			queue(ReloadStarmapMessage.builder().build());
-		}
-		WebManager.enqueue(
-			    () -> API.matchmaking().result(GameModel.activeGameState.gameUUID),
-			    result -> {
-			    	PostGameModel.reward = result;
-			    	Gdx.app.postRunnable(() -> {
-			    		postGameRenderer.reload();
-			    		Menu.load();
-			    	});
-			    }
-		);
-	}
-	
-	public static void open() {
-		Game.dispose();
-		MenuModel.active = true;
+		if (PlayModel.lobbyStatus != null && PlayModel.lobbyStatus.getType().getGameMode() == GameMode.CONQUEST) Play.leaveLobby();
 	}
 
 	private static void updateBaseInfo() {

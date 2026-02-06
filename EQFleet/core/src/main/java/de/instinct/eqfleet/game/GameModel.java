@@ -26,5 +26,7 @@ public class GameModel {
     public static volatile Queue<GameState> receivedGameState;
     public static volatile GameState activeGameState;
     public static volatile long lastUpdateTimestampMS;
+    
+    public static volatile String lastGameUUID;
 
 }

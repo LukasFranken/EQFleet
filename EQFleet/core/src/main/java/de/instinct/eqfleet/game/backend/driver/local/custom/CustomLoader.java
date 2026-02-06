@@ -2,7 +2,6 @@ package de.instinct.eqfleet.game.backend.driver.local.custom;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -40,7 +39,7 @@ public class CustomLoader {
 	
 	public GameStateInitialization generateInitialGameState(LoadoutData loadout, int threatLevel) {
 		GameStateInitialization initialization = new GameStateInitialization();
-		initialization.setGameUUID(UUID.randomUUID().toString());;
+		initialization.setGameUUID("custom");
 		initialization.setPlayers(loadPlayers(loadout, threatLevel));
 		initialization.setMap(generateMap(GameType.builder()
 				.factionMode(FactionMode.ONE_VS_ONE)

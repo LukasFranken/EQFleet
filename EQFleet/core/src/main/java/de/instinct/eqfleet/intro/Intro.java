@@ -78,7 +78,6 @@ public class Intro {
 	}
 	
 	private static void loadMenu() {
-		Menu.load();
 		Macro startClientMacro = new Macro(new Action() {
 			
 			@Override

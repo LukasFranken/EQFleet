@@ -3,7 +3,6 @@ package de.instinct.eqfleet.game.backend.driver.local.tutorial;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.badlogic.gdx.math.Vector2;
@@ -51,7 +50,7 @@ public class TutorialLoader {
 
 	public GameStateInitialization generateInitialGameState() {
 		GameStateInitialization initialGameState = new GameStateInitialization();
-		initialGameState.setGameUUID(UUID.randomUUID().toString());
+		initialGameState.setGameUUID("tutorial");
 		initialGameState.setPlayers(loadPlayers());
 		initialGameState.setAncientPlanetResourceDegradationFactor(0.5f);;
 		initialGameState.setGameTimeLimitMS(240_000);
@@ -1480,7 +1479,6 @@ public class TutorialLoader {
 				GameModel.activeGameState.maxGameTimeMS = GameModel.activeGameState.gameTimeMS + 30_000;
 				AudioManager.playVoice("tutorial_voiceline_36");
 				AudioManager.updateUserVoiceVolume(0.5f);
-				AudioManager.playMusic("infinite_future", true);
 			}
 			
 			@Override

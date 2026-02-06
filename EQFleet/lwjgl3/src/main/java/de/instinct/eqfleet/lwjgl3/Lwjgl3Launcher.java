@@ -31,7 +31,7 @@ public class Lwjgl3Launcher {
         configuration.setWindowedMode((int)windowSize.x, (int)windowSize.y);
         configuration.setHdpiMode(HdpiMode.Pixels);
         configuration.setBackBufferConfig(8, 8, 8, 8, 16, 8, 4);
-        configuration.setWindowIcon("libgdx128.png", "libgdx64.png", "libgdx32.png", "libgdx16.png");
+        configuration.setWindowIcon("eq_128.png", "eq_64.png", "eq_32.png", "eq_16.png");
         
         int targetMonitorIndex = 2;
         Monitor[] monitors = Lwjgl3ApplicationConfiguration.getMonitors();
