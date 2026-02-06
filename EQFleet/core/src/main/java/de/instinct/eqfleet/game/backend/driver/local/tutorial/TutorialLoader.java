@@ -54,7 +54,7 @@ public class TutorialLoader {
 		initialGameState.setGameUUID(UUID.randomUUID().toString());
 		initialGameState.setPlayers(loadPlayers());
 		initialGameState.setAncientPlanetResourceDegradationFactor(0.5f);;
-		initialGameState.setGameTimeLimitMS(600_000);
+		initialGameState.setGameTimeLimitMS(240_000);
 		initialGameState.setAtpToWin(30);
 		initialGameState.setPauseTimeLimitMS(20_000);
 		initialGameState.setPauseCountLimit(0);
@@ -71,6 +71,8 @@ public class TutorialLoader {
 		neutralPlayer.name = "Neutral Player";
 		PlanetData neutralPlanetData = new PlanetData();
 		neutralPlayer.planetData = neutralPlanetData;
+		neutralPlayer.ships = new ArrayList<>();
+		neutralPlayer.turrets = new ArrayList<>();
 		players.add(neutralPlayer);
 		
 		Player player = new Player();
@@ -120,10 +122,11 @@ public class TutorialLoader {
 		tutorialShip.shields = new ArrayList<>();
 		ShieldData tutorialShipShield = new ShieldData();
 		tutorialShipShield.type = ShieldType.PLASMA;
-		tutorialShipShield.strength = 3f;
+		tutorialShipShield.strength = 2f;
 		tutorialShipShield.generation = 0.2f;
 		tutorialShip.shields.add(tutorialShipShield);
 		player.ships.add(tutorialShip);
+		player.turrets = new ArrayList<>();
 		
 		//------------------------------------------
 
@@ -132,8 +135,7 @@ public class TutorialLoader {
 		aiPlayer.teamId = 2;
 		aiPlayer.turrets = new ArrayList<>();
 		aiPlayer.ships.get(0).weapons.get(0).damage = 1;
-		aiPlayer.ships.get(0).hull.strength = 3;
-		aiPlayer.ships.get(0).shields.get(0).strength = 2;
+		aiPlayer.ships.get(0).hull.strength = 4;
 		aiPlayer.ships.get(0).engine.speed = 100f;
 		
 		ShipData aiSmartassShip = new ShipData();
@@ -171,7 +173,7 @@ public class TutorialLoader {
 		aiSmartassShipShield.generation = 0.2f;
 		aiSmartassShip.shields.add(aiSmartassShipShield);
 		aiPlayer.ships.add(aiSmartassShip);
-		
+		aiPlayer.turrets = new ArrayList<>();
 		players.add(aiPlayer);
 
 		return players;
@@ -193,7 +195,7 @@ public class TutorialLoader {
     	
     	PlanetInitialization ancientPlanet = new PlanetInitialization();
     	ancientPlanet.setOwnerId(0);
-    	ancientPlanet.setPosition(new Vector2(0, 200));
+    	ancientPlanet.setPosition(new Vector2(0, 100));
     	ancientPlanet.setAncient(true);
     	planets.add(ancientPlanet);
     	
@@ -267,34 +269,6 @@ public class TutorialLoader {
 		guideQueue.add(firstMessageGuideEvent);
 
 		if (mode == TutorialMode.FULL) {
-			DialogGuideEvent secondMessageGuideEvent = new DialogGuideEvent();
-			secondMessageGuideEvent.setDuration(6.5f);
-			secondMessageGuideEvent.setMessage(new MessageBehavior() {
-				
-				@Override
-				public VerticalAlignment getVerticalAlignment() {
-					return VerticalAlignment.CENTER;
-				}
-				
-				@Override
-				public String getText() {
-					return "The metrics from your brainwave analysis\nindicate a significant complexity\nin strategic computation";
-				}
-				
-			});
-			secondMessageGuideEvent.setAction(new ActionBehavior() {
-				
-				@Override
-				public void executeAtStart() {
-					AudioManager.playVoice("tutorial_voiceline_2");
-				}
-				
-				@Override
-				public void executeAtEnd() {}
-				
-			});
-			guideQueue.add(secondMessageGuideEvent);
-
 			DialogGuideEvent fourthMessageGuideEvent = new DialogGuideEvent();
 			fourthMessageGuideEvent.setDuration(6f);
 			fourthMessageGuideEvent.setMessage(new MessageBehavior() {
@@ -322,9 +296,7 @@ public class TutorialLoader {
 				
 			});
 			guideQueue.add(fourthMessageGuideEvent);
-		}
-		
-		if (mode == TutorialMode.FULL) {
+			
 			DialogGuideEvent fifthMessageGuideEvent = new DialogGuideEvent();
 			fifthMessageGuideEvent.setDuration(2.5f);
 			fifthMessageGuideEvent.setMessage(new MessageBehavior() {
@@ -533,7 +505,7 @@ public class TutorialLoader {
 		guideQueue.add(seventhMessageGuideEvent);
 		
 		DialogGuideEvent eigthMessageGuideEvent = new DialogGuideEvent();
-		eigthMessageGuideEvent.setDuration(5f);
+		eigthMessageGuideEvent.setDuration(4.5f);
 		eigthMessageGuideEvent.setMessage(new MessageBehavior() {
 			
 			@Override
@@ -1241,7 +1213,7 @@ public class TutorialLoader {
 		panAwayToMapFromAncientGuideEvent.setTargetCameraPos(new Vector3(130f, -200f, 3800f));
 		guideQueue.add(panAwayToMapFromAncientGuideEvent);
 		
-		if (mode == TutorialMode.FULL) {
+		if (mode == TutorialMode.TOO_MUCH) {
 			DialogGuideEvent ancientShipInfoMessageGuideEvent = new DialogGuideEvent();
 			ancientShipInfoMessageGuideEvent.setDuration(9.5f);
 			ancientShipInfoMessageGuideEvent.setMessage(new MessageBehavior() {
@@ -1505,9 +1477,10 @@ public class TutorialLoader {
 			@Override
 			public void executeAtStart() {
 				GameModel.inputEnabled = true;
-				GameModel.activeGameState.maxGameTimeMS = GameModel.activeGameState.gameTimeMS + 60_000;
+				GameModel.activeGameState.maxGameTimeMS = GameModel.activeGameState.gameTimeMS + 30_000;
 				AudioManager.playVoice("tutorial_voiceline_36");
 				AudioManager.updateUserVoiceVolume(0.5f);
+				AudioManager.playMusic("infinite_future", true);
 			}
 			
 			@Override

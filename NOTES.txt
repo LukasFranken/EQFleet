@@ -23,9 +23,7 @@ GENERAL:
 
 SERVER:
 - DRASTICALLY IMPROVE GAME NETWORKING AND BUFFER SIZES
-- fix surrender sometimes grants extreme amount of exp?
 - actual dbs for data
-- treat surrender as wiped out with new enum message
 
 MENU:
 - settings tabs (audio, video, gameplay, account)
@@ -34,23 +32,17 @@ MENU:
 - change hangar space needed for build blueprint, not buy blueprint
 
 TUTORAL:
-- deeper tutorial, but tutorial gives rewards
-- add glow buttonlogic to shipyard
-- add glow buttonlogic as menu tutorial
-- fix tutorial
+- longer post-tutorial scene
+- add first glow to buttonlogic to shipyard modules
 
 AUDIO:
-- add cool copyright music for test purposes
+- better tutorial ai voice (its annoying)
 - reward cash with digital number up sound
 - radio: show track, skip track, previous track
  -> add/remove tracks from playlist
-- fix iphone sound stutter
 - fix explosion sound for non missiles?
-- randomly pitch/volume sound fx
- -> makes often occuring sounds more pleasant
 - more sound fx (like in menu)
-- one minute remaining/10 sec remaining sound
-- wiped out/dominated sound after game
+- one minute remaining/30sec/10 sec remaining sound
 
 CONTROL:
 - mapmaker part of control
@@ -60,11 +52,9 @@ CONTROL:
 - add user management to web ui
 
 GAME:
- -> probably by just disabling selecting another planet
 - fix arrow draw while losing planet crash
+ -> probably by just disabling selecting another planet
 - fix hover selection above another planet crash
-- add wiped out/domination to victory screen
-- make solo conquest offline (with online verification)
 - make beam actual beam
 - fix explosion ui, add effect for non missile explosion
 
@@ -104,6 +94,8 @@ Jan 30 21:46:58 ip-172-30-0-159.eu-central-1.compute.internal bash[10704]: at ja
   - create linux command to see status of all fleet services
 ---------------------------------------------------------------------
 FUTURE RELEASES TODO:
+- make solo conquest offline (with online verification)
+
 - scrollable console log
 
 REFACTIORING:

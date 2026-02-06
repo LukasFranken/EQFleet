@@ -5,8 +5,6 @@ import de.instinct.engine.model.GameState;
 import de.instinct.engine.net.message.types.JoinMessage;
 import de.instinct.engine.net.message.types.PlayerAssigned;
 import de.instinct.engine.stats.StatCollector;
-import de.instinct.engine.util.EngineUtility;
-import de.instinct.eqfleet.audio.AudioManager;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.backend.driver.Driver;
@@ -60,11 +58,6 @@ public class OnlineDriver extends Driver {
 
 	@Override
 	public void finish() {
-		if (GameModel.activeGameState.winner == EngineUtility.getPlayer(GameModel.activeGameState.players, GameModel.playerId).teamId) {
-			AudioManager.playVoice("victory");
-		} else {
-			AudioManager.playVoice("defeat");
-		}
 		gameClient.stop();
 		Menu.loadPostGame();
 	}

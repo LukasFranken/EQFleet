@@ -19,10 +19,8 @@ import de.instinct.engine.order.types.GamePauseOrder;
 import de.instinct.engine.order.types.ShipMovementOrder;
 import de.instinct.engine.order.types.SurrenderOrder;
 import de.instinct.engine.stats.StatCollector;
-import de.instinct.engine.util.EngineUtility;
 import de.instinct.engine_api.core.model.GameStateInitialization;
 import de.instinct.engine_api.core.service.GameStateInitializer;
-import de.instinct.eqfleet.audio.AudioManager;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.backend.driver.local.LocalDriver;
@@ -131,11 +129,6 @@ public class CustomDriver extends LocalDriver {
 	@Override
 	public void finish() {
 		System.out.println(StatCollector.grab(GameModel.activeGameState.gameUUID));
-		if (GameModel.activeGameState.winner == EngineUtility.getPlayer(GameModel.activeGameState.players, GameModel.playerId).teamId) {
-			AudioManager.playVoice("victory");
-		} else {
-			AudioManager.playVoice("defeat");
-		}
 		finished = true;
 		Menu.load();
 	}

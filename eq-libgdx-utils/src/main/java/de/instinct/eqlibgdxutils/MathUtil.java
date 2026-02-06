@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 public class MathUtil {
 
 	public static float linear(float min, float max, float ratio) {
+		ratio = MathUtils.clamp(ratio, 0, 1);
 		if (min < max) {
 			return MathUtils.clamp(min + (ratio * (max - min)), min, max);
 		} else {

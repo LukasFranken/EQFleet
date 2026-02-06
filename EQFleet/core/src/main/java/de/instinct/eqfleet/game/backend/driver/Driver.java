@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 import de.instinct.api.core.modules.MenuModule;
 import de.instinct.api.matchmaking.model.GameMode;
 import de.instinct.engine.FleetEngine;
+import de.instinct.engine.util.EngineUtility;
 import de.instinct.eqfleet.audio.AudioManager;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.menu.main.Menu;
@@ -51,6 +52,23 @@ public abstract class Driver {
 	public void stop() {
 		AudioManager.stopAllSfx();
 		AudioManager.stopAllVoices();
+		if (GameModel.activeGameState.winner == EngineUtility.getPlayer(GameModel.activeGameState.players, GameModel.playerId).teamId) {
+			if (EngineUtility.winIsWiped(GameModel.activeGameState)) {
+				AudioManager.playVoice("domination");
+			} else {
+				AudioManager.playVoice("victory");
+			}
+		} else {
+			if (GameModel.activeGameState.surrendered != 0) {
+				AudioManager.playVoice("surrender");
+			} else {
+				if (EngineUtility.winIsWiped(GameModel.activeGameState)) {
+					AudioManager.playVoice("wiped_out");
+				} else {
+					AudioManager.playVoice("defeat");
+				}
+			}
+		}
 		finish();
 		scheduler.schedule(() -> {
 			

@@ -97,6 +97,7 @@ public class AudioManager {
 			currentMusic = next;
 			currentMusic.setVolume(targetMusicVolume * userMusicVolume);
 			currentMusic.play();
+			Logger.log(LOGTAG, "Playing new music: " + tag, ConsoleColor.YELLOW);
 			return;
 		}
 
@@ -107,6 +108,7 @@ public class AudioManager {
 
 		try {
 			queuedInMusic.play();
+			Logger.log(LOGTAG, "Playing queued music: " + tag, ConsoleColor.YELLOW);
 		} catch (Exception e) {
 			Gdx.app.error("AudioManager", "Failed to play queued music: " + tag, e);
 			Logger.log(LOGTAG, "Failed to play queued music: " + tag, ConsoleColor.YELLOW);
@@ -146,20 +148,21 @@ public class AudioManager {
 
 				Logger.log(LOGTAG, "Loading music: " + tag, ConsoleColor.YELLOW);
 			}
-			return;
 		}
 
 		if (queuedInMusic != null && currentMusic != null) {
-			float t = currentSwapElapsed / swapDuration;
-			float currentVolume = MathUtil.linear(0f, targetMusicVolume * userMusicVolume, t);
-
-			queuedInMusic.setVolume(currentVolume);
-			currentMusic.setVolume((targetMusicVolume * userMusicVolume) - currentVolume);
+			float ratioQueued = (currentSwapElapsed - (swapDuration / 2)) / (swapDuration / 2f);
+			float queuedVolume = MathUtil.linear(0f, targetMusicVolume * userMusicVolume, ratioQueued);
+			float ratioCurrent = (currentSwapElapsed / swapDuration) * 2f;
+			float currentVolume = MathUtil.linear(targetMusicVolume * userMusicVolume, 0f, ratioCurrent);
+			queuedInMusic.setVolume(queuedVolume);
+			currentMusic.setVolume(currentVolume);
 
 			if (currentSwapElapsed >= swapDuration) {
 				currentMusic.stop();
 				currentMusic = queuedInMusic;
 				queuedInMusic = null;
+				currentSwapElapsed = 0f;
 			}
 
 			currentSwapElapsed += Gdx.graphics.getDeltaTime();
@@ -179,7 +182,10 @@ public class AudioManager {
 
 	public static void playSfx(String tag) {
 		Sound sfx = sfxs.get(tag);
-		if (sfx != null) sfx.play(0.5f * userSfxVolume);
+		float volumeRng = 0.8f + (RNG.nextFloat() * 0.4f);
+		float pitchRng = 0.8f + (RNG.nextFloat() * 0.4f);
+		float panRng = 0.8f + (RNG.nextFloat() * 0.4f);
+		if (sfx != null) sfx.play(0.5f * userSfxVolume * volumeRng, 1f * pitchRng, 1f * panRng);
 	}
 
 	public static void stopAllSfx() {

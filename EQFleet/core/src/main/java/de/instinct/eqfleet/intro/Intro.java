@@ -141,6 +141,18 @@ public class Intro {
 			
 		});
 		choices.add(slideChoiceEnglish);
+		SlideChoice slideChoiceGerman = new SlideChoice();
+		slideChoiceGerman.setLabelText("German");
+		slideChoiceGerman.setAction(new Action() {
+			
+			@Override
+			public void execute() {
+				PreferenceManager.save("language", "de");
+				createVolumeSelectionSlide();
+			}
+			
+		});
+		choices.add(slideChoiceGerman);
 		return choices;
 	}
 	
@@ -219,7 +231,7 @@ public class Intro {
 	private static List<SlideChoice> getTutorialChoices() {
 		List<SlideChoice> choices = new ArrayList<>();
 		SlideChoice slideChoiceFull = new SlideChoice();
-		slideChoiceFull.setLabelText("Full (~4 min)");
+		slideChoiceFull.setLabelText("Full (~3 min)");
 		slideChoiceFull.setAction(new Action() {
 
 			@Override
@@ -239,7 +251,7 @@ public class Intro {
 		choices.add(slideChoiceFull);
 		
 		SlideChoice slideChoiceShort = new SlideChoice();
-		slideChoiceShort.setLabelText("Short (~2 min)");
+		slideChoiceShort.setLabelText("Shorter (~2 min)");
 		slideChoiceShort.setAction(new Action() {
 
 			@Override

@@ -718,9 +718,21 @@ public class GameUIRenderer {
 			int winner = GameModel.activeGameState.winner;
 			if (winner != 0) {
 				if (winner == EngineUtility.getPlayer(GameModel.activeGameState.players, GameModel.playerId).teamId) {
-					message = "VICTORY";
+					if (EngineUtility.winIsWiped(GameModel.activeGameState)) {
+						message = "DOMINATION";
+					} else {
+						message = "VICTORY";
+					}
 				} else if (winner != 0) {
-					message = "DEFEATED";
+					if (GameModel.activeGameState.surrendered != 0) {
+						message = "SURRENDERED";
+					} else {
+						if (EngineUtility.winIsWiped(GameModel.activeGameState)) {
+							message = "WIPED OUT";
+						} else {
+							message = "DEFEATED";
+						}
+					}
 				}
 			} else {
 				message = "";

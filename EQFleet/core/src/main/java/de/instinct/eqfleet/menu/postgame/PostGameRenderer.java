@@ -124,7 +124,7 @@ public class PostGameRenderer extends BaseModuleRenderer {
 					.uiElement(skipButton)
 					.build());
 			
-			Label header = new Label(PostGameModel.reward.getVictoryType().toString());
+			Label header = new Label(PostGameModel.reward.getVictoryType().toString().replace("_", " "));
 			header.setType(FontType.LARGE);
 			header.setFixedHeight(50);
 			header.setFixedWidth(GraphicsUtil.screenBounds().width);
