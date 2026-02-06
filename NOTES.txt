@@ -13,7 +13,7 @@ GENERAL:
  -> SHIP CHECKLIST
   o hawk
   o turtle
-  x shark
+  ? shark
   x eel (after beam rework)
   x shellshock
   x fallout
@@ -36,6 +36,7 @@ TUTORAL:
 - add first glow to buttonlogic to shipyard modules
 
 AUDIO:
+- ios audio issues still exist on loudspeaker
 - better tutorial ai voice (its annoying)
 - reward cash with digital number up sound
 - radio: show track, skip track, previous track
