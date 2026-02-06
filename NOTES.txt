@@ -1,5 +1,6 @@
 ALPHA RELEASE TODO:
 VERIFY:
+- fix tutorial sporadically crashes on ios gamerenderer:65
 
 GENERAL:
 - adjust all maps

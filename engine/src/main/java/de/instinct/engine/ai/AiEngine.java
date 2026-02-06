@@ -85,7 +85,7 @@ public class AiEngine {
 		}
 		if (state.maxGameTimeMS - state.gameTimeMS < 10000 && state.teamATPs.get(aiPlayer.teamId == 2 ? 1 : 2) == 0) {
 			for (Planet planet : state.planets) {
-				if (planet.ancient && closestOwnPlanet.currentResources >= aiPlayer.ships.get(0).resourceCost) {
+				if (planet.ancient && closestOwnPlanet != null && closestOwnPlanet.currentResources >= aiPlayer.ships.get(0).resourceCost) {
 					ShipMovementOrder newShipMovementOrder = new ShipMovementOrder();
 					newShipMovementOrder.fromPlanetId = closestOwnPlanet.id;
 					newShipMovementOrder.toPlanetId = planet.id;

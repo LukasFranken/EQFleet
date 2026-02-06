@@ -41,7 +41,6 @@ public class GameRenderer {
 	public void init() {
 		GameModel.mode = InteractionMode.UNIT_CONTROL;
 		isFlipped = false;
-		uiRenderer = new GameUIRenderer();
 		
 		camera = new PerspectiveCamera(30, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		camera.position.set(BASE_CAM_POS);
@@ -59,33 +58,36 @@ public class GameRenderer {
 		guideRenderer = new GuideRenderer();
 		
 		zoomInElapsed = 0f;
+		uiRenderer = new GameUIRenderer();
 	}
 
 	public void render(GameState state) {
-		if (!uiRenderer.initialized) {
-			uiRenderer.init();
-		}
-		camera.update();
-		if (GameModel.visible) {
-			if (zoomInElapsed < zoomInTime) {
-				zoomInElapsed += Gdx.graphics.getDeltaTime();
-				calculateZoomInStart(state);
+		if (uiRenderer != null) {
+			if (!uiRenderer.initialized) {
+				uiRenderer.init();
 			}
-			uiRenderer.setCamera(camera);
-			uiRenderer.setState(state);
-			if (state != null && state.winner == 0) {
-				if (state.started) {
-					checkFlip();
-					gridRenderer.drawGrid(camera);
-					uiRenderer.renderParticles();
-					planetRenderer.render(state, camera);
-					shipRenderer.render(state, camera);
-					projectileRenderer.render(state, camera);
+			camera.update();
+			if (GameModel.visible) {
+				if (zoomInElapsed < zoomInTime) {
+					zoomInElapsed += Gdx.graphics.getDeltaTime();
+					calculateZoomInStart(state);
 				}
+				uiRenderer.setCamera(camera);
+				uiRenderer.setState(state);
+				if (state != null && state.winner == 0) {
+					if (state.started) {
+						checkFlip();
+						gridRenderer.drawGrid(camera);
+						uiRenderer.renderParticles();
+						planetRenderer.render(state, camera);
+						shipRenderer.render(state, camera);
+						projectileRenderer.render(state, camera);
+					}
+				}
+				uiRenderer.render();
 			}
-			uiRenderer.render();
+			guideRenderer.renderEvents(camera);
 		}
-		guideRenderer.renderEvents(camera);
 	}
 
 	private void calculateZoomInStart(GameState state) {
