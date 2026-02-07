@@ -13,6 +13,8 @@ import de.instinct.eqfleet.PreferenceManager;
 import de.instinct.eqfleet.audio.AudioManager;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.backend.driver.local.tutorial.TutorialMode;
+import de.instinct.eqfleet.language.LanguageManager;
+import de.instinct.eqfleet.language.model.Language;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.main.MenuModel;
 import de.instinct.eqfleet.net.WebManager;
@@ -113,8 +115,7 @@ public class Intro {
 	}
 	
 	private static void createFirstTimeSlides() {
-		String language = PreferenceManager.load("language");
-		if (language.isEmpty()) {
+		if (!LanguageManager.languageIsSet()) {
 			createSelectLanguageSlide();
 		} else {
 			createVolumeSelectionSlide();
@@ -128,30 +129,20 @@ public class Intro {
 	
 	private static List<SlideChoice> getLanguageChoices() {
 		List<SlideChoice> choices = new ArrayList<>();
-		SlideChoice slideChoiceEnglish = new SlideChoice();
-		slideChoiceEnglish.setLabelText("English");
-		slideChoiceEnglish.setAction(new Action() {
-			
-			@Override
-			public void execute() {
-				PreferenceManager.save("language", "en");
-				createVolumeSelectionSlide();
-			}
-			
-		});
-		choices.add(slideChoiceEnglish);
-		SlideChoice slideChoiceGerman = new SlideChoice();
-		slideChoiceGerman.setLabelText("German");
-		slideChoiceGerman.setAction(new Action() {
-			
-			@Override
-			public void execute() {
-				PreferenceManager.save("language", "de");
-				createVolumeSelectionSlide();
-			}
-			
-		});
-		choices.add(slideChoiceGerman);
+		for (Language language : LanguageManager.getAvailableLanguages()) {
+			SlideChoice slideChoice = new SlideChoice();
+			slideChoice.setLabelText(language.getName());
+			slideChoice.setAction(new Action() {
+				
+				@Override
+				public void execute() {
+					LanguageManager.setLanguage(language.getCode());
+					createVolumeSelectionSlide();
+				}
+				
+			});
+			choices.add(slideChoice);
+		}
 		return choices;
 	}
 	

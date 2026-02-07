@@ -1,0 +1,245 @@
+{
+	"availableLanguages": [
+		{
+			"code": "en",
+			"name": "English"
+		},
+		{
+			"code": "de",
+			"name": "Deutsch"
+		}
+	],
+	"translations": [
+		{
+			"key": "tutorial_voiceline_1",
+			"translations": {
+				"de": "Achtung!",
+				"en": "Attention!"
+			}
+		},
+		{
+			"key": "tutorial_voiceline_2",
+			"translations": {
+				"de": "Wir haben deine Daten ausgewertet",
+				"en": "We have evaluated your metrics"
+			}
+		},
+		{
+			"key": "tutorial_voiceline_3",
+			"translations": {
+				"de": "Du wurdest der Kommandantenlaufbahn zugeordnet",
+				"en": "You have been assigned\nthe career of a commander"
+			}
+		},
+		{
+			"key": "tutorial_voiceline_4",
+			"translations": {
+				"de": "Ich leite dich durch die Grundlagen",
+				"en": "I will guide you through the basics"
+			}
+		},
+		{
+			"key": "tutorial_voiceline_5",
+			"translations": {
+				"de": "Wir haben dich mit einer Satelliten-\nsoftware zu unserem Kommandonetzwerk\nausgestattet",
+				"en": "We have updated your device with a\nsatellite link to our command network"
+			}
+		},
+		{
+			"key": "tutorial_voiceline_6",
+			"translations": {
+				"de": "Diese ermöglicht es dir in Echtzeit\nInformationen über deine Flotte\naus dem gesamten Universum zu erhalten",
+				"en": "Giving you realtime access to\ninformation of your fleet\nall across the universe"
+			}
+		},
+		{
+			"key": "tutorial_voiceline_7",
+			"translations": {
+				"de": "Iniziiere Trainingssimulation",
+				"en": "Initializing training combat simulation"
+			}
+		},
+		{
+			"key": "tutorial_voiceline_8",
+			"translations": {
+				"de": "In der oberen rechten Ecke wird\ndie restliche Missionszeit angezeigt",
+				"en": "In the top right corner, you can\nsee the remaining mission time"
+			}
+		},
+		{
+			"key": "tutorial_voiceline_9",
+			"translations": {
+				"de": "Der Blaue Planet ist unter deiner Kontrolle",
+				"en": "The blue planet is under your control"
+			}
+		},
+		{
+			"key": "tutorial_voiceline_10",
+			"translations": {
+				"de": "Er generiert Ressourcen, erkennbar\nan den äußeren blauen Kreis",
+				"en": "It generates resources, represented\nby the blue circle around it"
+			}
+		},
+		{
+			"key": "tutorial_voiceline_11",
+			"translations": {
+				"de": "Der graue Planet ist unbewohnt",
+				"en": "The gray planet is uninhabited"
+			}
+		},
+		{
+			"key": "tutorial_voiceline_12",
+			"translations": {
+				"de": "Zieh von deinem Planeten zum neutralen",
+				"en": "Drag from your planet to the neutral one"
+			}
+		},
+		{
+			"key": "tutorial_voiceline_13",
+			"translations": {
+				"de": "Du hast ein Schiff zum neutralen Planeten gesendet",
+				"en": "You have sent a ship to the neutral planet"
+			}
+		},
+		{
+			"key": "tutorial_voiceline_14",
+			"translations": {
+				"de": "Jedes Schiff kostet dem Planeten\nResourcen und Kommandopunkte (CP)",
+				"en": "Every ship costs planetary resources,\nas well as Command Points (CP)"
+			}
+		},
+		{
+			"key": "tutorial_voiceline_15",
+			"translations": {
+				"de": "Die Leiste deiner CP befindet\nsich am unteren Rand",
+				"en": "You can see your CP meter at the bottom"
+			}
+		},
+		{
+			"key": "tutorial_voiceline_16",
+			"translations": {
+				"de": "CP und die Resourcen von Planeten\nregenerieren mit der Zeit",
+				"en": "Both CP and planetary resources\nregenerate gradually over time"
+			}
+		},
+		{
+			"key": "tutorial_voiceline_17",
+			"translations": {
+				"de": "Du hast die Kontrolle über\nden neutralen Planeten erlangt",
+				"en": "You gained control over the neutral\nplanet and its resource production"
+			}
+		},
+		{
+			"key": "tutorial_voiceline_18",
+			"translations": {
+				"de": "Der rote Planet ist unter\nder Kontrolle der 'Turbulenz'",
+				"en": "The red planet is controlled\nby 'the Turbulence'"
+			}
+		},
+		{
+			"key": "tutorial_voiceline_19",
+			"translations": {
+				"de": "Die Turbulenz ist eine kaum erforschte,\nhochintelligente, kollektive Lebensform",
+				"en": "The Turbulence is a scarcely researched,\nhighly intelligent, collective life form"
+			}
+		},
+		{
+			"key": "tutorial_voiceline_20",
+			"translations": {
+				"de": "Allem voran ist sie extrem feindselig",
+				"en": "Most of all, it is extremely hostile"
+			}
+		},
+		{
+			"key": "tutorial_voiceline_21",
+			"translations": {
+				"de": "Unsere Sensoren sind in der Lage\ndie CP der Turbulenz zu berechnen,\nvisualisiert durch die Leiste oben links",
+				"en": "Our scanners have been modulated to\ncalculate the Turbulence collectives CP,\nas indicated by the red meter at the top left"
+			}
+		},
+		{
+			"key": "tutorial_voiceline_22",
+			"translations": {
+				"de": "Greif den nun feindlichen Planeten an",
+				"en": "Attack the now hostile planet"
+			}
+		},
+		{
+			"key": "tutorial_voiceline_23",
+			"translations": {
+				"de": "Die Turbulenz hat ein Schiff\nzur Verteidigung entsand",
+				"en": "The Turbulence has sent a ship\nto defend its planet"
+			}
+		},
+		{
+			"key": "tutorial_voiceline_24",
+			"translations": {
+				"de": "Schiffe greifen automatisch andere Schiffe\nin Reichweite an, unabhängig ihrer Route",
+				"en": "When in range, ships will automatically\nattack each other, regardless of their route"
+			}
+		},
+		{
+			"key": "tutorial_voiceline_25",
+			"translations": {
+				"de": "Unter einem Schiff befindet sich\ndie blaue Schildleiste und darunter\ndie Rüstung in braun",
+				"en": "Below the ships you can see their blue\nshield bar and underneath it their\narmor in brown"
+			}
+		},
+		{
+			"key": "tutorial_voiceline_26",
+			"translations": {
+				"de": "Um zu gewinnen, muss die Turbulenz\nentweder ausgelöscht, oder bei\nAblauf der Zeit die meisten Planeten\nkontrolliert werden",
+				"en": "To achieve mission success, either\nwipe out the Turbulence, or control the\nmost planets when the time runs out"
+			}
+		},
+		{
+			"key": "tutorial_voiceline_27",
+			"translations": {
+				"de": "Der gelbe Planet ist ein Stern,\num den antike Technologie erfasst wurde",
+				"en": "The yellow planet is a star, where\nancient technology has been detected"
+			}
+		},
+		{
+			"key": "tutorial_voiceline_28",
+			"translations": {
+				"de": "Ist ein Stern unter Kontrolle, reduzieren\nsich die planetaren Ressourcen",
+				"en": "When captured, your planetary resources\non the star decrease, not increase over time"
+			}
+		},
+		{
+			"key": "tutorial_voiceline_29",
+			"translations": {
+				"de": "Schick ein Schiff zu dem Stern",
+				"en": "Send a ship to the star"
+			}
+		},
+		{
+			"key": "tutorial_voiceline_30",
+			"translations": {
+				"de": "Die Kontrolle über einen Stern generiert\nAntike Technologie-Punkte (AP), visualisiert\ndurch die gelbe Leiste am linken Rand",
+				"en": "While under control, you generate\nAncient Technology Points (AP), as shown in\nthe yellow bar on the left side"
+			}
+		},
+		{
+			"key": "tutorial_voiceline_31",
+			"translations": {
+				"de": "Ist die AP-Leiste voll, wird die Mission\nsofort erfolgreich beendet, unabhängig\nder Planetenkontrolle",
+				"en": "If your AP-bar is full, the mission is\nalso immediately considered successful,\nregardless of planetary control status"
+			}
+		},
+		{
+			"key": "tutorial_voiceline_32",
+			"translations": {
+				"de": "Wenn die Planetaren Ressourcen auslaufen,\nverliert man die Kontrolle über den Stern",
+				"en": "When the ancient planet resources are\nempty, you lose control over it"
+			}
+		},
+		{
+			"key": "tutorial_voiceline_33",
+			"translations": {
+				"de": "Beende die Mission!",
+				"en": "Complete the mission in any way!"
+			}
+		}
+	]
+}

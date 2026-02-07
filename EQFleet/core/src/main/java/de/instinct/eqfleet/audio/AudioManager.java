@@ -194,7 +194,7 @@ public class AudioManager {
 		Music voice = voices.get(tag);
 		if (voice != null) {
 			if (currentVoice != null) currentVoice.stop();
-			voice.setVolume(1f * userVoiceVolume);
+			voice.setVolume(1f * userVoiceVolume * (tag.contains("tutorial") ? 0.7f : 1f));
 			voice.setLooping(false);
 			voice.play();
 			currentVoice = voice;

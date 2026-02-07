@@ -11,6 +11,9 @@ import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 
 public class CoverManager {
 	
+	//private static final int TOTAL_DURATION = 59_000;
+	private static final int TOTAL_DURATION = 15_000;
+	
 	private static float elapsed;
 	private static boolean active;
 	
@@ -33,7 +36,7 @@ public class CoverManager {
 		if (active) {
 			elapsed += Gdx.graphics.getDeltaTime();
 			render();
-			if (elapsed > 59f) {
+			if (elapsed > TOTAL_DURATION / 1000) {
 				finish();
 			}
 		}
@@ -55,7 +58,7 @@ public class CoverManager {
 	}
 
 	public static int getDuration() {
-		return 59_000;
+		return TOTAL_DURATION;
 	}
 
 }

@@ -13,6 +13,7 @@ import de.instinct.eqfleet.audio.AudioManager;
 import de.instinct.eqfleet.cover.CoverManager;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.intro.Intro;
+import de.instinct.eqfleet.language.LanguageManager;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.net.WebManager;
 import de.instinct.eqlibgdxutils.CursorUtil;
@@ -35,7 +36,7 @@ import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
 
 public class App extends ApplicationAdapter {
 
-    public static final String VERSION = "0.1.6";
+    public static final String VERSION = "0.1.7";
     private final String LOGTAG = "APP";
 
     private boolean halted;
@@ -50,6 +51,7 @@ public class App extends ApplicationAdapter {
     	TextureManager.init();
     	SkinManager.init();
     	AudioManager.init();
+    	LanguageManager.init();
     	loadFonts();
     	Gdx.input.setInputProcessor(new InputMultiplexer());
     	CursorUtil.createCursor();

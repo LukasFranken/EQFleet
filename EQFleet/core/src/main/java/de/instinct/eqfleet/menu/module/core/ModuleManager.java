@@ -31,7 +31,7 @@ public class ModuleManager {
 				.build());
 		moduleOpenMessages.add(InitialModuleOpenMessage.builder()
 				.module(MenuModule.SHIPYARD)
-				.message("Manage and customize your fleet.\nYou can also view your ships\ncomponents upgrade process.")
+				.message("Build and equip your first ship")
 				.opened(preferenceLoadedModules.contains(MenuModule.SHIPYARD.toString()))
 				.build());
 		moduleOpenMessages.add(InitialModuleOpenMessage.builder()

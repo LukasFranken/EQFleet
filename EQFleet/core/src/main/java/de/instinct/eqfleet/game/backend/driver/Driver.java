@@ -53,20 +53,22 @@ public abstract class Driver {
 	public void stop() {
 		AudioManager.stopAllSfx();
 		AudioManager.stopAllVoices();
-		if (GameModel.activeGameState.winner == EngineUtility.getPlayer(GameModel.activeGameState.players, GameModel.playerId).teamId) {
-			if (EngineUtility.winIsWiped(GameModel.activeGameState)) {
-				AudioManager.playVoice("domination");
-			} else {
-				AudioManager.playVoice("victory");
-			}
-		} else {
-			if (GameModel.activeGameState.surrendered != 0) {
-				AudioManager.playVoice("surrender");
-			} else {
+		if (!GameModel.activeGameState.gameUUID.equals("tutorial")) {
+			if (GameModel.activeGameState.winner == EngineUtility.getPlayer(GameModel.activeGameState.players, GameModel.playerId).teamId) {
 				if (EngineUtility.winIsWiped(GameModel.activeGameState)) {
-					AudioManager.playVoice("wiped_out");
+					AudioManager.playVoice("domination");
 				} else {
-					AudioManager.playVoice("defeat");
+					AudioManager.playVoice("victory");
+				}
+			} else {
+				if (GameModel.activeGameState.surrendered != 0) {
+					AudioManager.playVoice("surrender");
+				} else {
+					if (EngineUtility.winIsWiped(GameModel.activeGameState)) {
+						AudioManager.playVoice("wiped_out");
+					} else {
+						AudioManager.playVoice("defeat");
+					}
 				}
 			}
 		}

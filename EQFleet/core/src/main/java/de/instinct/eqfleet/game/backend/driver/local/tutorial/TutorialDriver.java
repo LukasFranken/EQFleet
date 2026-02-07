@@ -12,6 +12,7 @@ import de.instinct.eqfleet.cover.CoverManager;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.backend.driver.local.LocalDriver;
+import de.instinct.eqfleet.language.LanguageManager;
 
 public class TutorialDriver extends LocalDriver {
 
@@ -73,13 +74,13 @@ public class TutorialDriver extends LocalDriver {
         	if (GameModel.activeGameState.winner != 0) {
     			GameModel.guidedEvents = null;
     			Game.stop();
-    			AudioManager.playVoice("tutorial_voiceline_37");
     		}
     	}
 	}
 
 	@Override
 	public long finish() {
+		AudioManager.playVoice("tutorial/" + LanguageManager.getCurrentLanguage().getCode() + "/voiceline_34");
 		GameModel.guidedEvents = null;
 		mode = null;
 		finished = true;
