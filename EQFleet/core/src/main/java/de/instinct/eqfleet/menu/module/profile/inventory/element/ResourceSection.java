@@ -68,7 +68,7 @@ public class ResourceSection extends Component {
 
 	@Override
 	public float calculateHeight() {
-		return Math.min(resources.size() * itemHeight, itemHeight);
+		return Math.max(resources.size() * itemHeight, itemHeight);
 	}
 
 	@Override

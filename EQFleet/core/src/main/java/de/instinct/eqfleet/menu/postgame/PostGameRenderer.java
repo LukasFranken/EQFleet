@@ -131,9 +131,15 @@ public class PostGameRenderer extends BaseModuleRenderer {
 					.uiElement(header)
 					.build());
 			
-			elements.add(new PostGameExperienceElement(PER_ITEM_DURATION_MS));
-			elements.add(new PostGameResourceElement(PER_ITEM_DURATION_MS));
-			int offset = 0;
+			int offset = 200;
+			PostGameExperienceElement postGameExperienceElement = new PostGameExperienceElement(PER_ITEM_DURATION_MS, offset);
+			elements.add(postGameExperienceElement);
+			offset += postGameExperienceElement.getUiElement().calculateHeight();
+			
+			PostGameResourceElement postGameResourceElement = new PostGameResourceElement(PER_ITEM_DURATION_MS, offset);
+			elements.add(postGameResourceElement);
+			offset += postGameResourceElement.getHeight() + 20;
+			
 			for (ShipResult shipResult : PostGameModel.reward.getShipResults()) {
 				PostGameShipProgressOverview postGameShipProgressOverview = new PostGameShipProgressOverview(PER_ITEM_DURATION_MS, shipResult, offset);
 				elements.add(postGameShipProgressOverview);

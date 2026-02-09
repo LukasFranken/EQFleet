@@ -87,7 +87,7 @@ public class ExperienceSection extends Component {
 	
 	@Override
 	public float calculateHeight() {
-		return 20 + 20 + (margin * 2);
+		return 40f;
 	}
 
 	@Override

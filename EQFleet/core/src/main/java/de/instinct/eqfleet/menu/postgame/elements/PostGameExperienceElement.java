@@ -35,9 +35,9 @@ public class PostGameExperienceElement implements PostGameElement {
 	private ExperienceSection uiElement;
 	private AnimationAction animationAction;
 	
-	public PostGameExperienceElement(float itemDuration) {
+	public PostGameExperienceElement(float itemDuration, int offset) {
 		uiElement = new ExperienceSection();
-		uiElement.init(50, GraphicsUtil.screenBounds().getHeight() - 200, GraphicsUtil.screenBounds().getWidth() - 100);
+		uiElement.init(50, GraphicsUtil.screenBounds().getHeight() - offset, GraphicsUtil.screenBounds().getWidth() - 100);
 		this.itemDuration = itemDuration;
 		
 		buildAnimationAction();

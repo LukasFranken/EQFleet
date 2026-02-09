@@ -118,12 +118,13 @@ public class Intro {
 		if (!LanguageManager.languageIsSet()) {
 			createSelectLanguageSlide();
 		} else {
-			createVolumeSelectionSlide();
+			createVolumeSelectionSlide(false);
 		}
 	}
 	
 	private static void createSelectLanguageSlide() {
 		MultiChoiceDialog languageSelectionDialog = new MultiChoiceDialog("Choose your prefered language:", getLanguageChoices());
+		languageSelectionDialog.setBackButtonEnabled(false);
 		introSlideshow.add(languageSelectionDialog);
 	}
 	
@@ -137,7 +138,7 @@ public class Intro {
 				@Override
 				public void execute() {
 					LanguageManager.setLanguage(language.getCode());
-					createVolumeSelectionSlide();
+					createVolumeSelectionSlide(true);
 				}
 				
 			});
@@ -146,7 +147,7 @@ public class Intro {
 		return choices;
 	}
 	
-	private static void createVolumeSelectionSlide() {
+	private static void createVolumeSelectionSlide(boolean backButtonEnabled) {
 		String volume = PreferenceManager.load("initialvolume");
 		if (volume.isEmpty()) {
 			AudioManager.playMusic("eqspace2", false);
@@ -171,19 +172,20 @@ public class Intro {
 					AudioManager.saveUserVoiceVolume(Float.parseFloat(newVolume));
 					AudioManager.saveUserSfxVolume(Float.parseFloat(newVolume));
 					AudioManager.stop();
-					createDoYouHaveAnAccountSlide();
+					createDoYouHaveAnAccountSlide(true);
 				}
 				
 			};
 			SliderSlide volumeSelectionSlide = new SliderSlide("Adjust the audio volume", volumeChangeAction, AudioManager.getUserMusicVolume(), volumeConfirmAction);
+			volumeSelectionSlide.setBackButtonEnabled(backButtonEnabled);
 			introSlideshow.add(volumeSelectionSlide);
 			
 		} else {
-			createDoYouHaveAnAccountSlide();
+			createDoYouHaveAnAccountSlide(false);
 		}
 	}
 
-	private static void createDoYouHaveAnAccountSlide() {
+	private static void createDoYouHaveAnAccountSlide(boolean backButtonEnabled) {
 		Action acceptAction = new Action() {
 			
 			@Override
@@ -214,7 +216,7 @@ public class Intro {
 		};
 		
 		BinaryLabeledDialog firstTimeDialog = new BinaryLabeledDialog("Do you have an account?", "Yes", "No", acceptAction, denyAction);
-		firstTimeDialog.setBackButtonEnabled(false);
+		firstTimeDialog.setBackButtonEnabled(backButtonEnabled);
 		introSlideshow.add(firstTimeDialog);
 	}
 

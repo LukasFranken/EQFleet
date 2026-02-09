@@ -25,11 +25,13 @@ public class PostGameResourceElement implements PostGameElement {
 	
 	private List<ResourceChange> currentResources;
 	
-	public PostGameResourceElement(float itemDuration) {
+	public PostGameResourceElement(float itemDuration, int offset) {
 		uiElement = new ResourceSection();
 		uiElement.setFixedWidth(GraphicsUtil.screenBounds().width / 2);
 		this.itemDuration = itemDuration;
 		
+		updateCurrentResources(0f);
+		uiElement.setPosition(GraphicsUtil.screenBounds().width / 4, GraphicsUtil.screenBounds().getHeight() - offset - uiElement.calculateHeight());
 		buildAnimationAction();
 	}
 	
@@ -38,22 +40,29 @@ public class PostGameResourceElement implements PostGameElement {
 			
 			@Override
 			public void update(float progression) {
-				currentResources = new ArrayList<>();
-				for (ResourceAmount resource : PostGameModel.reward.getResources()) {
-					long currentChange = (long)MathUtil.easeInOut(0, resource.getAmount(), progression);
-					ResourceChange currentResource = new ResourceChange();
-					currentResource.setCurrentResource(new ResourceAmount());
-					currentResource.getCurrentResource().setType(resource.getType());
-					currentResource.getCurrentResource().setAmount(Inventory.getResource(resource.getType()) + currentChange);
-					currentResource.setChangeAmount(currentChange);
-					currentResources.add(currentResource);
-				}
-				uiElement.setResources(currentResources);
-				uiElement.setPosition(GraphicsUtil.screenBounds().width / 4, GraphicsUtil.screenBounds().getHeight() - 230 - uiElement.calculateHeight());
-				uiElement.update();
+				updateCurrentResources(progression);
 			}
 			
 		};
+	}
+	
+	private void updateCurrentResources(float progression) {
+		currentResources = new ArrayList<>();
+		for (ResourceAmount resource : PostGameModel.reward.getResources()) {
+			long currentChange = (long)MathUtil.easeInOut(0, resource.getAmount(), progression);
+			ResourceChange currentResource = new ResourceChange();
+			currentResource.setCurrentResource(new ResourceAmount());
+			currentResource.getCurrentResource().setType(resource.getType());
+			currentResource.getCurrentResource().setAmount(Inventory.getResource(resource.getType()) + currentChange);
+			currentResource.setChangeAmount(currentChange);
+			currentResources.add(currentResource);
+		}
+		uiElement.setResources(currentResources);
+		uiElement.update();
+	}
+	
+	public float getHeight() {
+		return uiElement.calculateHeight();
 	}
 
 	@Override

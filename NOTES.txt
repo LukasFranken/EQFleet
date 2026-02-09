@@ -20,12 +20,22 @@ GENERAL:
   x fallout
   
 - full dual-language
- 
-- intro: remove back button from language select or make it not break the game
-- postgame screen resources dynamic palcement
+
+- postgame screen resources dynamic placement
 - tutorial not updated postgame sometimes
 - remove starmap until ship is equipped
 
+- console proper profiler area
+- proper profile
+ -> instead of just numbers show actual cp bar
+
+- ion weapon type
+ -> accelerates firerate while shooting
+ -> with extra buildup bar
+
+- buy ships through packs in shop
+- fix voice volume much higher after tutorial
+- fix frametime metric disabled after game
 SERVER:
 - DRASTICALLY IMPROVE GAME NETWORKING AND BUFFER SIZES
 - actual dbs for data
@@ -38,13 +48,12 @@ MENU:
 - change hangar space needed for build blueprint, not buy blueprint
 
 TUTORAL:
-- refactor tutorialloader
 - longer post-tutorial scene
-- full menu tutorial
+- full menu ship tutorial
 
 AUDIO:
+- seperate available radio tracks from nonradio tracks
 - implement last track id to prevent same track being played twice
- -> last message shorter
 - ios audio issues still exist on loudspeaker
 - better tutorial ai voice (its annoying)
 - reward cash with digital number up sound

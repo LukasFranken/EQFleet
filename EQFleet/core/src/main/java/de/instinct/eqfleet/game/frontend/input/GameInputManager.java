@@ -1,4 +1,7 @@
-package de.instinct.eqfleet.game.frontend;
+package de.instinct.eqfleet.game.frontend.input;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
@@ -15,6 +18,11 @@ import de.instinct.engine.net.message.types.FleetMovementMessage;
 import de.instinct.engine.net.message.types.GamePauseMessage;
 import de.instinct.engine.util.EngineUtility;
 import de.instinct.eqfleet.game.GameModel;
+import de.instinct.eqfleet.game.frontend.InteractionMode;
+import de.instinct.eqfleet.game.frontend.input.handler.ConstructionInputHandler;
+import de.instinct.eqfleet.game.frontend.input.handler.GeneralInputHandler;
+import de.instinct.eqfleet.game.frontend.input.handler.QLinkInputHandler;
+import de.instinct.eqfleet.game.frontend.input.handler.UnitInputHandler;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.InputUtil;
 
@@ -32,74 +40,80 @@ public class GameInputManager {
     private float radialSelectionThreshold = 80f;
     private float radialHoverThreshold = 20f;
     
+    private InputHandler generalInputHandler;
+    private Map<InteractionMode, InputHandler> modeInputHandlers;
+    
+    public GameInputManager() {
+    	generalInputHandler = new GeneralInputHandler();
+    	modeInputHandlers = new HashMap<>();
+    	modeInputHandlers.put(InteractionMode.UNIT_CONTROL, new UnitInputHandler());
+    	modeInputHandlers.put(InteractionMode.CONSTRUCTION, new ConstructionInputHandler());
+    	modeInputHandlers.put(InteractionMode.Q_LINK, new QLinkInputHandler());
+    }
+    
     public void handleInput(PerspectiveCamera camera, GameState state) {
-        if (!GameModel.inputEnabled) {
-            return;
+        if (!GameModel.inputEnabled) return;
+        if (state.winner != 0) return;
+        if (state.resumeCountdownMS > 0) return;
+        if (state.teamPause != 0) return;
+        
+        generalInputHandler.handleInput(camera, state);
+        modeInputHandlers.get(GameModel.mode).handleInput(camera, state);
+        
+        
+        
+        Vector3 worldTouch = getTouchWorldPosition(camera);
+    	if (Gdx.input.justTouched()) {
+            for (Planet planet : state.planets) {
+                if (planet.ownerId == GameModel.playerId && isTouchInsidePlanet(worldTouch, planet)) {
+                    selectedPlanetId = planet.id;
+                    dragStartPosition.set(worldTouch);
+                    isDragging = true;
+                    selectedShipId = null;
+                    break;
+                }
+            }
         }
-        if (state.winner == 0 && state.resumeCountdownMS <= 0 && state.teamPause == 0) {
-        	Vector3 worldTouch = getTouchWorldPosition(camera);
-        	if (Gdx.input.justTouched()) {
-                for (Planet planet : state.planets) {
-                    if (planet.ownerId == GameModel.playerId && isTouchInsidePlanet(worldTouch, planet)) {
-                        selectedPlanetId = planet.id;
-                        dragStartPosition.set(worldTouch);
-                        isDragging = true;
-                        selectedShipId = null;
-                        break;
-                    }
-                }
-                
-                Rectangle timerBounds = GraphicsUtil.scaleFactorAdjusted(new Rectangle(320, 820, 80, 50));
-                if (state.teamPause == 0 && timerBounds.contains(InputUtil.getMousePosition())) {
-                	GamePauseMessage order = new GamePauseMessage();
-                	order.gameUUID = state.gameUUID;
-                	order.userUUID = API.authKey;
-                	order.reason = "Manual Pause";
-                	order.pause = true;
-                	GameModel.outputMessageQueue.add(order);
-                }
-            }
-            
-            if (Gdx.input.isTouched() && selectedPlanetId != null && isDragging) {
-                Player player = getPlayerForSelectedPlanet(state);
-                switch (GameModel.mode) {
-				case UNIT_CONTROL:
-					if (selectedShipId == null) {
-                		if (player.ships.size() > 1) {
-                    		updateShipSelectionFromDrag(worldTouch, state);
-                    	} else {
-                    		selectedShipId = 0;
-                    	}
+        
+        if (Gdx.input.isTouched() && selectedPlanetId != null && isDragging) {
+            Player player = getPlayerForSelectedPlanet(state);
+            switch (GameModel.mode) {
+			case UNIT_CONTROL:
+				if (selectedShipId == null) {
+            		if (player.ships.size() > 1) {
+                		updateShipSelectionFromDrag(worldTouch, state);
+                	} else {
+                		selectedShipId = 0;
                 	}
-					break;
-				case CONSTRUCTION:
-					updateBuildingSelectionFromDrag(worldTouch, state);
-					break;
-				case Q_LINK:
-					//updateBuildingSelectionFromDrag(worldTouch, state);
-					break;
-				}
-            }
+            	}
+				break;
+			case CONSTRUCTION:
+				updateBuildingSelectionFromDrag(worldTouch, state);
+				break;
+			case Q_LINK:
+				//updateBuildingSelectionFromDrag(worldTouch, state);
+				break;
+			}
+        }
 
-            if (!Gdx.input.isTouched() && selectedPlanetId != null) {
-                isDragging = false;
-                for (Planet planet : state.planets) {
-                    if (isTouchInsidePlanet(worldTouch, planet)) {
-                    	if (planet.id != selectedPlanetId) {
-                    		FleetMovementMessage order = new FleetMovementMessage();
-                            order.gameUUID = state.gameUUID;
-                            order.userUUID = API.authKey;
-                            order.fromPlanetId = selectedPlanetId;
-                            order.toPlanetId = planet.id;
-                            order.shipId = selectedShipId == null ? 0 : selectedShipId;
-                            GameModel.outputMessageQueue.add(order);
-                            break;
-                    	}
-                    }
+        if (!Gdx.input.isTouched() && selectedPlanetId != null) {
+            isDragging = false;
+            for (Planet planet : state.planets) {
+                if (isTouchInsidePlanet(worldTouch, planet)) {
+                	if (planet.id != selectedPlanetId) {
+                		FleetMovementMessage order = new FleetMovementMessage();
+                        order.gameUUID = state.gameUUID;
+                        order.userUUID = API.authKey;
+                        order.fromPlanetId = selectedPlanetId;
+                        order.toPlanetId = planet.id;
+                        order.shipId = selectedShipId == null ? 0 : selectedShipId;
+                        GameModel.outputMessageQueue.add(order);
+                        break;
+                	}
                 }
-                selectedPlanetId = null;
-                selectedShipId = null;
             }
+            selectedPlanetId = null;
+            selectedShipId = null;
         }
     }
 	
@@ -118,6 +132,10 @@ public class GameInputManager {
         int shipCount = player.ships.size();
         if (shipCount == 3) {
         	angle = angle + 30f; 
+        }
+        
+        if (shipCount == 5) {
+        	angle = angle + 55f; 
         }
         
         float sectorSize = 360f / shipCount;
@@ -151,6 +169,10 @@ public class GameInputManager {
         int buildingCount = 1;
         if (buildingCount == 3) {
         	angle = angle + 30f; 
+        }
+        
+        if (buildingCount == 5) {
+        	angle = angle + 55f; 
         }
         
         float sectorSize = 360f / buildingCount;

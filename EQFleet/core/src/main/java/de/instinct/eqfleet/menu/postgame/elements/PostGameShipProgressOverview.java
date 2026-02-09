@@ -20,7 +20,7 @@ public class PostGameShipProgressOverview implements PostGameElement {
 		this.itemDuration = itemDuration;
 		uiElement = new ShipProgressSection(result);
 		uiElement.setFixedWidth(GraphicsUtil.screenBounds().width / 2f);
-		uiElement.setPosition(GraphicsUtil.screenBounds().width / 4f, GraphicsUtil.screenBounds().height - 270 - offset - getHeight());
+		uiElement.setPosition(GraphicsUtil.screenBounds().width / 4f, GraphicsUtil.screenBounds().height - offset - getHeight());
 		buildAnimationAction();
 	}
 
