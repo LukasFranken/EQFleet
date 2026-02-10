@@ -76,7 +76,7 @@
 		{
 			"key": "tutorial_voiceline_10",
 			"translations": {
-				"de": "Er generiert Ressourcen, erkennbar\nan den äußeren blauen Kreis",
+				"de": "Er generiert Ressourcen, erkennbar\nan dem äußeren blauen Kreis",
 				"en": "It generates resources, represented\nby the blue circle around it"
 			}
 		},
@@ -202,7 +202,7 @@
 		{
 			"key": "tutorial_voiceline_28",
 			"translations": {
-				"de": "Ist ein Stern unter Kontrolle, reduzieren\nsich die planetaren Ressourcen",
+				"de": "Ist ein Stern unter Kontrolle, reduzieren\nsich die planetaren Ressourcen darauf",
 				"en": "When captured, your planetary resources\non the star decrease, not increase over time"
 			}
 		},
@@ -230,7 +230,7 @@
 		{
 			"key": "tutorial_voiceline_32",
 			"translations": {
-				"de": "Wenn die Planetaren Ressourcen auslaufen,\nverliert man die Kontrolle über den Stern",
+				"de": "Wenn die planetaren Ressourcen auslaufen,\nverliert man die Kontrolle über den Stern",
 				"en": "When the ancient planet resources are\nempty, you lose control over it"
 			}
 		},

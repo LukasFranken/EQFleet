@@ -195,7 +195,7 @@ public class TutorialLoader {
     	
     	PlanetInitialization ancientPlanet = new PlanetInitialization();
     	ancientPlanet.setOwnerId(0);
-    	ancientPlanet.setPosition(new Vector2(0, 100));
+    	ancientPlanet.setPosition(new Vector2(0, 0));
     	ancientPlanet.setAncient(true);
     	planets.add(ancientPlanet);
     	
@@ -237,16 +237,16 @@ public class TutorialLoader {
 		guideQueue.add(setupGuideEvent);
 		
 		guideQueue.add(eventLoader.pause(1f));
-		guideQueue.add(eventLoader.dialog(1.5f, 1, VerticalAlignment.CENTER));
+		guideQueue.add(eventLoader.dialog(1, VerticalAlignment.CENTER));
 		if (mode == TutorialMode.FULL) {
-			guideQueue.add(eventLoader.dialog(3f, 2, VerticalAlignment.CENTER));
-			guideQueue.add(eventLoader.dialog(3f, 3, VerticalAlignment.CENTER));
-			guideQueue.add(eventLoader.dialog(3f, 4, VerticalAlignment.CENTER));
+			guideQueue.add(eventLoader.dialog(2, VerticalAlignment.CENTER));
+			guideQueue.add(eventLoader.dialog(3, VerticalAlignment.CENTER));
+			guideQueue.add(eventLoader.dialog(4, VerticalAlignment.CENTER));
 			guideQueue.add(eventLoader.pause(1f));
-			guideQueue.add(eventLoader.dialog(4.5f, 5, VerticalAlignment.CENTER));
-			guideQueue.add(eventLoader.dialog(5.5f, 6, VerticalAlignment.CENTER));
+			guideQueue.add(eventLoader.dialog(5, VerticalAlignment.CENTER));
+			guideQueue.add(eventLoader.dialog(6, VerticalAlignment.CENTER));
 		}
-		guideQueue.add(eventLoader.dialog(3f, 7, VerticalAlignment.TOP));
+		guideQueue.add(eventLoader.dialog(7, VerticalAlignment.TOP));
 		guideQueue.add(eventLoader.action(new Action() {
 			
 			@Override
@@ -266,14 +266,14 @@ public class TutorialLoader {
 			}
 			
 		}));
-		guideQueue.add(eventLoader.dialog(4f, 8, VerticalAlignment.TOP));
+		guideQueue.add(eventLoader.dialog(8, VerticalAlignment.TOP));
 		guideQueue.add(eventLoader.pan(2f, new Vector3(0f, -800f, 2000f)));
-		guideQueue.add(eventLoader.dialog(3.5f, 9, VerticalAlignment.TOP));
-		guideQueue.add(eventLoader.dialog(4.5f, 10, VerticalAlignment.TOP));
+		guideQueue.add(eventLoader.dialog(9, VerticalAlignment.TOP));
+		guideQueue.add(eventLoader.dialog(10, VerticalAlignment.TOP));
 		guideQueue.add(eventLoader.pause(1f));
 		guideQueue.add(eventLoader.pan(2f, new Vector3(-50f, -700f, 2000f)));
 		if (mode == TutorialMode.FULL) {
-			guideQueue.add(eventLoader.dialog(3f, 11, VerticalAlignment.TOP));
+			guideQueue.add(eventLoader.dialog(11, VerticalAlignment.TOP));
 		}
 		guideQueue.add(eventLoader.action(new Action() {
 			
@@ -284,7 +284,7 @@ public class TutorialLoader {
 			}
 			
 		}));
-		guideQueue.add(eventLoader.dialog(3f, 12, VerticalAlignment.TOP));
+		guideQueue.add(eventLoader.dialog(12, VerticalAlignment.TOP));
 		guideQueue.add(eventLoader.condition(new Condition() {
 			
 			@Override
@@ -316,13 +316,13 @@ public class TutorialLoader {
 			
 		}));
 		if (mode == TutorialMode.FULL) {
-			guideQueue.add(eventLoader.dialog(3.5f, 13, VerticalAlignment.TOP));
+			guideQueue.add(eventLoader.dialog(13, VerticalAlignment.TOP));
 		}
-		guideQueue.add(eventLoader.dialog(7f, 14, VerticalAlignment.TOP));
+		guideQueue.add(eventLoader.dialog(14, VerticalAlignment.TOP));
 		if (mode == TutorialMode.FULL) {
-			guideQueue.add(eventLoader.dialog(3f, 15, VerticalAlignment.TOP));
+			guideQueue.add(eventLoader.dialog(15, VerticalAlignment.TOP));
 		}
-		guideQueue.add(eventLoader.dialog(4.5f, 16, VerticalAlignment.TOP));
+		guideQueue.add(eventLoader.dialog(16, VerticalAlignment.TOP));
 		guideQueue.add(eventLoader.action(new Action() {
 			
 			@Override
@@ -345,14 +345,17 @@ public class TutorialLoader {
 			
 		}));
 		if (mode == TutorialMode.FULL) {
-			guideQueue.add(eventLoader.dialog(4.5f, 17, VerticalAlignment.TOP));
+			guideQueue.add(eventLoader.dialog(17, VerticalAlignment.TOP));
 		}
 		guideQueue.add(eventLoader.pan(2f, new Vector3(130f, -700f, 3000f)));
 		guideQueue.add(eventLoader.pan(2f, new Vector3(320f, -700f, 2300f)));
-		guideQueue.add(eventLoader.dialog(3.5f, 18, VerticalAlignment.TOP));
+		guideQueue.add(eventLoader.dialog(18, VerticalAlignment.TOP));
+		
+		if (mode == TutorialMode.TOO_MUCH) {
+			guideQueue.add(eventLoader.dialog(19, VerticalAlignment.TOP));
+		}
 		if (mode == TutorialMode.FULL) {
-			guideQueue.add(eventLoader.dialog(5f, 19, VerticalAlignment.TOP));
-			guideQueue.add(eventLoader.dialog(4f, 20, VerticalAlignment.TOP));
+			guideQueue.add(eventLoader.dialog(20, VerticalAlignment.TOP));
 		}
 		guideQueue.add(eventLoader.action(new Action() {
 			
@@ -362,7 +365,7 @@ public class TutorialLoader {
 			}
 			
 		}));
-		guideQueue.add(eventLoader.dialog(7.5f, 21, VerticalAlignment.TOP));
+		guideQueue.add(eventLoader.dialog(21, VerticalAlignment.TOP));
 		guideQueue.add(eventLoader.action(new Action() {
 			
 			@Override
@@ -384,7 +387,7 @@ public class TutorialLoader {
 			}
 			
 		}));
-		guideQueue.add(eventLoader.dialog(2f, 22, VerticalAlignment.TOP));
+		guideQueue.add(eventLoader.dialog(22, VerticalAlignment.TOP));
 		guideQueue.add(eventLoader.condition(new Condition() {
 			
 			@Override
@@ -437,10 +440,10 @@ public class TutorialLoader {
 			}
 			
 		}));
-		guideQueue.add(eventLoader.dialog(3.5f, 23, VerticalAlignment.TOP));
-		guideQueue.add(eventLoader.dialog(4.5f, 24, VerticalAlignment.TOP));
+		guideQueue.add(eventLoader.dialog(23, VerticalAlignment.TOP));
+		guideQueue.add(eventLoader.dialog(24, VerticalAlignment.TOP));
 		guideQueue.add(panToShipGuideEvent);
-		guideQueue.add(eventLoader.dialog(6f, 25, VerticalAlignment.TOP));
+		guideQueue.add(eventLoader.dialog(25, VerticalAlignment.TOP));
 		guideQueue.add(eventLoader.pan(2f, new Vector3(200f, -600f, 1800f)));
 		guideQueue.add(eventLoader.action(new Action() {
 			
@@ -458,11 +461,11 @@ public class TutorialLoader {
 			}
 			
 		}));
-		guideQueue.add(eventLoader.dialog(7f, 26, VerticalAlignment.TOP));
+		guideQueue.add(eventLoader.dialog(26, VerticalAlignment.TOP));
 		guideQueue.add(eventLoader.pan(2f, new Vector3(0f, 0f, 2000f)));
-		guideQueue.add(eventLoader.dialog(5f, 27, VerticalAlignment.TOP));
+		guideQueue.add(eventLoader.dialog(27, VerticalAlignment.TOP));
 		guideQueue.add(eventLoader.pan(2f, new Vector3(130f, -200f, 3800f)));
-		guideQueue.add(eventLoader.dialog(7f, 28, VerticalAlignment.TOP));
+		guideQueue.add(eventLoader.dialog(28, VerticalAlignment.TOP));
 		guideQueue.add(eventLoader.action(new Action() {
 			
 			@Override
@@ -471,7 +474,7 @@ public class TutorialLoader {
 			}
 			
 		}));
-		guideQueue.add(eventLoader.dialog(3f, 29, VerticalAlignment.TOP));
+		guideQueue.add(eventLoader.dialog(29, VerticalAlignment.TOP));
 		guideQueue.add(eventLoader.condition(new Condition() {
 			
 			@Override
@@ -490,10 +493,10 @@ public class TutorialLoader {
 			}
 			
 		}));
-		guideQueue.add(eventLoader.dialog(8.5f, 30, VerticalAlignment.TOP));
-		guideQueue.add(eventLoader.dialog(8f, 31, VerticalAlignment.TOP));
+		guideQueue.add(eventLoader.dialog(30, VerticalAlignment.TOP));
+		guideQueue.add(eventLoader.dialog(31, VerticalAlignment.TOP));
 		if (mode == TutorialMode.FULL) {
-			guideQueue.add(eventLoader.dialog(5f, 32, VerticalAlignment.TOP));
+			guideQueue.add(eventLoader.dialog(32, VerticalAlignment.TOP));
 		}
 		guideQueue.add(eventLoader.action(new Action() {
 			
@@ -505,7 +508,7 @@ public class TutorialLoader {
 			}
 			
 		}));
-		guideQueue.add(eventLoader.dialog(4f, 33, VerticalAlignment.TOP));
+		guideQueue.add(eventLoader.dialog(33, VerticalAlignment.TOP));
 		guideQueue.add(eventLoader.condition(new Condition() {
 			
 			@Override

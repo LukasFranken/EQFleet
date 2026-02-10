@@ -40,7 +40,6 @@ public class ProjectileRenderer {
 			projectileInstance.setActive(false);
 		}
 		for (Projectile projectile : state.projectiles) {
-            
             ProjectileInstance projectileInstance = getProjectileInstance(projectile);
             if (projectileInstance == null) {
             	projectileInstance = instanciateProjectileInstance(projectile, state);

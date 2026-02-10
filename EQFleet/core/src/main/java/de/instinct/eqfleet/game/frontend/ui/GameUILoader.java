@@ -35,9 +35,9 @@ public class GameUILoader {
 	
 	private final float AP_GLOWUP_DELAY = 2.8f;
 	
-	public List<GameUIElement<?>> loadElements(UIBounds bounds) {
+	public List<GameUIElement<?>> loadElements() {
 		elements = new ArrayList<>();
-		
+		UIBounds bounds = GameModel.uiBounds;
 		loadTimeLabel(bounds);
 		loadOwnCPBar(bounds);
 		loadEnemy1CPBar(bounds);

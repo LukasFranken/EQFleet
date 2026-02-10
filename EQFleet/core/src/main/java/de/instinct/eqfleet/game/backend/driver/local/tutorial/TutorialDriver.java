@@ -80,7 +80,7 @@ public class TutorialDriver extends LocalDriver {
 
 	@Override
 	public long finish() {
-		AudioManager.playVoice("tutorial/" + LanguageManager.getCurrentLanguage().getCode() + "/voiceline_34");
+		AudioManager.playVoice("tutorial/" + LanguageManager.getCurrentLanguage().getCode(), "voiceline_34");
 		GameModel.guidedEvents = null;
 		mode = null;
 		finished = true;

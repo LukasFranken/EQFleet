@@ -16,9 +16,11 @@ import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.VerticalAl
 
 public class DefaultGuideEventLoader {
 	
-	public DialogGuideEvent dialog(float duration, int id, VerticalAlignment alignment) {
+	private static final float POST_DIALOG_DELAY = 0.5f;
+	
+	public DialogGuideEvent dialog(int id, VerticalAlignment alignment) {
 		DialogGuideEvent dialog = new DialogGuideEvent();
-		dialog.setDuration(duration);
+		dialog.setDuration(getVoiceLineDuration(id) + POST_DIALOG_DELAY);
 		dialog.setMessage(new MessageBehavior() {
 			
 			@Override
@@ -99,7 +101,11 @@ public class DefaultGuideEventLoader {
 	}
 	
 	private void playVoiceLine(int id) {
-		AudioManager.playVoice("tutorial/" + LanguageManager.getCurrentLanguage().getCode() + "/voiceline_" + id);
+		AudioManager.playVoice("tutorial/" + LanguageManager.getCurrentLanguage().getCode(), "voiceline_" + id);
+	}
+	
+	private float getVoiceLineDuration(int id) {
+		return AudioManager.getVoiceDuration("tutorial/" + LanguageManager.getCurrentLanguage().getCode(), "voiceline_" + id);
 	}
 
 }

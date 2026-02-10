@@ -30,22 +30,27 @@ public class LanguageManager {
 		languageData = ObjectJSONMapper.mapJSON(new String(fh.readBytes(), StandardCharsets.UTF_8), LanguageData.class);
 		String languageCode = PreferenceManager.load("language");
 		if (!languageCode.isEmpty()) {
-			setLanguage(languageCode);
+			setCurrentLanguage(languageCode);
 			Logger.log(LOGTAG, "Language set to " + languageCode, ConsoleColor.YELLOW);
 		}
-		if (currentLanguage == null)
+		if (currentLanguage == null) {
 			Logger.log(LOGTAG, "WARNING: No language set, defaulting to en", ConsoleColor.YELLOW);
-			setLanguage("en");
+			setCurrentLanguage("en");
+		}
 	}
-
-	public static void setLanguage(String code) {
+	
+	private static void setCurrentLanguage(String code) {
 		for (Language language : languageData.getAvailableLanguages()) {
 			if (language.getCode().equals(code)) {
-				PreferenceManager.save("language", code);
 				currentLanguage = language;
 				return;
 			}
 		}
+	}
+
+	public static void setLanguage(String code) {
+		setCurrentLanguage(code);
+		if (currentLanguage != null) PreferenceManager.save("language", code);
 	}
 
 	public static Language getCurrentLanguage() {

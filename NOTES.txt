@@ -21,45 +21,51 @@ GENERAL:
   
 - full dual-language
 
-- postgame screen resources dynamic placement
-- tutorial not updated postgame sometimes
 - remove starmap until ship is equipped
 
 - console proper profiler area
-- proper profile
- -> instead of just numbers show actual cp bar
 
 - ion weapon type
  -> accelerates firerate while shooting
  -> with extra buildup bar
+- repair ray weapon type
+ -> targets the most damaged friendly entity in range
+ -> can either repair shield, hull or both
+ -> can also have a damage weapon
+ -> maybe first cruiser as support ship?
+ -> after laser rework
 
-- buy ships through packs in shop
 - fix voice volume much higher after tutorial
 - fix frametime metric disabled after game
+- fix shipyard comp glow keeps resetting
+- fix tutorial not updated postgame sometimes
+
+- calmer tutorial music
+
 SERVER:
 - DRASTICALLY IMPROVE GAME NETWORKING AND BUFFER SIZES
 - actual dbs for data
 
 MENU:
-- fix postgame exp section by making it dynamic for playerreward
 - settings tabs (audio, video, gameplay, account)
 - slider logic change to screenwide drag and drop (especially for mobile)
 - better nullpoint shield bar visual (fragmentbar)
 - change hangar space needed for build blueprint, not buy blueprint
+- proper profile
+ -> instead of just numbers show actual cp bar
 
 TUTORAL:
-- longer post-tutorial scene
-- full menu ship tutorial
+- full menu ship component tutorial
+- full cover sequence
+ -> show cover logo at end
 
 AUDIO:
 - seperate available radio tracks from nonradio tracks
 - implement last track id to prevent same track being played twice
 - ios audio issues still exist on loudspeaker
-- better tutorial ai voice (its annoying)
 - reward cash with digital number up sound
 - radio: show track, skip track, previous track
  -> add/remove tracks from playlist
-- fix explosion sound for non missiles?
 - more sound fx (like in menu)
 - one minute remaining/30sec/10 sec remaining sound
 - maybe dispose all tutorial voicelines after tutorial?
@@ -73,12 +79,7 @@ CONTROL:
 
 GAME:
 - make cp/ap bars borders as thick for ios as on pc
-- fix arrow draw while losing planet crash
- -> probably by just disabling selecting another planet
-- fix hover selection above another planet crash
 - make beam actual beam
-- fix explosion ui, add effect for non missile explosion
-- remove construction for the player for now
 
 LAST STEPS:
 - random amazon requests killing apis
@@ -115,6 +116,8 @@ Jan 30 21:46:58 ip-172-30-0-159.eu-central-1.compute.internal bash[10704]: at ja
   - create linux command to see status of all fleet services
 ---------------------------------------------------------------------
 FUTURE RELEASES TODO:
+- ingame different edge border color for interaction mode active
+
 - maybe add 0.99$ purchase to unlock adhd-friendly-mode (meant to be stupid)
  -> everything is animated rainbow colors
  -> there is a temple run vod that bounces across screen like dvd logo

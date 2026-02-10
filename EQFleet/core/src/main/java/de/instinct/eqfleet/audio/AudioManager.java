@@ -1,12 +1,16 @@
 package de.instinct.eqfleet.audio;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
 
 import de.instinct.eqfleet.PreferenceManager;
 import de.instinct.eqlibgdxutils.MathUtil;
@@ -15,6 +19,7 @@ import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
 import de.instinct.eqlibgdxutils.generic.cache.Cache;
 import de.instinct.eqlibgdxutils.generic.cache.model.LoadSequence;
+import de.instinct.eqlibgdxutils.net.ObjectJSONMapper;
 
 public class AudioManager {
 
@@ -26,6 +31,7 @@ public class AudioManager {
 	private static Music currentVoice;
 
 	private static List<String> availableRadioTracks;
+	private static Map<String, AudioMetaData> voiceMetaDatas;
 
 	private static Cache<Music> voices;
 	private static Cache<Sound> sfxs;
@@ -44,6 +50,7 @@ public class AudioManager {
 	private static final Random RNG = new Random();
 
 	public static void init() {
+		voiceMetaDatas = new HashMap<>();
 		availableRadioTracks = new ArrayList<>();
 		availableRadioTracks.add("eqspace1");
 		availableRadioTracks.add("eqspace2");
@@ -190,15 +197,42 @@ public class AudioManager {
 		}
 	}
 
-	public static void playVoice(String tag) {
-		Music voice = voices.get(tag);
+	public static void playVoice(String category, String tag) {
+		String categoryPath = category;
+		if (!category.contentEquals("")) categoryPath += "/";
+		Music voice = voices.get(categoryPath + tag);
 		if (voice != null) {
 			if (currentVoice != null) currentVoice.stop();
-			voice.setVolume(1f * userVoiceVolume * (tag.contains("tutorial") ? 0.7f : 1f));
+			voice.setVolume(1f * userVoiceVolume * (category.contains("tutorial") ? 0.7f : 1f));
 			voice.setLooping(false);
 			voice.play();
 			currentVoice = voice;
 		}
+	}
+	
+	public static float getVoiceDuration(String category, String tag) {
+		AudioMetaData metaData = voiceMetaDatas.get(category);
+		if (!voiceMetaDatas.containsKey(category)) {
+			metaData = loadVoiceMetaData(category);
+		}
+		if (metaData == null) {
+			Logger.log(LOGTAG, "Failed to load metadata for voice category: " + category, ConsoleColor.RED);
+			return 0f;
+		}
+		if (!metaData.getDurations().containsKey(tag)) {
+			Logger.log(LOGTAG, "Failed to find duration for voice tag: " + tag + " in category: " + category, ConsoleColor.RED);
+			return 0f;
+		}
+		return metaData.getDurations().get(tag);
+	}
+
+	private static AudioMetaData loadVoiceMetaData(String category) {
+		String categoryPath = "audio/voice/" + category;
+		if (!category.contentEquals("")) categoryPath += "/";
+		FileHandle fh = Gdx.files.internal(categoryPath + "metadata.json");
+		AudioMetaData metaData = ObjectJSONMapper.mapJSON(new String(fh.readBytes(), StandardCharsets.UTF_8), AudioMetaData.class);
+		voiceMetaDatas.put(categoryPath, metaData);
+		return metaData;
 	}
 
 	public static void playSfx(String tag) {

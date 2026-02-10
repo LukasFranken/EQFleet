@@ -7,6 +7,7 @@ import de.instinct.engine.model.GameState;
 import de.instinct.engine.net.message.NetworkMessage;
 import de.instinct.eqfleet.game.backend.driver.local.tutorial.guide.GuideEvent;
 import de.instinct.eqfleet.game.frontend.InteractionMode;
+import de.instinct.eqfleet.game.frontend.ui.model.UIBounds;
 import de.instinct.eqlibgdxutils.net.MessageQueue;
 
 public class GameModel {
@@ -28,5 +29,7 @@ public class GameModel {
     public static volatile long lastUpdateTimestampMS;
     
     public static volatile String lastGameUUID;
+    
+    public static volatile UIBounds uiBounds;
 
 }

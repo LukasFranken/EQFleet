@@ -1,0 +1,12 @@
+{
+	"durations": {
+		"construction": 0.86,
+		"defeat": 0.91,
+		"domination": 1.39,
+		"qlink": 0.8,
+		"surrender": 0.9,
+		"units": 0.63,
+		"victory": 0.97,
+		"wiped_out": 1.07
+	}
+}

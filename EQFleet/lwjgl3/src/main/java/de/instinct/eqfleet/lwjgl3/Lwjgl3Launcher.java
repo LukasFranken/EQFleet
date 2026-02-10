@@ -10,9 +10,9 @@ import de.instinct.eqfleet.App;
 
 public class Lwjgl3Launcher {
 	
-	private static Vector2 windowSize = new Vector2(400, 900);
+	//private static Vector2 windowSize = new Vector2(400, 900);
 	//private static Vector2 windowSize = new Vector2(500, 1125);
-	//private static Vector2 windowSize = new Vector2(600, 1350);
+	private static Vector2 windowSize = new Vector2(600, 1350);
 	
     public static void main(String[] args) {
         if (StartupHelper.startNewJvmIfRequired()) return;

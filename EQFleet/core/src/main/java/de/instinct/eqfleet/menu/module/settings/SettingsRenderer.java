@@ -96,7 +96,7 @@ public class SettingsRenderer extends BaseModuleRenderer {
 			@Override
 			public void execute() {
 				AudioManager.saveUserVoiceVolume(voiceVolumeSlider.getSlider().getCurrentValue());
-				AudioManager.playVoice("units");
+				AudioManager.playVoice("game", "units");
 			}
 			
 		});

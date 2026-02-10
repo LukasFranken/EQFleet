@@ -56,18 +56,18 @@ public abstract class Driver {
 		if (!GameModel.activeGameState.gameUUID.equals("tutorial")) {
 			if (GameModel.activeGameState.winner == EngineUtility.getPlayer(GameModel.activeGameState.players, GameModel.playerId).teamId) {
 				if (EngineUtility.winIsWiped(GameModel.activeGameState)) {
-					AudioManager.playVoice("domination");
+					AudioManager.playVoice("game", "domination");
 				} else {
-					AudioManager.playVoice("victory");
+					AudioManager.playVoice("game", "victory");
 				}
 			} else {
 				if (GameModel.activeGameState.surrendered != 0) {
-					AudioManager.playVoice("surrender");
+					AudioManager.playVoice("game", "surrender");
 				} else {
 					if (EngineUtility.winIsWiped(GameModel.activeGameState)) {
-						AudioManager.playVoice("wiped_out");
+						AudioManager.playVoice("game", "wiped_out");
 					} else {
-						AudioManager.playVoice("defeat");
+						AudioManager.playVoice("game", "defeat");
 					}
 				}
 			}

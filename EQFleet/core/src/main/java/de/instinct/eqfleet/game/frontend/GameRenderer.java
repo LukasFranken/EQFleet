@@ -78,7 +78,6 @@ public class GameRenderer {
 					if (state.started) {
 						checkFlip();
 						gridRenderer.drawGrid(camera);
-						uiRenderer.renderParticles();
 						planetRenderer.render(state, camera);
 						shipRenderer.render(state, camera);
 						projectileRenderer.render(state, camera);
