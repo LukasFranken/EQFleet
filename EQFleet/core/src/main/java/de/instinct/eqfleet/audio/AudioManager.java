@@ -31,13 +31,14 @@ public class AudioManager {
 	private static Music currentVoice;
 
 	private static List<String> availableRadioTracks;
+	private static List<String> availableNonRadioTracks;
 	private static Map<String, AudioMetaData> voiceMetaDatas;
 
 	private static Cache<Music> voices;
 	private static Cache<Sound> sfxs;
 	private static Cache<Music> musics;
 
-	private static float targetMusicVolume = 0.5f;
+	private static float targetMusicVolume = 0.4f;
 	private static final float swapDuration = 5f;
 	private static float currentSwapElapsed = 0f;
 
@@ -48,16 +49,27 @@ public class AudioManager {
 	private static boolean radioMode;
 
 	private static final Random RNG = new Random();
+	private static int lastPlayedRadioTrackIdx = -1;
 
 	public static void init() {
 		voiceMetaDatas = new HashMap<>();
 		availableRadioTracks = new ArrayList<>();
-		availableRadioTracks.add("eqspace1");
+		/*availableRadioTracks.add("eqspace1");
 		availableRadioTracks.add("eqspace2");
 		availableRadioTracks.add("eqspace3");
 		availableRadioTracks.add("eqspace4");
 		availableRadioTracks.add("infinite_future");
-		availableRadioTracks.add("infinite_future_short");
+		availableRadioTracks.add("to_the_stars");
+		availableRadioTracks.add("to_the_stars_funk");
+		availableRadioTracks.add("to_the_stars_ambient");
+		availableRadioTracks.add("to_the_stars_disco");
+		availableRadioTracks.add("neon_horizon_ambient");
+		availableRadioTracks.add("to_the_stars_70s");
+		availableRadioTracks.add("to_the_stars_synth");*/
+		availableRadioTracks.add("to_the_stars_disco_lowbit");
+		
+		availableNonRadioTracks = new ArrayList<>();
+		availableNonRadioTracks.add("to_the_stars_short");
 
 		musics = new Cache<>(new LoadSequence<Music>() {
 			@Override
@@ -90,6 +102,10 @@ public class AudioManager {
 		if (!sfxVolumePrefString.isEmpty()) userSfxVolume = Float.parseFloat(sfxVolumePrefString);
 
 		for (String tag : availableRadioTracks) {
+			musics.get(tag);
+		}
+		
+		for (String tag : availableNonRadioTracks) {
 			musics.get(tag);
 		}
 	}
@@ -161,8 +177,13 @@ public class AudioManager {
 					queuedInMusic = null;
 					Logger.log(LOGTAG, "Updating music to queued in", ConsoleColor.YELLOW);
 				} else {
-					int idx = RNG.nextInt(availableRadioTracks.size());
+					int idx = -1;
+					do {
+						idx = RNG.nextInt(availableRadioTracks.size());
+						if (availableRadioTracks.size() == 1) break;
+					} while (idx == lastPlayedRadioTrackIdx);
 					String tag = availableRadioTracks.get(idx);
+					lastPlayedRadioTrackIdx = idx;
 					next = musics.get(tag);
 					Logger.log(LOGTAG, "Updating music to random: " + tag, ConsoleColor.YELLOW);
 				}

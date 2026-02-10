@@ -43,8 +43,6 @@ GENERAL:
 - fix shipyard comp glow keeps resetting
 - fix tutorial not updated postgame sometimes
 
-- calmer tutorial music
-
 SERVER:
 - DRASTICALLY IMPROVE GAME NETWORKING AND BUFFER SIZES
 - actual dbs for data
@@ -63,8 +61,6 @@ TUTORAL:
  -> show cover logo at end
 
 AUDIO:
-- seperate available radio tracks from nonradio tracks
-- implement last track id to prevent same track being played twice
 - ios audio issues still exist on loudspeaker
 - reward cash with digital number up sound
 - radio: show track, skip track, previous track
@@ -81,6 +77,7 @@ CONTROL:
 - add user management to web ui
 
 GAME:
+- fix short game rendering between end and postgame
 - make cp/ap bars borders as thick for ios as on pc
 - make beam actual beam
 
@@ -119,6 +116,8 @@ Jan 30 21:46:58 ip-172-30-0-159.eu-central-1.compute.internal bash[10704]: at ja
   - create linux command to see status of all fleet services
 ---------------------------------------------------------------------
 FUTURE RELEASES TODO:
+- maybe different music for different menus with transition? combat,casino etc.
+
 - ingame different edge border color for interaction mode active
 
 - maybe add 0.99$ purchase to unlock adhd-friendly-mode (meant to be stupid)

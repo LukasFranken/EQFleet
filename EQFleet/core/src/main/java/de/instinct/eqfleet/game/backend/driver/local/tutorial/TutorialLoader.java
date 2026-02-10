@@ -252,7 +252,7 @@ public class TutorialLoader {
 			@Override
 			public void execute() {
 				GameModel.visible = true;
-				AudioManager.playMusic("eqspace1", true);
+				AudioManager.playMusic("to_the_stars_ambient", true);
 				AudioManager.startRadio();
 			}
 			

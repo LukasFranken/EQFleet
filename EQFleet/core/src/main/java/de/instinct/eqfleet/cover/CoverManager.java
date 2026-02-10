@@ -12,7 +12,7 @@ import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 public class CoverManager {
 	
 	//private static final int TOTAL_DURATION = 59_000;
-	private static final int TOTAL_DURATION = 15_000;
+	private static final int TOTAL_DURATION = 30_000;
 	
 	private static float elapsed;
 	private static boolean active;
@@ -21,7 +21,7 @@ public class CoverManager {
 	
 	public static void start() {
 		active = true;
-		AudioManager.playMusic("infinite_future_short", false);
+		AudioManager.playMusic("to_the_stars_short", false);
 		AudioManager.queueMusic("eqspace2");
 		
 		load();
@@ -44,10 +44,10 @@ public class CoverManager {
 
 	private static void render() {
 		coverImage.setAlpha(0f);
-		if (elapsed > 8f) {
-			coverImage.setAlpha(MathUtil.easeInOut(0f, 1f, (elapsed - 8f) / 1.5f));
-			if (elapsed > 12f) {
-				coverImage.setAlpha(MathUtil.easeInOut(1f, 0f, (elapsed - 13f) / 1.5f));
+		if (elapsed > 24f) {
+			coverImage.setAlpha(MathUtil.easeInOut(0f, 1f, (elapsed - 24f) / 1.5f));
+			if (elapsed > 29f) {
+				coverImage.setAlpha(MathUtil.easeInOut(1f, 0f, (elapsed - 29f) / 1.5f));
 			}
 		}
 		coverImage.render();
