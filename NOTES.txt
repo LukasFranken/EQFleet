@@ -42,7 +42,11 @@ GENERAL:
 - fix frametime metric disabled after game
 - fix shipyard comp glow keeps resetting
 - fix tutorial not updated postgame sometimes
+- fix no camera zoom value in play pvp/pve
 
+- more resource types with maybe craftable ones in station
+
+- main screen tab bar bottom (combat, flagship, station, profile)
 SERVER:
 - DRASTICALLY IMPROVE GAME NETWORKING AND BUFFER SIZES
  -> start with segmentalizing gamestate transmission
