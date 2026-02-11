@@ -54,7 +54,7 @@ public class AudioManager {
 	public static void init() {
 		voiceMetaDatas = new HashMap<>();
 		availableRadioTracks = new ArrayList<>();
-		/*availableRadioTracks.add("eqspace1");
+		availableRadioTracks.add("eqspace1");
 		availableRadioTracks.add("eqspace2");
 		availableRadioTracks.add("eqspace3");
 		availableRadioTracks.add("eqspace4");
@@ -65,8 +65,7 @@ public class AudioManager {
 		availableRadioTracks.add("to_the_stars_disco");
 		availableRadioTracks.add("neon_horizon_ambient");
 		availableRadioTracks.add("to_the_stars_70s");
-		availableRadioTracks.add("to_the_stars_synth");*/
-		availableRadioTracks.add("to_the_stars_disco_lowbit");
+		availableRadioTracks.add("to_the_stars_synth");
 		
 		availableNonRadioTracks = new ArrayList<>();
 		availableNonRadioTracks.add("to_the_stars_short");
