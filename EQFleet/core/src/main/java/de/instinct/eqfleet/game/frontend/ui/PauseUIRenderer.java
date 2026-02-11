@@ -57,9 +57,9 @@ public class PauseUIRenderer {
 	}
 	
 	private void renderCountdownScreen(GameState state) {
-		if (state.resumeCountdownMS > 0) {
+		if (state.pauseData.resumeCountdownMS > 0) {
 			TextureManager.draw(TextureManager.createTexture(bluroutColor), GraphicsUtil.screenBounds());
-			Label pauseLabel = new Label(StringUtils.format(Math.min((state.resumeCountdownMS / 1000) + 1, 3), 0));
+			Label pauseLabel = new Label(StringUtils.format(Math.min((state.pauseData.resumeCountdownMS / 1000) + 1, 3), 0));
 			pauseLabel.setType(FontType.GIANT);
 			pauseLabel.setBounds(new Rectangle(100, (GraphicsUtil.screenBounds().getHeight() / 2), GraphicsUtil.screenBounds().getWidth() - 200, 60));
 			pauseLabel.render();
@@ -67,24 +67,24 @@ public class PauseUIRenderer {
 	}
 
 	private void renderPauseScreen(GameState state) {
-		if (state.teamPause != 0) {
+		if (state.pauseData.teamPause != 0) {
 			TextureManager.draw(TextureManager.createTexture(bluroutColor), GraphicsUtil.screenBounds());
 			Player self = EngineUtility.getPlayer(state.players, GameModel.playerId);
-			String teamName = self.teamId == state.teamPause ? "OWN" : "ENEMY";
+			String teamName = self.teamId == state.pauseData.teamPause ? "OWN" : "ENEMY";
 			Label pauseLabel = new Label("PAUSED - " + teamName + " TEAM");
 			pauseLabel.setType(FontType.LARGE);
 			pauseLabel.setBounds(new Rectangle(50, (GraphicsUtil.screenBounds().getHeight() / 2) + 200, GraphicsUtil.screenBounds().getWidth() - 100, 60));
 			pauseLabel.setBackgroundColor(Color.BLACK);
 			pauseLabel.render();
 			
-			long teamPauseMS = state.teamPausesMS.get(state.teamPause);
-			Label remainingTimeLabel = new Label("Remaining Time: " + StringUtils.format(((float)(state.maxPauseMS - teamPauseMS) / 1000f), 0) + "s");
+			long teamPauseMS = state.pauseData.teamPausesMS.get(state.pauseData.teamPause);
+			Label remainingTimeLabel = new Label("Remaining Time: " + StringUtils.format(((float)(state.pauseData.maxPauseMS - teamPauseMS) / 1000f), 0) + "s");
 			remainingTimeLabel.setType(FontType.NORMAL);
 			remainingTimeLabel.setBounds(new Rectangle(100, (GraphicsUtil.screenBounds().getHeight() / 2) + 100, GraphicsUtil.screenBounds().getWidth() - 200, 30));
 			remainingTimeLabel.setBackgroundColor(Color.BLACK);
 			remainingTimeLabel.render();
 			
-			if (self.teamId == state.teamPause && state.currentPauseElapsedMS > state.minPauseMS) {
+			if (self.teamId == state.pauseData.teamPause && state.pauseData.currentPauseElapsedMS > state.pauseData.minPauseMS) {
 				surrenderButton.render();
 	        	resumeButton.render();
 			}

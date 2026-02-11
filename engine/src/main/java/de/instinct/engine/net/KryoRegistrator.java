@@ -20,6 +20,7 @@ import de.instinct.engine.combat.unit.component.Shield;
 import de.instinct.engine.combat.unit.component.Weapon;
 import de.instinct.engine.model.AiPlayer;
 import de.instinct.engine.model.GameState;
+import de.instinct.engine.model.PauseData;
 import de.instinct.engine.model.Player;
 import de.instinct.engine.model.PlayerConnectionStatus;
 import de.instinct.engine.model.UnitData;
@@ -108,6 +109,7 @@ public class KryoRegistrator {
 		kryo.register(Shield.class);
 		kryo.register(Weapon.class);
 		kryo.register(ConcurrentLinkedQueue.class);
+		kryo.register(PauseData.class);
 	}
 
 }

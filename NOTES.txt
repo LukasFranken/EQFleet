@@ -45,6 +45,8 @@ GENERAL:
 
 SERVER:
 - DRASTICALLY IMPROVE GAME NETWORKING AND BUFFER SIZES
+ -> start with segmentalizing gamestate transmission
+  -> then tune down packet sizes again
 - actual dbs for data
 
 MENU:
@@ -62,6 +64,8 @@ TUTORAL:
 
 AUDIO:
 - ios audio issues still exist on loudspeaker
+ -> probably move over to miniaudio
+ -> probably check out audio effects
 - reward cash with digital number up sound
 - radio: show track, skip track, previous track
  -> add/remove tracks from playlist
@@ -80,6 +84,9 @@ GAME:
 - fix short game rendering between end and postgame
 - make cp/ap bars borders as thick for ios as on pc
 - make beam actual beam
+- projectile impact calculation for high speed collision
+- dont show explode animation/sound when proj reaches eol
+- check and fix projectile trajectory calculation
 
 LAST STEPS:
 - random amazon requests killing apis

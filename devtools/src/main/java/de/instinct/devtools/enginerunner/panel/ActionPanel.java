@@ -109,7 +109,7 @@ public class ActionPanel extends JPanel {
 				GamePauseOrder order = new GamePauseOrder();
 				order.playerId = 1;
 				order.reason = "Manual pause";
-				if (TestEngineManager.state.teamPause == 0) {
+				if (TestEngineManager.state.pauseData.teamPause == 0) {
 					order.pause = true;
 					pauseButton.setText("resume");
 				} else {

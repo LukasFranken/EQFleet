@@ -10,15 +10,15 @@ import de.instinct.engine.util.EngineUtility;
 public class MetaProcessor {
 
 	public void update(GameState state, long deltaTime) {
-		if (state.teamPause != 0) {
-			state.currentPauseElapsedMS += deltaTime;
-			state.teamPausesMS.put(state.teamPause, state.teamPausesMS.get(state.teamPause) + deltaTime);
-			if (state.teamPausesMS.get(state.teamPause) > state.maxPauseMS) {
-				state.teamPause = 0;
+		if (state.pauseData.teamPause != 0) {
+			state.pauseData.currentPauseElapsedMS += deltaTime;
+			state.pauseData.teamPausesMS.put(state.pauseData.teamPause, state.pauseData.teamPausesMS.get(state.pauseData.teamPause) + deltaTime);
+			if (state.pauseData.teamPausesMS.get(state.pauseData.teamPause) > state.pauseData.maxPauseMS) {
+				state.pauseData.teamPause = 0;
 			}
 		} else {
-			if (state.resumeCountdownMS > 0) {
-				state.resumeCountdownMS -= deltaTime;
+			if (state.pauseData.resumeCountdownMS > 0) {
+				state.pauseData.resumeCountdownMS -= deltaTime;
 			}
 		}
 	}
@@ -29,14 +29,14 @@ public class MetaProcessor {
         	if (isValid(gamePauseOrder, state)) {
         		Player player = EngineUtility.getPlayer(state.players, gamePauseOrder.playerId);
         		if (gamePauseOrder.pause) {
-        			state.teamPause = player.teamId;
-        			state.teamPausesCount.put(state.teamPause, state.teamPausesCount.get(state.teamPause) - 1);
-        			state.currentPauseReason = gamePauseOrder.reason;
+        			state.pauseData.teamPause = player.teamId;
+        			state.pauseData.teamPausesCount.put(state.pauseData.teamPause, state.pauseData.teamPausesCount.get(state.pauseData.teamPause) - 1);
+        			state.pauseData.currentPauseReason = gamePauseOrder.reason;
         		} else {
-        			state.currentPauseElapsedMS = 0;
-        			state.teamPause = 0;
-        			state.currentPauseReason = null;
-        			state.resumeCountdownMS = 3000L;
+        			state.pauseData.currentPauseElapsedMS = 0;
+        			state.pauseData.teamPause = 0;
+        			state.pauseData.currentPauseReason = null;
+        			state.pauseData.resumeCountdownMS = 3000L;
         		}
         		return true;
         	}
@@ -55,13 +55,13 @@ public class MetaProcessor {
 	private boolean isValid(GamePauseOrder gamePauseOrder, GameState state) {
 		Player player = EngineUtility.getPlayer(state.players, gamePauseOrder.playerId);
 		if (gamePauseOrder.pause) {
-			if (state.teamPause != 0) return false;
-			if (state.teamPausesMS.get(player.teamId) >= state.maxPauseMS) return false;
-			if (state.teamPausesCount.get(player.teamId) <= 0) return false;
+			if (state.pauseData.teamPause != 0) return false;
+			if (state.pauseData.teamPausesMS.get(player.teamId) >= state.pauseData.maxPauseMS) return false;
+			if (state.pauseData.teamPausesCount.get(player.teamId) <= 0) return false;
 		} else {
-			if (state.teamPause == 0) return false;
-			if (player.teamId != state.teamPause) return false;
-			if (state.currentPauseElapsedMS < state.minPauseMS) return false;
+			if (state.pauseData.teamPause == 0) return false;
+			if (player.teamId != state.pauseData.teamPause) return false;
+			if (state.pauseData.currentPauseElapsedMS < state.pauseData.minPauseMS) return false;
 		}
 		return true;
 	}

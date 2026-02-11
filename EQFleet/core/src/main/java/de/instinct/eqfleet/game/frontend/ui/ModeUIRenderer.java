@@ -60,7 +60,7 @@ public class ModeUIRenderer {
 	}
 
 	public void render(PerspectiveCamera camera) {
-		if (GameModel.activeGameState.teamPause == 0 && GameModel.activeGameState.resumeCountdownMS <= 0) {
+		if (GameModel.activeGameState.pauseData.teamPause == 0 && GameModel.activeGameState.pauseData.resumeCountdownMS <= 0) {
 			renderModeButtons(GameModel.activeGameState);
 			modeRenderers.get(GameModel.mode).render(camera, GameModel.activeGameState);
 		}

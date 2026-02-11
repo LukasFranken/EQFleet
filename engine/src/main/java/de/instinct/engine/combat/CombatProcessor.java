@@ -56,7 +56,7 @@ public class CombatProcessor {
 		Player player = EngineUtility.getPlayer(state.players, buildTurretOrder.playerId);
 		TurretData playerTurret = player.turrets.get(buildTurretOrder.turretId);
 		
-		if (state.teamPause != 0) return false;
+		if (state.pauseData.teamPause != 0) return false;
 		if (playerTurret == null) return false;
 		if (buildPlanet.ownerId != buildTurretOrder.playerId) return false;
 		if (buildPlanet.currentResources < playerTurret.resourceCost) return false;
@@ -70,7 +70,7 @@ public class CombatProcessor {
 		Player player = EngineUtility.getPlayer(state.players, shipMovementOrder.playerId);
 		ShipData playerShip = player.ships.get(shipMovementOrder.playerShipId);
 		
-		if (state.teamPause != 0) return false;
+		if (state.pauseData.teamPause != 0) return false;
 		if (fromPlanet.ownerId != shipMovementOrder.playerId) return false;
 		if (shipMovementOrder.fromPlanetId == shipMovementOrder.toPlanetId) return false;
 		if (fromPlanet.currentResources < playerShip.resourceCost) return false;

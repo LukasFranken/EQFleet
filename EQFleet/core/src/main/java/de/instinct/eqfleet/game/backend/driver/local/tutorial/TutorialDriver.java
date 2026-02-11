@@ -40,7 +40,7 @@ public class TutorialDriver extends LocalDriver {
 		GameModel.playerId = 1;
 		GameStateInitialization initialGameState = tutorialLoader.generateInitialGameState();
 		GameModel.activeGameState = gameStateInitializer.initialize(initialGameState);
-		GameModel.activeGameState.resumeCountdownMS = 0;
+		GameModel.activeGameState.pauseData.resumeCountdownMS = 0;
 		GameModel.lastUpdateTimestampMS = System.currentTimeMillis();
 	}
 	

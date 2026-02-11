@@ -63,7 +63,7 @@ public class FleetEngine {
 			long deltaTime = Math.min(UPDATE_INTERVAL_MS, remainingTime);
 			remainingTime -= deltaTime;
 			metaProcessor.update(state, deltaTime);
-			if (state.teamPause == 0 && state.resumeCountdownMS <= 0) {
+			if (state.pauseData.teamPause == 0 && state.pauseData.resumeCountdownMS <= 0) {
 				combatProcessor.update(state, deltaTime);
 			    planetProcessor.update(state, deltaTime);
 			    playerProcessor.update(state, deltaTime);

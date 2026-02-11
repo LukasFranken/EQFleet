@@ -28,13 +28,13 @@ public class AudioManager {
 	private static Music currentMusic;
 	private static Music transitionedInMusic;
 	private static Music queuedInMusic;
-	private static Music currentVoice;
+	private static Sound currentVoice;
 
 	private static List<String> availableRadioTracks;
 	private static List<String> availableNonRadioTracks;
 	private static Map<String, AudioMetaData> voiceMetaDatas;
 
-	private static Cache<Music> voices;
+	private static Cache<Sound> voices;
 	private static Cache<Sound> sfxs;
 	private static Cache<Music> musics;
 
@@ -54,7 +54,7 @@ public class AudioManager {
 	public static void init() {
 		voiceMetaDatas = new HashMap<>();
 		availableRadioTracks = new ArrayList<>();
-		/*availableRadioTracks.add("eqspace1");
+		availableRadioTracks.add("eqspace1");
 		availableRadioTracks.add("eqspace2");
 		availableRadioTracks.add("eqspace3");
 		availableRadioTracks.add("eqspace4");
@@ -65,8 +65,7 @@ public class AudioManager {
 		availableRadioTracks.add("to_the_stars_disco");
 		availableRadioTracks.add("neon_horizon_ambient");
 		availableRadioTracks.add("to_the_stars_70s");
-		availableRadioTracks.add("to_the_stars_synth");*/
-		availableRadioTracks.add("to_the_stars_disco_lowbit");
+		availableRadioTracks.add("to_the_stars_synth");
 		
 		availableNonRadioTracks = new ArrayList<>();
 		availableNonRadioTracks.add("to_the_stars_short");
@@ -78,10 +77,10 @@ public class AudioManager {
 			}
 		});
 
-		voices = new Cache<>(new LoadSequence<Music>() {
+		voices = new Cache<>(new LoadSequence<Sound>() {
 			@Override
-			public Music execute(String tag) {
-				return Gdx.audio.newMusic(Gdx.files.internal("audio/voice/" + tag + ".mp3"));
+			public Sound execute(String tag) {
+				return Gdx.audio.newSound(Gdx.files.internal("audio/voice/" + tag + ".mp3"));
 			}
 		});
 
@@ -221,12 +220,10 @@ public class AudioManager {
 	public static void playVoice(String category, String tag) {
 		String categoryPath = category;
 		if (!category.contentEquals("")) categoryPath += "/";
-		Music voice = voices.get(categoryPath + tag);
+		Sound voice = voices.get(categoryPath + tag);
 		if (voice != null) {
 			if (currentVoice != null) currentVoice.stop();
-			voice.setVolume(1f * userVoiceVolume * (category.contains("tutorial") ? 0.7f : 1f));
-			voice.setLooping(false);
-			voice.play();
+			voice.play(1f * userVoiceVolume * (category.contains("tutorial") ? 0.7f : 1f));
 			currentVoice = voice;
 		}
 	}
@@ -269,12 +266,12 @@ public class AudioManager {
 	}
 
 	public static void stopAllVoices() {
-		for (Music voice : voices.getAllLoadedElements()) voice.stop();
+		for (Sound voice : voices.getAllLoadedElements()) voice.stop();
 	}
 
 	public static void dispose() {
 		for (Sound sfx : sfxs.getAllLoadedElements()) sfx.dispose();
-		for (Music voice : voices.getAllLoadedElements()) voice.dispose();
+		for (Sound voice : voices.getAllLoadedElements()) voice.dispose();
 		for (Music music : musics.getAllLoadedElements()) music.dispose();
 	}
 

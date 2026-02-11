@@ -14,33 +14,30 @@ import lombok.ToString;
 public class GameState {
 	
 	public String gameUUID;
+	public long gameTimeMS;
+	public boolean started;
+	public int winner;
+	public int surrendered;
+	public Map<Integer, Double> teamATPs;
+	
+	public long maxGameTimeMS;
+	public float zoomFactor;
+	public double atpToWin;
+	public float ancientPlanetResourceDegradationFactor;
+	
+	public int orderCounter;
+	public Queue<GameOrder> unprocessedOrders;
+	public List<GameOrder> orders;
+	
 	public List<Player> players;
 	public List<PlayerConnectionStatus> connectionStati;
+	
+	public int entityCounter;
 	public List<Planet> planets;
 	public List<Ship> ships;
 	public List<Turret> turrets;
 	public List<Projectile> projectiles;
-	public Queue<GameOrder> unprocessedOrders;
-	public List<GameOrder> orders;
-	public long gameTimeMS;
-	public long maxGameTimeMS;
-	public int winner;
-	public int surrendered;
-	public double atpToWin;
-	public float ancientPlanetResourceDegradationFactor;
-	public Map<Integer, Double> teamATPs;
-	public boolean started;
-	public int entityCounter;
-	public int orderCounter;
-	public float zoomFactor;
 	
-	public long resumeCountdownMS;
-	public long maxPauseMS;
-	public long minPauseMS;
-	public long currentPauseElapsedMS;
-	public Map<Integer, Long> teamPausesMS;
-	public Map<Integer, Integer> teamPausesCount;
-	public int teamPause;
-	public String currentPauseReason;
+	public PauseData pauseData;
 
 }
