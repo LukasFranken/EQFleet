@@ -20,10 +20,15 @@ import de.instinct.engine.combat.unit.component.Shield;
 import de.instinct.engine.combat.unit.component.Weapon;
 import de.instinct.engine.model.AiPlayer;
 import de.instinct.engine.model.GameState;
-import de.instinct.engine.model.PauseData;
 import de.instinct.engine.model.Player;
 import de.instinct.engine.model.PlayerConnectionStatus;
 import de.instinct.engine.model.UnitData;
+import de.instinct.engine.model.data.EntityData;
+import de.instinct.engine.model.data.ResultData;
+import de.instinct.engine.model.data.OrderData;
+import de.instinct.engine.model.data.PauseData;
+import de.instinct.engine.model.data.PlayerData;
+import de.instinct.engine.model.data.StaticData;
 import de.instinct.engine.model.planet.Planet;
 import de.instinct.engine.model.planet.PlanetData;
 import de.instinct.engine.model.ship.ShipData;
@@ -43,7 +48,10 @@ import de.instinct.engine.model.turret.TurretData;
 import de.instinct.engine.net.message.NetworkMessage;
 import de.instinct.engine.net.message.types.BuildTurretMessage;
 import de.instinct.engine.net.message.types.FleetMovementMessage;
+import de.instinct.engine.net.message.types.GameFinishUpdate;
+import de.instinct.engine.net.message.types.GameOrderUpdate;
 import de.instinct.engine.net.message.types.GamePauseMessage;
+import de.instinct.engine.net.message.types.GameStartUpdate;
 import de.instinct.engine.net.message.types.JoinMessage;
 import de.instinct.engine.net.message.types.LoadedMessage;
 import de.instinct.engine.net.message.types.PlayerAssigned;
@@ -110,6 +118,14 @@ public class KryoRegistrator {
 		kryo.register(Weapon.class);
 		kryo.register(ConcurrentLinkedQueue.class);
 		kryo.register(PauseData.class);
+		kryo.register(StaticData.class);
+		kryo.register(PlayerData.class);
+		kryo.register(OrderData.class);
+		kryo.register(EntityData.class);
+		kryo.register(GameOrderUpdate.class);
+		kryo.register(GameStartUpdate.class);
+		kryo.register(GameFinishUpdate.class);
+		kryo.register(ResultData.class);
 	}
 
 }

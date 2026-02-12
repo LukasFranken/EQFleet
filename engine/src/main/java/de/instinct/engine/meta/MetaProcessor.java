@@ -13,7 +13,7 @@ public class MetaProcessor {
 		if (state.pauseData.teamPause != 0) {
 			state.pauseData.currentPauseElapsedMS += deltaTime;
 			state.pauseData.teamPausesMS.put(state.pauseData.teamPause, state.pauseData.teamPausesMS.get(state.pauseData.teamPause) + deltaTime);
-			if (state.pauseData.teamPausesMS.get(state.pauseData.teamPause) > state.pauseData.maxPauseMS) {
+			if (state.pauseData.teamPausesMS.get(state.pauseData.teamPause) > state.staticData.maxPauseMS) {
 				state.pauseData.teamPause = 0;
 			}
 		} else {
@@ -27,7 +27,7 @@ public class MetaProcessor {
 		if (order instanceof GamePauseOrder) {
         	GamePauseOrder gamePauseOrder = (GamePauseOrder)order;
         	if (isValid(gamePauseOrder, state)) {
-        		Player player = EngineUtility.getPlayer(state.players, gamePauseOrder.playerId);
+        		Player player = EngineUtility.getPlayer(state.staticData.playerData.players, gamePauseOrder.playerId);
         		if (gamePauseOrder.pause) {
         			state.pauseData.teamPause = player.teamId;
         			state.pauseData.teamPausesCount.put(state.pauseData.teamPause, state.pauseData.teamPausesCount.get(state.pauseData.teamPause) - 1);
@@ -44,8 +44,8 @@ public class MetaProcessor {
         if (order instanceof SurrenderOrder) {
         	SurrenderOrder surrenderOrder = (SurrenderOrder)order;
         	if (isValid(surrenderOrder, state)) {
-        		Player player = EngineUtility.getPlayer(state.players, surrenderOrder.playerId);
-            	state.surrendered = player.teamId;
+        		Player player = EngineUtility.getPlayer(state.staticData.playerData.players, surrenderOrder.playerId);
+            	state.resultData.surrendered = player.teamId;
             	return true;
         	}
         }
@@ -53,15 +53,15 @@ public class MetaProcessor {
 	}
 
 	private boolean isValid(GamePauseOrder gamePauseOrder, GameState state) {
-		Player player = EngineUtility.getPlayer(state.players, gamePauseOrder.playerId);
+		Player player = EngineUtility.getPlayer(state.staticData.playerData.players, gamePauseOrder.playerId);
 		if (gamePauseOrder.pause) {
 			if (state.pauseData.teamPause != 0) return false;
-			if (state.pauseData.teamPausesMS.get(player.teamId) >= state.pauseData.maxPauseMS) return false;
+			if (state.pauseData.teamPausesMS.get(player.teamId) >= state.staticData.maxPauseMS) return false;
 			if (state.pauseData.teamPausesCount.get(player.teamId) <= 0) return false;
 		} else {
 			if (state.pauseData.teamPause == 0) return false;
 			if (player.teamId != state.pauseData.teamPause) return false;
-			if (state.pauseData.currentPauseElapsedMS < state.pauseData.minPauseMS) return false;
+			if (state.pauseData.currentPauseElapsedMS < state.staticData.minPauseMS) return false;
 		}
 		return true;
 	}

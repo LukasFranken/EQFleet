@@ -289,7 +289,7 @@ public class TutorialLoader {
 			
 			@Override
 			public boolean isMet() {
-				for (Ship ship : GameModel.activeGameState.ships) {
+				for (Ship ship : GameModel.activeGameState.entityData.ships) {
 					if (ship.ownerId == 1) {
 						return true;
 					}
@@ -335,7 +335,7 @@ public class TutorialLoader {
 			
 			@Override
 			public boolean isMet() {
-				for (Ship ship : GameModel.activeGameState.ships) {
+				for (Ship ship : GameModel.activeGameState.entityData.ships) {
 					if (ship.ownerId == 1) {
 						return false;
 					}
@@ -392,7 +392,7 @@ public class TutorialLoader {
 			
 			@Override
 			public boolean isMet() {
-				for (Ship ship : GameModel.activeGameState.ships) {
+				for (Ship ship : GameModel.activeGameState.entityData.ships) {
 					if (ship.ownerId == 1) {
 						if (ship.targetPlanetId == 3 || ship.targetPlanetId == 1) {
 							return true;
@@ -412,7 +412,7 @@ public class TutorialLoader {
 				GameModel.inputEnabled = false;
 				int originId = 0;
 				int targetId = 3;
-				for (Ship ship : GameModel.activeGameState.ships) {
+				for (Ship ship : GameModel.activeGameState.entityData.ships) {
 					if (ship.ownerId == 1) {
 						originId = ship.originPlanetId;
 						targetId = ship.targetPlanetId;
@@ -457,7 +457,7 @@ public class TutorialLoader {
 			
 			@Override
 			public boolean isMet() {
-				return EngineUtility.getPlanet(GameModel.activeGameState.planets, 3).ownerId == 1 || EngineUtility.getPlanet(GameModel.activeGameState.planets, 1).ownerId == 1;
+				return EngineUtility.getPlanet(GameModel.activeGameState.entityData.planets, 3).ownerId == 1 || EngineUtility.getPlanet(GameModel.activeGameState.entityData.planets, 1).ownerId == 1;
 			}
 			
 		}));
@@ -479,7 +479,7 @@ public class TutorialLoader {
 			
 			@Override
 			public boolean isMet() {
-				return EngineUtility.getPlanet(GameModel.activeGameState.planets, 2).ownerId == 1;
+				return EngineUtility.getPlanet(GameModel.activeGameState.entityData.planets, 2).ownerId == 1;
 			}
 			
 		}));
@@ -503,7 +503,7 @@ public class TutorialLoader {
 			@Override
 			public void execute() {
 				GameModel.inputEnabled = true;
-				GameModel.activeGameState.maxGameTimeMS = GameModel.activeGameState.gameTimeMS + 30_000;
+				GameModel.activeGameState.staticData.maxGameTimeMS = GameModel.activeGameState.gameTimeMS + 30_000;
 				AudioManager.updateUserVoiceVolume(0.5f);
 			}
 			
@@ -513,7 +513,7 @@ public class TutorialLoader {
 			
 			@Override
 			public boolean isMet() {
-				return GameModel.activeGameState.winner == 1;
+				return GameModel.activeGameState.resultData.winner == 1;
 			}
 			
 		}));

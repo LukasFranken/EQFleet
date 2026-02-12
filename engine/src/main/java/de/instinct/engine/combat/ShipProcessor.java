@@ -21,10 +21,10 @@ public class ShipProcessor extends UnitProcessor {
 	}
 
 	public void updateShips(GameState state, long deltaTime) {
-		for (Ship ship : state.ships) {
+		for (Ship ship : state.entityData.ships) {
 			updateShip(ship, state, deltaTime);
 		}
-		super.removeDestroyed(state.ships.iterator());
+		super.removeDestroyed(state.entityData.ships.iterator());
 	}
 	
 	private void updateShip(Ship ship, GameState state, long deltaTime) {
@@ -35,16 +35,16 @@ public class ShipProcessor extends UnitProcessor {
 	}
 
 	public void createShipInstance(ShipMovementOrder movement, GameState state) {
-		Planet fromPlanet = EngineUtility.getPlanet(state.planets, movement.fromPlanetId);
-		Planet toPlanet = EngineUtility.getPlanet(state.planets, movement.toPlanetId);
-		Player player = EngineUtility.getPlayer(state.players, movement.playerId);
+		Planet fromPlanet = EngineUtility.getPlanet(state.entityData.planets, movement.fromPlanetId);
+		Planet toPlanet = EngineUtility.getPlanet(state.entityData.planets, movement.toPlanetId);
+		Player player = EngineUtility.getPlayer(state.staticData.playerData.players, movement.playerId);
 		ShipData shipData = player.ships.get(movement.playerShipId);
 		Ship newShip = new Ship();
 		super.initializeUnit(newShip, shipData, movement.fromPlanetId, state, true);
 		newShip.position = VectorUtil.getTargetPosition(fromPlanet.position, toPlanet.position, EngineUtility.PLANET_RADIUS);
 		newShip.targetPlanetId = movement.toPlanetId;
 		newShip.radius = 3;
-		state.ships.add(newShip);
+		state.entityData.ships.add(newShip);
 		
 		ShipStatistic shipStatistic = StatCollector.getPlayer(state.gameUUID, newShip.ownerId).getShip(newShip.data.model);
 		shipStatistic.getCoreStatistic().setTimesBuilt(shipStatistic.getCoreStatistic().getTimesBuilt() + 1);
@@ -53,9 +53,9 @@ public class ShipProcessor extends UnitProcessor {
 	}
 	
 	private void moveShip(Ship ship, GameState state, long deltaTime) {
-		Player shipOwner = EngineUtility.getPlayer(state.players, ship.ownerId);
-		Planet targetPlanet = EngineUtility.getPlanet(state.planets, ship.targetPlanetId);
-		Player targetPlanetOwner = EngineUtility.getPlayer(state.players, targetPlanet.ownerId);
+		Player shipOwner = EngineUtility.getPlayer(state.staticData.playerData.players, ship.ownerId);
+		Planet targetPlanet = EngineUtility.getPlanet(state.entityData.planets, ship.targetPlanetId);
+		Player targetPlanetOwner = EngineUtility.getPlayer(state.staticData.playerData.players, targetPlanet.ownerId);
 		ShipData shipData = (ShipData) ship.data;
 		float distance = Math.min(((float)deltaTime / 1000f) * shipData.engine.speed, VectorUtil.dst(ship.position, targetPlanet.position));
 		Vector2 targetPosition = VectorUtil.getTargetPosition(ship.position, targetPlanet.position, distance);

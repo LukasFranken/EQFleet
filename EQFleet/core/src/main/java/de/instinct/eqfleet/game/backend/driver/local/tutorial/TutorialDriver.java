@@ -68,10 +68,10 @@ public class TutorialDriver extends LocalDriver {
 	@Override
 	protected void postEngineUpdate() {
 		if (TutorialModel.skipped) {
-			GameModel.activeGameState.winner = 1;
+			GameModel.activeGameState.resultData.winner = 1;
 		}
 		if (GameModel.activeGameState != null && GameModel.activeGameState.started && !finished) {
-        	if (GameModel.activeGameState.winner != 0) {
+        	if (GameModel.activeGameState.resultData.winner != 0) {
     			GameModel.guidedEvents = null;
     			Game.stop();
     		}

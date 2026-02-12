@@ -1,4 +1,4 @@
-package de.instinct.engine.model;
+package de.instinct.engine.model.data;
 
 import java.util.Map;
 
@@ -8,8 +8,6 @@ import lombok.ToString;
 public class PauseData {
 	
 	public long resumeCountdownMS;
-	public long maxPauseMS;
-	public long minPauseMS;
 	public long currentPauseElapsedMS;
 	public Map<Integer, Long> teamPausesMS;
 	public Map<Integer, Integer> teamPausesCount;

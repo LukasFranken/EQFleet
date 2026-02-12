@@ -4,7 +4,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.badlogic.gdx.Gdx;
 
-import de.instinct.engine.model.GameState;
 import de.instinct.engine.net.message.types.PlayerAssigned;
 import de.instinct.eqfleet.game.backend.driver.Driver;
 import de.instinct.eqfleet.game.backend.driver.local.custom.CustomDriver;
@@ -26,6 +25,7 @@ public class Game {
     	GameModel.outputMessageQueue = new MessageQueue<>();
     	GameModel.inputMessageQueue = new MessageQueue<>();
     	GameModel.receivedGameState = new ConcurrentLinkedQueue<>();
+    	GameModel.receivedOrders = new ConcurrentLinkedQueue<>();
     	renderer = new GameRenderer();
     }
     
@@ -71,10 +71,6 @@ public class Game {
             }
         }
     }
-	
-	public static void update(GameState newGameState) {
-		GameModel.receivedGameState.add(newGameState);
-	}
 
 	public static void dispose() {
 		if (renderer != null) {

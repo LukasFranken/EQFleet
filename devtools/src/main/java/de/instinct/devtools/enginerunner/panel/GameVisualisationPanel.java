@@ -47,7 +47,7 @@ public class GameVisualisationPanel extends JPanel {
     }
 
 	private void renderTurrets(Graphics g, GameState state) {
-		for (Turret turret : state.turrets) {
+		for (Turret turret : state.entityData.turrets) {
 			Vector2 screenPosition = convertToScreenPosition(turret.position);
 			g.setColor(Color.GRAY);
 			g.drawRect((int)screenPosition.x - 7, (int)screenPosition.y + 18, 30, 3);
@@ -77,22 +77,22 @@ public class GameVisualisationPanel extends JPanel {
 		g.setColor(Color.LIGHT_GRAY);
 		g.drawString("Game Time: " + state.gameTimeMS + "ms", 8, 15);
 		g.drawString(state.started ? "running" : (state.gameTimeMS == 0 ? "not started" : "paused"), 8, 28);
-		g.drawString("Own CP: " + format(EngineUtility.getPlayer(state.players, 1).currentCommandPoints, 1), 190, 800);
-		g.drawString("Enemy1 CP: " + format(EngineUtility.getPlayer(state.players, 4).currentCommandPoints, 1), 190, 15);
-		if (state.players.size() > 2) {
-			g.drawString("Teammate1 CP: " + format(EngineUtility.getPlayer(state.players, 2).currentCommandPoints, 1), 190, 785);
-			g.drawString("Enemy2 CP: " + format(EngineUtility.getPlayer(state.players, 5).currentCommandPoints, 1), 190, 30);
+		g.drawString("Own CP: " + format(EngineUtility.getPlayer(state.staticData.playerData.players, 1).currentCommandPoints, 1), 190, 800);
+		g.drawString("Enemy1 CP: " + format(EngineUtility.getPlayer(state.staticData.playerData.players, 4).currentCommandPoints, 1), 190, 15);
+		if (state.staticData.playerData.players.size() > 2) {
+			g.drawString("Teammate1 CP: " + format(EngineUtility.getPlayer(state.staticData.playerData.players, 2).currentCommandPoints, 1), 190, 785);
+			g.drawString("Enemy2 CP: " + format(EngineUtility.getPlayer(state.staticData.playerData.players, 5).currentCommandPoints, 1), 190, 30);
 		}
-		if (state.players.size() > 4) {
-			g.drawString("Teammate2 CP: " + format(EngineUtility.getPlayer(state.players, 3).currentCommandPoints, 1), 190, 770);
-			g.drawString("Enemy3 CP: " + format(EngineUtility.getPlayer(state.players, 6).currentCommandPoints, 1), 190, 45);
+		if (state.staticData.playerData.players.size() > 4) {
+			g.drawString("Teammate2 CP: " + format(EngineUtility.getPlayer(state.staticData.playerData.players, 3).currentCommandPoints, 1), 190, 770);
+			g.drawString("Enemy3 CP: " + format(EngineUtility.getPlayer(state.staticData.playerData.players, 6).currentCommandPoints, 1), 190, 45);
 		}
 		g.drawString("Own ATP: " + format(state.teamATPs.get(1), 1), 8, 615);
 		g.drawString("Enemy ATP: " + format(state.teamATPs.get(2), 1), 8, 200);
 	}
 
 	private void renderPlanets(Graphics g, GameState state) {
-		for (Planet planet : state.planets) {
+		for (Planet planet : state.entityData.planets) {
 			renderPlanetCircle(g, planet);
 			renderPlanetUI(g, planet);
 		}
@@ -125,7 +125,7 @@ public class GameVisualisationPanel extends JPanel {
 	}
 	
 	private void renderShips(Graphics g, GameState state) {
-		for (Ship ship : state.ships) {
+		for (Ship ship : state.entityData.ships) {
 			renderShip(g, ship);
 		}
 	}
@@ -144,7 +144,7 @@ public class GameVisualisationPanel extends JPanel {
 	}
 
 	private void renderProjectiles(Graphics g, GameState state) {
-		for (Projectile projectile : state.projectiles) {
+		for (Projectile projectile : state.entityData.projectiles) {
 			renderProjectile(g, projectile);
 		}
 	}

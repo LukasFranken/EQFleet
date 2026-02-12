@@ -8,21 +8,22 @@ import de.instinct.engine.model.planet.Planet;
 public class VictoryCalculator {
 	
 	public static void checkVictory(GameState state) {
-	    if (state.winner != 0) return;
+	    if (state.resultData.winner != 0) return;
 	    checkSurrenderVictory(state);
 	    checkMapATPVictory(state);
 	    checkEliminationVictory(state);
-	    if (state.gameTimeMS >= state.maxGameTimeMS) {
+	    if (state.gameTimeMS >= state.staticData.maxGameTimeMS) {
 	    	calculatePlanetCountVictory(state);
-	    	if (state.winner == 0) {
+	    	if (state.resultData.winner == 0) {
 	    		calculateATPVictory(state);
 	    	}
 	    }
+	    checkWiped(state);
 	}
 	
 	private static void checkSurrenderVictory(GameState state) {
-		if (state.surrendered != 0) {
-			state.winner = state.surrendered == 1 ? 2 : 1;
+		if (state.resultData.surrendered != 0) {
+			state.resultData.winner = state.resultData.surrendered == 1 ? 2 : 1;
 		}
 	}
 
@@ -35,15 +36,15 @@ public class VictoryCalculator {
 				highestTeamId = teamid;
 			}
         }
-        state.winner = highestTeamId;
+        state.resultData.winner = highestTeamId;
 	}
 
 	private static void calculatePlanetCountVictory(GameState state) {
 		int team1Planets = 0;
     	int team2Planets = 0;
-    	for (Planet planet : state.planets) {
+    	for (Planet planet : state.entityData.planets) {
     		if (planet.ownerId != 0) {
-    			if (EngineUtility.getPlayer(state.players, planet.ownerId).teamId == 1) {
+    			if (EngineUtility.getPlayer(state.staticData.playerData.players, planet.ownerId).teamId == 1) {
     				team1Planets++;
     			} else {
     				team2Planets++;
@@ -51,17 +52,17 @@ public class VictoryCalculator {
     		}
     	}
     	if (team1Planets > team2Planets) {
-    		state.winner = 1;
+    		state.resultData.winner = 1;
     	} 
     	if (team1Planets < team2Planets) {
-    		state.winner = 2;
+    		state.resultData.winner = 2;
     	}
 	}
 
 	private static void checkMapATPVictory(GameState state) {
-		for (Player player : state.players) {
-	        if (state.teamATPs.get(player.teamId) >= state.atpToWin) {
-	            state.winner = player.teamId;
+		for (Player player : state.staticData.playerData.players) {
+	        if (state.teamATPs.get(player.teamId) >= state.staticData.atpToWin) {
+	            state.resultData.winner = player.teamId;
 	            return;
 	        }
 	    }
@@ -70,27 +71,47 @@ public class VictoryCalculator {
 	private static void checkEliminationVictory(GameState state) {
 		boolean team1HasUnit = false;
 	    boolean team2HasUnit = false;
-	    for (Planet planet : state.planets) {
-	        if (EngineUtility.getPlayer(state.players, planet.ownerId).teamId == 1) {
+	    for (Planet planet : state.entityData.planets) {
+	        if (EngineUtility.getPlayer(state.staticData.playerData.players, planet.ownerId).teamId == 1) {
 	        	team1HasUnit = true;
 	        }
-	        if (EngineUtility.getPlayer(state.players, planet.ownerId).teamId == 2) {
+	        if (EngineUtility.getPlayer(state.staticData.playerData.players, planet.ownerId).teamId == 2) {
 	        	team2HasUnit = true;
 	        }
 	    }
-	    for (Ship ship : state.ships) {
-	        if (EngineUtility.getPlayer(state.players, ship.ownerId).teamId == 1) {
+	    for (Ship ship : state.entityData.ships) {
+	        if (EngineUtility.getPlayer(state.staticData.playerData.players, ship.ownerId).teamId == 1) {
 	        	team1HasUnit = true;
 	        }
-	        if (EngineUtility.getPlayer(state.players, ship.ownerId).teamId == 2) {
+	        if (EngineUtility.getPlayer(state.staticData.playerData.players, ship.ownerId).teamId == 2) {
 	        	team2HasUnit = true;
 	        }
 	    }
 	    if (!team1HasUnit) {
-	    	state.winner = 2;
+	    	state.resultData.winner = 2;
 	    }
 		if (!team2HasUnit) {
-			state.winner = 1;
+			state.resultData.winner = 1;
+		}
+	}
+	
+	private static void checkWiped(GameState state) {
+		if (state.resultData.winner != 0) {
+			for (Planet planet : state.entityData.planets) {
+		        if (planet.ownerId != 0) {
+		        	if (EngineUtility.getPlayer(state.staticData.playerData.players, planet.ownerId).teamId != state.resultData.winner) {
+		        		return;
+		        	}
+		        }
+		    }
+		    for (Ship ship : state.entityData.ships) {
+		        if (ship.ownerId != 0) {
+		        	if (EngineUtility.getPlayer(state.staticData.playerData.players, ship.ownerId).teamId != state.resultData.winner) {
+		        		return;
+		        	}
+		        }
+		    }
+			state.resultData.wiped = true;
 		}
 	}
 

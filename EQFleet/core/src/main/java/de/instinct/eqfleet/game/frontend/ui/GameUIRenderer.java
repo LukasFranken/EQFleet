@@ -59,7 +59,7 @@ public class GameUIRenderer {
 	
 	public void render() {
 		if (state != null) {
-			if (initialized && state.winner == 0) {
+			if (initialized && state.resultData.winner == 0) {
 				staticUIRenderer.render();
 				inputManager.handleInput(camera, state);
 				renderResourceCircles();
@@ -73,8 +73,8 @@ public class GameUIRenderer {
 	}
 	
 	private void renderResourceCircles() {
-		for (Planet planet : state.planets) {
-		    Player owner = EngineUtility.getPlayer(state.players, planet.ownerId);
+		for (Planet planet : state.entityData.planets) {
+		    Player owner = EngineUtility.getPlayer(state.staticData.playerData.players, planet.ownerId);
 		    renderResourceCircle(planet.position.x, planet.position.y, GameConfig.getPlayerColor(owner.id), (float)(planet.currentResources / owner.planetData.maxResourceCapacity));
 		}
 	}
@@ -96,19 +96,19 @@ public class GameUIRenderer {
 	private void renderMessageText() {
 		String message = "Connecting...";
 		if (GameModel.activeGameState != null) {
-			int winner = GameModel.activeGameState.winner;
+			int winner = GameModel.activeGameState.resultData.winner;
 			if (winner != 0 && !GameModel.activeGameState.gameUUID.equals("tutorial")) {
-				if (winner == EngineUtility.getPlayer(GameModel.activeGameState.players, GameModel.playerId).teamId) {
-					if (EngineUtility.winIsWiped(GameModel.activeGameState)) {
+				if (winner == EngineUtility.getPlayer(GameModel.activeGameState.staticData.playerData.players, GameModel.playerId).teamId) {
+					if (GameModel.activeGameState.resultData.wiped) {
 						message = "DOMINATION";
 					} else {
 						message = "VICTORY";
 					}
 				} else if (winner != 0) {
-					if (GameModel.activeGameState.surrendered != 0) {
+					if (GameModel.activeGameState.resultData.surrendered != 0) {
 						message = "SURRENDERED";
 					} else {
-						if (EngineUtility.winIsWiped(GameModel.activeGameState)) {
+						if (GameModel.activeGameState.resultData.wiped) {
 							message = "WIPED OUT";
 						} else {
 							message = "DEFEATED";

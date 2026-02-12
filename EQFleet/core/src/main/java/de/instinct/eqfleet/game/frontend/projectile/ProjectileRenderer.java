@@ -39,7 +39,7 @@ public class ProjectileRenderer {
 		for (ProjectileInstance projectileInstance : projectileInstances) {
 			projectileInstance.setActive(false);
 		}
-		for (Projectile projectile : state.projectiles) {
+		for (Projectile projectile : state.entityData.projectiles) {
             ProjectileInstance projectileInstance = getProjectileInstance(projectile);
             if (projectileInstance == null) {
             	projectileInstance = instanciateProjectileInstance(projectile, state);
@@ -125,7 +125,7 @@ public class ProjectileRenderer {
 	}
 	
 	private Projectile getProjectileData(ProjectileInstance projectileInstance, GameState state) {
-		for (Projectile projectile : state.projectiles) {
+		for (Projectile projectile : state.entityData.projectiles) {
 			if (projectile.id == projectileInstance.getProjectileId()) {
 				return projectile;
 			}

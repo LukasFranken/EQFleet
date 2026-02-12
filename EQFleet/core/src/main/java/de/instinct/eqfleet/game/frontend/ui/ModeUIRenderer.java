@@ -67,7 +67,7 @@ public class ModeUIRenderer {
 	}
 	
 	private void renderModeButtons(GameState state) {
-		Player self = EngineUtility.getPlayer(state.players, GameModel.playerId);
+		Player self = EngineUtility.getPlayer(state.staticData.playerData.players, GameModel.playerId);
 		if (!self.turrets.isEmpty()) {
 			if (GameModel.mode == InteractionMode.UNIT_CONTROL) {
 				unitControlButton.getBorder().setColor(Color.GREEN);

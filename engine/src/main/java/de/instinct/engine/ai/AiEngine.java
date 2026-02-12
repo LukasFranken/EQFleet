@@ -34,8 +34,8 @@ public class AiEngine {
 
 	private GameOrder calculateBuildOrder(AiPlayer aiPlayer, GameState state) {
 		if (aiPlayer.currentCommandPoints >= 2 && !aiPlayer.turrets.isEmpty()) {
-			for (Planet planet : state.planets) {
-				Turret turret = EngineUtility.getPlanetTurret(state.turrets, planet.id);
+			for (Planet planet : state.entityData.planets) {
+				Turret turret = EngineUtility.getPlanetTurret(state.entityData.turrets, planet.id);
 				if (turret == null) {
 					if (planet.currentResources >= aiPlayer.turrets.get(0).resourceCost && planet.ownerId == aiPlayer.id) {
 						BuildTurretOrder newBuildTurretOrder = new BuildTurretOrder();
@@ -51,7 +51,7 @@ public class AiEngine {
 
 	private GameOrder calculateOffensiveOrder(AiPlayer aiPlayer, GameState state) {
 		List<Planet> ownPlanets = new ArrayList<>();
-		for (Planet planet : state.planets) {
+		for (Planet planet : state.entityData.planets) {
 			if (planet.ownerId == aiPlayer.id) {
 				ownPlanets.add(planet);
 			}
@@ -59,8 +59,8 @@ public class AiEngine {
 		float distanceToClosestPlanet = Float.MAX_VALUE;
 		Planet closestNeutralPlanet = null;
 		Planet closestOwnPlanet = null;
-		for (Planet planet : state.planets) {
-			Player planetOwner = EngineUtility.getPlayer(state.players, planet.ownerId);
+		for (Planet planet : state.entityData.planets) {
+			Player planetOwner = EngineUtility.getPlayer(state.staticData.playerData.players, planet.ownerId);
 			if (planetOwner.teamId != aiPlayer.teamId && !planet.ancient) {
 				for (Planet ownPlanet : ownPlanets) {
 					if (distanceToClosestPlanet > ownPlanet.position.dst(planet.position)) {
@@ -73,7 +73,7 @@ public class AiEngine {
 		}
 		if (closestNeutralPlanet != null && closestOwnPlanet != null) {
 			if (closestOwnPlanet.currentResources >= aiPlayer.ships.get(0).resourceCost) {
-				if (aiPlayer.currentCommandPoints >= 3 || state.maxGameTimeMS - state.gameTimeMS < 15000 && aiPlayer.currentCommandPoints >= 2) {
+				if (aiPlayer.currentCommandPoints >= 3 || state.staticData.maxGameTimeMS - state.gameTimeMS < 15000 && aiPlayer.currentCommandPoints >= 2) {
 					ShipMovementOrder newShipMovementOrder = new ShipMovementOrder();
 					newShipMovementOrder.fromPlanetId = closestOwnPlanet.id;
 					newShipMovementOrder.toPlanetId = closestNeutralPlanet.id;
@@ -83,8 +83,8 @@ public class AiEngine {
 				}
 			}
 		}
-		if (state.maxGameTimeMS - state.gameTimeMS < 10000 && state.teamATPs.get(aiPlayer.teamId == 2 ? 1 : 2) == 0) {
-			for (Planet planet : state.planets) {
+		if (state.staticData.maxGameTimeMS - state.gameTimeMS < 10000 && state.teamATPs.get(aiPlayer.teamId == 2 ? 1 : 2) == 0) {
+			for (Planet planet : state.entityData.planets) {
 				if (planet.ancient && closestOwnPlanet != null && closestOwnPlanet.currentResources >= aiPlayer.ships.get(0).resourceCost) {
 					ShipMovementOrder newShipMovementOrder = new ShipMovementOrder();
 					newShipMovementOrder.fromPlanetId = closestOwnPlanet.id;
@@ -95,10 +95,10 @@ public class AiEngine {
 				}
 			}
 		}
-		if (state.teamATPs.get(aiPlayer.teamId == 2 ? 1 : 2) >= state.atpToWin / 2) {
-			for (Planet planet : state.planets) {
+		if (state.teamATPs.get(aiPlayer.teamId == 2 ? 1 : 2) >= state.staticData.atpToWin / 2) {
+			for (Planet planet : state.entityData.planets) {
 				if (planet.ancient) {
-					Player planetOwner = EngineUtility.getPlayer(state.players, planet.ownerId);
+					Player planetOwner = EngineUtility.getPlayer(state.staticData.playerData.players, planet.ownerId);
 					if (planetOwner.teamId != aiPlayer.teamId && closestOwnPlanet.currentResources >= aiPlayer.ships.get(0).resourceCost && aiPlayer.currentCommandPoints > 1) {
 						ShipMovementOrder newShipMovementOrder = new ShipMovementOrder();
 						newShipMovementOrder.fromPlanetId = closestOwnPlanet.id;
@@ -115,13 +115,13 @@ public class AiEngine {
 	
 	private GameOrder calculateDefensiveOrder(AiPlayer aiPlayer, GameState state) {
 		List<Planet> ownPlanets = new ArrayList<>();
-		for (Planet planet : state.planets) {
+		for (Planet planet : state.entityData.planets) {
 			if (planet.ownerId == aiPlayer.id) {
 				ownPlanets.add(planet);
 			}
 		}
-		for (Ship ship : state.ships) {
-			Player shipOwner = EngineUtility.getPlayer(state.players, ship.ownerId);
+		for (Ship ship : state.entityData.ships) {
+			Player shipOwner = EngineUtility.getPlayer(state.staticData.playerData.players, ship.ownerId);
 			if (shipOwner.teamId != aiPlayer.teamId) {
 				for (Planet ownPlanet : ownPlanets) {
 					if (ship.targetPlanetId == ownPlanet.id) {

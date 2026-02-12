@@ -13,7 +13,7 @@ public class ConstructionInputHandler extends InputHandler {
 	}
 	
 	/*private void updateBuildingSelectionFromDrag(Vector3 currentPosition, GameState state) {
-        Planet sourcePlanet = EngineUtility.getPlanet(state.planets, GameInputModel.selectedPlanetId);
+        Planet sourcePlanet = EngineUtility.getPlanet(state.entityData.planets, GameInputModel.selectedPlanetId);
         if (sourcePlanet == null) return;
         
         float dx = currentPosition.x - sourcePlanet.position.x;

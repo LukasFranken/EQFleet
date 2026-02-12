@@ -33,7 +33,7 @@ public class ShipRenderer {
 	}
 	
 	public void render(GameState state, PerspectiveCamera camera) {
-		for (Ship ship : state.ships) {
+		for (Ship ship : state.entityData.ships) {
     		ModelInstance shipModel = shipModels.get(ship);
             if (shipModel == null) {
             	shipModel = ModelLoader.instanciate("ship");
@@ -41,7 +41,7 @@ public class ShipRenderer {
                 shipModels.put(ship, shipModel);
             }
 
-            Planet to = EngineUtility.getPlanet(state.planets, ship.targetPlanetId);
+            Planet to = EngineUtility.getPlanet(state.entityData.planets, ship.targetPlanetId);
             float dx = to.position.x - ship.position.x;
             float dy = to.position.y - ship.position.y;
             float angleDeg = (float) Math.toDegrees(Math.atan2(dy, dx));

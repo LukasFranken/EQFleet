@@ -10,8 +10,8 @@ public class UIDataUtility {
 
 	public static PlayerData getPlayerData(GameState state) {
 		PlayerData playerData = PlayerData.builder().build();
-		playerData.setSelf(EngineUtility.getPlayer(state.players, GameModel.playerId));
-		for (Player player : GameModel.activeGameState.players) {
+		playerData.setSelf(EngineUtility.getPlayer(state.staticData.playerData.players, GameModel.playerId));
+		for (Player player : GameModel.activeGameState.staticData.playerData.players) {
 			if (player.id == 0) {
 				continue;
 			}

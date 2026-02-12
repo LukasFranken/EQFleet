@@ -46,7 +46,7 @@ public class GeneralInputHandler extends InputHandler {
     }
 	
 	private Planet getHoveredPlanet(PerspectiveCamera camera, GameState state) {
-        for (Planet planet : state.planets) {
+        for (Planet planet : state.entityData.planets) {
             if (isTouchInsidePlanet(GameInputModel.mouseWorldPos, planet)) {
                 return planet;
             }

@@ -39,7 +39,7 @@ public class UnitInputHandler extends InputHandler {
         }
         
         if (InputUtil.isPressed() && model.selectedOriginPlanetId != null && model.isDragging) {
-        	Planet originPlanet = EngineUtility.getPlanet(state.planets, model.selectedOriginPlanetId);
+        	Planet originPlanet = EngineUtility.getPlanet(state.entityData.planets, model.selectedOriginPlanetId);
         	if (originPlanet.ownerId != GameModel.playerId) {
         		resetSelection();
 				return;
@@ -81,7 +81,7 @@ public class UnitInputHandler extends InputHandler {
 
 	private void updateShipSelectionFromDrag(GameState state) {
 		Vector3 currentPosition = GameInputModel.mouseWorldPos;
-        Planet sourcePlanet = EngineUtility.getPlanet(state.planets, model.selectedOriginPlanetId);
+        Planet sourcePlanet = EngineUtility.getPlanet(state.entityData.planets, model.selectedOriginPlanetId);
         if (sourcePlanet == null) return;
         
         float dx = currentPosition.x - sourcePlanet.position.x;
@@ -119,9 +119,9 @@ public class UnitInputHandler extends InputHandler {
 	
 	private Player getPlayerForSelectedPlanet(GameState state) {
         if (model.selectedOriginPlanetId == null) return null;
-        Planet planet = EngineUtility.getPlanet(state.planets, model.selectedOriginPlanetId);
+        Planet planet = EngineUtility.getPlanet(state.entityData.planets, model.selectedOriginPlanetId);
         if (planet == null) return null;
-        return EngineUtility.getPlayer(state.players, planet.ownerId);
+        return EngineUtility.getPlayer(state.staticData.playerData.players, planet.ownerId);
     }
 	
 }

@@ -151,13 +151,13 @@ public class ActionPanel extends JPanel {
 		List<String> targetPlanets = new ArrayList<>();
 		List<String> ships = new ArrayList<>();
 		if (TestEngineManager.state != null) {
-			for (Planet planet : TestEngineManager.state.planets) {
+			for (Planet planet : TestEngineManager.state.entityData.planets) {
 				if (planet.ownerId == 1) {
 					ownPlanets.add(planet.id + "");
 				}
 				targetPlanets.add(planet.id + "");
 			}
-			for (Player player : TestEngineManager.state.players) {
+			for (Player player : TestEngineManager.state.staticData.playerData.players) {
 				if (player.id == 1) {
 					int i = 0;
 					for (ShipData ship : player.ships) {

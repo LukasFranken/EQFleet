@@ -45,23 +45,23 @@ public class EngineUtility {
 	}
 	
 	public static Unit getUnit(GameState state, int id) {
-		for (Ship ship : state.ships) {
+		for (Ship ship : state.entityData.ships) {
 			if (ship.id == id) {
 				return ship;
 			}
 		}
-		for (Turret turret : state.turrets) {
+		for (Turret turret : state.entityData.turrets) {
 			if (turret.id == id) {
 				return turret;
 			}
 		}
 		System.out.println("couldnt find unit with id " + id);
 		System.out.println("ships:");
-		for (Ship ship : state.ships) {
+		for (Ship ship : state.entityData.ships) {
 			System.out.println(ship.id);
 		}
 		System.out.println("turrets:");
-		for (Turret turret : state.turrets) {
+		for (Turret turret : state.entityData.turrets) {
 			System.out.println(turret.id);
 		}
 		return null;
@@ -77,20 +77,10 @@ public class EngineUtility {
 	}
 	
 	public static boolean mapHasAncient(GameState state) {
-		for (Planet planet : state.planets) {
+		for (Planet planet : state.entityData.planets) {
 			if (planet.ancient) {
 				return true;
 			}
-		}
-		return false;
-	}
-	
-	public static boolean winIsWiped(GameState state) {
-		if (state.winner != 0 && state.gameTimeMS < state.maxGameTimeMS) {
-			for (double atp : state.teamATPs.values()) {
-				if (atp >= state.atpToWin) return false;
-			}
-			return true;
 		}
 		return false;
 	}

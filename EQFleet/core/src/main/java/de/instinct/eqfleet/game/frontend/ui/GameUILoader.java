@@ -82,7 +82,7 @@ public class GameUILoader {
 			
 			@Override
 			public void execute() {
-				long remainingMS = timeElement.getCurrentGameState().maxGameTimeMS - timeElement.getCurrentGameState().gameTimeMS;
+				long remainingMS = timeElement.getCurrentGameState().staticData.maxGameTimeMS - timeElement.getCurrentGameState().gameTimeMS;
 				String remainingTimeLabel = StringUtils.generateCountdownLabel(remainingMS, false);
 				Label timeLabel = new Label(remainingTimeLabel);
 				timeLabel.setColor(remainingMS < 60_000 ? Color.RED : Color.WHITE);
@@ -364,7 +364,7 @@ public class GameUILoader {
 			public void execute() {
 				PlayerData playerData = UIDataUtility.getPlayerData(teamAPElement.getCurrentGameState());
 				teamAPElement.setBounds(bounds.getTeamAPBar());
-				teamAPElement.getElement().setMaxValue(GameModel.activeGameState.atpToWin);
+				teamAPElement.getElement().setMaxValue(GameModel.activeGameState.staticData.atpToWin);
 				teamAPElement.getElement().setCurrentValue(GameModel.activeGameState.teamATPs.get(playerData.getSelf().teamId));
 			}
 			
@@ -380,18 +380,18 @@ public class GameUILoader {
 				PlayerData playerData = UIDataUtility.getPlayerData(teamAPElement.getCurrentGameState());
 				elapsed += Gdx.graphics.getDeltaTime();
 				Planet activeAncientPlanet = null; 
-				for (Planet planet : GameModel.activeGameState.planets) {
+				for (Planet planet : GameModel.activeGameState.entityData.planets) {
 					if (planet.ancient) {
 						activeAncientPlanet = planet;
 					}
 				}
-				Player owner = EngineUtility.getPlayer(GameModel.activeGameState.players, activeAncientPlanet.ownerId);
+				Player owner = EngineUtility.getPlayer(GameModel.activeGameState.staticData.playerData.players, activeAncientPlanet.ownerId);
 				if (owner.teamId != playerData.getSelf().teamId && glowAlpha == 0f) {
 		        	elapsed = 0f;
 		        }
 				if (activeAncientPlanet != null) {
 			    	if (activeAncientPlanet.ownerId != 0) {
-					    Player self = EngineUtility.getPlayer(GameModel.activeGameState.players, GameModel.playerId);
+					    Player self = EngineUtility.getPlayer(GameModel.activeGameState.staticData.playerData.players, GameModel.playerId);
 			    		if (owner.teamId == self.teamId) {
 			    			alphaStore += Gdx.graphics.getDeltaTime();
 			    		}
@@ -442,7 +442,7 @@ public class GameUILoader {
 			public void execute() {
 				PlayerData playerData = UIDataUtility.getPlayerData(enemyAPElement.getCurrentGameState());
 				enemyAPElement.setBounds(bounds.getEnemyAPBar());
-				enemyAPElement.getElement().setMaxValue(GameModel.activeGameState.atpToWin);
+				enemyAPElement.getElement().setMaxValue(GameModel.activeGameState.staticData.atpToWin);
 				enemyAPElement.getElement().setCurrentValue(GameModel.activeGameState.teamATPs.get(playerData.getEnemy1().teamId));
 			}
 			

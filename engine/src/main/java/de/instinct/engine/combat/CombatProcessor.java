@@ -52,8 +52,8 @@ public class CombatProcessor {
     }
 
 	private boolean isValid(BuildTurretOrder buildTurretOrder, GameState state) {
-		Planet buildPlanet = EngineUtility.getPlanet(state.planets, buildTurretOrder.planetId);
-		Player player = EngineUtility.getPlayer(state.players, buildTurretOrder.playerId);
+		Planet buildPlanet = EngineUtility.getPlanet(state.entityData.planets, buildTurretOrder.planetId);
+		Player player = EngineUtility.getPlayer(state.staticData.playerData.players, buildTurretOrder.playerId);
 		TurretData playerTurret = player.turrets.get(buildTurretOrder.turretId);
 		
 		if (state.pauseData.teamPause != 0) return false;
@@ -61,13 +61,13 @@ public class CombatProcessor {
 		if (buildPlanet.ownerId != buildTurretOrder.playerId) return false;
 		if (buildPlanet.currentResources < playerTurret.resourceCost) return false;
 		if (player.currentCommandPoints < playerTurret.cpCost) return false;
-		for (Turret turret : state.turrets) if (turret.originPlanetId == buildTurretOrder.planetId) return false;
+		for (Turret turret : state.entityData.turrets) if (turret.originPlanetId == buildTurretOrder.planetId) return false;
 		return true;
 	}
 
 	private boolean isValid(ShipMovementOrder shipMovementOrder, GameState state) {
-		Planet fromPlanet = EngineUtility.getPlanet(state.planets, shipMovementOrder.fromPlanetId);
-		Player player = EngineUtility.getPlayer(state.players, shipMovementOrder.playerId);
+		Planet fromPlanet = EngineUtility.getPlanet(state.entityData.planets, shipMovementOrder.fromPlanetId);
+		Player player = EngineUtility.getPlayer(state.staticData.playerData.players, shipMovementOrder.playerId);
 		ShipData playerShip = player.ships.get(shipMovementOrder.playerShipId);
 		
 		if (state.pauseData.teamPause != 0) return false;

@@ -13,17 +13,17 @@ public class EntityManager {
 	}
 	
 	public static Entity getEntity(GameState state, int id) {
-		for (Ship ship : state.ships) {
+		for (Ship ship : state.entityData.ships) {
 			if (ship.id == id) {
 				return ship;
 			}
 		}
-		for (Projectile projectile : state.projectiles) {
+		for (Projectile projectile : state.entityData.projectiles) {
 			if (projectile.id == id) {
 				return projectile;
 			}
 		}
-		for (Planet planet : state.planets) {
+		for (Planet planet : state.entityData.planets) {
 			if (planet.id == id) {
 				return planet;
 			}

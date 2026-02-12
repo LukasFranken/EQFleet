@@ -74,7 +74,7 @@ public class GameRenderer {
 				}
 				uiRenderer.setCamera(camera);
 				uiRenderer.setState(state);
-				if (state != null && state.winner == 0) {
+				if (state != null && state.resultData.winner == 0) {
 					if (state.started) {
 						checkFlip();
 						gridRenderer.drawGrid(camera);
@@ -91,11 +91,11 @@ public class GameRenderer {
 
 	private void calculateZoomInStart(GameState state) {
 		float currentZoomOutFactor = MathUtil.easeInOut(startZoomOutFactor, 1f, zoomInElapsed / zoomInTime);
-		camera.position.set(new Vector3(BASE_CAM_POS.x, BASE_CAM_POS.y, (BASE_CAM_POS.z / state.zoomFactor) * currentZoomOutFactor));
+		camera.position.set(new Vector3(BASE_CAM_POS.x, BASE_CAM_POS.y, (BASE_CAM_POS.z / (state.staticData.zoomFactor == 0 ? 1 : state.staticData.zoomFactor)) * currentZoomOutFactor));
 	}
 
 	private void checkFlip() {
-		Player self = EngineUtility.getPlayer(GameModel.activeGameState.players, GameModel.playerId);
+		Player self = EngineUtility.getPlayer(GameModel.activeGameState.staticData.playerData.players, GameModel.playerId);
 		if (isFlipped && self.teamId == 1) {
 			flip();
 		}

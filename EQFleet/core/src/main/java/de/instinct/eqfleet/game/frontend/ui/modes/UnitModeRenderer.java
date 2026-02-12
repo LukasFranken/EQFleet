@@ -65,9 +65,9 @@ public class UnitModeRenderer extends ModeRenderer {
 	
 	private void renderRadialSelectionCircle() {
 		Integer selectedId = GameInputModel.unitModeInputModel.selectedShipId;
-		Planet selected = (selectedId != null) ? EngineUtility.getPlanet(state.planets, selectedId) : null;
+		Planet selected = (selectedId != null) ? EngineUtility.getPlanet(state.entityData.planets, selectedId) : null;
 		if (selected != null) {
-			Player owner = EngineUtility.getPlayer(state.players, selected.ownerId);
+			Player owner = EngineUtility.getPlayer(state.staticData.playerData.players, selected.ownerId);
 			if (owner.ships.size() > 1 && GameInputModel.unitModeInputModel.selectedShipId == null) {
 				renderShipSelectionCircle(selected, owner);
 			}
@@ -96,7 +96,7 @@ public class UnitModeRenderer extends ModeRenderer {
 	
 	private void renderArrow() {
 		Integer selectedId = GameInputModel.unitModeInputModel.selectedOriginPlanetId;
-		Planet selected = (selectedId != null) ? EngineUtility.getPlanet(state.planets, selectedId) : null;
+		Planet selected = (selectedId != null) ? EngineUtility.getPlanet(state.entityData.planets, selectedId) : null;
 		if (selected != null && Gdx.input.isTouched()) {
 			Vector3 cursorWorld = GameInputModel.mouseWorldPos;
 			Gdx.gl.glEnable(GL20.GL_BLEND);
@@ -116,7 +116,7 @@ public class UnitModeRenderer extends ModeRenderer {
 
 	private void renderSelected() {
 		Integer selectedId = GameInputModel.unitModeInputModel.selectedOriginPlanetId;
-		Planet selected = (selectedId != null) ? EngineUtility.getPlanet(state.planets, selectedId) : null;
+		Planet selected = (selectedId != null) ? EngineUtility.getPlanet(state.entityData.planets, selectedId) : null;
 		if (selected != null) {
 			shapeRenderer.circle(selected.position.x, selected.position.y, EngineUtility.PLANET_RADIUS);
 			renderResourceCost(selected);
@@ -126,8 +126,8 @@ public class UnitModeRenderer extends ModeRenderer {
 	private void renderCPCostRect(GameState state) {
 		if (GameInputModel.unitModeInputModel.selectedShipId != null && Gdx.input.isTouched()) {
 			float cpCost = 0f;
-			Planet selected = EngineUtility.getPlanet(state.planets, GameInputModel.unitModeInputModel.selectedOriginPlanetId);
-			Player owner = EngineUtility.getPlayer(state.players, selected.ownerId);
+			Planet selected = EngineUtility.getPlanet(state.entityData.planets, GameInputModel.unitModeInputModel.selectedOriginPlanetId);
+			Player owner = EngineUtility.getPlayer(state.staticData.playerData.players, selected.ownerId);
 			if (GameInputModel.unitModeInputModel.selectedShipId != null || GameInputModel.unitModeInputModel.hoveredShipId != null) {
 				cpCost = owner.ships.get(GameInputModel.unitModeInputModel.selectedShipId == null ? GameInputModel.unitModeInputModel.hoveredShipId : GameInputModel.unitModeInputModel.selectedShipId).cpCost;
 			}
@@ -152,8 +152,8 @@ public class UnitModeRenderer extends ModeRenderer {
 		if (GameInputModel.unitModeInputModel.selectedOriginPlanetId != null && GameInputModel.unitModeInputModel.selectedShipId != null && Gdx.input.isTouched()) {
 			float arrowLabelYOffset = Gdx.app.getType() == ApplicationType.Android || Gdx.app.getType() == ApplicationType.iOS ? 50f : 30f;
 			Integer selectedId = GameInputModel.unitModeInputModel.selectedOriginPlanetId;
-			Planet selected = (selectedId != null) ? EngineUtility.getPlanet(state.planets, selectedId) : null;
-			Player owner = EngineUtility.getPlayer(state.players, selected.ownerId);
+			Planet selected = (selectedId != null) ? EngineUtility.getPlanet(state.entityData.planets, selectedId) : null;
+			Player owner = EngineUtility.getPlayer(state.staticData.playerData.players, selected.ownerId);
 			ShipData ship = owner.ships.get(GameInputModel.unitModeInputModel.selectedShipId);
 			String shipName = ship.model;
 	        float labelWidth = FontUtil.getFontTextWidthPx(shipName.length(), FontType.SMALL);
@@ -240,7 +240,7 @@ public class UnitModeRenderer extends ModeRenderer {
 	
 	private void renderResourceCost(Planet selected) {
 		float resourceCost = 0;
-		Player owner = EngineUtility.getPlayer(state.players, selected.ownerId);
+		Player owner = EngineUtility.getPlayer(state.staticData.playerData.players, selected.ownerId);
 		Integer shipIndex = GameInputModel.unitModeInputModel.selectedShipId;
 		if (shipIndex == null) shipIndex = GameInputModel.unitModeInputModel.hoveredShipId;
 		if (owner.ships.size() == 1) shipIndex = 0;
@@ -260,7 +260,7 @@ public class UnitModeRenderer extends ModeRenderer {
 	
 	private void renderHovered() {
 		Integer selectedId = GameInputModel.unitModeInputModel.selectedOriginPlanetId;
-		Planet selected = (selectedId != null) ? EngineUtility.getPlanet(state.planets, selectedId) : null;
+		Planet selected = (selectedId != null) ? EngineUtility.getPlanet(state.entityData.planets, selectedId) : null;
 		Planet targeted = GameInputModel.targetedPlanet;
 		
 		if (targeted != null) {
@@ -270,8 +270,8 @@ public class UnitModeRenderer extends ModeRenderer {
 				shapeRenderer.circle(targeted.position.x, targeted.position.y, EngineUtility.PLANET_RADIUS);
 			}
 			if (isTargeting && GameInputModel.unitModeInputModel.selectedShipId != null) {
-				Player owner = EngineUtility.getPlayer(state.players, selected.ownerId);
-				Player target = EngineUtility.getPlayer(state.players, targeted.ownerId);
+				Player owner = EngineUtility.getPlayer(state.staticData.playerData.players, selected.ownerId);
+				Player target = EngineUtility.getPlayer(state.staticData.playerData.players, targeted.ownerId);
 				if (owner != null && owner.ships != null) {
 					float fleetCost = owner.ships.get(GameInputModel.unitModeInputModel.selectedShipId).resourceCost;
 					if (owner.teamId == target.teamId) {
@@ -279,7 +279,7 @@ public class UnitModeRenderer extends ModeRenderer {
 					}
 				}
 			}
-			Turret turret = EngineUtility.getPlanetTurret(state.turrets, targeted.id);
+			Turret turret = EngineUtility.getPlanetTurret(state.entityData.turrets, targeted.id);
 			if (turret != null && turret.data.weapons.size() > 0) {
 				shapeRenderer.end();
 				setDensityLineWidth();

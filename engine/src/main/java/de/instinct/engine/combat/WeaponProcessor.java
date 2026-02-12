@@ -43,7 +43,7 @@ public class WeaponProcessor {
         for (Weapon weapon : unit.weapons) {
         	if (weapon.currentCooldown == 0) {
                 if (EntityManager.entityDistance(unit, closestTarget) <= weapon.data.range) {
-                	state.projectiles.add(projectileProcessor.createProjectile(unit, weapon.id, closestTarget, state));
+                	state.entityData.projectiles.add(projectileProcessor.createProjectile(unit, weapon.id, closestTarget, state));
                     weapon.currentCooldown = weapon.data.cooldown;
                 }
             }

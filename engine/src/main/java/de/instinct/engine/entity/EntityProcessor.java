@@ -11,8 +11,8 @@ public abstract class EntityProcessor {
 	}
 	
 	public void initializeEntity(Entity newEntity, GameState state) {
-		newEntity.id = state.entityCounter;
-		state.entityCounter++;
+		newEntity.id = state.entityData.entityCounter;
+		state.entityData.entityCounter++;
 	}
 	
 	public void removeDestroyed(Iterator<? extends Entity> entityIterator) {

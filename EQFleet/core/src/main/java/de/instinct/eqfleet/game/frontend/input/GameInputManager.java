@@ -28,7 +28,7 @@ public class GameInputManager {
     
     public void handleInput(PerspectiveCamera camera, GameState state) {
         if (!GameModel.inputEnabled) return;
-        if (state.winner != 0) return;
+        if (state.resultData.winner != 0) return;
         if (state.pauseData.resumeCountdownMS > 0) return;
         if (state.pauseData.teamPause != 0) return;
         

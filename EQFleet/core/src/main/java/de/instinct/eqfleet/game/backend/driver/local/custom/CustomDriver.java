@@ -107,7 +107,7 @@ public class CustomDriver extends LocalDriver {
 	protected void postEngineUpdate() {
 		if (GameModel.activeGameState != null && GameModel.activeGameState.started && !finished) {
 			try {
-				for (Player player : GameModel.activeGameState.players) {
+				for (Player player : GameModel.activeGameState.staticData.playerData.players) {
 					if (player instanceof AiPlayer) {
 						List<GameOrder> aiOrders = aiEngine.act((AiPlayer)player, GameModel.activeGameState);
 						for (GameOrder order : aiOrders) {
@@ -119,7 +119,7 @@ public class CustomDriver extends LocalDriver {
 				e.printStackTrace();
 			}
         	
-			if (GameModel.activeGameState.winner != 0) {
+			if (GameModel.activeGameState.resultData.winner != 0) {
 				Game.stop();
 			}
     	}

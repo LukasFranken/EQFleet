@@ -11,9 +11,8 @@ public abstract class GameOrder {
 	
 	protected abstract OrderType getOrderType();
 
-	public long orderId;
+	public long processGameTimeStamp;
 	public OrderType type;
-	public long acceptedTimeMS;
 	
 	public GameOrder clone() {
 		try {

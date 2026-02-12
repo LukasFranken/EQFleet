@@ -47,6 +47,12 @@ GENERAL:
 - more resource types with maybe craftable ones in station
 
 - main screen tab bar bottom (combat, flagship, station, profile)
+
+- much more stars in galaxy with slower threat level progression
+
+- flagship on map which can actually be destroyed
+ -> when redoing tutorial just say enemy and not turbulence
+ -> different types of enemies have different ships
 SERVER:
 - DRASTICALLY IMPROVE GAME NETWORKING AND BUFFER SIZES
  -> start with segmentalizing gamestate transmission

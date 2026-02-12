@@ -14,8 +14,8 @@ public class TurretProcessor extends UnitProcessor {
 	}
 	
 	public void initializeTurrets(GameState state) {
-		for (Planet planet : state.planets) {
-			Player player = EngineUtility.getPlayer(state.players, planet.ownerId);
+		for (Planet planet : state.entityData.planets) {
+			Player player = EngineUtility.getPlayer(state.staticData.playerData.players, planet.ownerId);
 			if (!planet.ancient && player.turrets.size() > 0) {
 				createTurretInstance(planet.id, 0, state, false);
 			}
@@ -23,16 +23,16 @@ public class TurretProcessor extends UnitProcessor {
 	}
 
 	public void updateTurrets(GameState state, long deltaTime) {
-		for (Turret turret : state.turrets) {
+		for (Turret turret : state.entityData.turrets) {
 			//TODO turn turret
 			super.updateUnit(turret, state, deltaTime);
 		}
-		super.removeDestroyed(state.turrets.iterator());
+		super.removeDestroyed(state.entityData.turrets.iterator());
 	}
 
 	public void createTurretInstance(int planetId, int turretId, GameState state, boolean payCost) {
-		Planet planet = EngineUtility.getPlanet(state.planets, planetId);
-		Player player = EngineUtility.getPlayer(state.players, planet.ownerId);
+		Planet planet = EngineUtility.getPlanet(state.entityData.planets, planetId);
+		Player player = EngineUtility.getPlayer(state.staticData.playerData.players, planet.ownerId);
 		Turret newTurret = new Turret();
 		super.initializeUnit(newTurret, player.turrets.get(turretId), planetId, state, payCost);
 		for (Shield shield : newTurret.shields) {
@@ -41,7 +41,7 @@ public class TurretProcessor extends UnitProcessor {
 		newTurret.position = planet.position;
 		newTurret.radius = EngineUtility.PLANET_RADIUS;
 		newTurret.rotationSpeed = player.turrets.get(turretId).platform.rotationSpeed;
-		state.turrets.add(newTurret);
+		state.entityData.turrets.add(newTurret);
 	}
 
 }

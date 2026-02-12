@@ -65,16 +65,16 @@ public abstract class UnitProcessor extends EntityProcessor {
 	public static Unit getClosestTarget(Entity origin, GameState state) {
 		List<Unit> potentialTargets = new ArrayList<>();
         
-        Player originPlayer = EngineUtility.getPlayer(state.players, origin.ownerId);
-        for (Ship ship : state.ships) {
-            Player shipPlayer = EngineUtility.getPlayer(state.players, ship.ownerId);
+        Player originPlayer = EngineUtility.getPlayer(state.staticData.playerData.players, origin.ownerId);
+        for (Ship ship : state.entityData.ships) {
+            Player shipPlayer = EngineUtility.getPlayer(state.staticData.playerData.players, ship.ownerId);
             if (shipPlayer.teamId != originPlayer.teamId) {
                 potentialTargets.add(ship);
             }
         }
         
-        for (Turret turret : state.turrets) {
-            Player planetPlayer = EngineUtility.getPlayer(state.players, turret.ownerId);
+        for (Turret turret : state.entityData.turrets) {
+            Player planetPlayer = EngineUtility.getPlayer(state.staticData.playerData.players, turret.ownerId);
             if (planetPlayer.teamId != originPlayer.teamId && turret.hull != null) {
                 potentialTargets.add(turret);
             }
@@ -97,10 +97,10 @@ public abstract class UnitProcessor extends EntityProcessor {
 		unit.originPlanetId = planetId;
 		unit.data = unitData;
 		
-		Planet planet = EngineUtility.getPlanet(state.planets, unit.originPlanetId);
+		Planet planet = EngineUtility.getPlanet(state.entityData.planets, unit.originPlanetId);
 		unit.ownerId = planet.ownerId;
 		
-		Player player = EngineUtility.getPlayer(state.players, unit.ownerId);
+		Player player = EngineUtility.getPlayer(state.staticData.playerData.players, unit.ownerId);
         PlayerStatistic playerStat = StatCollector.getPlayer(state.gameUUID, player.id);
 		
 		if (payCost) { 

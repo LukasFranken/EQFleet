@@ -54,7 +54,7 @@ public class TestEngineManager {
 	
 	public static void update(long deltaTime) {
 		engine.update(state, deltaTime);
-		for (Player player : state.players) {
+		for (Player player : state.staticData.playerData.players) {
 			if (player instanceof AiPlayer) {
 				List<GameOrder> aiOrders = aiEngine.act((AiPlayer)player, state);
 				for (GameOrder order : aiOrders) {
@@ -62,7 +62,7 @@ public class TestEngineManager {
 				}
 			}
 		}
-		if (state.winner != 0) {
+		if (state.resultData.winner != 0) {
 			GameStatistic stats = StatCollector.grab(state.gameUUID);
 			if (stats != null) {
 				System.out.println(stats);

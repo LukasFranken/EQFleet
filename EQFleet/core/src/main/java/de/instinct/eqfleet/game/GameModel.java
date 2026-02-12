@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import de.instinct.engine.model.GameState;
 import de.instinct.engine.net.message.NetworkMessage;
+import de.instinct.engine.net.message.types.GameOrderUpdate;
 import de.instinct.eqfleet.game.backend.driver.local.tutorial.guide.GuideEvent;
 import de.instinct.eqfleet.game.frontend.InteractionMode;
 import de.instinct.eqfleet.game.frontend.ui.model.UIBounds;
@@ -25,6 +26,7 @@ public class GameModel {
 	public static volatile String playerUUID = UUID.randomUUID().toString();
     public static volatile int playerId;
     public static volatile Queue<GameState> receivedGameState;
+    public static volatile Queue<GameOrderUpdate> receivedOrders;
     public static volatile GameState activeGameState;
     public static volatile long lastUpdateTimestampMS;
     

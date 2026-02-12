@@ -28,7 +28,7 @@ public class PlanetRenderer {
 	
 	public void render(GameState state, PerspectiveCamera camera) {
 		if (planetModels.isEmpty() && state != null) {
-		    for (Planet planet : state.planets) {
+		    for (Planet planet : state.entityData.planets) {
 		        ModelInstance planetInstance = ModelLoader.instanciate("planet");
 		        planetInstance.transform.idt();
 		        planetInstance.transform.translate(planet.position.x, planet.position.y, 0f);
@@ -44,7 +44,7 @@ public class PlanetRenderer {
 		    }
 		}
 		planetRotationAngle += Gdx.graphics.getDeltaTime() * 10f;
-		for (Planet planet : state.planets) {
+		for (Planet planet : state.entityData.planets) {
 		    ModelInstance instance = planetModels.get(planet.id);
 		    if (instance != null) {
 		    	

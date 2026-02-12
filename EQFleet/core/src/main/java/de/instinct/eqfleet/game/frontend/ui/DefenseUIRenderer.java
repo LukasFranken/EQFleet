@@ -22,7 +22,7 @@ public class DefenseUIRenderer {
 	private Color armorColor = new Color(1f, 0.5f, 0f, 0.8f);
 	
 	public void render(GameState state, PerspectiveCamera camera) {
-		for (Turret turret : state.turrets) {
+		for (Turret turret : state.entityData.turrets) {
 			if (turret.hull != null) {
 				Rectangle defenseArea = new Rectangle(turret.position.x - 30, turret.position.y, 60, 14);
 				renderDefense(camera, turret, defenseArea, true);
@@ -30,7 +30,7 @@ public class DefenseUIRenderer {
 		}
 		
 		List<Rectangle> occupiedAreas = new ArrayList<>();
-	    for (Ship ship : state.ships) {
+	    for (Ship ship : state.entityData.ships) {
 	        if (ship.hull != null) {
 	            Rectangle defenseArea = new Rectangle(ship.position.x - 19, ship.position.y - 28, 40, 10);
 	            boolean overlapping = true;

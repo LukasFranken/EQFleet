@@ -29,10 +29,10 @@ import de.instinct.engine.util.VectorUtil;
 public class ProjectileProcessor extends EntityProcessor {
 
     public void updateProjectiles(GameState state, long deltaTime) {
-        for (Projectile projectile : state.projectiles) {
+        for (Projectile projectile : state.entityData.projectiles) {
         	updateProjectile(projectile, state, deltaTime);
         }
-        super.removeDestroyed(state.projectiles.iterator());
+        super.removeDestroyed(state.entityData.projectiles.iterator());
     }
 
     private void updateProjectile(Projectile projectile, GameState state, long deltaTime) {
@@ -78,8 +78,8 @@ public class ProjectileProcessor extends EntityProcessor {
 	}
 
 	private void calculateHit(Projectile projectile, GameState state) {
-    	Player projectileOwner = EngineUtility.getPlayer(state.players, projectile.ownerId);
-        for (Ship ship : state.ships) {
+    	Player projectileOwner = EngineUtility.getPlayer(state.staticData.playerData.players, projectile.ownerId);
+        for (Ship ship : state.entityData.ships) {
         	if (checkHit(projectile, projectileOwner, ship, state)) {
         		calculateDamage(projectile, ship, state);
         		projectile.flaggedForDestroy = true;
@@ -87,7 +87,7 @@ public class ProjectileProcessor extends EntityProcessor {
         	}
         }
         if (!projectile.flaggedForDestroy) {
-        	for (Turret turret : state.turrets) {
+        	for (Turret turret : state.entityData.turrets) {
         		if (checkHit(projectile, projectileOwner, turret, state)) {
         			calculateDamage(projectile, turret, state);
             		projectile.flaggedForDestroy = true;
@@ -101,7 +101,7 @@ public class ProjectileProcessor extends EntityProcessor {
     private boolean checkHit(Projectile projectile, Player projectileOwner, Unit potencialTarget, GameState state) {
     	float distanceToTarget = EntityManager.entityDistance(projectile, potencialTarget);
     	if (distanceToTarget <= 0) {
-    		Player targetOwner = EngineUtility.getPlayer(state.players, potencialTarget.ownerId);
+    		Player targetOwner = EngineUtility.getPlayer(state.staticData.playerData.players, potencialTarget.ownerId);
         	if (projectileOwner.teamId != targetOwner.teamId && potencialTarget.hull != null) {
         		return true;
         	}
@@ -111,21 +111,21 @@ public class ProjectileProcessor extends EntityProcessor {
 
 	private void calculateDamage(Projectile projectile, Unit target, GameState state) {
         if (projectile.aoeRadius > 0) {
-        	Player projectileOwner = EngineUtility.getPlayer(state.players, projectile.ownerId);
-        	for (Ship pentencialTargetShip : state.ships) {
+        	Player projectileOwner = EngineUtility.getPlayer(state.staticData.playerData.players, projectile.ownerId);
+        	for (Ship pentencialTargetShip : state.entityData.ships) {
         		float distanceToTarget = EntityManager.entityDistance(projectile, pentencialTargetShip);
         		if (distanceToTarget < projectile.aoeRadius) {
-        			if (projectileOwner.teamId != EngineUtility.getPlayer(state.players, pentencialTargetShip.ownerId).teamId) {
+        			if (projectileOwner.teamId != EngineUtility.getPlayer(state.staticData.playerData.players, pentencialTargetShip.ownerId).teamId) {
         				if (pentencialTargetShip.hull != null) {
         					dealDamage(projectile, pentencialTargetShip, state);
         				}
         			}
         		}
         	}
-        	for (Turret pentencialTargetTurret : state.turrets) {
+        	for (Turret pentencialTargetTurret : state.entityData.turrets) {
         		float distanceToTarget = EntityManager.entityDistance(projectile, pentencialTargetTurret);
         		if (distanceToTarget < projectile.aoeRadius) {
-        			if (projectileOwner.teamId != EngineUtility.getPlayer(state.players, pentencialTargetTurret.ownerId).teamId) {
+        			if (projectileOwner.teamId != EngineUtility.getPlayer(state.staticData.playerData.players, pentencialTargetTurret.ownerId).teamId) {
         				if (pentencialTargetTurret.hull != null) {
         					dealDamage(projectile, pentencialTargetTurret, state);
         				}
@@ -277,7 +277,7 @@ public class ProjectileProcessor extends EntityProcessor {
         if (target instanceof Ship) {
             Ship ship = (Ship) target;
             if (!UnitProcessor.isInCombatRange(ship, state) && origin.originPlanetId != ship.targetPlanetId) {
-                Planet targetPlanet = EngineUtility.getPlanet(state.planets, ship.targetPlanetId);
+                Planet targetPlanet = EngineUtility.getPlanet(state.entityData.planets, ship.targetPlanetId);
                 if (targetPlanet != null) {
                     Vector2 shipDirection = VectorUtil.getDirection(ship.position, targetPlanet.position);
                     Vector2 shipVelocity = new Vector2(shipDirection).scl(((ShipData)ship.data).engine.speed);

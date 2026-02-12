@@ -12,17 +12,17 @@ import de.instinct.engine.util.EngineUtility;
 public class PlanetProcessor extends EntityProcessor {
 	
 	public void update(GameState state, long deltaMS) {
-		for (Planet planet : state.planets) {
+		for (Planet planet : state.entityData.planets) {
 	        if (planet.ownerId != 0) {
-	            Player owner = EngineUtility.getPlayer(state.players, planet.ownerId);
+	            Player owner = EngineUtility.getPlayer(state.staticData.playerData.players, planet.ownerId);
 	            if (planet.ancient) {
 	            	double available = planet.currentResources;
-	            	double desired = ((double) deltaMS / 1000D) * state.ancientPlanetResourceDegradationFactor;
+	            	double desired = ((double) deltaMS / 1000D) * state.staticData.ancientPlanetResourceDegradationFactor;
 	            	double actualGain = Math.min(available, desired);
 
 	            	planet.currentResources -= actualGain;
-	            	double newATPValue = state.teamATPs.get(owner.teamId) + (actualGain / state.ancientPlanetResourceDegradationFactor);
-	            	state.teamATPs.put(owner.teamId, newATPValue > state.atpToWin ? state.atpToWin : newATPValue);
+	            	double newATPValue = state.teamATPs.get(owner.teamId) + (actualGain / state.staticData.ancientPlanetResourceDegradationFactor);
+	            	state.teamATPs.put(owner.teamId, newATPValue > state.staticData.atpToWin ? state.staticData.atpToWin : newATPValue);
 
 	            	if (planet.currentResources <= 0) {
 	            	    planet.ownerId = 0;
@@ -30,7 +30,7 @@ public class PlanetProcessor extends EntityProcessor {
 	            	}
 	            	
 	            	PlayerStatistic playerStat = StatCollector.getPlayer(state.gameUUID, owner.id);
-	            	playerStat.setAtpGained(playerStat.getAtpGained() + (actualGain / state.ancientPlanetResourceDegradationFactor));
+	            	playerStat.setAtpGained(playerStat.getAtpGained() + (actualGain / state.staticData.ancientPlanetResourceDegradationFactor));
 	            } else {
 	                double resourceIncrease = calculateResourceGeneration(owner, deltaMS);
 	                planet.currentResources += resourceIncrease;

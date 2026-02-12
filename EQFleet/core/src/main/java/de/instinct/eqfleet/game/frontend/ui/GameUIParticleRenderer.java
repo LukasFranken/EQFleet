@@ -16,13 +16,13 @@ public class GameUIParticleRenderer {
 	public void render(PerspectiveCamera camera) {
 		if (EngineUtility.mapHasAncient(GameModel.activeGameState)) {
 			Planet activeAncientPlanet = null;
-			for (Planet planet : GameModel.activeGameState.planets) {
+			for (Planet planet : GameModel.activeGameState.entityData.planets) {
 				if (planet.ancient) {
 					activeAncientPlanet = planet;
 				}
 			}
-			Player owner = EngineUtility.getPlayer(GameModel.activeGameState.players, activeAncientPlanet.ownerId);
-			Player self = EngineUtility.getPlayer(GameModel.activeGameState.players, GameModel.playerId);
+			Player owner = EngineUtility.getPlayer(GameModel.activeGameState.staticData.playerData.players, activeAncientPlanet.ownerId);
+			Player self = EngineUtility.getPlayer(GameModel.activeGameState.staticData.playerData.players, GameModel.playerId);
 			if (activeAncientPlanet != null) {
 				if (activeAncientPlanet.ownerId != 0) {
 					if (!ParticleRenderer.isStarted("ancient")) ParticleRenderer.start("ancient");

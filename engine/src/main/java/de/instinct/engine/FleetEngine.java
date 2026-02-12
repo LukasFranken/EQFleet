@@ -17,8 +17,6 @@ public class FleetEngine {
 	private CombatProcessor combatProcessor;
 	private MetaProcessor metaProcessor;
 	
-	private boolean updateContainedValidOrder;
-	
 	public void initialize() {
 		planetProcessor = new PlanetProcessor();
 		playerProcessor = new PlayerProcessor();
@@ -28,7 +26,7 @@ public class FleetEngine {
 
 	public void update(GameState state, long progressionMS) {
 		try {
-			if (state.started && state.winner == 0) {
+			if (state.started && state.resultData.winner == 0) {
 				advanceTime(state, progressionMS);
 			    integrateNewOrders(state);
 			    VictoryCalculator.checkVictory(state);
@@ -39,14 +37,11 @@ public class FleetEngine {
 	}
 	
 	private void integrateNewOrders(GameState state) {
-		updateContainedValidOrder = false;
-		while (!state.unprocessedOrders.isEmpty()) {
-			GameOrder order = state.unprocessedOrders.poll();
+		while (!state.orderData.unprocessedOrders.isEmpty() && state.orderData.unprocessedOrders.peek().processGameTimeStamp <= state.gameTimeMS) {
+			GameOrder order = state.orderData.unprocessedOrders.poll();
 			if (processOrder(state, order)) {
-				order.orderId = state.orderCounter++;
-				order.acceptedTimeMS = state.gameTimeMS;
-				state.orders.add(order);
-				updateContainedValidOrder = true;
+				order.processGameTimeStamp = state.gameTimeMS;
+				state.orderData.processedOrders.add(order);
 			}
 		}
 	}
@@ -73,11 +68,7 @@ public class FleetEngine {
 	}
 	
 	public void queue(GameState state, GameOrder order) {
-		state.unprocessedOrders.add(order);
-	}
-	
-	public boolean containedValidOrders() {
-		return updateContainedValidOrder;
+		state.orderData.unprocessedOrders.add(order);
 	}
 	
 }

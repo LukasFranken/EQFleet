@@ -69,7 +69,7 @@ public class PauseUIRenderer {
 	private void renderPauseScreen(GameState state) {
 		if (state.pauseData.teamPause != 0) {
 			TextureManager.draw(TextureManager.createTexture(bluroutColor), GraphicsUtil.screenBounds());
-			Player self = EngineUtility.getPlayer(state.players, GameModel.playerId);
+			Player self = EngineUtility.getPlayer(state.staticData.playerData.players, GameModel.playerId);
 			String teamName = self.teamId == state.pauseData.teamPause ? "OWN" : "ENEMY";
 			Label pauseLabel = new Label("PAUSED - " + teamName + " TEAM");
 			pauseLabel.setType(FontType.LARGE);
@@ -78,13 +78,13 @@ public class PauseUIRenderer {
 			pauseLabel.render();
 			
 			long teamPauseMS = state.pauseData.teamPausesMS.get(state.pauseData.teamPause);
-			Label remainingTimeLabel = new Label("Remaining Time: " + StringUtils.format(((float)(state.pauseData.maxPauseMS - teamPauseMS) / 1000f), 0) + "s");
+			Label remainingTimeLabel = new Label("Remaining Time: " + StringUtils.format(((float)(state.staticData.maxPauseMS - teamPauseMS) / 1000f), 0) + "s");
 			remainingTimeLabel.setType(FontType.NORMAL);
 			remainingTimeLabel.setBounds(new Rectangle(100, (GraphicsUtil.screenBounds().getHeight() / 2) + 100, GraphicsUtil.screenBounds().getWidth() - 200, 30));
 			remainingTimeLabel.setBackgroundColor(Color.BLACK);
 			remainingTimeLabel.render();
 			
-			if (self.teamId == state.pauseData.teamPause && state.pauseData.currentPauseElapsedMS > state.pauseData.minPauseMS) {
+			if (self.teamId == state.pauseData.teamPause && state.pauseData.currentPauseElapsedMS > state.staticData.minPauseMS) {
 				surrenderButton.render();
 	        	resumeButton.render();
 			}
@@ -97,9 +97,9 @@ public class PauseUIRenderer {
 		Label header = new Label("NAME - CONNECTED - LOADED");
 		header.setBounds(new Rectangle(0, 500, GraphicsUtil.screenBounds().getWidth(), labelHeight));
 		header.render();
-		for (Player player : state.players) {
+		for (Player player : state.staticData.playerData.players) {
 			if (player.teamId == 0) continue;
-			for (PlayerConnectionStatus status : state.connectionStati) {
+			for (PlayerConnectionStatus status : state.staticData.playerData.connectionStati) {
 				if (status.playerId == player.id) {
 					Label row = new Label(player.name + " - " + status.connected + " - " + status.loaded);
 					row.setBounds(new Rectangle(0, 500 - (i * labelHeight), GraphicsUtil.screenBounds().getWidth(), labelHeight));
