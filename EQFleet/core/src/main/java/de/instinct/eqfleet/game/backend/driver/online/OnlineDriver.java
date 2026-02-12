@@ -16,6 +16,7 @@ public class OnlineDriver extends Driver {
 	
 	private final int SMOOTHNESS_DELAY_MS = 200;
 	private GameClient gameClient;
+	private boolean finished;
 	
 	public OnlineDriver() {
 		super();
@@ -28,6 +29,7 @@ public class OnlineDriver extends Driver {
 		JoinMessage joinMessage = new JoinMessage();
 		joinMessage.playerUUID = API.authKey;
 		GameModel.outputMessageQueue.add(joinMessage);
+		finished = false;
 	}
 	
 	@Override
@@ -47,13 +49,14 @@ public class OnlineDriver extends Driver {
 				GameModel.activeGameState.started = true;
 			}
 			if (object instanceof GameFinishUpdate) {
-				GameModel.activeGameState.resultData = ((GameFinishUpdate) object).resultData;
+				GameModel.receivedResults = ((GameFinishUpdate) object);
 			}
 		}
 	}
 
 	@Override
 	protected void postEngineUpdate() {
+		if (finished) return;
 		if (GameModel.outputMessageQueue.peek() != null && gameClient.client.isConnected()) {
 			gameClient.send(GameModel.outputMessageQueue.next());
 		}
@@ -64,18 +67,25 @@ public class OnlineDriver extends Driver {
         		StatCollector.initialize(GameModel.activeGameState.gameUUID, GameModel.activeGameState.staticData.playerData.players);
         	}
             GameModel.lastUpdateTimestampMS = System.currentTimeMillis();
-            if (GameModel.activeGameState.resultData.winner != 0) {
-    			Game.stop();
-    		}
         }
 		if (!GameModel.receivedOrders.isEmpty()) {
 			GameModel.activeGameState.orderData.unprocessedOrders.addAll(GameModel.receivedOrders.poll().newOrders);
+		}
+		if (GameModel.activeGameState != null) {
+			if (GameModel.receivedResults != null) {
+				GameModel.activeGameState.resultData = GameModel.receivedResults.resultData;
+				GameModel.receivedResults = null;
+			}
+			if (GameModel.activeGameState.resultData.winner != 0) {
+				Game.stop();
+			}
 		}
 	}
 
 	@Override
 	public long finish() {
 		gameClient.stop();
+		finished = true;
 		return 2000;
 	}
 

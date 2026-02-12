@@ -118,9 +118,9 @@ public class Menu {
 	}
 	
 	public static void open() {
-		MenuModel.active = true;
 		if (GameModel.lastGameUUID == null || GameModel.lastGameUUID.contentEquals("custom") || GameModel.lastGameUUID.contentEquals("tutorial")) {
 			load();
+			MenuModel.active = true;
 		} else {
 			WebManager.enqueue(
 				    () -> API.matchmaking().result(GameModel.lastGameUUID),
@@ -128,6 +128,7 @@ public class Menu {
 				    	PostGameModel.reward = result;
 				    	Gdx.app.postRunnable(() -> {
 				    		postGameRenderer.reload();
+				    		MenuModel.active = true;
 				    	});
 				    }
 			);

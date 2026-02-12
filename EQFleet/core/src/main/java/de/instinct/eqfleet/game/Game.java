@@ -4,6 +4,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.badlogic.gdx.Gdx;
 
+import de.instinct.api.matchmaking.model.GameMode;
 import de.instinct.engine.net.message.types.PlayerAssigned;
 import de.instinct.eqfleet.game.backend.driver.Driver;
 import de.instinct.eqfleet.game.backend.driver.local.custom.CustomDriver;
@@ -11,6 +12,8 @@ import de.instinct.eqfleet.game.backend.driver.local.tutorial.TutorialDriver;
 import de.instinct.eqfleet.game.backend.driver.local.tutorial.TutorialMode;
 import de.instinct.eqfleet.game.backend.driver.online.OnlineDriver;
 import de.instinct.eqfleet.game.frontend.GameRenderer;
+import de.instinct.eqfleet.menu.main.Menu;
+import de.instinct.eqfleet.menu.module.play.PlayModel;
 import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
 import de.instinct.eqlibgdxutils.net.MessageQueue;
@@ -66,18 +69,26 @@ public class Game {
     public static void render() {
         if (GameModel.active) {
             currentDriver.update();
-            if (GameModel.activeGameState != null) {
+            if (GameModel.activeGameState != null && GameModel.visible) {
                 renderer.render(GameModel.activeGameState);
             }
         }
     }
 
 	public static void dispose() {
+		GameModel.visible = false;
+		GameModel.active = false;
 		if (renderer != null) {
 			renderer.dispose();
 		}
 		if (currentDriver != null) {
 			currentDriver.dispose();
+		}
+		
+		try {
+			Menu.open();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

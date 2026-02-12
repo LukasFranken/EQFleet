@@ -4,15 +4,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import de.instinct.api.core.modules.MenuModule;
-import de.instinct.api.matchmaking.model.GameMode;
 import de.instinct.engine.FleetEngine;
 import de.instinct.engine.util.EngineUtility;
 import de.instinct.eqfleet.audio.AudioManager;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.GameModel;
-import de.instinct.eqfleet.menu.main.Menu;
-import de.instinct.eqfleet.menu.module.play.PlayModel;
 
 public abstract class Driver {
 	
@@ -73,25 +69,12 @@ public abstract class Driver {
 			}
 		}
 		
-		scheduler.schedule(() -> {
-			
-			try {
-				GameModel.active = false;
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			
-		}, 2000, TimeUnit.MILLISECONDS);
-		
 		long delay = finish();
-		scheduler.schedule(() -> {
+		
+        scheduler.schedule(() -> {
 			
 			try {
-				if (PlayModel.lobbyStatus != null && PlayModel.lobbyStatus.getType() != null && PlayModel.lobbyStatus.getType().getGameMode() == GameMode.CONQUEST) {
-					Menu.openModule(MenuModule.STARMAP);
-				}
 				Game.dispose();
-				Menu.open();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -102,12 +85,12 @@ public abstract class Driver {
 	public abstract long finish();
 	
 	public void dispose() {
+		GameModel.lastGameUUID = GameModel.activeGameState != null ? GameModel.activeGameState.gameUUID : null;
+		GameModel.activeGameState = null;
 		if (scheduler != null) {
 			scheduler.shutdownNow();
 		}
 		cleanup();
-		GameModel.lastGameUUID = GameModel.activeGameState != null ? GameModel.activeGameState.gameUUID : null;
-		GameModel.activeGameState = null;
 	}
 	
 	public abstract void cleanup();

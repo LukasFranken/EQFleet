@@ -54,9 +54,10 @@ GENERAL:
  -> when redoing tutorial just say enemy and not turbulence
  -> different types of enemies have different ships
 SERVER:
-- DRASTICALLY IMPROVE GAME NETWORKING AND BUFFER SIZES
- -> start with segmentalizing gamestate transmission
-  -> then tune down packet sizes again
+- test new networking on slower devices
+ -> implement disconnect pause
+ -> implement dynamic delay
+ -> implement long delay catchup
 - actual dbs for data
 
 MENU:
@@ -82,6 +83,8 @@ AUDIO:
 - more sound fx (like in menu)
 - one minute remaining/30sec/10 sec remaining sound
 - maybe dispose all tutorial voicelines after tutorial?
+- multiple music themes
+ -> changes genre depnding on menu/game
 
 CONTROL:
 - mapmaker part of control
@@ -91,7 +94,6 @@ CONTROL:
 - add user management to web ui
 
 GAME:
-- fix short game rendering between end and postgame
 - make cp/ap bars borders as thick for ios as on pc
 - make beam actual beam
 - projectile impact calculation for high speed collision
