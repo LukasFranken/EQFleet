@@ -6,5 +6,6 @@ import lombok.Data;
 public class Request<T> {
 	
 	private RequestAction requestAction;
+	private RequestErrorConsumer errorConsumer;
 
 }

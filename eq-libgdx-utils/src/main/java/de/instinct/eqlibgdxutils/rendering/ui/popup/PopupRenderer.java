@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Rectangle;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.InputUtil;
 import de.instinct.eqlibgdxutils.debug.console.Console;
-import de.instinct.eqlibgdxutils.debug.metrics.NumberMetric;
+import de.instinct.eqlibgdxutils.debug.metrics.types.NumberMetric;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;

@@ -1,4 +1,4 @@
-package de.instinct.eqlibgdxutils.debug;
+package de.instinct.eqlibgdxutils.debug.metrics;
 
 import lombok.Builder;
 import lombok.Data;

@@ -19,9 +19,12 @@ GENERAL:
   x shellshock
   x fallout
   
+- night mode: dark, slow ambient music, less animation and low sfx
+  
 - full dual-language
 
 - remove starmap until ship is equipped
+ -> fixed with categorized menu (show main ship shipyard first)
 
 - console proper profiler area
  -> buttons for time control
@@ -67,6 +70,8 @@ MENU:
 - change hangar space needed for build blueprint, not buy blueprint
 - proper profile
  -> instead of just numbers show actual cp bar
+- when disabling manuparticles make 3 options:
+ -> on, off, static (is only an image)
 
 TUTORAL:
 - full menu ship component tutorial

@@ -1,13 +1,13 @@
-package de.instinct.eqlibgdxutils.debug.metrics;
+package de.instinct.eqlibgdxutils.debug.metrics.types;
 
-import de.instinct.eqlibgdxutils.debug.Metric;
+import de.instinct.eqlibgdxutils.debug.metrics.Metric;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 
 @Data
 @SuperBuilder
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 public class StringMetric extends Metric<String> {
 
 	@Override

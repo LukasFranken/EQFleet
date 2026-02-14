@@ -8,7 +8,7 @@ import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqlibgdxutils.debug.console.Console;
 import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
-import de.instinct.eqlibgdxutils.debug.metrics.NumberMetric;
+import de.instinct.eqlibgdxutils.debug.metrics.types.NumberMetric;
 
 public class GameConnectionListener extends Listener {
 

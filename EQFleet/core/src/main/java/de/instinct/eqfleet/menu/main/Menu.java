@@ -118,6 +118,7 @@ public class Menu {
 	}
 	
 	public static void open() {
+		Logger.log("MENU", "Opening Menu with last game UUID: " + GameModel.lastGameUUID, ConsoleColor.YELLOW);
 		if (GameModel.lastGameUUID == null || GameModel.lastGameUUID.contentEquals("custom") || GameModel.lastGameUUID.contentEquals("tutorial")) {
 			load();
 			MenuModel.active = true;
@@ -125,11 +126,22 @@ public class Menu {
 			WebManager.enqueue(
 				    () -> API.matchmaking().result(GameModel.lastGameUUID),
 				    result -> {
-				    	PostGameModel.reward = result;
-				    	Gdx.app.postRunnable(() -> {
-				    		postGameRenderer.reload();
-				    		MenuModel.active = true;
-				    	});
+				    	if (result == null) {
+				    		Logger.log("Menu", "Failed to load post game data for UUID " + GameModel.lastGameUUID, ConsoleColor.RED);
+					    	load();
+					    	MenuModel.active = true;
+				    	} else {
+				    		PostGameModel.reward = result;
+					    	Gdx.app.postRunnable(() -> {
+					    		postGameRenderer.reload();
+					    		MenuModel.active = true;
+					    	});
+				    	}
+				    },
+				    error -> {
+				    	Logger.log("Menu", "Failed to load post game data for UUID " + GameModel.lastGameUUID + " with error: " + error.getMessage(), ConsoleColor.RED);
+				    	load();
+				    	MenuModel.active = true;
 				    }
 			);
 		}
@@ -154,6 +166,7 @@ public class Menu {
 
 	public static void close() {
 		MenuModel.active = false;
+		MenuModel.activeModule = null;
 		menuRenderer.close();
 	}
 	

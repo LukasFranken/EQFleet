@@ -1,4 +1,4 @@
-package de.instinct.eqlibgdxutils.debug;
+package de.instinct.eqlibgdxutils.debug.metrics;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,9 +6,6 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.eqlibgdxutils.GraphicsUtil;
@@ -22,8 +19,6 @@ import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 @SuppressWarnings("rawtypes")
 public class MetricUtil {
 
-	private static SpriteBatch batch;
-
 	private static boolean active;
 
 	private static Queue<Metric> metricsAddQueue;
@@ -33,13 +28,12 @@ public class MetricUtil {
 	private static List<Metric> metrics;
 
 	private static final float elementMargin = 4f;
-	private static Texture backgroundColorTexture;
 	private static float horizontalPanelOffset = 20f;
 	
 	private static boolean spanHorizontal;
 	
 	private static int fixedHeight;
-	private static int scrollButtonButtonHeight;
+	private static int scrollButtonButtonHeight = 30;
 	private static int itemOffset;
 	private static FontType panelFontType;
 	
@@ -54,11 +48,8 @@ public class MetricUtil {
 	}
 	
 	public static void build() {
-		batch = new SpriteBatch();
-		backgroundColorTexture = createBackgroundColorTexture();
 		spanHorizontal = true;
 		fixedHeight = (int)GraphicsUtil.screenBounds().getHeight();
-		scrollButtonButtonHeight = 20;
 		itemOffset = 0;
 		panelFontType = FontType.SMALL;
 		
@@ -88,39 +79,27 @@ public class MetricUtil {
 			
 		});
 	}
-
-	private static Texture createBackgroundColorTexture() {
-		Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pixmap.setColor(Color.BLACK);
-        pixmap.fill();
-        Texture texture = new Texture(pixmap);
-        pixmap.dispose();
-		return texture;
-	}
 	
 	public static void setFixedHeight(int height) {
 		fixedHeight = height;
+	}
+	
+	public static float getFixedHeight() {
+		return fixedHeight;
 	}
 
 	public static void render() {
 		updateMetrics();
 		if (active) {
-			batch.begin();
 			float panelWidth = calculatePanelWidth();
 			float panelHeight = fixedHeight == 0
 					? elementMargin + (metrics.size() * (FontUtil.getFontHeightPx(panelFontType) + elementMargin))
 					: fixedHeight;
 
 			Rectangle panelBounds = new Rectangle(0, GraphicsUtil.screenBounds().getHeight() - panelHeight, panelWidth, panelHeight);
-
-			batch.setColor(1f, 1f, 1f, 0.5f);
-			batch.draw(backgroundColorTexture, panelBounds.x, panelBounds.y, panelBounds.width, panelBounds.height);
-			batch.end();
-
 			float labelHeight = FontUtil.getFontHeightPx(panelFontType) + elementMargin;
 			float buttonsTopY = panelBounds.y + scrollButtonButtonHeight;
 			float startY = buttonsTopY + elementMargin;
-
 			for (int i = 0; i < metrics.size(); i++) {
 				int index = i + itemOffset;
 				if (index < metrics.size()) {
@@ -242,7 +221,7 @@ public class MetricUtil {
 	}
 
 	public static void dispose() {
-		batch.dispose();
+		
 	}
 
 }

@@ -1,9 +1,9 @@
-package de.instinct.eqlibgdxutils.debug.metrics;
+package de.instinct.eqlibgdxutils.debug.metrics.types;
 
 import com.badlogic.gdx.math.Vector3;
 
 import de.instinct.eqlibgdxutils.StringUtils;
-import de.instinct.eqlibgdxutils.debug.Metric;
+import de.instinct.eqlibgdxutils.debug.metrics.Metric;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -11,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 
 @Data
 @SuperBuilder
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 public class VectorMetric extends Metric<Vector3> {
 
 	@Builder.Default

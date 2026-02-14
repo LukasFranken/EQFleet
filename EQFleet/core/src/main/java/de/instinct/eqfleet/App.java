@@ -22,7 +22,8 @@ import de.instinct.eqlibgdxutils.InputUtil;
 import de.instinct.eqlibgdxutils.debug.console.Console;
 import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
-import de.instinct.eqlibgdxutils.debug.metrics.NumberMetric;
+import de.instinct.eqlibgdxutils.debug.metrics.types.NumberMetric;
+import de.instinct.eqlibgdxutils.debug.profiler.Profiler;
 import de.instinct.eqlibgdxutils.rendering.model.ModelRenderer;
 import de.instinct.eqlibgdxutils.rendering.particle.ParticleRenderer;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontConfiguration;
@@ -36,7 +37,7 @@ import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
 
 public class App extends ApplicationAdapter {
 
-    public static final String VERSION = "0.1.9";
+    public static final String VERSION = "0.1.10";
     private final String LOGTAG = "APP";
 
     private boolean halted;
@@ -121,17 +122,25 @@ public class App extends ApplicationAdapter {
 		InputUtil.update();
 		try {
 			if (!halted) {
+				Profiler.startFrame();
 				AudioManager.update();
+				Profiler.checkpoint("AudioManager.update()");
 				ScreenUtils.clear(0f, 0f, 0f, 1f);
 				if (GlobalStaticData.backgroundParticles) {
 					ParticleRenderer.updateParticles();
 			        ParticleRenderer.renderParticles("stars");
+			        Profiler.checkpoint("MenuParticles");
 				}
 				CoverManager.update();
+				Profiler.checkpoint("CoverManager.update()");
 		        Intro.render();
+		        Profiler.checkpoint("Intro.render()");
 		        Menu.render();
+		        Profiler.checkpoint("Menu.render()");
 		        Game.render();
+		        Profiler.checkpoint("Game.render()");
 		        PopupRenderer.render();
+		        Profiler.endFrame();
 			}
 		} catch (Exception e) {
 			Logger.log(LOGTAG, e);

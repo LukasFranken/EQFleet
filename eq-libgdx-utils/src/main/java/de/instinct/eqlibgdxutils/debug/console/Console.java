@@ -12,10 +12,11 @@ import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.InputUtil;
 import de.instinct.eqlibgdxutils.PreferenceUtil;
 import de.instinct.eqlibgdxutils.StringUtils;
-import de.instinct.eqlibgdxutils.debug.Metric;
-import de.instinct.eqlibgdxutils.debug.MetricUtil;
 import de.instinct.eqlibgdxutils.debug.logging.LogLine;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
+import de.instinct.eqlibgdxutils.debug.metrics.Metric;
+import de.instinct.eqlibgdxutils.debug.metrics.MetricUtil;
+import de.instinct.eqlibgdxutils.debug.profiler.Profiler;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.LimitedInputField;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.model.TextfieldActionHandler;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.HorizontalAlignment;
@@ -33,6 +34,7 @@ public class Console {
 	
 	private static int tapSize = 100;
 	private static int metricsHeight = 200;
+	private static int profilerHeight = 200;
 	private static int consoleInputHeight = 30;
 	private static int borderMargin = 30;
 	
@@ -54,10 +56,12 @@ public class Console {
 		commandProcessor.addCommands(baseCommandLoader.getCommands());
 		inputList = new ArrayList<>();
 		MetricUtil.init();
+		Profiler.init();
 	}
 	
 	public static void build() {
 		buildMetrics();
+		buildProfiler();
 		activationScreenTaps = new ArrayList<>();
 		activationScreenTaps.add(ActivationScreenTap.builder()
 				.region(new Rectangle(0, GraphicsUtil.screenBounds().getHeight() - tapSize, tapSize, tapSize))
@@ -123,6 +127,14 @@ public class Console {
 		}
 	}
 	
+	private static void buildProfiler() {
+    	Profiler.build();
+    	Profiler.setFixedHeight(profilerHeight);
+    	if (!Profiler.isActive()) {
+    		Profiler.toggle();
+		}
+	}
+	
 	public static void addCommands(List<Command> commands) {
 		commandProcessor.addCommands(commands);
 	}
@@ -143,6 +155,7 @@ public class Console {
 					.color(new Color(0, 0, 0, 0.85f))
 					.build());
 			MetricUtil.render();
+			Profiler.render();
 			renderLogs();
 			renderConsoleInput();
 		}
@@ -170,7 +183,7 @@ public class Console {
 				logPanelMargin, 
 				consoleInputHeight + logPanelMargin + borderMargin, 
 				GraphicsUtil.screenBounds().getWidth() - (logPanelMargin * 2), 
-				GraphicsUtil.screenBounds().getHeight() - consoleInputHeight - metricsHeight - (logPanelMargin * 2) - borderMargin);
+				GraphicsUtil.screenBounds().getHeight() - consoleInputHeight - metricsHeight - profilerHeight - (logPanelMargin * 2) - borderMargin);
 		Shapes.draw(EQRectangle.builder()
 				.bounds(logsBounds)
 				.color(SkinManager.skinColor)

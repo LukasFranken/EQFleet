@@ -158,6 +158,18 @@ public class StringUtils {
 
 	    return "";
 	}
+	
+	public static String formatNanoTime(long value, int decimals) {
+	    if (value < 1_000_000) {
+	        return String.valueOf(value + "ns");
+	    }
+
+	    if (value < 1_000_000_000) {
+	        return cleanDecimal(String.format("%." + decimals + "f ms", value / 1_000_000.0).replace(',', '.')).replace(" ", "");
+	    }
+
+	    return cleanDecimal(String.format("%." + decimals + "f  s", value / 1_000_000_000.0).replace(',', '.')).replace(" ", "");
+	}
 
 	private static String cleanDecimal(String number) {
 	    return number.contains(".") ? number.substring(0, number.length() - 2).replaceAll("0*$","").replaceAll("\\.$","") + number.substring(number.length() - 2, number.length()) : number;

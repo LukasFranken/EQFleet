@@ -10,11 +10,12 @@ import de.instinct.api.core.logging.LoggingHook;
 import de.instinct.eqfleet.GlobalStaticData;
 import de.instinct.eqfleet.net.model.Request;
 import de.instinct.eqfleet.net.model.RequestConsumer;
+import de.instinct.eqfleet.net.model.RequestErrorConsumer;
 import de.instinct.eqfleet.net.model.RequestSupplier;
 import de.instinct.eqlibgdxutils.debug.console.Console;
 import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
-import de.instinct.eqlibgdxutils.debug.metrics.NumberMetric;
+import de.instinct.eqlibgdxutils.debug.metrics.types.NumberMetric;
 
 public class WebManager {
 
@@ -69,7 +70,11 @@ public class WebManager {
     	}
         Request<?> request = requestQueue.peek();
         if (request != null) {
-            request.getRequestAction().execute();
+            try {
+            	request.getRequestAction().execute();
+			} catch (Exception e) {
+				if (request.getErrorConsumer() != null) request.getErrorConsumer().onError(e);
+			}
             if (!requestQueue.isEmpty()) requestQueue.remove();
         }
     }
@@ -83,7 +88,18 @@ public class WebManager {
         requestQueue.add(request);
     }
     
+    public static <T> void enqueue(RequestSupplier<T> requestSupplier, RequestConsumer<T> responseHandler, RequestErrorConsumer errorHandler) {
+        Request<T> request = new Request<>();
+        request.setRequestAction(() -> {
+            T result = requestSupplier.get();
+            responseHandler.accept(result);
+        });
+        request.setErrorConsumer(errorHandler);
+        requestQueue.add(request);
+    }
+    
     public static void dispose() {
+    	Logger.log(LOGTAG, "Disposing...", ConsoleColor.YELLOW);
     	Console.remove(PING_METRIC_TAG);
         if (scheduler != null) {
             scheduler.shutdownNow();

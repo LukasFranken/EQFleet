@@ -68,7 +68,6 @@ public class GameRenderer {
 			}
 			camera.update();
 			if (GameModel.visible) {
-				System.out.println("Rendering game state");
 				if (zoomInElapsed < zoomInTime) {
 					zoomInElapsed += Gdx.graphics.getDeltaTime();
 					calculateZoomInStart(state);
