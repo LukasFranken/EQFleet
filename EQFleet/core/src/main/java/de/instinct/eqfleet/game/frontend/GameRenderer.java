@@ -14,6 +14,7 @@ import de.instinct.eqfleet.game.frontend.projectile.ProjectileRenderer;
 import de.instinct.eqfleet.game.frontend.ships.ShipRenderer;
 import de.instinct.eqfleet.game.frontend.ui.GameUIRenderer;
 import de.instinct.eqlibgdxutils.MathUtil;
+import de.instinct.eqlibgdxutils.debug.profiler.Profiler;
 import de.instinct.eqlibgdxutils.rendering.grid.GridConfiguration;
 import de.instinct.eqlibgdxutils.rendering.grid.GridRenderer;
 
@@ -63,29 +64,41 @@ public class GameRenderer {
 
 	public void render(GameState state) {
 		if (uiRenderer != null) {
+			Profiler.startFrame("GAME_RENDERER");
 			if (!uiRenderer.initialized) {
 				uiRenderer.init();
+				Profiler.checkpoint("GAME_RENDERER", "init");
 			}
 			camera.update();
+			Profiler.checkpoint("GAME_RENDERER", "camera_update");
 			if (GameModel.visible) {
 				if (zoomInElapsed < zoomInTime) {
 					zoomInElapsed += Gdx.graphics.getDeltaTime();
 					calculateZoomInStart(state);
+					Profiler.checkpoint("GAME_RENDERER", "zoom in");
 				}
 				uiRenderer.setCamera(camera);
 				uiRenderer.setState(state);
 				if (state != null && state.resultData.winner == 0) {
 					if (state.started) {
+						Profiler.checkpoint("GAME_RENDERER", "pre-render");
 						checkFlip();
 						gridRenderer.drawGrid(camera);
+						Profiler.checkpoint("GAME_RENDERER", "grid render");
 						planetRenderer.render(state, camera);
+						Profiler.checkpoint("GAME_RENDERER", "planet render");
 						shipRenderer.render(state, camera);
+						Profiler.checkpoint("GAME_RENDERER", "ship render");
 						projectileRenderer.render(state, camera);
+						Profiler.checkpoint("GAME_RENDERER", "projectile render");
 					}
 				}
 				uiRenderer.render();
+				Profiler.checkpoint("GAME_RENDERER", "ui render");
 			}
 			guideRenderer.renderEvents(camera);
+			Profiler.checkpoint("GAME_RENDERER", "events");
+			Profiler.endFrame("GAME_RENDERER");
 		}
 	}
 

@@ -20,6 +20,7 @@ import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.ship.components.types.WeaponType;
 import de.instinct.eqfleet.audio.AudioManager;
 import de.instinct.eqfleet.game.frontend.projectile.explosion.ExplosionRenderer;
+import de.instinct.eqlibgdxutils.debug.profiler.Profiler;
 import de.instinct.eqlibgdxutils.rendering.model.ModelLoader;
 import de.instinct.eqlibgdxutils.rendering.model.ModelRenderer;
 import de.instinct.eqlibgdxutils.rendering.particle.ParticleRenderer;
@@ -35,10 +36,13 @@ public class ProjectileRenderer {
 	}
 
 	public void render(GameState state, PerspectiveCamera camera) {
+		Profiler.startFrame("GAME_PROJECTILE_RENDERER");
 		explosionRenderer.renderExplosions(camera);
+		Profiler.checkpoint("GAME_PROJECTILE_RENDERER", "explosion render");
 		for (ProjectileInstance projectileInstance : projectileInstances) {
 			projectileInstance.setActive(false);
 		}
+		Profiler.checkpoint("GAME_PROJECTILE_RENDERER", "pre loop");
 		for (Projectile projectile : state.entityData.projectiles) {
             ProjectileInstance projectileInstance = getProjectileInstance(projectile);
             if (projectileInstance == null) {
@@ -97,6 +101,7 @@ public class ProjectileRenderer {
                 projectileInstance.setActive(true);
     		}
 		}
+		Profiler.checkpoint("GAME_PROJECTILE_RENDERER", "postloop");
 		for (ProjectileInstance projectileInstance : projectileInstances) {
 			if (!projectileInstance.isActive()) {
 				ParticleRenderer.stop(projectileInstance.getParticlesTag());
@@ -113,6 +118,8 @@ public class ProjectileRenderer {
 			}
 		}
 		projectileInstances.removeAll(toRemove);
+		Profiler.checkpoint("GAME_PROJECTILE_RENDERER", "cleanup");
+		Profiler.endFrame("GAME_PROJECTILE_RENDERER");
 	}
 
 	private ProjectileInstance getProjectileInstance(Projectile projectile) {

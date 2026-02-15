@@ -15,6 +15,7 @@ import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.frontend.GameRenderer;
 import de.instinct.eqfleet.game.frontend.input.GameInputManager;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
+import de.instinct.eqlibgdxutils.debug.profiler.Profiler;
 import de.instinct.eqlibgdxutils.rendering.particle.ParticleRenderer;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
@@ -60,13 +61,22 @@ public class GameUIRenderer {
 	public void render() {
 		if (state != null) {
 			if (initialized && state.resultData.winner == 0) {
+				Profiler.startFrame("GAME_UI_RENDERER");
 				staticUIRenderer.render();
+				Profiler.checkpoint("GAME_UI_RENDERER", "staticUI");
 				inputManager.handleInput(camera, state);
+				Profiler.checkpoint("GAME_UI_RENDERER", "handleInput");
 				renderResourceCircles();
+				Profiler.checkpoint("GAME_UI_RENDERER", "resourceCircles");
 				defenseUIRenderer.render(state, camera);
+				Profiler.checkpoint("GAME_UI_RENDERER", "defenseUI");
 				modeUIRenderer.render(camera);
+				Profiler.checkpoint("GAME_UI_RENDERER", "modeUI");
 				particleUIRenderer.render(camera);
+				Profiler.checkpoint("GAME_UI_RENDERER", "particleUI");
 				pauseUIRenderer.render();
+				Profiler.checkpoint("GAME_UI_RENDERER", "pause render");
+				Profiler.endFrame("GAME_UI_RENDERER");
 			}
 		}
 		renderMessageText();

@@ -1,4 +1,4 @@
-package de.instinct.eqlibgdxutils.debug.profiler;
+package de.instinct.eqlibgdxutils.debug.profiler.model;
 
 import java.util.List;
 

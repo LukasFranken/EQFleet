@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Rectangle;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.frontend.ui.model.GameUIElement;
 import de.instinct.eqfleet.game.frontend.ui.model.UIBounds;
+import de.instinct.eqlibgdxutils.debug.profiler.Profiler;
 
 public class StaticUIRenderer {
 	
@@ -50,8 +51,12 @@ public class StaticUIRenderer {
 	}
 	
 	public void render() {
+		Profiler.startFrame("GAME_STATIC_UI_RENDERER");
 		updateStaticUI();
+		Profiler.checkpoint("GAME_STATIC_UI_RENDERER", "update");
 		renderStaticUI();
+		Profiler.checkpoint("GAME_STATIC_UI_RENDERER", "render");
+		Profiler.endFrame("GAME_STATIC_UI_RENDERER");
 	}
 	
 	private void updateStaticUI() {
