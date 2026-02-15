@@ -11,11 +11,6 @@ public class Capture {
 	
 	private long startTimeNS;
 	private long durationNS;
-	private long maxFrameTimeNS;
-	private Frame maxFrame;
-	private long minFrameTimeNS;
-	private Frame minFrame;
-	private Frame avgFrame;
-	private List<Frame> frames;
+	private List<Section> sections;
 
 }

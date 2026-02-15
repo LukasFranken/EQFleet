@@ -10,5 +10,6 @@ public class Checkpoint {
 	private String tag;
 	private long timeStampNS;
 	private long durationNS;
+	private int frames;
 
 }

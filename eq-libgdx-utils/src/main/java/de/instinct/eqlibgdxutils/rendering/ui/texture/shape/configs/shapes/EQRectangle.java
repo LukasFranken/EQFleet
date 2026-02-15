@@ -15,6 +15,7 @@ public class EQRectangle extends EQShape {
 	private Rectangle bounds;
 	private String label;
 	private boolean round;
+	private boolean filled;
 	private float thickness;
 
 }

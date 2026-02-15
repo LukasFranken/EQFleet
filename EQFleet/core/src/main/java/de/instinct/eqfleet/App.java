@@ -37,7 +37,7 @@ import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
 
 public class App extends ApplicationAdapter {
 
-    public static final String VERSION = "0.1.10";
+    public static final String VERSION = "0.1.11";
     private final String LOGTAG = "APP";
 
     private boolean halted;
@@ -122,25 +122,26 @@ public class App extends ApplicationAdapter {
 		InputUtil.update();
 		try {
 			if (!halted) {
-				Profiler.startFrame();
+				Profiler.startFrame("APP");
 				AudioManager.update();
-				Profiler.checkpoint("AudioManager.update()");
+				Profiler.checkpoint("APP", "AudioManager.update()");
 				ScreenUtils.clear(0f, 0f, 0f, 1f);
 				if (GlobalStaticData.backgroundParticles) {
 					ParticleRenderer.updateParticles();
 			        ParticleRenderer.renderParticles("stars");
-			        Profiler.checkpoint("MenuParticles");
+			        Profiler.checkpoint("APP", "MenuParticles");
 				}
 				CoverManager.update();
-				Profiler.checkpoint("CoverManager.update()");
+				Profiler.checkpoint("APP", "CoverManager.update()");
 		        Intro.render();
-		        Profiler.checkpoint("Intro.render()");
+		        Profiler.checkpoint("APP", "Intro.render()");
 		        Menu.render();
-		        Profiler.checkpoint("Menu.render()");
+		        Profiler.checkpoint("APP", "Menu.render()");
 		        Game.render();
-		        Profiler.checkpoint("Game.render()");
+		        Profiler.checkpoint("APP", "Game.render()");
 		        PopupRenderer.render();
-		        Profiler.endFrame();
+		        Profiler.checkpoint("APP", "PopupRenderer.render()");
+		        Profiler.endFrame("APP");
 			}
 		} catch (Exception e) {
 			Logger.log(LOGTAG, e);

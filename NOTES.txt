@@ -18,18 +18,19 @@ GENERAL:
   x eel (after beam rework)
   x shellshock
   x fallout
-  
+
+- profiler
+ -> make submenu to cycle through captures
+ -> add headers to the tables
+  -> enable showing total frames of checkpoints
+ -> enable Saving/loading to/from datafile
+
 - night mode: dark, slow ambient music, less animation and low sfx
   
 - full dual-language
 
 - remove starmap until ship is equipped
  -> fixed with categorized menu (show main ship shipyard first)
-
-- console proper profiler area
- -> buttons for time control
- -> show time for each render segment on graph
- -> button for start/stop profiler
 
 - ion weapon type
  -> accelerates firerate while shooting

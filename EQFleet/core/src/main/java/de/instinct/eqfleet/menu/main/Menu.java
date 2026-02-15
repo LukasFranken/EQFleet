@@ -48,6 +48,7 @@ import de.instinct.eqfleet.net.WebManager;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
+import de.instinct.eqlibgdxutils.debug.profiler.Profiler;
 import de.instinct.eqlibgdxutils.rendering.grid.GridConfiguration;
 import de.instinct.eqlibgdxutils.rendering.grid.GridRenderer;
 
@@ -185,20 +186,27 @@ public class Menu {
 	}
 	
 	public static void render() {
+		Profiler.startFrame("MENU");
 		while (reloadRequired.peek() != null) {
 			MenuModel.renderers.get(reloadRequired.poll()).reload();
 		}
+		Profiler.checkpoint("MENU", "reload");
 		if (MenuModel.active) {
 			if (GlobalStaticData.showDebugGrid) gridRenderer.drawGrid();
+			Profiler.checkpoint("MENU", "grid render");
 			if (PostGameModel.reward != null) {
 				postGameRenderer.render();
+				Profiler.checkpoint("MENU", "postgame render");
 			} else {
 				if (MenuModel.activeModule != null) {
 					MenuModel.renderers.get(MenuModel.activeModule).render();
+					Profiler.checkpoint("MENU", "module render");
 				}
 				menuRenderer.render();
+				Profiler.checkpoint("MENU", "menu render");
 			}
 		}
+		Profiler.endFrame("MENU");
 	}
 	
 	public static void queue(ModuleMessage message) {
