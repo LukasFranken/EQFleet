@@ -14,6 +14,7 @@ import de.instinct.eqfleet.game.frontend.GameRenderer;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
+import de.instinct.eqlibgdxutils.debug.profiler.Profiler;
 import de.instinct.eqlibgdxutils.net.MessageQueue;
 
 public class Game {
@@ -66,10 +67,14 @@ public class Game {
 
     public static void render() {
         if (GameModel.active) {
+        	Profiler.startFrame("GAME");
             currentDriver.update();
+            Profiler.checkpoint("GAME", "update");
             if (GameModel.activeGameState != null && GameModel.visible) {
                 renderer.render(GameModel.activeGameState);
+                Profiler.checkpoint("GAME", "render");
             }
+            Profiler.endFrame("GAME");
         }
     }
 
