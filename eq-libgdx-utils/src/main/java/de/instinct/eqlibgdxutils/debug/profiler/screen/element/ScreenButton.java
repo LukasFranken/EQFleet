@@ -1,4 +1,4 @@
-package de.instinct.eqlibgdxutils.debug.profiler.screen.model;
+package de.instinct.eqlibgdxutils.debug.profiler.screen.element;
 
 import com.badlogic.gdx.math.Rectangle;
 

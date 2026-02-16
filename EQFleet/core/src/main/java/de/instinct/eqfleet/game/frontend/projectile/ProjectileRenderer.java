@@ -36,13 +36,13 @@ public class ProjectileRenderer {
 	}
 
 	public void render(GameState state, PerspectiveCamera camera) {
-		Profiler.startFrame("GAME_PROJECTILE_RENDERER");
+		Profiler.startFrame("GAME_PROJ_RENDER");
 		explosionRenderer.renderExplosions(camera);
-		Profiler.checkpoint("GAME_PROJECTILE_RENDERER", "explosion render");
+		Profiler.checkpoint("GAME_PROJ_RENDER", "explosion render");
 		for (ProjectileInstance projectileInstance : projectileInstances) {
 			projectileInstance.setActive(false);
 		}
-		Profiler.checkpoint("GAME_PROJECTILE_RENDERER", "pre loop");
+		Profiler.checkpoint("GAME_PROJ_RENDER", "pre loop");
 		for (Projectile projectile : state.entityData.projectiles) {
             ProjectileInstance projectileInstance = getProjectileInstance(projectile);
             if (projectileInstance == null) {
@@ -101,12 +101,13 @@ public class ProjectileRenderer {
                 projectileInstance.setActive(true);
     		}
 		}
-		Profiler.checkpoint("GAME_PROJECTILE_RENDERER", "postloop");
+		Profiler.checkpoint("GAME_PROJ_RENDER", "postloop");
 		for (ProjectileInstance projectileInstance : projectileInstances) {
 			if (!projectileInstance.isActive()) {
 				ParticleRenderer.stop(projectileInstance.getParticlesTag());
 			}
 		}
+		Profiler.checkpoint("GAME_PROJ_RENDER", "stop particles");
 		List<ProjectileInstance> toRemove = new ArrayList<>();
 		for (ProjectileInstance instance : projectileInstances) {
 			if (!instance.isActive()) {
@@ -118,8 +119,8 @@ public class ProjectileRenderer {
 			}
 		}
 		projectileInstances.removeAll(toRemove);
-		Profiler.checkpoint("GAME_PROJECTILE_RENDERER", "cleanup");
-		Profiler.endFrame("GAME_PROJECTILE_RENDERER");
+		Profiler.checkpoint("GAME_PROJ_RENDER", "cleanup");
+		Profiler.endFrame("GAME_PROJ_RENDER");
 	}
 
 	private ProjectileInstance getProjectileInstance(Projectile projectile) {

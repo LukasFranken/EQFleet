@@ -15,6 +15,7 @@ import de.instinct.eqfleet.menu.postgame.elements.PostGameShipProgressOverview;
 import de.instinct.eqfleet.menu.postgame.model.DynamicPostGameElement;
 import de.instinct.eqfleet.menu.postgame.model.PostGameElement;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
+import de.instinct.eqlibgdxutils.debug.profiler.Profiler;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
@@ -57,7 +58,9 @@ public class PostGameRenderer extends BaseModuleRenderer {
 	@Override
 	public void render() {
 		if (loaded) {
+			Profiler.startFrame("POSTGAME_RNDR");
 			update();
+			Profiler.checkpoint("POSTGAME_RNDR", "update");
 			for (PostGameElement element : elements) {
 				if (element.getElapsed() > 0) {
 					if (element.getUiElement() != null) {
@@ -65,6 +68,8 @@ public class PostGameRenderer extends BaseModuleRenderer {
 					}
 				}
 			}
+			Profiler.checkpoint("POSTGAME_RNDR", "render");
+			Profiler.endFrame("POSTGAME_RNDR");
 		}
 	}
 

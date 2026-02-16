@@ -64,12 +64,11 @@ public class UnitModeRenderer extends ModeRenderer {
 	}
 	
 	private void renderRadialSelectionCircle() {
-		Integer selectedId = GameInputModel.unitModeInputModel.selectedShipId;
-		Planet selected = (selectedId != null) ? EngineUtility.getPlanet(state.entityData.planets, selectedId) : null;
-		if (selected != null) {
-			Player owner = EngineUtility.getPlayer(state.staticData.playerData.players, selected.ownerId);
-			if (owner.ships.size() > 1 && GameInputModel.unitModeInputModel.selectedShipId == null) {
-				renderShipSelectionCircle(selected, owner);
+		if (GameInputModel.unitModeInputModel.selectedOriginPlanetId != null) {
+			Planet selectedPlanet = EngineUtility.getPlanet(state.entityData.planets, GameInputModel.unitModeInputModel.selectedOriginPlanetId);
+			Player owner = EngineUtility.getPlayer(state.staticData.playerData.players, selectedPlanet.ownerId);
+			if (owner.ships.size() > 1 && GameInputModel.unitModeInputModel.selectedShipId == null && InputUtil.isPressed()) {
+				renderShipSelectionCircle(selectedPlanet, owner);
 			}
 		}
 	}
@@ -175,8 +174,8 @@ public class UnitModeRenderer extends ModeRenderer {
 		Color selectedAffordableColor = new Color(0f, 1f, 0f, 0.5f);
 		
 	    int shipCount = owner.ships.size();
-	    float outerRadius = EngineUtility.PLANET_RADIUS + 80f;
-	    float innerRadius = EngineUtility.PLANET_RADIUS + 20f;
+	    float outerRadius = EngineUtility.PLANET_RADIUS + GameInputModel.radialSelectionThreshold;
+	    float innerRadius = EngineUtility.PLANET_RADIUS + GameInputModel.radialHoverThreshold;
 	    float sectionAngle = 360f / shipCount;
 	    float marginAngle = 30f / shipCount;
 	    

@@ -124,23 +124,23 @@ public class App extends ApplicationAdapter {
 			if (!halted) {
 				Profiler.startFrame("APP");
 				AudioManager.update();
-				Profiler.checkpoint("APP", "AudioManager.update()");
+				Profiler.checkpoint("APP", "AudioManager");
 				ScreenUtils.clear(0f, 0f, 0f, 1f);
 				if (GlobalStaticData.backgroundParticles) {
 					ParticleRenderer.updateParticles();
 			        ParticleRenderer.renderParticles("stars");
-			        Profiler.checkpoint("APP", "MenuParticles");
+			        Profiler.checkpoint("APP", "Particles");
 				}
 				CoverManager.update();
-				Profiler.checkpoint("APP", "CoverManager.update()");
+				Profiler.checkpoint("APP", "CoverManager");
 		        Intro.render();
-		        Profiler.checkpoint("APP", "Intro.render()");
+		        Profiler.checkpoint("APP", "Intro");
 		        Menu.render();
-		        Profiler.checkpoint("APP", "Menu.render()");
+		        Profiler.checkpoint("APP", "Menu");
 		        Game.render();
-		        Profiler.checkpoint("APP", "Game.render()");
+		        Profiler.checkpoint("APP", "Game");
 		        PopupRenderer.render();
-		        Profiler.checkpoint("APP", "PopupRenderer.render()");
+		        Profiler.checkpoint("APP", "PopupRenderer");
 		        Profiler.endFrame("APP");
 			}
 		} catch (Exception e) {

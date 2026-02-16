@@ -61,22 +61,22 @@ public class GameUIRenderer {
 	public void render() {
 		if (state != null) {
 			if (initialized && state.resultData.winner == 0) {
-				Profiler.startFrame("GAME_UI_RENDERER");
+				Profiler.startFrame("GAME_UI_RNDR");
 				staticUIRenderer.render();
-				Profiler.checkpoint("GAME_UI_RENDERER", "staticUI");
+				Profiler.checkpoint("GAME_UI_RNDR", "staticUI");
 				inputManager.handleInput(camera, state);
-				Profiler.checkpoint("GAME_UI_RENDERER", "handleInput");
+				Profiler.checkpoint("GAME_UI_RNDR", "input");
 				renderResourceCircles();
-				Profiler.checkpoint("GAME_UI_RENDERER", "resourceCircles");
+				Profiler.checkpoint("GAME_UI_RNDR", "resource");
 				defenseUIRenderer.render(state, camera);
-				Profiler.checkpoint("GAME_UI_RENDERER", "defenseUI");
+				Profiler.checkpoint("GAME_UI_RNDR", "defenseUI");
 				modeUIRenderer.render(camera);
-				Profiler.checkpoint("GAME_UI_RENDERER", "modeUI");
+				Profiler.checkpoint("GAME_UI_RNDR", "modeUI");
 				particleUIRenderer.render(camera);
-				Profiler.checkpoint("GAME_UI_RENDERER", "particleUI");
+				Profiler.checkpoint("GAME_UI_RNDR", "particleUI");
 				pauseUIRenderer.render();
-				Profiler.checkpoint("GAME_UI_RENDERER", "pause render");
-				Profiler.endFrame("GAME_UI_RENDERER");
+				Profiler.checkpoint("GAME_UI_RNDR", "pause");
+				Profiler.endFrame("GAME_UI_RNDR");
 			}
 		}
 		renderMessageText();

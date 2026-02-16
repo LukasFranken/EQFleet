@@ -21,10 +21,8 @@ GENERAL:
 
 - profiler
  -> make submenu to cycle through captures
- -> add headers to the tables
-  -> enable showing total frames of checkpoints
  -> enable Saving/loading to/from datafile
- -> show total frame duration as top line in statistics
+ -> load store prefs
 
 - night mode: dark, slow ambient music, less animation and low sfx
   
@@ -36,8 +34,7 @@ GENERAL:
  -> fixed with categorized menu (show main ship shipyard first)
 
 - ion weapon type
- -> accelerates firerate while shooting
- -> with extra buildup bar
+ -> ramps dmg while shooting
 - repair ray weapon type
  -> targets the most damaged friendly entity in range
  -> can either repair shield, hull or both
@@ -50,7 +47,6 @@ GENERAL:
 - fix shipyard comp glow keeps resetting
 - fix tutorial not updated postgame sometimes
 - fix no camera zoom value in play pvp/pve
-- fix ship wheel selection ui
 
 - more resource types with maybe craftable ones in station
 

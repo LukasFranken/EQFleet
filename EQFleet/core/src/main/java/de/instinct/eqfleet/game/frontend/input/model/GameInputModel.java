@@ -9,7 +9,7 @@ import lombok.ToString;
 public class GameInputModel {
 	
 	public static volatile float HITBOX_INCREASE = 50f;
-	public static volatile float radialSelectionThreshold = 80f;
+	public static volatile float radialSelectionThreshold = 50f;
 	public static volatile float radialHoverThreshold = 20f;
 	
 	public static volatile UnitModeInputModel unitModeInputModel;

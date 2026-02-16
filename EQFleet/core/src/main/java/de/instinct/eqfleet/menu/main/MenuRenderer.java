@@ -16,6 +16,7 @@ import de.instinct.eqfleet.menu.module.profile.inventory.Inventory;
 import de.instinct.eqfleet.menu.module.profile.inventory.InventoryModel;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.StringUtils;
+import de.instinct.eqlibgdxutils.debug.profiler.Profiler;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.Button;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
@@ -194,14 +195,20 @@ public class MenuRenderer extends BaseModuleRenderer {
 	@Override
 	public void render() {
 		if (menuBounds != null) {
+			Profiler.startFrame("MENU_RNDR");
 			renderIntro();
+			Profiler.checkpoint("MENU_RNDR", "intro");
 			renderHeader();
+			Profiler.checkpoint("MENU_RNDR", "header");
 			if (MenuModel.activeModule == null) {
 				renderModuleButtons();
+				Profiler.checkpoint("MENU_RNDR", "mod btns");
 			} else {
 				renderTitle();
+				Profiler.checkpoint("MENU_RNDR", "title");
 			}
 			elapsed += Gdx.graphics.getDeltaTime();
+			Profiler.endFrame("MENU_RNDR");
 		}
 	}
 

@@ -10,7 +10,7 @@ import de.instinct.eqlibgdxutils.debug.profiler.model.Frame;
 import de.instinct.eqlibgdxutils.debug.profiler.model.Section;
 import de.instinct.eqlibgdxutils.debug.profiler.model.TrackedCheckpoint;
 import de.instinct.eqlibgdxutils.debug.profiler.screen.Screen;
-import de.instinct.eqlibgdxutils.debug.profiler.screen.model.ScreenButton;
+import de.instinct.eqlibgdxutils.debug.profiler.screen.element.ScreenButton;
 import de.instinct.eqlibgdxutils.generic.Action;
 
 public class MainInactiveScreen extends Screen {
@@ -106,6 +106,7 @@ public class MainInactiveScreen extends Screen {
 			@Override
 			public void execute() {
 				ProfilerInactiveMainModel.selectedSectionIndex = -1;
+				ProfilerInactiveMainModel.hoveredCheckpointIndex = 0;
 			}
 			
 		});
@@ -196,6 +197,7 @@ public class MainInactiveScreen extends Screen {
 				 drawLineHover(i);
 			}
 		}
+		renderStatistic("Total", formatNSTime(frame.getDurationNS()), frame.getCheckpoints().size() + 1);
 	}
 	
 	private String formatNSTime(long timeNS) {

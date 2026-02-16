@@ -64,41 +64,41 @@ public class GameRenderer {
 
 	public void render(GameState state) {
 		if (uiRenderer != null) {
-			Profiler.startFrame("GAME_RENDERER");
+			Profiler.startFrame("GAME_RNDR");
 			if (!uiRenderer.initialized) {
 				uiRenderer.init();
-				Profiler.checkpoint("GAME_RENDERER", "init");
+				Profiler.checkpoint("GAME_RNDR", "init");
 			}
 			camera.update();
-			Profiler.checkpoint("GAME_RENDERER", "camera_update");
+			Profiler.checkpoint("GAME_RNDR", "camera");
 			if (GameModel.visible) {
 				if (zoomInElapsed < zoomInTime) {
 					zoomInElapsed += Gdx.graphics.getDeltaTime();
 					calculateZoomInStart(state);
-					Profiler.checkpoint("GAME_RENDERER", "zoom in");
+					Profiler.checkpoint("GAME_RNDR", "zoom in");
 				}
 				uiRenderer.setCamera(camera);
 				uiRenderer.setState(state);
 				if (state != null && state.resultData.winner == 0) {
 					if (state.started) {
-						Profiler.checkpoint("GAME_RENDERER", "pre-render");
+						Profiler.checkpoint("GAME_RNDR", "pre-render");
 						checkFlip();
 						gridRenderer.drawGrid(camera);
-						Profiler.checkpoint("GAME_RENDERER", "grid render");
+						Profiler.checkpoint("GAME_RNDR", "grid");
 						planetRenderer.render(state, camera);
-						Profiler.checkpoint("GAME_RENDERER", "planet render");
+						Profiler.checkpoint("GAME_RNDR", "planet");
 						shipRenderer.render(state, camera);
-						Profiler.checkpoint("GAME_RENDERER", "ship render");
+						Profiler.checkpoint("GAME_RNDR", "ship");
 						projectileRenderer.render(state, camera);
-						Profiler.checkpoint("GAME_RENDERER", "projectile render");
+						Profiler.checkpoint("GAME_RNDR", "projectile");
 					}
 				}
 				uiRenderer.render();
-				Profiler.checkpoint("GAME_RENDERER", "ui render");
+				Profiler.checkpoint("GAME_RNDR", "ui render");
 			}
 			guideRenderer.renderEvents(camera);
-			Profiler.checkpoint("GAME_RENDERER", "events");
-			Profiler.endFrame("GAME_RENDERER");
+			Profiler.checkpoint("GAME_RNDR", "events");
+			Profiler.endFrame("GAME_RNDR");
 		}
 	}
 
