@@ -260,11 +260,14 @@ public class MenuRenderer extends BaseModuleRenderer {
 	private void renderHeader() {
 		if (ProfileModel.profile != null && MenuModel.unlockedModules.getEnabledModules().contains(MenuModule.PROFILE)) {
 			if (MenuModel.activeModule != MenuModule.PROFILE) {
+				Profiler.startFrame("MENU_RNDR_HEAD_PRO");
 				rankImage.setAlpha(MenuModel.alpha);
 				rankImage.render();
+				Profiler.checkpoint("MENU_RNDR_HEAD_PRO", "rankimg");
 				usernameLabel.setBounds(new Rectangle(menuBounds.x + 50, menuBounds.y + menuBounds.height + 20, 100, 25));
 				usernameLabel.setAlpha(MenuModel.alpha);
 				usernameLabel.render();
+				Profiler.checkpoint("MENU_RNDR_HEAD_PRO", "usrname");
 				expBar.setBounds(expBounds);
 				Label expLabel = new Label("EXP");
 				expLabel.setColor(Color.BLUE);
@@ -273,10 +276,12 @@ public class MenuRenderer extends BaseModuleRenderer {
 				expLabel.setAlpha(MenuModel.alpha);
 				expLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
 				expLabel.render();
+				Profiler.checkpoint("MENU_RNDR_HEAD_PRO", "explabel");
 				expBar.setMaxValue(ProfileModel.profile.getRank().getNextRequiredExp() - ProfileModel.profile.getRank().getRequiredExp());
 				expBar.setCurrentValue(ProfileModel.profile.getCurrentExp() - ProfileModel.profile.getRank().getRequiredExp());
 				expBar.setAlpha(MenuModel.alpha);
 				expBar.render();
+				Profiler.checkpoint("MENU_RNDR_HEAD_PRO", "expbar");
 		        
 				Color rankNameColor = new Color(SkinManager.skinColor);
 				rankNameColor.a = MenuModel.alpha;
@@ -292,17 +297,20 @@ public class MenuRenderer extends BaseModuleRenderer {
 						.glowConfig(EQGlowConfig.builder().build())
 						.thickness(2f)
 						.build());
+				Profiler.checkpoint("MENU_RNDR_HEAD_PRO", "shapes");
+				Profiler.endFrame("MENU_RNDR_HEAD_PRO");
 			}
 		}
 		if (InventoryModel.resources != null && MenuModel.unlockedModules.getEnabledModules().contains(MenuModule.PROFILE)) {
 			if (MenuModel.activeModule != MenuModule.PROFILE) {
+				Profiler.startFrame("MENU_RNDR_HEAD_RES");
 				creditsLabel.setBounds(new Rectangle(menuBounds.x + menuBounds.width - 95, menuBounds.y + menuBounds.height + 10, 70, 20));
 				creditsLabel.setText(StringUtils.formatBigNumber(Inventory.getResource(Resource.CREDITS)));
 				creditsLabel.setAlpha(MenuModel.alpha);
 		        creditsLabel.render();
 		        creditsImage.setAlpha(MenuModel.alpha);
 		        creditsImage.render();
-		        
+		        Profiler.checkpoint("MENU_RNDR_HEAD_RES", "cr_img");
 		        Color creditsColor = new Color(Color.GREEN);
 		        creditsColor.a = MenuModel.alpha;
 		        Shapes.draw(EQRectangle.builder()
@@ -311,6 +319,8 @@ public class MenuRenderer extends BaseModuleRenderer {
 						.glowConfig(EQGlowConfig.builder().build())
 						.thickness(2f)
 						.build());
+		        Profiler.checkpoint("MENU_RNDR_HEAD_RES", "shape");
+		        Profiler.endFrame("MENU_RNDR_HEAD_RES");
 			}
 		}
 	}

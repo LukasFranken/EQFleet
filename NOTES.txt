@@ -18,13 +18,6 @@ GENERAL:
   x eel (after beam rework)
   x shellshock
   x fallout
-
-- profiler
- -> make submenu to cycle through captures
- -> enable Saving/loading to/from datafile
- -> load store prefs
-
-- night mode: dark, slow ambient music, less animation and low sfx
   
 - full dual-language
 
@@ -57,12 +50,12 @@ GENERAL:
 - flagship on map which can actually be destroyed
  -> when redoing tutorial just say enemy and not turbulence
  -> different types of enemies have different ships
+ 
 SERVER:
 - test new networking on slower devices
  -> implement disconnect pause
  -> implement dynamic delay
  -> implement long delay catchup
-- actual dbs for data
 
 MENU:
 - settings tabs (audio, video, gameplay, account)
@@ -92,13 +85,6 @@ AUDIO:
 - multiple music themes
  -> changes genre depnding on menu/game
 
-CONTROL:
-- mapmaker part of control
-- add starmap to webcontrol
-- add meta to webcontrol
-- fix stupid certificate issue for web ui
-- add user management to web ui
-
 GAME:
 - make cp/ap bars borders as thick for ios as on pc
 - make beam actual beam
@@ -121,6 +107,8 @@ Jan 30 21:46:58 ip-172-30-0-159.eu-central-1.compute.internal bash[10704]: at or
 Jan 30 21:46:58 ip-172-30-0-159.eu-central-1.compute.internal bash[10704]: at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[na:na]
 Jan 30 21:46:58 ip-172-30-0-159.eu-central-1.compute.internal bash[10704]: at java.base@17.0.9/java.lang.Thread.run(Thread.java:840) ~[starmap:na]
 
+- actual dbs for data
+
 - test and live environment
 - build apk
 
@@ -141,6 +129,23 @@ Jan 30 21:46:58 ip-172-30-0-159.eu-central-1.compute.internal bash[10704]: at ja
   - create linux command to see status of all fleet services
 ---------------------------------------------------------------------
 FUTURE RELEASES TODO:
+
+
+CONTROL:
+- mapmaker part of control
+- add starmap to webcontrol
+- add meta to webcontrol
+- fix stupid certificate issue for web ui
+- add user management to web ui
+
+- night mode: dark, slow ambient music, less animation and low sfx
+
+- profiler
+ -> scrollable section list
+ -> make submenu to cycle through captures
+ -> enable Saving/loading to/from datafile
+ -> load store prefs
+ 
 - maybe different music for different menus with transition? combat,casino etc.
 
 - ingame different edge border color for interaction mode active

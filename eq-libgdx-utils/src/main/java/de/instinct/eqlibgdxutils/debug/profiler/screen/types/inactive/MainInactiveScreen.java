@@ -134,7 +134,7 @@ public class MainInactiveScreen extends Screen {
 		}
 		if (ProfilerInactiveMainModel.selectedSection != null) {
 			if (ProfilerInactiveMainModel.hoveredCheckpointIndex != -1) {
-				ProfilerInactiveMainModel.hoveredCheckpoint = getCheckpoints().get(ProfilerInactiveMainModel.hoveredCheckpointIndex);
+				ProfilerInactiveMainModel.hoveredCheckpoint = getCheckpoints().isEmpty() ? null : getCheckpoints().get(ProfilerInactiveMainModel.hoveredCheckpointIndex);
 			}
 		}
 	}
