@@ -8,7 +8,6 @@ import com.badlogic.gdx.math.Rectangle;
 import de.instinct.api.auth.dto.TokenVerificationResponse;
 import de.instinct.api.core.API;
 import de.instinct.eqfleet.App;
-import de.instinct.eqfleet.GlobalStaticData;
 import de.instinct.eqfleet.PreferenceManager;
 import de.instinct.eqfleet.audio.AudioManager;
 import de.instinct.eqfleet.game.Game;
@@ -46,37 +45,9 @@ public class Intro {
 		introSlideshow = new Slideshow();
 		loadWelcomeSlides();
 		active = true;
-		String authKey = "";
-		if (!GlobalStaticData.debugIntro) {
-			authKey = PreferenceManager.load("authkey");
-		}
-		if (!authKey.contentEquals("")) {
-			verifyAuthKey(authKey, true);
-		} else {
-			createFirstTimeSlides();
-		}
 		versionLabel = new Label("v" + App.VERSION);
 		versionLabel.setBounds(new Rectangle(30, 30, 60, 20));
 		versionLabel.setColor(SkinManager.skinColor);
-	}
-
-	private static void verifyAuthKey(String authKey, boolean loadfirst) {
-		WebManager.enqueue(
-			    () -> API.authentication().verify(authKey),
-			    result -> {
-					if (result == TokenVerificationResponse.VERIFIED) {
-						API.authKey = authKey;
-						PreferenceManager.save("authkey", authKey);
-						loadMenu();
-					} else {
-						if (loadfirst) {
-							createFirstTimeSlides();
-						} else {
-							authKeyInsertDialog.setResponse("INVALID KEY"); 
-						}
-					}
-			    }
-		);
 	}
 	
 	private static void loadMenu() {
@@ -105,13 +76,25 @@ public class Intro {
 			
 			@Override
 			public boolean isMet() {
-				
 				return !MenuModel.loaded;
 				
 			}
 			
 		});
 		introSlideshow.add(welcomeMessage);
+		Macro checkAuthAndConnection = new Macro(new Action() {
+			
+			@Override
+			public void execute() {
+				if (WebManager.isOnline() && API.authKey.contentEquals("invalid")) {
+					createFirstTimeSlides();
+				} else {
+					loadMenu();
+				}
+			}
+			
+		});
+		introSlideshow.add(checkAuthAndConnection);
 	}
 	
 	private static void createFirstTimeSlides() {
@@ -194,7 +177,19 @@ public class Intro {
 					
 					@Override
 					public void execute() {
-						verifyAuthKey(authKeyInsertDialog.getAuthKey(), false);
+						final String authKey = authKeyInsertDialog.getAuthKey();
+						WebManager.enqueue(
+							    () -> API.authentication().verify(authKey),
+							    result -> {
+									if (result == TokenVerificationResponse.VERIFIED) {
+										API.authKey = authKey;
+										PreferenceManager.save("authkey", authKey);
+										loadMenu();
+									} else {
+										authKeyInsertDialog.setResponse("INVALID KEY"); 
+									}
+							    }
+						);
 					}
 					
 				};
@@ -231,8 +226,7 @@ public class Intro {
 				WebManager.enqueue(
 					    () -> API.authentication().register(),
 					    result -> {
-					    	API.authKey = result;
-					    	PreferenceManager.save("authkey", result);
+					    	handleRegister(result);
 							Game.startTutorial(TutorialMode.FULL);
 							active = false;
 					    }
@@ -251,8 +245,7 @@ public class Intro {
 				WebManager.enqueue(
 					    () -> API.authentication().register(),
 					    result -> {
-					    	API.authKey = result;
-					    	PreferenceManager.save("authkey", result);
+					    	handleRegister(result);
 							Game.startTutorial(TutorialMode.SHORT);
 							active = false;
 					    }
@@ -271,18 +264,21 @@ public class Intro {
 				WebManager.enqueue(
 					    () -> API.authentication().register(),
 					    result -> {
-					    	API.authKey = result;
-							if (result != null) {
-								PreferenceManager.save("authkey", result);
-							}
+					    	handleRegister(result);
 							loadMenu();
 					    }
 				);
 			}
-			
+
 		});
 		choices.add(slideChoiceNo);
 		return choices;
+	}
+	
+	private static void handleRegister(String result) {
+		if (result != null) {
+			PreferenceManager.save("authkey", result);
+		}
 	}
 	
 	private static void deactivate() {

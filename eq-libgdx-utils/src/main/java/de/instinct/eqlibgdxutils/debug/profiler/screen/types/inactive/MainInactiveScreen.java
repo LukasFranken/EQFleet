@@ -30,7 +30,7 @@ public class MainInactiveScreen extends Screen {
 			
 			@Override
 			public void execute() {
-				if (ProfilerInactiveMainModel.selectedSectionIndex == -1) {
+				if (ProfilerInactiveMainModel.selectedSection == null) {
 					ProfilerInactiveMainModel.selectedSectionIndex = ProfilerInactiveMainModel.hoveredSectionIndex;
 				} else {
 					TrackedCheckpoint trackedCheckpoint = null;
@@ -73,7 +73,7 @@ public class MainInactiveScreen extends Screen {
 				if (ProfilerInactiveMainModel.selectedSectionIndex == -1) {
 					ProfilerInactiveMainModel.hoveredSectionIndex = Math.min(ProfilerModel.captures.get(ProfilerModel.captures.size() - 1).getSections().size() - 1, ProfilerInactiveMainModel.hoveredSectionIndex + 1);
 				} else {
-					ProfilerInactiveMainModel.hoveredCheckpointIndex = Math.min(getCheckpoints().size() - 1, ProfilerInactiveMainModel.hoveredCheckpointIndex + 1);
+					ProfilerInactiveMainModel.hoveredCheckpointIndex = getCheckpoints() == null ? 0 : Math.min(getCheckpoints().size() - 1, ProfilerInactiveMainModel.hoveredCheckpointIndex + 1);
 				}
 			}
 			
@@ -107,6 +107,7 @@ public class MainInactiveScreen extends Screen {
 			public void execute() {
 				ProfilerInactiveMainModel.selectedSectionIndex = -1;
 				ProfilerInactiveMainModel.hoveredCheckpointIndex = 0;
+				ProfilerInactiveMainModel.selectedSection = null;
 			}
 			
 		});
@@ -127,10 +128,10 @@ public class MainInactiveScreen extends Screen {
 	public void update() {
 		capture = ProfilerModel.captures.get(ProfilerModel.captures.size() - 1);
 		if (ProfilerInactiveMainModel.selectedSectionIndex != -1) {
-			ProfilerInactiveMainModel.selectedSection = capture.getSections().get(ProfilerInactiveMainModel.selectedSectionIndex);
+			ProfilerInactiveMainModel.selectedSection = capture.getSections().isEmpty() ? null : capture.getSections().get(ProfilerInactiveMainModel.selectedSectionIndex);
 		}
 		if (ProfilerInactiveMainModel.hoveredSectionIndex != -1) {
-			ProfilerInactiveMainModel.hoveredSection = capture.getSections().get(ProfilerInactiveMainModel.hoveredSectionIndex);
+			ProfilerInactiveMainModel.hoveredSection = capture.getSections().isEmpty() ? null : capture.getSections().get(ProfilerInactiveMainModel.hoveredSectionIndex);
 		}
 		if (ProfilerInactiveMainModel.selectedSection != null) {
 			if (ProfilerInactiveMainModel.hoveredCheckpointIndex != -1) {
@@ -144,7 +145,7 @@ public class MainInactiveScreen extends Screen {
 		upButton.render();
 		downButton.render();
 		selectButton.render();
-		if (ProfilerInactiveMainModel.selectedSectionIndex != -1) {
+		if (ProfilerInactiveMainModel.selectedSection != null) {
 			modeButton.render();
 			backButton.render();
 		}
@@ -152,7 +153,7 @@ public class MainInactiveScreen extends Screen {
 
 	@Override
 	public void renderContent() {
-		if (ProfilerInactiveMainModel.selectedSectionIndex == -1) {
+		if (ProfilerInactiveMainModel.selectedSection == null) {
 			renderHeadline("SECTIONS");
 			int i = 0;
 			for (Section section : capture.getSections()) {
@@ -205,6 +206,7 @@ public class MainInactiveScreen extends Screen {
 	}
 	
 	private List<Checkpoint> getCheckpoints() {
+		if (ProfilerInactiveMainModel.selectedSection == null) return null;
 		switch (ProfilerInactiveMainModel.mode) {
 		case MAX:
 			return ProfilerInactiveMainModel.selectedSection.getMaxFrame().getCheckpoints();

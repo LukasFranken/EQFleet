@@ -75,7 +75,7 @@ public class ShipPartOverview extends Component {
 		
 		levelArea = new ShipPartLevelArea(shipComponentLevel.getLevel(), Shipyard.getPartTypeColor(partType), shipComponentLevel.getProgress(), nextLevel == null ? shipComponentLevel.getProgress() : nextLevel.getRequirementValue());
 		levelArea.getColorButton().setLayer(1);
-		boolean componentButtonClicked = PreferenceManager.load("shipyardglow").contentEquals("true");
+		boolean componentButtonClicked = PreferenceManager.load("shipyardglow").contentEquals("false");
 		levelArea.getColorButton().setGlowAnimation(!componentButtonClicked);
 		levelArea.getColorButton().setAction(new Action() {
 			
@@ -83,8 +83,10 @@ public class ShipPartOverview extends Component {
 			public void execute() {
 				createPartLevelPopup();
 				if (!componentButtonClicked) {
-					levelArea.getColorButton().setGlowAnimation(false);
-					PreferenceManager.save("shipyardglow", "false");
+					if (levelArea.getColorButton().isGlowAnimation()) {
+						levelArea.getColorButton().setGlowAnimation(false);
+						PreferenceManager.save("shipyardglow", "false");
+					}
 				}
 			}
 			

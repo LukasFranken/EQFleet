@@ -50,9 +50,7 @@ public class Profiler {
 			
 			@Override
 			public void execute() {
-				if (ProfilerModel.currentCapture == null) {
-					capture();
-				}
+				capture();
 			}
 			
 		});
@@ -63,9 +61,7 @@ public class Profiler {
 			
 			@Override
 			public void execute() {
-				if (ProfilerModel.currentCapture != null) {
-					stopCapture();
-				}
+				stopCapture();
 			}
 			
 		});
@@ -113,8 +109,11 @@ public class Profiler {
 				.round(true)
 				.build());
 		
-		startButton.render();
-		stopButton.render();
+		if (ProfilerModel.currentCapture == null) {
+			startButton.render();
+		} else {
+			stopButton.render();
+		}
 		
 		if (ProfilerModel.currentCapture == null) {
 			if (!ProfilerModel.captures.isEmpty()) {
@@ -135,9 +134,9 @@ public class Profiler {
 		startButton.setFixedWidth(60f);
 		startButton.setFixedHeight(ProfilerModel.buttonHeight);
 		
-		stopButton.setPosition(startButton.getBounds().x + startButton.getFixedWidth() + 5f, ProfilerModel.bounds.y + 10f);
-		stopButton.setFixedWidth(60f);
-		stopButton.setFixedHeight(ProfilerModel.buttonHeight);
+		stopButton.setPosition(startButton.getBounds().x, startButton.getBounds().y);
+		stopButton.setFixedWidth(startButton.getFixedWidth());
+		stopButton.setFixedHeight(startButton.getFixedHeight());
 	}
 	
 	public static void setFixedHeight(int height) {
