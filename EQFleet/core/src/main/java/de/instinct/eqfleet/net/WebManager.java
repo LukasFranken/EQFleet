@@ -29,7 +29,7 @@ public class WebManager {
     public static ConcurrentLinkedQueue<Request<?>> requestQueue;
 
     private static final long NETWORK_UPDATE_CLOCK_MS = 50;
-    private static final int PING_UPDATE_CLOCK_MS = 1000;
+    private static final int PING_UPDATE_CLOCK_MS = 500;
     
     private static long lastPingTime;
     
@@ -91,13 +91,14 @@ public class WebManager {
     	if (lastPingTime > PING_UPDATE_CLOCK_MS) {
     		ping();
     		lastPingTime = 0;
+    		if (API.authKey.isEmpty()) {
+        		verifyAuthKey();
+        	}
     	}
     	
     	if (online) {
-    		if (API.authKey.isEmpty()) {
-        		verifyAuthKey();
-        	} else {
-        		Request<?> request = requestQueue.peek();
+    		if (!API.authKey.isEmpty()) {
+    			Request<?> request = requestQueue.peek();
                 if (request != null) {
                     try {
                     	request.getRequestAction().execute();

@@ -41,7 +41,7 @@ public class Logger {
 		long timestamp = System.currentTimeMillis();
 		String formattedTime = formatter.format(new Date(timestamp));
 		System.out.print(color.getCode());
-		Gdx.app.log(formattedTime, tag + " - " + message);
+		if (Gdx.app != null) Gdx.app.log(formattedTime, tag + " - " + message);
 		System.out.print(ConsoleColor.DEFAULT.getCode());
 		synchronized(logsLock) {
 		    logs.add(LogLine.builder()

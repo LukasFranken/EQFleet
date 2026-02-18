@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.glutils.HdpiMode;
 import com.badlogic.gdx.math.Vector2;
 
 import de.instinct.eqfleet.App;
+import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
+import de.instinct.eqlibgdxutils.debug.logging.Logger;
 
 public class Lwjgl3Launcher {
 	
@@ -16,6 +18,7 @@ public class Lwjgl3Launcher {
 	
     public static void main(String[] args) {
         if (StartupHelper.startNewJvmIfRequired()) return;
+        Logger.log("test","app" , ConsoleColor.CYAN);
         createApplication();
     }
 

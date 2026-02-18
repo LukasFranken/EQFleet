@@ -17,6 +17,8 @@ import de.instinct.eqfleet.language.model.Language;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.main.MenuModel;
 import de.instinct.eqfleet.net.WebManager;
+import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
+import de.instinct.eqlibgdxutils.debug.logging.Logger;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.slider.ValueChangeAction;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
@@ -82,11 +84,12 @@ public class Intro {
 			
 		});
 		introSlideshow.add(welcomeMessage);
+		Logger.log("INTRO", "Creating welcome slides", ConsoleColor.YELLOW);
 		Macro checkAuthAndConnection = new Macro(new Action() {
 			
 			@Override
 			public void execute() {
-				if (WebManager.isOnline() && API.authKey.contentEquals("invalid")) {
+				if (WebManager.isOnline() && API.authKey.contentEquals("invalid") || API.authKey.isEmpty()) {
 					createFirstTimeSlides();
 				} else {
 					loadMenu();
@@ -98,6 +101,7 @@ public class Intro {
 	}
 	
 	private static void createFirstTimeSlides() {
+		Logger.log("INTRO", "Creating first time slides", ConsoleColor.YELLOW);
 		if (!LanguageManager.languageIsSet()) {
 			createSelectLanguageSlide();
 		} else {

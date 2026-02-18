@@ -54,7 +54,7 @@ public class AudioManager {
 	public static void init() {
 		voiceMetaDatas = new HashMap<>();
 		availableRadioTracks = new ArrayList<>();
-		/*availableRadioTracks.add("eqspace1");
+		availableRadioTracks.add("eqspace1");
 		availableRadioTracks.add("eqspace2");
 		availableRadioTracks.add("eqspace3");
 		availableRadioTracks.add("eqspace4");
@@ -65,7 +65,7 @@ public class AudioManager {
 		availableRadioTracks.add("to_the_stars_disco");
 		availableRadioTracks.add("neon_horizon_ambient");
 		availableRadioTracks.add("to_the_stars_70s");
-		availableRadioTracks.add("to_the_stars_synth");*/
+		availableRadioTracks.add("to_the_stars_synth");
 		
 		availableNonRadioTracks = new ArrayList<>();
 		availableNonRadioTracks.add("to_the_stars_short");
@@ -108,8 +108,8 @@ public class AudioManager {
 			musics.get(tag);
 		}
 		
-		Music music = Gdx.audio.newMusic(Gdx.files.internal("audio/music/to_the_stars.wav"));
-		music.play();
+		//Music music = Gdx.audio.newMusic(Gdx.files.internal("audio/music/to_the_stars.wav"));
+		//music.play();
 	}
 
 	public static void playMusic(String tag, boolean loop) {
@@ -179,15 +179,17 @@ public class AudioManager {
 					queuedInMusic = null;
 					Logger.log(LOGTAG, "Updating music to queued in", ConsoleColor.YELLOW);
 				} else {
-					int idx = -1;
-					do {
-						idx = RNG.nextInt(availableRadioTracks.size());
-						if (availableRadioTracks.size() == 1) break;
-					} while (idx == lastPlayedRadioTrackIdx);
-					String tag = availableRadioTracks.get(idx);
-					lastPlayedRadioTrackIdx = idx;
-					next = musics.get(tag);
-					Logger.log(LOGTAG, "Updating music to random: " + tag, ConsoleColor.YELLOW);
+					if (availableRadioTracks.size() > 0) {
+						int idx = -1;
+						do {
+							idx = RNG.nextInt(availableRadioTracks.size());
+							if (availableRadioTracks.size() == 1) break;
+						} while (idx == lastPlayedRadioTrackIdx);
+						String tag = availableRadioTracks.get(idx);
+						lastPlayedRadioTrackIdx = idx;
+						next = musics.get(tag);
+						Logger.log(LOGTAG, "Updating music to random: " + tag, ConsoleColor.YELLOW);
+					}
 				}
 				
 				if (next == null) return;

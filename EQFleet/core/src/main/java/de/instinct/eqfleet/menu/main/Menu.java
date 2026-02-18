@@ -211,6 +211,7 @@ public class Menu {
 	}
 	
 	public static void openModule(MenuModule menuModule) {
+		System.gc();
 		BaseModule module = MenuModel.modules.get(menuModule);
 		if (module == null) {
 			Logger.log("Menu", "Tried to open missing module: " + menuModule);

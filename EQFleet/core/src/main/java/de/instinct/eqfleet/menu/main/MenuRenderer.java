@@ -149,7 +149,7 @@ public class MenuRenderer extends BaseModuleRenderer {
 		expBounds = new Rectangle(menuBounds.x + 65, menuBounds.y + menuBounds.height + 10, 100, 7);
 		creditsBounds = new Rectangle(menuBounds.x + menuBounds.width - 103, menuBounds.y + menuBounds.height + 10, 85, 20);
 		
-		if (tabButtons.size() != MenuModel.buttons.size()) {
+		if (tabButtons != null && tabButtons.size() != MenuModel.buttons.size()) {
 			tabButtons = new LinkedHashMap<>();
 			for (MenuModule module : MenuModel.buttons) {
 				createModuleButton(module);
