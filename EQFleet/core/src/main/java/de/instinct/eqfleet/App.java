@@ -57,7 +57,7 @@ public class App extends ApplicationAdapter {
     	Gdx.input.setInputProcessor(new InputMultiplexer());
     	CursorUtil.createCursor();
     	WebManager.init();
-        Intro.init();
+    	Intro.init();
         Menu.init();
         Game.init();
         ParticleRenderer.init();
@@ -115,17 +115,17 @@ public class App extends ApplicationAdapter {
 				.fontTypes(fontTypes)
 				.build());
 	}
-
+	
 	@Override
     public void render() {
 		long startNanoTime = System.nanoTime();
 		InputUtil.update();
+		ScreenUtils.clear(0f, 0f, 0f, 1f);
 		try {
 			if (!halted) {
 				Profiler.startFrame("APP");
 				AudioManager.update();
 				Profiler.checkpoint("APP", "AudioManager");
-				ScreenUtils.clear(0f, 0f, 0f, 1f);
 				if (GlobalStaticData.backgroundParticles) {
 					ParticleRenderer.updateParticles();
 			        ParticleRenderer.renderParticles("stars");

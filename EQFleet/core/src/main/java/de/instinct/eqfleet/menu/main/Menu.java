@@ -16,6 +16,7 @@ import com.badlogic.gdx.math.Rectangle;
 import de.instinct.api.core.API;
 import de.instinct.api.core.modules.MenuModule;
 import de.instinct.api.matchmaking.model.GameMode;
+import de.instinct.api.meta.dto.modules.ModuleData;
 import de.instinct.api.meta.dto.modules.ModuleInfoRequest;
 import de.instinct.eqfleet.GlobalStaticData;
 import de.instinct.eqfleet.game.GameModel;
@@ -23,7 +24,6 @@ import de.instinct.eqfleet.menu.common.architecture.BaseModule;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.module.construction.Construction;
 import de.instinct.eqfleet.menu.module.construction.ConstructionRenderer;
-import de.instinct.eqfleet.menu.module.construction.message.ReloadConstructionMessage;
 import de.instinct.eqfleet.menu.module.core.ModuleManager;
 import de.instinct.eqfleet.menu.module.core.ModuleMessage;
 import de.instinct.eqfleet.menu.module.play.Play;
@@ -37,7 +37,6 @@ import de.instinct.eqfleet.menu.module.settings.Settings;
 import de.instinct.eqfleet.menu.module.settings.SettingsRenderer;
 import de.instinct.eqfleet.menu.module.ship.Shipyard;
 import de.instinct.eqfleet.menu.module.ship.ShipyardRenderer;
-import de.instinct.eqfleet.menu.module.ship.message.ReloadShipyardMessage;
 import de.instinct.eqfleet.menu.module.shop.Shop;
 import de.instinct.eqfleet.menu.module.shop.ShopRenderer;
 import de.instinct.eqfleet.menu.module.starmap.Starmap;
@@ -157,9 +156,7 @@ public class Menu {
 	}
 
 	private static void updateBaseInfo() {
-		queue(ReloadShipyardMessage.builder().build());
-		queue(ReloadConstructionMessage.builder().build());
-		if (PostGameModel.reward == null) {
+		if (WebManager.isOnline()) {
 			queue(LoadProfileMessage.builder().build());
 			queue(UpdateLobbyStatusMessage.builder().build());
 		}
@@ -230,27 +227,39 @@ public class Menu {
 	}
 	
 	public static void loadModules() {
-		WebManager.enqueue(
-			    () -> API.meta().modules(API.authKey),
-			    modulesResult -> {
-			    	if (modulesResult != null) {
-			    		MenuModel.unlockedModules = modulesResult;
-			    		List<MenuModule> lockedModules = new ArrayList<>();
-			    		for (MenuModule module : MenuModule.values()) {
-			    			if (!MenuModel.unlockedModules.getEnabledModules().contains(module)) {
-			    				lockedModules.add(module);
-			    			}
-			    		}
-			    		loadLockedModuleInfo(lockedModules);
-			    		loadButtons();
-			    		reloadAll();
-					} else {
-						Logger.log("Menu", "ModuleData couldn't be loaded!", ConsoleColor.RED);
-					}
-			    }
-		);
+		if (WebManager.isOnline()) {
+			WebManager.enqueue(
+				    () -> API.meta().modules(API.authKey),
+				    modulesResult -> {
+				    	processModulesResult(modulesResult);
+				    }
+			);
+		} else {
+			ModuleData offlineModulesResult = new ModuleData();
+			offlineModulesResult.setEnabledModules(new ArrayList<>());
+			offlineModulesResult.getEnabledModules().add(MenuModule.SETTINGS);
+			offlineModulesResult.getEnabledModules().add(MenuModule.PLAY);
+			processModulesResult(offlineModulesResult);
+		}
 	}
 	
+	private static void processModulesResult(ModuleData modulesResult) {
+		if (modulesResult != null) {
+    		MenuModel.unlockedModules = modulesResult;
+    		List<MenuModule> lockedModules = new ArrayList<>();
+    		for (MenuModule module : MenuModule.values()) {
+    			if (!MenuModel.unlockedModules.getEnabledModules().contains(module)) {
+    				lockedModules.add(module);
+    			}
+    		}
+    		loadLockedModuleInfo(lockedModules);
+    		loadButtons();
+    		reloadAll();
+		} else {
+			Logger.log("Menu", "ModuleData couldn't be loaded!", ConsoleColor.RED);
+		}
+	}
+
 	private static void loadButtons() {
 		MenuModel.buttons = new ArrayList<>();
 		if (MenuModel.unlockedModules != null && MenuModel.unlockedModules.getEnabledModules() != null) {

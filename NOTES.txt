@@ -19,6 +19,10 @@ GENERAL:
   x shellshock
   x fallout
   
+- implement offline mode
+ -> might be nessecary to fix  
+ -> symbol for server connectivity
+
 - full dual-language
 
 - clearer postgame sections
@@ -56,6 +60,7 @@ SERVER:
  -> implement disconnect pause
  -> implement dynamic delay
  -> implement long delay catchup
+ -> fix state desync
 
 MENU:
 - settings tabs (audio, video, gameplay, account)

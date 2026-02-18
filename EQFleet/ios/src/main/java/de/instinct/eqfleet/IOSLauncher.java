@@ -14,6 +14,8 @@ public class IOSLauncher extends IOSApplication.Delegate {
         IOSApplicationConfiguration configuration = new IOSApplicationConfiguration();
         configuration.orientationLandscape = false;
         configuration.hdpiMode = HdpiMode.Pixels;
+        configuration.audioDeviceBufferSize = 4096;
+        configuration.audioDeviceBufferCount = 12;
         return new IOSApplication(new App(), configuration);
     }
 
