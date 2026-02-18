@@ -8,12 +8,23 @@ import de.instinct.eqlibgdxutils.debug.profiler.model.Checkpoint;
 import de.instinct.eqlibgdxutils.debug.profiler.model.Frame;
 import de.instinct.eqlibgdxutils.debug.profiler.model.TrackedCheckpoint;
 import de.instinct.eqlibgdxutils.debug.profiler.screen.Screen;
+import de.instinct.eqlibgdxutils.debug.profiler.screen.element.ScreenButton;
+import de.instinct.eqlibgdxutils.generic.Action;
 
 public class MainActiveScreen extends Screen {
+	
+	private ScreenButton clearButton;
 
 	@Override
 	public void init() {
-		
+		clearButton = new ScreenButton(0, "clr", new Action() {
+			
+			@Override
+			public void execute() {
+				ProfilerModel.trackedCheckpoints.clear();
+			}
+			
+		});
 	}
 
 	@Override
@@ -23,7 +34,7 @@ public class MainActiveScreen extends Screen {
 
 	@Override
 	protected void renderButtons() {
-		
+		clearButton.render();
 	}
 
 	@Override
