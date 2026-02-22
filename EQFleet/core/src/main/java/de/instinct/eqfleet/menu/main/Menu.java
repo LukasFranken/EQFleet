@@ -44,6 +44,7 @@ import de.instinct.eqfleet.menu.module.starmap.StarmapRenderer;
 import de.instinct.eqfleet.menu.postgame.PostGameModel;
 import de.instinct.eqfleet.menu.postgame.PostGameRenderer;
 import de.instinct.eqfleet.net.WebManager;
+import de.instinct.eqfleet.scene.Scene;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
@@ -51,22 +52,24 @@ import de.instinct.eqlibgdxutils.debug.profiler.Profiler;
 import de.instinct.eqlibgdxutils.rendering.grid.GridConfiguration;
 import de.instinct.eqlibgdxutils.rendering.grid.GridRenderer;
 
-public class Menu {
+public class Menu extends Scene {
 	
-	private static PostGameRenderer postGameRenderer;
-	private static MenuRenderer menuRenderer;
-	private static GridRenderer gridRenderer;
+	private PostGameRenderer postGameRenderer;
+	private MenuRenderer menuRenderer;
+	private GridRenderer gridRenderer;
 	
-	private static ScheduledExecutorService scheduler;
-	private static long UPDATE_CLOCK_MS = 20;
+	private ScheduledExecutorService scheduler;
+	private long UPDATE_CLOCK_MS = 20;
 	
-	private static Queue<ModuleMessage> moduleMessageQueue;
-	private static Queue<MenuModule> reloadRequired;
+	private Queue<ModuleMessage> moduleMessageQueue;
+	private Queue<MenuModule> reloadRequired;
 	
-	public static void init() {
+	@Override
+	public void init() {
 		ModuleManager.init();
 		postGameRenderer = new PostGameRenderer();
 		menuRenderer = new MenuRenderer();
+		menuRenderer.init();
 		
 		gridRenderer = new GridRenderer(GridConfiguration.builder()
 				.step(10f)
@@ -112,12 +115,13 @@ public class Menu {
 		}, 0, UPDATE_CLOCK_MS, TimeUnit.MILLISECONDS);
 	}
 	
-	private static void calculateMenuBounds() {
+	private void calculateMenuBounds() {
 		float margin = 20f;
-		MenuModel.moduleBounds = new Rectangle(margin, margin + 20, GraphicsUtil.screenBounds().width - (margin * 2), GraphicsUtil.screenBounds().height - 150 - 40f);
+		//MenuModel.moduleBounds = new Rectangle(margin, margin + 20, GraphicsUtil.screenBounds().width - (margin * 2), GraphicsUtil.screenBounds().height - 150 - 40f);
 	}
 	
-	public static void open() {
+	@Override
+	public void open() {
 		Logger.log("MENU", "Opening Menu with last game UUID: " + GameModel.lastGameUUID, ConsoleColor.YELLOW);
 		if (GameModel.lastGameUUID == null || GameModel.lastGameUUID.contentEquals("custom") || GameModel.lastGameUUID.contentEquals("tutorial")) {
 			load();
@@ -147,7 +151,13 @@ public class Menu {
 		}
 	}
 	
-	public static void load() {
+	@Override
+	public void close() {
+		MenuModel.active = false;
+		MenuModel.activeModule = null;
+	}
+	
+	public void load() {
 		MenuModel.loaded = false;
 		calculateMenuBounds();
 		updateBaseInfo();
@@ -155,20 +165,15 @@ public class Menu {
 		if (PlayModel.lobbyStatus != null && PlayModel.lobbyStatus.getType().getGameMode() == GameMode.CONQUEST) Play.leaveLobby();
 	}
 
-	private static void updateBaseInfo() {
+	private void updateBaseInfo() {
 		if (WebManager.isOnline()) {
 			queue(LoadProfileMessage.builder().build());
 			queue(UpdateLobbyStatusMessage.builder().build());
 		}
 	}
-
-	public static void close() {
-		MenuModel.active = false;
-		MenuModel.activeModule = null;
-		menuRenderer.close();
-	}
 	
-	private static void update() {
+	@Override
+	public void update() {
 		while (!moduleMessageQueue.isEmpty()) {
 			ModuleMessage message = moduleMessageQueue.poll();
 			BaseModule module = MenuModel.modules.get(message.getMenuModule());
@@ -180,12 +185,14 @@ public class Menu {
 				module.update();
 			}
 		}
+		menuRenderer.update();
 	}
 	
-	public static void render() {
+	@Override
+	public void render() {
 		Profiler.startFrame("MENU");
 		while (reloadRequired.peek() != null) {
-			MenuModel.renderers.get(reloadRequired.poll()).reload();
+			//MenuModel.renderers.get(reloadRequired.poll()).reload();
 		}
 		Profiler.checkpoint("MENU", "reload");
 		if (MenuModel.active) {
@@ -206,12 +213,11 @@ public class Menu {
 		Profiler.endFrame("MENU");
 	}
 	
-	public static void queue(ModuleMessage message) {
+	public void queue(ModuleMessage message) {
 		moduleMessageQueue.add(message);
 	}
 	
 	public static void openModule(MenuModule menuModule) {
-		System.gc();
 		BaseModule module = MenuModel.modules.get(menuModule);
 		if (module == null) {
 			Logger.log("Menu", "Tried to open missing module: " + menuModule);
@@ -222,12 +228,12 @@ public class Menu {
 		ModuleManager.openModule(menuModule);
 	}
 	
-	public static void closeModule() {
+	public void closeModule() {
 		MenuModel.activeModule = null;
 		updateBaseInfo();
 	}
 	
-	public static void loadModules() {
+	public void loadModules() {
 		if (WebManager.isOnline()) {
 			WebManager.enqueue(
 				    () -> API.meta().modules(API.authKey),
@@ -244,7 +250,7 @@ public class Menu {
 		}
 	}
 	
-	private static void processModulesResult(ModuleData modulesResult) {
+	private void processModulesResult(ModuleData modulesResult) {
 		if (modulesResult != null) {
     		MenuModel.unlockedModules = modulesResult;
     		List<MenuModule> lockedModules = new ArrayList<>();
@@ -255,13 +261,12 @@ public class Menu {
     		}
     		loadLockedModuleInfo(lockedModules);
     		loadButtons();
-    		reloadAll();
 		} else {
 			Logger.log("Menu", "ModuleData couldn't be loaded!", ConsoleColor.RED);
 		}
 	}
 
-	private static void loadButtons() {
+	private void loadButtons() {
 		MenuModel.buttons = new ArrayList<>();
 		if (MenuModel.unlockedModules != null && MenuModel.unlockedModules.getEnabledModules() != null) {
 	        for (MenuModule module : MenuModel.renderers.keySet()) {
@@ -272,7 +277,7 @@ public class Menu {
 	    }
 	}
 
-	private static void loadLockedModuleInfo(List<MenuModule> lockedModules) {
+	private void loadLockedModuleInfo(List<MenuModule> lockedModules) {
 		ModuleInfoRequest moduleInfoRequest = new ModuleInfoRequest();
 		moduleInfoRequest.setRequestedModuleInfos(lockedModules);
 		WebManager.enqueue(
@@ -287,27 +292,16 @@ public class Menu {
 		);
 	}
 	
-	public static void reloadContent() {
-		Gdx.app.postRunnable(() -> {
-			menuRenderer.reloadContent();
-		});
-	}
-
-	public static void reloadAll() {
-		Gdx.app.postRunnable(() -> {
-			menuRenderer.reload();
-			for (BaseModuleRenderer renderer : MenuModel.renderers.values()) {
-				renderer.reload();
-			}
-			MenuModel.loaded = true;
-		});
+	public void reloadContent() {
+		
 	}
 	
-	public static void requireReload(MenuModule module) {
+	public void requireReload(MenuModule module) {
 		reloadRequired.add(module);
 	}
 
-	public static void dispose() {
+	@Override
+	public void dispose() {
 		postGameRenderer.dispose();
 		if (scheduler != null) {
 			scheduler.shutdownNow();

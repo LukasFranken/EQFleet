@@ -25,7 +25,7 @@ public class Shop extends BaseModule {
 
 	@Override
 	public void open() {
-		Menu.queue(ReloadShopMessage.builder().build());
+		//Menu.queue(ReloadShopMessage.builder().build());
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class Shop extends BaseModule {
 				    result -> {
 				    	if (result.getCode() == BuyResponseCode.SUCCESS) {
 				    		Inventory.loadData();
-				    		Menu.queue(ReloadShopMessage.builder().build());
+				    		//Menu.queue(ReloadShopMessage.builder().build());
 				    	} else {
 				    		ShopModel.buyResponse = result;
 				    	}

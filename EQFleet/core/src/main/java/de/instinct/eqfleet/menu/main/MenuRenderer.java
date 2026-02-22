@@ -4,323 +4,100 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.api.core.modules.MenuModule;
-import de.instinct.api.meta.dto.Resource;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
-import de.instinct.eqfleet.menu.module.profile.ProfileModel;
-import de.instinct.eqfleet.menu.module.profile.inventory.Inventory;
-import de.instinct.eqfleet.menu.module.profile.inventory.InventoryModel;
+import de.instinct.eqfleet.menu.main.header.MenuHeader;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
-import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.debug.profiler.Profiler;
-import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.Button;
-import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.LabeledModelButton;
-import de.instinct.eqlibgdxutils.rendering.ui.component.passive.image.Image;
-import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.HorizontalAlignment;
-import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
-import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.subtypes.PlainRectangularLoadingBar;
-import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
-import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
-import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.shapes.EQRectangle;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.utility.EQGlowConfig;
 
 public class MenuRenderer extends BaseModuleRenderer {
 	
-	private Map<MenuModule, Button> tabButtons;
-	private PlainRectangularLoadingBar expBar;
-	private Label usernameLabel;
-	private Label creditsLabel;
-	
 	private final float OPEN_ANIMATION_DURATION = 1.5f;
 	private float elapsed;
-	private Label menuBackground;
-	private Label title;
-	private float titleHeight;
 	
 	private Rectangle menuBounds;
-	
-	private ColorButton closeModuleButton;
-	private Image rankImage;
-	private Image creditsImage;
-	
-	private Rectangle titleDividerBounds;
-	private Rectangle rankBounds;
-	private Rectangle nameBounds;
-	private Rectangle expBounds;
-	private Rectangle creditsBounds;
+
+	private MenuWindow window;
+	private MenuHeader header;
+	private Map<MenuModule, Button> tabButtons;
 
 	public MenuRenderer() {
-		titleHeight = 40f;
+		menuBounds = new Rectangle();
+		
 		tabButtons = new LinkedHashMap<>();
-	}
-
-	public void reload() {
-		close();
-		createCloseModuleButton();
-		
-		expBar = new PlainRectangularLoadingBar();
-		expBar.setBar(TextureManager.createTexture(Color.BLUE));
-		expBar.setCustomDescriptor("");
-		Border barBorder = new Border();
-		barBorder.setSize(1f);
-		barBorder.setColor(Color.BLUE);
-		expBar.setBorder(barBorder);
-		
-		usernameLabel = new Label(ProfileModel.profile != null && ProfileModel.profile.getUsername() != null ? ProfileModel.profile.getUsername() : "???");
-		usernameLabel.setColor(Color.LIGHT_GRAY);
-		usernameLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
-		
-		creditsLabel = new Label("");
-		creditsLabel.setColor(Color.GREEN);
-		creditsLabel.setHorizontalAlignment(HorizontalAlignment.RIGHT);
-		
-		menuBackground = new Label("");
-		Border backgroundBorder = new Border();
-		backgroundBorder.setColor(SkinManager.skinColor);
-		backgroundBorder.setSize(2f);
-		menuBackground.setBorder(backgroundBorder);
-		
-		title = new Label("");
-		title.setHorizontalAlignment(HorizontalAlignment.LEFT);
-		
-		float margin = 20f;
-		menuBounds = new Rectangle(margin, margin + 20, GraphicsUtil.screenBounds().width - (margin * 2), GraphicsUtil.screenBounds().height - 150);
-		
-		titleDividerBounds = new Rectangle(menuBounds.x, menuBounds.y + menuBounds.height - titleHeight, menuBounds.width, 2);
-		rankBounds = new Rectangle(menuBounds.x, menuBounds.y + menuBounds.height + 10, 35, 35);
-		nameBounds = new Rectangle(menuBounds.x + 45, menuBounds.y + menuBounds.height + 20, 120, 25);
-		expBounds = new Rectangle(menuBounds.x + 65, menuBounds.y + menuBounds.height + 10, 100, 7);
-		creditsBounds = new Rectangle(menuBounds.x + menuBounds.width - 103, menuBounds.y + menuBounds.height + 10, 85, 20);
-		
-		if (tabButtons.size() != MenuModel.buttons.size()) {
-			tabButtons = new LinkedHashMap<>();
-			for (MenuModule module : MenuModel.buttons) {
-				createModuleButton(module);
-			}
-		}
-		
-		rankImage = new Image(TextureManager.getTexture("ui/image/rank",  ProfileModel.profile != null ? ProfileModel.profile.getRank().getFileName() : "recruit1"));
-		rankImage.setBounds(new Rectangle(menuBounds.x + 5, menuBounds.y + menuBounds.height + 15, 25, 25));
-		creditsImage = new Image(TextureManager.getTexture("ui/image", "credits"));
-        creditsImage.setBounds(new Rectangle(menuBounds.x + menuBounds.width - 16, menuBounds.y + menuBounds.height + 12, 16, 16));
+		window = new MenuWindow();
+		header = new MenuHeader();
 	}
 	
-	public void reloadContent() {
-		expBar = new PlainRectangularLoadingBar();
-		expBar.setBar(TextureManager.createTexture(Color.BLUE));
-		expBar.setCustomDescriptor("");
-		Border barBorder = new Border();
-		barBorder.setSize(1f);
-		barBorder.setColor(Color.BLUE);
-		expBar.setBorder(barBorder);
-		
-		usernameLabel = new Label(ProfileModel.profile != null && ProfileModel.profile.getUsername() != null ? ProfileModel.profile.getUsername() : "???");
-		usernameLabel.setColor(Color.LIGHT_GRAY);
-		usernameLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
-		
-		creditsLabel = new Label("");
-		creditsLabel.setColor(Color.GREEN);
-		creditsLabel.setHorizontalAlignment(HorizontalAlignment.RIGHT);
-		
-		menuBackground = new Label("");
-		Border backgroundBorder = new Border();
-		backgroundBorder.setColor(SkinManager.skinColor);
-		backgroundBorder.setSize(2f);
-		menuBackground.setBorder(backgroundBorder);
-		
-		title = new Label("");
-		title.setHorizontalAlignment(HorizontalAlignment.LEFT);
-		
-		float margin = 20f;
-		menuBounds = new Rectangle(margin, margin + 20, GraphicsUtil.screenBounds().width - (margin * 2), GraphicsUtil.screenBounds().height - 150);
-		
-		titleDividerBounds = new Rectangle(menuBounds.x, menuBounds.y + menuBounds.height - titleHeight, menuBounds.width, 2);
-		rankBounds = new Rectangle(menuBounds.x, menuBounds.y + menuBounds.height + 10, 35, 35);
-		nameBounds = new Rectangle(menuBounds.x + 45, menuBounds.y + menuBounds.height + 20, 120, 25);
-		expBounds = new Rectangle(menuBounds.x + 65, menuBounds.y + menuBounds.height + 10, 100, 7);
-		creditsBounds = new Rectangle(menuBounds.x + menuBounds.width - 103, menuBounds.y + menuBounds.height + 10, 85, 20);
-		
+	@Override
+	public void init() {
+		window.init();
+		header.init();
+		resetWindowAnimation();
+		//loadContent();
+	}
+	
+	public void resetWindowAnimation() {
+		MenuModel.alpha = 0f;
+		elapsed = 0f;
+	}
+	
+	private void loadContent() {
 		if (tabButtons != null && tabButtons.size() != MenuModel.buttons.size()) {
 			tabButtons = new LinkedHashMap<>();
 			for (MenuModule module : MenuModel.buttons) {
 				createModuleButton(module);
 			}
 		}
-		
-		rankImage = new Image(TextureManager.getTexture("ui/image/rank",  ProfileModel.profile != null ? ProfileModel.profile.getRank().getFileName() : "recruit1"));
-		rankImage.setBounds(new Rectangle(menuBounds.x + 5, menuBounds.y + menuBounds.height + 15, 25, 25));
-		creditsImage = new Image(TextureManager.getTexture("ui/image", "credits"));
-        creditsImage.setBounds(new Rectangle(menuBounds.x + menuBounds.width - 16, menuBounds.y + menuBounds.height + 12, 16, 16));
-	}
-	
-	private void createCloseModuleButton() {
-		closeModuleButton = DefaultButtonFactory.colorButton("x", new Action() {
-			
-			@Override
-			public void execute() {
-				Menu.closeModule();
-			}
-			
-		});
-		closeModuleButton.setBorder(null);
-		closeModuleButton.setColor(Color.CLEAR);
-		Color downColor = new Color(SkinManager.skinColor);
-		downColor.a = 0.4f;
-		closeModuleButton.getLabel().setType(FontType.LARGE);
-		closeModuleButton.setDownColor(downColor);
-		closeModuleButton.setHoverColor(downColor);
-		closeModuleButton.setContentMargin(0f);
-	}
-	
-	public void close() {
-		MenuModel.alpha = 0f;
-		elapsed = 0f;
-		menuBounds = null;
 	}
 	
 	private void createModuleButton(MenuModule module) {
 		LabeledModelButton menuModelButton = DefaultButtonFactory.moduleButton(module);
 		tabButtons.put(module, menuModelButton);
 	}
+	
+	@Override
+	public void update() {
+		float margin = 20f;
+		menuBounds.set(margin, margin + 20, GraphicsUtil.screenBounds().width - (margin * 2), GraphicsUtil.screenBounds().height - 120f - 40f);
+		updateWindowAnimation();
+		header.getBounds().set(menuBounds.x, menuBounds.y + menuBounds.height + 10f, menuBounds.width, 50);
+		window.getBounds().set(menuBounds);
+		
+		header.setAlpha(MenuModel.alpha);
+	}
 
 	@Override
 	public void render() {
 		if (menuBounds != null) {
 			Profiler.startFrame("MENU_RNDR");
-			renderIntro();
-			Profiler.checkpoint("MENU_RNDR", "intro");
-			renderHeader();
+			header.render();
 			Profiler.checkpoint("MENU_RNDR", "header");
+			window.render();
+			Profiler.checkpoint("MENU_RNDR", "window");
 			if (MenuModel.activeModule == null) {
 				renderModuleButtons();
 				Profiler.checkpoint("MENU_RNDR", "mod btns");
-			} else {
-				renderTitle();
-				Profiler.checkpoint("MENU_RNDR", "title");
 			}
 			elapsed += Gdx.graphics.getDeltaTime();
 			Profiler.endFrame("MENU_RNDR");
 		}
 	}
 
-	private void renderTitle() {
-		float titleHorizontalMargin = 20f;
-		Rectangle titleBounds = new Rectangle(MenuModel.moduleBounds.x, MenuModel.moduleBounds.y + MenuModel.moduleBounds.height, MenuModel.moduleBounds.width, titleHeight);
-		title.setText(MenuModel.activeModule.toString());
-		title.setBounds(new Rectangle(titleBounds.x + titleHorizontalMargin, titleBounds.y, titleBounds.width - (titleHorizontalMargin * 2), titleBounds.height));
-		title.render();
-		
-		float smallXFontAdjustment = 2f * GraphicsUtil.getVerticalDisplayScaleFactor();
-		closeModuleButton.setFixedHeight(titleHeight - smallXFontAdjustment);
-		closeModuleButton.setFixedWidth(titleHeight);
-		closeModuleButton.setPosition(titleBounds.x + titleBounds.width - titleHeight, titleBounds.y + smallXFontAdjustment);
-		closeModuleButton.render();
-		
-		Color titleColor = new Color(SkinManager.skinColor);
-		titleColor.a = MenuModel.alpha;
-		Shapes.draw(EQRectangle.builder()
-				.bounds(titleDividerBounds)
-				.color(titleColor)
-				.glowConfig(EQGlowConfig.builder().build())
-				.thickness(2f)
-				.build());
-	}
-
-	private void renderIntro() {
+	private void updateWindowAnimation() {
 		if (elapsed < OPEN_ANIMATION_DURATION / 2) {
-			float firstStageDuration = OPEN_ANIMATION_DURATION / 4;
-			float secondStageDuration = OPEN_ANIMATION_DURATION / 4;
-			if (elapsed < OPEN_ANIMATION_DURATION / 4) {
-				float ratio = elapsed / firstStageDuration;
-				menuBackground.setBounds(new Rectangle(menuBounds.x + (menuBounds.width / 2) - ((menuBounds.width / 2) * ratio), menuBounds.y + menuBounds.height / 2, menuBounds.width * ratio, 2));
-			} else {
-				float ratio = (elapsed - firstStageDuration) / secondStageDuration;
-				menuBackground.setBounds(new Rectangle(menuBounds.x, menuBounds.y + (menuBounds.height / 2) - ((menuBounds.height / 2) * ratio), menuBounds.width, menuBounds.height * ratio));
-			}
+			MenuModel.openAnimationElapsed = elapsed / (OPEN_ANIMATION_DURATION / 2);
 		} else {
-			menuBackground.setBounds(menuBounds);
+			MenuModel.openAnimationElapsed = 1f;
 			if (elapsed < OPEN_ANIMATION_DURATION) {
 				MenuModel.alpha = (elapsed - (OPEN_ANIMATION_DURATION / 2)) / (OPEN_ANIMATION_DURATION / 2);
 			} else {
 				MenuModel.alpha = 1f;
-			}
-		}
-		menuBackground.render();
-	}
-
-	private void renderHeader() {
-		if (ProfileModel.profile != null && MenuModel.unlockedModules.getEnabledModules().contains(MenuModule.PROFILE)) {
-			if (MenuModel.activeModule != MenuModule.PROFILE) {
-				Profiler.startFrame("MENU_RNDR_HEAD_PRO");
-				rankImage.setAlpha(MenuModel.alpha);
-				rankImage.render();
-				Profiler.checkpoint("MENU_RNDR_HEAD_PRO", "rankimg");
-				usernameLabel.setBounds(new Rectangle(menuBounds.x + 50, menuBounds.y + menuBounds.height + 20, 100, 25));
-				usernameLabel.setAlpha(MenuModel.alpha);
-				usernameLabel.render();
-				Profiler.checkpoint("MENU_RNDR_HEAD_PRO", "usrname");
-				expBar.setBounds(expBounds);
-				Label expLabel = new Label("EXP");
-				expLabel.setColor(Color.BLUE);
-				expLabel.setType(FontType.TINY);
-				expLabel.setBounds(new Rectangle(menuBounds.x + 45, menuBounds.y + menuBounds.height + 10, 20, 7));
-				expLabel.setAlpha(MenuModel.alpha);
-				expLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
-				expLabel.render();
-				Profiler.checkpoint("MENU_RNDR_HEAD_PRO", "explabel");
-				expBar.setMaxValue(ProfileModel.profile.getRank().getNextRequiredExp() - ProfileModel.profile.getRank().getRequiredExp());
-				expBar.setCurrentValue(ProfileModel.profile.getCurrentExp() - ProfileModel.profile.getRank().getRequiredExp());
-				expBar.setAlpha(MenuModel.alpha);
-				expBar.render();
-				Profiler.checkpoint("MENU_RNDR_HEAD_PRO", "expbar");
-		        
-				Color rankNameColor = new Color(SkinManager.skinColor);
-				rankNameColor.a = MenuModel.alpha;
-				Shapes.draw(EQRectangle.builder()
-						.bounds(rankBounds)
-						.color(rankNameColor)
-						.glowConfig(EQGlowConfig.builder().build())
-						.thickness(2f)
-						.build());
-				Shapes.draw(EQRectangle.builder()
-						.bounds(nameBounds)
-						.color(rankNameColor)
-						.glowConfig(EQGlowConfig.builder().build())
-						.thickness(2f)
-						.build());
-				Profiler.checkpoint("MENU_RNDR_HEAD_PRO", "shapes");
-				Profiler.endFrame("MENU_RNDR_HEAD_PRO");
-			}
-		}
-		if (InventoryModel.resources != null && MenuModel.unlockedModules.getEnabledModules().contains(MenuModule.PROFILE)) {
-			if (MenuModel.activeModule != MenuModule.PROFILE) {
-				Profiler.startFrame("MENU_RNDR_HEAD_RES");
-				creditsLabel.setBounds(new Rectangle(menuBounds.x + menuBounds.width - 95, menuBounds.y + menuBounds.height + 10, 70, 20));
-				creditsLabel.setText(StringUtils.formatBigNumber(Inventory.getResource(Resource.CREDITS)));
-				creditsLabel.setAlpha(MenuModel.alpha);
-		        creditsLabel.render();
-		        creditsImage.setAlpha(MenuModel.alpha);
-		        creditsImage.render();
-		        Profiler.checkpoint("MENU_RNDR_HEAD_RES", "cr_img");
-		        Color creditsColor = new Color(Color.GREEN);
-		        creditsColor.a = MenuModel.alpha;
-		        Shapes.draw(EQRectangle.builder()
-						.bounds(creditsBounds)
-						.color(creditsColor)
-						.glowConfig(EQGlowConfig.builder().build())
-						.thickness(2f)
-						.build());
-		        Profiler.checkpoint("MENU_RNDR_HEAD_RES", "shape");
-		        Profiler.endFrame("MENU_RNDR_HEAD_RES");
 			}
 		}
 	}
@@ -346,7 +123,11 @@ public class MenuRenderer extends BaseModuleRenderer {
 
 	@Override
 	public void dispose() {
-		
+		window.dispose();
+		header.dispose();
+		for (Button button : tabButtons.values()) {
+			button.dispose();
+		}
 	}
 
 }

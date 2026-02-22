@@ -29,7 +29,7 @@ public class Starmap extends BaseModule {
 
 	@Override
 	public void open() {
-		Menu.queue(ReloadStarmapMessage.builder().build());
+		//Menu.queue(ReloadStarmapMessage.builder().build());
 	}
 
 	@Override

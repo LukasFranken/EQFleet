@@ -28,7 +28,7 @@ public class Construction extends BaseModule {
 	}
 	
 	private void loadData() {
-		Menu.queue(ReloadConstructionMessage.builder().build());
+		//Menu.queue(ReloadConstructionMessage.builder().build());
 	}
 
 	@Override

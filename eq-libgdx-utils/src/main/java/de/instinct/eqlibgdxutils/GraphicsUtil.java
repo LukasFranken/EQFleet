@@ -12,10 +12,16 @@ public class GraphicsUtil {
 	private static String LOGTAG = "GRAPHICS";
 	private static Vector2 baseWindowSize;
 	
+	private static Rectangle physicalBounds;
+	private static Rectangle screenBounds;
+	
 	public static void init(Vector2 windowSize) {
 		baseWindowSize = windowSize;
+		physicalBounds = new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		screenBounds = new Rectangle(0, 0, baseWindowSize.x, baseWindowSize.y);
     	Logger.log(LOGTAG, "Running on display size: " + physicalBounds(), ConsoleColor.YELLOW);
     	Logger.log(LOGTAG, "Base window size: " + baseWindowSize, ConsoleColor.YELLOW);
+    	Logger.log(LOGTAG, "Display scale factor: " + getScaleFactor(), ConsoleColor.YELLOW);
     	Logger.log(LOGTAG, "Horizontal display scale factor: " + getHorizontalDisplayScaleFactor(), ConsoleColor.YELLOW);
     	Logger.log(LOGTAG, "Vertical display scale factor: " + getVerticalDisplayScaleFactor(), ConsoleColor.YELLOW);
 	}
@@ -29,51 +35,55 @@ public class GraphicsUtil {
 	}
 	
 	public static Rectangle physicalBounds() {
-		return new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		return physicalBounds;
 	}
 	
 	public static Rectangle screenBounds() {
-		return new Rectangle(0, 0, baseWindowSize.x, baseWindowSize.y);
+		return screenBounds;
 	}
 	
-	public static Rectangle scaleFactorAdjusted(Rectangle unadjustedBounds) {
+	public static Rectangle scaleFactorAdjusted(Rectangle bounds) {
+		if (bounds == null) return null;
 		float horizontalScaleFactor = getHorizontalDisplayScaleFactor();
 		float verticalScaleFactor = getVerticalDisplayScaleFactor();
-		Rectangle adjustedBounds = new Rectangle(unadjustedBounds);
-		adjustedBounds.x *= horizontalScaleFactor;
-		adjustedBounds.y *= verticalScaleFactor;
-		adjustedBounds.width *= horizontalScaleFactor;
-		adjustedBounds.height *= verticalScaleFactor;
-		return adjustedBounds;
+		bounds.x *= horizontalScaleFactor;
+		bounds.y *= verticalScaleFactor;
+		bounds.width *= horizontalScaleFactor;
+		bounds.height *= verticalScaleFactor;
+		return bounds;
 	}
 	
-	public static Vector2 scaleFactorAdjusted(Vector2 unadjustedPosition) {
+	public static Vector2 scaleFactorAdjusted(Vector2 position) {
+		if (position == null) return null;
 		float horizontalScaleFactor = getHorizontalDisplayScaleFactor();
 		float verticalScaleFactor = getVerticalDisplayScaleFactor();
-		Vector2 adjustedPosition = new Vector2(unadjustedPosition);
-		adjustedPosition.x *= horizontalScaleFactor;
-		adjustedPosition.y *= verticalScaleFactor;
-		return adjustedPosition;
+		position.x *= horizontalScaleFactor;
+		position.y *= verticalScaleFactor;
+		return position;
 	}
 	
-	public static Rectangle scaleFactorDeducted(Rectangle unadjustedBounds) {
+	public static Rectangle scaleFactorDeducted(Rectangle bounds) {
+		if (bounds == null) return null;
 		float horizontalScaleFactor = getHorizontalDisplayScaleFactor();
 		float verticalScaleFactor = getVerticalDisplayScaleFactor();
-		Rectangle adjustedBounds = new Rectangle(unadjustedBounds);
-		adjustedBounds.x /= horizontalScaleFactor;
-		adjustedBounds.y /= verticalScaleFactor;
-		adjustedBounds.width /= horizontalScaleFactor;
-		adjustedBounds.height /= verticalScaleFactor;
-		return adjustedBounds;
+		bounds.x /= horizontalScaleFactor;
+		bounds.y /= verticalScaleFactor;
+		bounds.width /= horizontalScaleFactor;
+		bounds.height /= verticalScaleFactor;
+		return bounds;
 	}
 	
-	public static Vector2 scaleFactorDeducted(Vector2 unadjustedPosition) {
+	public static Vector2 scaleFactorDeducted(Vector2 position) {
+		if (position == null) return null;
 		float horizontalScaleFactor = getHorizontalDisplayScaleFactor();
 		float verticalScaleFactor = getVerticalDisplayScaleFactor();
-		Vector2 adjustedPosition = new Vector2(unadjustedPosition);
-		adjustedPosition.x /= horizontalScaleFactor;
-		adjustedPosition.y /= verticalScaleFactor;
-		return adjustedPosition;
+		position.x /= horizontalScaleFactor;
+		position.y /= verticalScaleFactor;
+		return position;
+	}
+
+	public static float getScaleFactor() {
+		return (float) Math.sqrt(getHorizontalDisplayScaleFactor() * getVerticalDisplayScaleFactor());
 	}
 
 }

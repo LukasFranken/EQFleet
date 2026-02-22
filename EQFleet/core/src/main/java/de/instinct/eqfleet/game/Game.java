@@ -11,7 +11,8 @@ import de.instinct.eqfleet.game.backend.driver.local.tutorial.TutorialDriver;
 import de.instinct.eqfleet.game.backend.driver.local.tutorial.TutorialMode;
 import de.instinct.eqfleet.game.backend.driver.online.OnlineDriver;
 import de.instinct.eqfleet.game.frontend.GameRenderer;
-import de.instinct.eqfleet.menu.main.Menu;
+import de.instinct.eqfleet.scene.SceneManager;
+import de.instinct.eqfleet.scene.SceneType;
 import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
 import de.instinct.eqlibgdxutils.debug.profiler.Profiler;
@@ -87,12 +88,7 @@ public class Game {
 		if (currentDriver != null) {
 			currentDriver.dispose();
 		}
-		
-		try {
-			Menu.open();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		SceneManager.changeTo(SceneType.MENU);
 	}
 
 	public static void assignPlayer(PlayerAssigned playerAssigned) {

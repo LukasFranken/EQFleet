@@ -8,12 +8,13 @@ import com.badlogic.gdx.Gdx;
 import de.instinct.api.matchmaking.dto.ShipResult;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
-import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.postgame.elements.PostGameExperienceElement;
 import de.instinct.eqfleet.menu.postgame.elements.PostGameResourceElement;
 import de.instinct.eqfleet.menu.postgame.elements.PostGameShipProgressOverview;
 import de.instinct.eqfleet.menu.postgame.model.DynamicPostGameElement;
 import de.instinct.eqfleet.menu.postgame.model.PostGameElement;
+import de.instinct.eqfleet.scene.SceneManager;
+import de.instinct.eqfleet.scene.SceneType;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.debug.profiler.Profiler;
 import de.instinct.eqlibgdxutils.generic.Action;
@@ -47,9 +48,9 @@ public class PostGameRenderer extends BaseModuleRenderer {
 			
 			@Override
 			public void execute() {
-				Menu.load();
 				PostGameModel.reward = null;
 				loaded = false;
+				SceneManager.changeTo(SceneType.MENU);
 			}
 			
 		});

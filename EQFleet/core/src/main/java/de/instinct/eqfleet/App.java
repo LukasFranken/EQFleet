@@ -1,43 +1,27 @@
 package de.instinct.eqfleet;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import de.instinct.eqfleet.audio.AudioManager;
-import de.instinct.eqfleet.cover.CoverManager;
-import de.instinct.eqfleet.game.Game;
-import de.instinct.eqfleet.intro.Intro;
 import de.instinct.eqfleet.language.LanguageManager;
-import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.net.WebManager;
-import de.instinct.eqlibgdxutils.CursorUtil;
-import de.instinct.eqlibgdxutils.GraphicsUtil;
+import de.instinct.eqfleet.scene.SceneManager;
+import de.instinct.eqfleet.scene.SceneType;
 import de.instinct.eqlibgdxutils.InputUtil;
 import de.instinct.eqlibgdxutils.debug.console.Console;
 import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
 import de.instinct.eqlibgdxutils.debug.metrics.types.NumberMetric;
 import de.instinct.eqlibgdxutils.debug.profiler.Profiler;
-import de.instinct.eqlibgdxutils.rendering.model.ModelRenderer;
 import de.instinct.eqlibgdxutils.rendering.particle.ParticleRenderer;
-import de.instinct.eqlibgdxutils.rendering.ui.font.FontConfiguration;
-import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
-import de.instinct.eqlibgdxutils.rendering.ui.font.FontTypeConfiguration;
-import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.popup.PopupRenderer;
-import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
 
 public class App extends ApplicationAdapter {
 
-    public static final String VERSION = "0.1.13";
+    public static final String VERSION = "0.1.14";
     private final String LOGTAG = "APP";
 
     private boolean halted;
@@ -45,76 +29,21 @@ public class App extends ApplicationAdapter {
     @Override
     public void create() {
     	Logger.log(LOGTAG, "Welcome to EQFLEET v" + VERSION, ConsoleColor.YELLOW);
-    	Console.init();
-    	Console.addCommands(new EQFleetCommandLoader().getCommands());
-    	PreferenceManager.init();
-    	GraphicsUtil.init(new Vector2(400, 900));
-    	TextureManager.init();
-    	SkinManager.init();
+    	LibraryManager.init();
     	AudioManager.init();
     	LanguageManager.init();
-    	loadFonts();
     	Gdx.input.setInputProcessor(new InputMultiplexer());
-    	CursorUtil.createCursor();
     	WebManager.init();
-    	Intro.init();
-        Menu.init();
-        Game.init();
-        ParticleRenderer.init();
-        ModelRenderer.init();
-        PopupRenderer.init();
-        Console.build();
+    	SceneManager.init();
         Console.registerMetric(NumberMetric.builder()
         		.decimals(2)
         		.tag("this_frame_time_MS")
         		.build());
         GlobalStaticData.backgroundParticles = !PreferenceManager.load("bgparticles").contentEquals("false");
         GlobalStaticData.showDebugGrid = PreferenceManager.load("debuggrid").contentEquals("true");
+        SceneManager.changeTo(SceneType.INTRO);
         Logger.log(LOGTAG, "Initialization completed", ConsoleColor.YELLOW);
     }
-
-	private void loadFonts() {
-		List<FontTypeConfiguration> fontTypes = new ArrayList<>();
-		fontTypes.add(FontTypeConfiguration.builder()
-				.type(FontType.GIANT)
-				.name("larabie")
-				.size(36)
-				.build());
-		fontTypes.add(FontTypeConfiguration.builder()
-				.type(FontType.LARGE)
-				.name("larabie")
-				.size(24)
-				.build());
-		fontTypes.add(FontTypeConfiguration.builder()
-				.type(FontType.NORMAL)
-				.name("larabie")
-				.size(16)
-				.build());
-		fontTypes.add(FontTypeConfiguration.builder()
-				.type(FontType.BOLD)
-				.name("larabie")
-				.size(16)
-				.build());
-		fontTypes.add(FontTypeConfiguration.builder()
-				.type(FontType.SMALL)
-				.name("larabie")
-				.size(12)
-				.build());
-		fontTypes.add(FontTypeConfiguration.builder()
-				.type(FontType.TINY)
-				.name("source_bold")
-				.size(10)
-				.build());
-		fontTypes.add(FontTypeConfiguration.builder()
-				.type(FontType.MICRO)
-				.name("source")
-				.size(7)
-				.build());
-
-		FontUtil.init(FontConfiguration.builder()
-				.fontTypes(fontTypes)
-				.build());
-	}
 	
 	@Override
     public void render() {
@@ -131,14 +60,10 @@ public class App extends ApplicationAdapter {
 			        ParticleRenderer.renderParticles("stars");
 			        Profiler.checkpoint("APP", "Particles");
 				}
-				CoverManager.update();
-				Profiler.checkpoint("APP", "CoverManager");
-		        Intro.render();
-		        Profiler.checkpoint("APP", "Intro");
-		        Menu.render();
-		        Profiler.checkpoint("APP", "Menu");
-		        Game.render();
-		        Profiler.checkpoint("APP", "Game");
+				SceneManager.update();
+				Profiler.checkpoint("APP", "SceneUpdate");
+				SceneManager.render();
+				Profiler.checkpoint("APP", "SceneRender");
 		        PopupRenderer.render();
 		        Profiler.checkpoint("APP", "PopupRenderer");
 		        Profiler.endFrame("APP");
@@ -155,14 +80,10 @@ public class App extends ApplicationAdapter {
 
 	@Override
     public void dispose() {
+		SceneManager.dispose();
 		WebManager.dispose();
-        Game.dispose();
-        Menu.dispose();
-        TextureManager.dispose();
         AudioManager.dispose();
-        ModelRenderer.dispose();
-        Console.dispose();
-        Shapes.dispose();
+        LibraryManager.dispose();
         Logger.log(LOGTAG, "EQFLEET TERMINATED", ConsoleColor.YELLOW);
     }
 

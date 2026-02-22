@@ -37,7 +37,7 @@ public class Shipyard extends BaseModule {
 	}
 	
 	private void loadData() {
-		Menu.queue(ReloadShipyardMessage.builder().build());
+		//Menu.queue(ReloadShipyardMessage.builder().build());
 	}
 
 	@Override

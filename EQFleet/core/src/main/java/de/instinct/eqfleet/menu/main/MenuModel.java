@@ -19,9 +19,11 @@ public class MenuModel {
 	public static volatile ModuleData unlockedModules;
 	public static volatile ModuleInfoResponse lockedModules;
 	public static volatile boolean loaded;
-	public static volatile float alpha;
 	public static volatile Map<MenuModule, BaseModule> modules;
 	public static volatile Map<MenuModule, BaseModuleRenderer> renderers;
 	public static volatile List<MenuModule> buttons;
+	
+	public static volatile float openAnimationElapsed;
+	public static volatile float alpha;
 
 }

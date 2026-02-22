@@ -70,7 +70,7 @@ public class LabeledImageButton extends Button {
 	}
 
 	private Rectangle calculateImageBounds(Rectangle bounds) {
-		return new Rectangle(
+		return bounds.set(
 				bounds.x + contentMargin,
 				bounds.y + contentMargin,
 				adjustedWidth(bounds),

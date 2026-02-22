@@ -67,7 +67,7 @@ public class LabeledModelButton extends Button {
 	
 	@Override
 	protected void updateButton() {
-		modelBounds = new Rectangle(getBounds().x, getBounds().y + labelHeight, getBounds().width, getBounds().height - labelHeight);
+		modelBounds.set(getBounds().x, getBounds().y + labelHeight, getBounds().width, getBounds().height - labelHeight);
 		modelPreview.setBounds(modelBounds);
 		modelPreview.setAlpha(getAlpha());
 		label.setFixedWidth(getBounds().width);

@@ -18,7 +18,10 @@ GENERAL:
   x eel (after beam rework)
   x shellshock
   x fallout
-  
+ 
+- remove all object allocations in all components
+ -> buttons already done
+
 - implement offline mode
  -> might be nessecary to fix  
  -> symbol for server connectivity

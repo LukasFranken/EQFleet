@@ -12,8 +12,9 @@ import de.instinct.api.meta.dto.ResourceAmount;
 import de.instinct.api.meta.dto.ResourceData;
 import de.instinct.api.meta.dto.ResourceUpdateResponseCode;
 import de.instinct.eqfleet.game.backend.driver.local.tutorial.TutorialModel;
-import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.net.WebManager;
+import de.instinct.eqfleet.scene.SceneManager;
+import de.instinct.eqfleet.scene.SceneType;
 import de.instinct.eqlibgdxutils.ClipboardUtil;
 import de.instinct.eqlibgdxutils.debug.console.Command;
 import de.instinct.eqlibgdxutils.debug.console.CommandAction;
@@ -73,7 +74,7 @@ public class EQFleetCommandLoader implements CommandLoader {
 					
 					@Override
 					public void execute(String message) {
-						Menu.loadModules();
+						SceneManager.changeTo(SceneType.MENU);
 						log("Menu reloaded");
 					}
 					
@@ -149,19 +150,19 @@ public class EQFleetCommandLoader implements CommandLoader {
 						case "off":
 							PreferenceManager.save("glow", "0");
 							GlobalRenderingConfiguration.defaultGlowRadius = 0;
-							Menu.reloadAll();
+							SceneManager.changeTo(SceneType.MENU);
 							log("Glow effect disabled");
 							break;
 						case "low":
 							PreferenceManager.save("glow", "10");
 							GlobalRenderingConfiguration.defaultGlowRadius = 10;
-							Menu.reloadAll();
+							SceneManager.changeTo(SceneType.MENU);
 							log("Glow effect set to low");
 							break;
 						case "high":
 							PreferenceManager.save("glow", "30");
 							GlobalRenderingConfiguration.defaultGlowRadius = 30;
-							Menu.reloadAll();
+							SceneManager.changeTo(SceneType.MENU);
 							log("Glow effect set to high");
 							break;
 
@@ -199,7 +200,7 @@ public class EQFleetCommandLoader implements CommandLoader {
 						try {
 							SkinManager.setSkinColor(SkinColor.valueOf(color));
 							PreferenceManager.save("skin", color);
-							Menu.reloadAll();
+							SceneManager.changeTo(SceneType.MENU);
 							log("Skin color set to " + color);
 						} catch (Exception e) {
 							log("Error setting skin color: " + color);

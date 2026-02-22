@@ -14,9 +14,11 @@ import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.backend.driver.local.tutorial.TutorialMode;
 import de.instinct.eqfleet.language.LanguageManager;
 import de.instinct.eqfleet.language.model.Language;
-import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.main.MenuModel;
 import de.instinct.eqfleet.net.WebManager;
+import de.instinct.eqfleet.scene.Scene;
+import de.instinct.eqfleet.scene.SceneManager;
+import de.instinct.eqfleet.scene.SceneType;
 import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
 import de.instinct.eqlibgdxutils.generic.Action;
@@ -34,30 +36,42 @@ import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.timed.Messa
 import de.instinct.eqlibgdxutils.rendering.ui.module.slideshow.slide.timed.Pause;
 import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 
-public class Intro {
+public class Intro extends Scene {
 	
-	public static boolean active;
-	
-	private static Slideshow introSlideshow;
-	
-	private static ClipboardDialog authKeyInsertDialog;
-	private static Label versionLabel;
+	private boolean active;
+	private Slideshow introSlideshow;
+	private ClipboardDialog authKeyInsertDialog;
+	private Label versionLabel;
 
-	public static void init() {
+	@Override
+	public void init() {
 		introSlideshow = new Slideshow();
-		loadWelcomeSlides();
-		active = true;
 		versionLabel = new Label("v" + App.VERSION);
 		versionLabel.setBounds(new Rectangle(30, 30, 60, 20));
 		versionLabel.setColor(SkinManager.skinColor);
 	}
 	
-	private static void loadMenu() {
+	@Override
+	public void open() {
+		loadWelcomeSlides();
+		active = true;
+		AudioManager.stopRadio();
+		AudioManager.playMusic("to_the_stars_intro", true);
+	}
+
+	@Override
+	public void close() {
+		introSlideshow.getSlideList().clear();
+		active = false;
+		AudioManager.startRadio();
+	}
+	
+	private void loadMenu() {
 		Macro startClientMacro = new Macro(new Action() {
 			
 			@Override
 			public void execute() {
-				deactivate();
+				SceneManager.changeTo(SceneType.MENU);
 			}
 			
 		});
@@ -67,7 +81,7 @@ public class Intro {
 		}
 	}
 
-	private static void loadWelcomeSlides() {
+	private void loadWelcomeSlides() {
 		Pause startDelay = new Pause();
 		startDelay.setDuration(1f);
 		introSlideshow.add(startDelay);
@@ -100,7 +114,7 @@ public class Intro {
 		introSlideshow.add(checkAuthAndConnection);
 	}
 	
-	private static void createFirstTimeSlides() {
+	private void createFirstTimeSlides() {
 		Logger.log("INTRO", "Creating first time slides", ConsoleColor.YELLOW);
 		if (!LanguageManager.languageIsSet()) {
 			createSelectLanguageSlide();
@@ -109,13 +123,13 @@ public class Intro {
 		}
 	}
 	
-	private static void createSelectLanguageSlide() {
+	private void createSelectLanguageSlide() {
 		MultiChoiceDialog languageSelectionDialog = new MultiChoiceDialog("Choose your prefered language:", getLanguageChoices());
 		languageSelectionDialog.setBackButtonEnabled(false);
 		introSlideshow.add(languageSelectionDialog);
 	}
 	
-	private static List<SlideChoice> getLanguageChoices() {
+	private List<SlideChoice> getLanguageChoices() {
 		List<SlideChoice> choices = new ArrayList<>();
 		for (Language language : LanguageManager.getAvailableLanguages()) {
 			SlideChoice slideChoice = new SlideChoice();
@@ -134,7 +148,7 @@ public class Intro {
 		return choices;
 	}
 	
-	private static void createVolumeSelectionSlide(boolean backButtonEnabled) {
+	private void createVolumeSelectionSlide(boolean backButtonEnabled) {
 		String volume = PreferenceManager.load("initialvolume");
 		if (volume.isEmpty()) {
 			AudioManager.playMusic("eqspace2", false);
@@ -172,7 +186,7 @@ public class Intro {
 		}
 	}
 
-	private static void createDoYouHaveAnAccountSlide(boolean backButtonEnabled) {
+	private void createDoYouHaveAnAccountSlide(boolean backButtonEnabled) {
 		Action acceptAction = new Action() {
 			
 			@Override
@@ -219,7 +233,7 @@ public class Intro {
 		introSlideshow.add(firstTimeDialog);
 	}
 
-	private static List<SlideChoice> getTutorialChoices() {
+	private List<SlideChoice> getTutorialChoices() {
 		List<SlideChoice> choices = new ArrayList<>();
 		SlideChoice slideChoiceFull = new SlideChoice();
 		slideChoiceFull.setLabelText("Full (~3 min)");
@@ -279,24 +293,29 @@ public class Intro {
 		return choices;
 	}
 	
-	private static void handleRegister(String result) {
+	private void handleRegister(String result) {
 		if (result != null) {
 			PreferenceManager.save("authkey", result);
 		}
 	}
-	
-	private static void deactivate() {
-		active = false;
-		introSlideshow.getSlideList().clear();
-		Menu.open();
-		AudioManager.startRadio();
-	}
 
-	public static void render() {
+	@Override
+	public void update() {
+		
+	}
+	
+	@Override
+	public void render() {
 		if (active) {
 			introSlideshow.render();
 			versionLabel.render();
 		}
+	}
+
+	@Override
+	public void dispose() {
+		introSlideshow.dispose();
+		versionLabel.dispose();
 	}
 
 }

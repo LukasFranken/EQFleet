@@ -65,7 +65,7 @@ public class Profile extends BaseModule {
 			    () -> API.meta().profile(API.authKey),
 			    result -> {
 			    	ProfileModel.profile = result;
-			    	Menu.reloadContent();
+			    	//Menu.reloadContent();
 			    	WebManager.enqueue(
 						    () -> API.commander().data(API.authKey),
 						    result2 -> {

@@ -7,7 +7,8 @@ import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.shapes.EQRectangle;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -29,6 +30,8 @@ public class ColorButton extends Button {
 	
 	private boolean glowAnimation;
 	private float currentGlow;
+	
+	private EQRectangle backgroundShape;
 
 	public ColorButton(String text) {
 		super();
@@ -45,6 +48,11 @@ public class ColorButton extends Button {
 		hoverColor = new Color(SkinManager.darkerSkinColor);
 		hoverActiveColor = new Color(SkinManager.skinColor);
 		contentMargin = 5;
+		backgroundShape = EQRectangle.builder()
+				.bounds(getBounds())
+				.color(new Color())
+				.filled(true)
+				.build();
 	}
 
 	@Override
@@ -61,48 +69,47 @@ public class ColorButton extends Button {
 	protected void updateButton() {
 		label.setAlpha(getAlpha());
 		label.setBounds(getBounds());
-		currentGlow += Gdx.graphics.getDeltaTime();
-		if (currentGlow > 1f) {
-			currentGlow = 0f;
+		if (glowAnimation && !isHovered() && !isDown()) {
+			currentGlow += Gdx.graphics.getDeltaTime();
+			if (currentGlow > 1f) {
+				currentGlow = 0f;
+			}
+			backgroundShape.getColor().set(downColor.r, downColor.g, downColor.b, downColor.a * getAlpha() * (0.6f * (float) Math.sin(currentGlow * Math.PI)));
+		} else {
+			backgroundShape.getColor().set(getButtonColor().r, getButtonColor().g, getButtonColor().b, getButtonColor().a * getAlpha());
 		}
 	}
 
 	@Override
 	public void renderComponent() {
-		if (glowAnimation && !isHovered() && !isDown()) {
-			TextureManager.draw(TextureManager.createTexture(new Color(downColor)), getBounds(), getAlpha() * (0.6f * (float) Math.sin(currentGlow * Math.PI)));
-		} else {
-			TextureManager.draw(TextureManager.createTexture(getButtonColor()), getBounds(), getAlpha());
-		}
+		Shapes.draw(backgroundShape);
 		label.render();
 	}
 
 	private Color getButtonColor() {
-		Color buttonColor = new Color(color);
 		if (isActive()) {
-			buttonColor = new Color(activeColor);
+			return activeColor;
 		}
 		if (isDown()) {
 			if (isActive()) {
-				buttonColor = new Color(downActiveColor);
+				return downActiveColor;
 			} else {
-				buttonColor = new Color(downColor);
+				return downColor;
 			}
 		}
 		if (isHovered()) {
 			if (isActive()) {
-				buttonColor = new Color(hoverActiveColor);
+				return hoverActiveColor;
 			} else {
-				buttonColor = new Color(hoverColor);
+				return hoverColor;
 			}
 		}
-		buttonColor.a = buttonColor.a * getAlpha();
-		return buttonColor;
+		return color;
 	}
 
 	@Override
 	public void dispose() {
-
+		label.dispose();
 	}
 
 }

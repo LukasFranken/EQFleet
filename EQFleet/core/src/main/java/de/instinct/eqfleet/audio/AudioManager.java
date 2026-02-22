@@ -28,6 +28,7 @@ public class AudioManager {
 	private static Music currentMusic;
 	private static Music transitionedInMusic;
 	private static Music queuedInMusic;
+	
 	private static Sound currentVoice;
 
 	private static List<String> availableRadioTracks;
@@ -66,6 +67,7 @@ public class AudioManager {
 		availableRadioTracks.add("neon_horizon_ambient");
 		availableRadioTracks.add("to_the_stars_70s");
 		availableRadioTracks.add("to_the_stars_synth");
+		availableRadioTracks.add("to_the_stars_intro");
 		
 		availableNonRadioTracks = new ArrayList<>();
 		availableNonRadioTracks.add("to_the_stars_short");
@@ -155,6 +157,10 @@ public class AudioManager {
 	public static void startRadio() {
 		radioMode = true;
 	}
+	
+	public static void stopRadio() {
+		radioMode = false;
+	}
 
 	public static void stop() {
 		radioMode = false;
@@ -198,8 +204,6 @@ public class AudioManager {
 				currentMusic.setVolume(targetMusicVolume * userMusicVolume);
 				currentMusic.setLooping(false);
 				currentMusic.play();
-
-				
 			}
 		}
 

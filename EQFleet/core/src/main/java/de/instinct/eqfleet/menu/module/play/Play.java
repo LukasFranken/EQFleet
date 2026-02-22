@@ -62,7 +62,7 @@ public class Play extends BaseModule {
 	private static void connectToGameserver() {
 		Gdx.app.postRunnable(() -> {
 		    Game.start();
-		    Menu.close();
+		    //Menu.close();
 		  });
 	}
 

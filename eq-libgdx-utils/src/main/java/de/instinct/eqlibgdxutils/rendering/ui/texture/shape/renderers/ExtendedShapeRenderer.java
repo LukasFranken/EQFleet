@@ -94,6 +94,12 @@ public class ExtendedShapeRenderer extends ShapeRenderer {
 		end();
 	}
 
+	public void rect(Rectangle bounds) {
+		begin(ShapeRenderer.ShapeType.Filled);
+		rect(bounds.x, bounds.y, bounds.width, bounds.height);
+		end();
+	}
+	
 	public void rect(Rectangle bounds, float thickness) {
 		begin(ShapeRenderer.ShapeType.Filled);
 		if (thickness > 0) {
@@ -101,8 +107,6 @@ public class ExtendedShapeRenderer extends ShapeRenderer {
 			rect(bounds.x, bounds.y, thickness, bounds.height);
 			rect(bounds.x + bounds.width - thickness, bounds.y, thickness, bounds.height);
 			rect(bounds.x, bounds.y + bounds.height - thickness, bounds.width, thickness);
-		} else {
-			rect(bounds.x, bounds.y, bounds.width, bounds.height);
 		}
 		end();
 	}

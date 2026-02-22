@@ -23,14 +23,15 @@ public abstract class UIElement {
 	}
 	
 	public void setBounds(Rectangle bounds) {
-		this.bounds = bounds;
 		if (bounds != null) {
-			fixedWidth = bounds.width;
-			fixedHeight = bounds.height;
-		} else {
-			fixedWidth = 0f;
-			fixedHeight = 0f;
+			setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
 		}
+	}
+	
+	public void setBounds(float x, float y, float width, float height) {
+		bounds.set(x, y, width, height);
+		fixedWidth = bounds.width;
+		fixedHeight = bounds.height;
 	}
 
 	public abstract float calculateWidth();
