@@ -15,8 +15,9 @@ import de.instinct.api.matchmaking.model.Invite;
 import de.instinct.api.matchmaking.model.VersusMode;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
-import de.instinct.eqfleet.menu.main.Menu;
-import de.instinct.eqfleet.menu.module.ship.Shipyard;
+import de.instinct.eqfleet.menu.module.ship.ShipyardModuleAPI;
+import de.instinct.eqfleet.scene.SceneManager;
+import de.instinct.eqfleet.scene.SceneType;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
@@ -92,7 +93,7 @@ public class PlayRenderer extends BaseModuleRenderer {
 			
 			@Override
 			public void execute() {
-				if (Shipyard.hasActiveShip()) {
+				if (ShipyardModuleAPI.hasActiveShip()) {
 					Play.createLobby();
 				} else {
 					PopupRenderer.createMessageDialog("Unable to start", "No active ship\nin Shipyard");
@@ -106,9 +107,9 @@ public class PlayRenderer extends BaseModuleRenderer {
 			
 			@Override
 			public void execute() {
-				if (Shipyard.hasActiveShip()) {
+				if (ShipyardModuleAPI.hasActiveShip()) {
 					Game.startCustom();
-					Menu.close();
+					SceneManager.changeTo(SceneType.GAME);
 				} else {
 					PopupRenderer.createMessageDialog("Unable to start", "No active ship\nin Shipyard");
 				}
@@ -229,7 +230,7 @@ public class PlayRenderer extends BaseModuleRenderer {
 			
 			@Override
 			public void triggered(ActionListElement element) {
-				if (Shipyard.hasActiveShip()) {
+				if (ShipyardModuleAPI.hasActiveShip()) {
 					Play.accept(element.getValue());
 				} else {
 					PopupRenderer.createMessageDialog("Unable to start", "No active ship\nin Shipyard");
@@ -273,6 +274,16 @@ public class PlayRenderer extends BaseModuleRenderer {
 		newColorButton.setDownColor(new Color(SkinManager.lighterSkinColor));
 		newColorButton.setActiveColor(new Color(SkinManager.darkestSkinColor));
 		return newColorButton;
+	}
+	
+	@Override
+	public void init() {
+		
+	}
+
+	@Override
+	public void update() {
+		
 	}
 	
 	@Override
@@ -428,11 +439,6 @@ public class PlayRenderer extends BaseModuleRenderer {
 	public void dispose() {
 		setTypeButton.dispose();
 		aiButton.dispose();
-	}
-
-	@Override
-	public void reload() {
-		
 	}
 
 }

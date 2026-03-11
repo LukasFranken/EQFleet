@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.math.Vector2;
 
 import de.instinct.api.starmap.dto.GalaxyData;
+import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,5 +15,7 @@ public class Galaxy {
 	private GalaxyData data;
 	private Decal decal;
 	private Vector2 screenPos;
+	private Label nameLabel;
+	private Label levelLabel;
 
 }

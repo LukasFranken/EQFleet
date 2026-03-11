@@ -8,7 +8,8 @@ import com.badlogic.gdx.math.Vector3;
 
 import de.instinct.api.core.modules.MenuModule;
 import de.instinct.api.core.modules.ModuleUnlockRequirement;
-import de.instinct.eqfleet.menu.main.Menu;
+import de.instinct.eqfleet.menu.main.MenuModel;
+import de.instinct.eqfleet.menu.main.message.types.OpenModuleMessage;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.model.ModelLoader;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
@@ -39,7 +40,7 @@ public class DefaultButtonFactory {
 			
 			@Override
 			public void execute() {
-				Menu.openModule(module);
+				MenuModel.messageQueue.add(OpenModuleMessage.builder().module(module).build());
 			}
 			
 		});

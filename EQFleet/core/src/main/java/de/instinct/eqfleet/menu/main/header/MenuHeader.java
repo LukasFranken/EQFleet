@@ -5,7 +5,6 @@ import de.instinct.eqfleet.menu.main.MenuModel;
 import de.instinct.eqfleet.menu.main.header.components.ProfileHeaderComponent;
 import de.instinct.eqfleet.menu.main.header.components.ResourceHeaderComponent;
 import de.instinct.eqfleet.menu.module.profile.ProfileModel;
-import de.instinct.eqfleet.menu.module.profile.inventory.InventoryModel;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
 
 public class MenuHeader extends Component {
@@ -34,14 +33,16 @@ public class MenuHeader extends Component {
 	
 	@Override
 	protected void renderComponent() {
-		if (ProfileModel.profile != null && MenuModel.unlockedModules.getEnabledModules().contains(MenuModule.PROFILE)) {
-			if (MenuModel.activeModule != MenuModule.PROFILE) {
-				profileComponent.render();
+		if (MenuModel.unlockedModules != null) {
+			if (ProfileModel.profile != null && MenuModel.unlockedModules.getEnabledModules().contains(MenuModule.PROFILE)) {
+				if (MenuModel.activeModule != MenuModule.PROFILE) {
+					profileComponent.render();
+				}
 			}
-		}
-		if (InventoryModel.resources != null && MenuModel.unlockedModules.getEnabledModules().contains(MenuModule.PROFILE)) {
-			if (MenuModel.activeModule != MenuModule.PROFILE) {
-				resourceComponent.render();
+			if (ProfileModel.resources != null && MenuModel.unlockedModules.getEnabledModules().contains(MenuModule.PROFILE)) {
+				if (MenuModel.activeModule != MenuModule.PROFILE) {
+					resourceComponent.render();
+				}
 			}
 		}
 	}

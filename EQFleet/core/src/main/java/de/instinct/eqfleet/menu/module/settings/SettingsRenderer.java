@@ -1,7 +1,5 @@
 package de.instinct.eqfleet.menu.module.settings;
 
-import com.badlogic.gdx.math.Rectangle;
-
 import de.instinct.eqfleet.audio.AudioManager;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.main.MenuModel;
@@ -23,29 +21,12 @@ public class SettingsRenderer extends BaseModuleRenderer {
 	private LabeledSlider voiceVolumeSlider;
 	private LabeledSlider sfxVolumeSlider;
 	
-	public SettingsRenderer() {
-		
-	}
-
 	@Override
-	public void render() {
-		musicVolumeSlider.render();
-		voiceVolumeSlider.render();
-		sfxVolumeSlider.render();
-		musicLabel.render();
-		musicLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
-		voiceLabel.render();
-		voiceLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
-		sfxLabel.render();
-		sfxLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
-	}
-
-	@Override
-	public void reload() {
+	public void init() {
 		musicLabel = new Label("Music Volume");
+		musicLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
 		musicLabel.setFixedHeight(30);
 		musicLabel.setFixedWidth(100);
-		musicLabel.setPosition(MenuModel.moduleBounds.x + 20, MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - musicLabel.getFixedHeight() - 20);
 		musicVolumeSlider = new LabeledSlider(new ValueChangeAction() {
 			
 			@Override
@@ -61,7 +42,6 @@ public class SettingsRenderer extends BaseModuleRenderer {
 			}
 			
 		});
-		musicVolumeSlider.setBounds(new Rectangle(MenuModel.moduleBounds.x + MenuModel.moduleBounds.width - 160 - 20, musicLabel.getBounds().y, 160, 30));
 		musicVolumeSlider.getSlider().setDragEndAction(new Action() {
 			
 			@Override
@@ -72,9 +52,9 @@ public class SettingsRenderer extends BaseModuleRenderer {
 		});
 		
 		voiceLabel = new Label("Voice Volume");
+		voiceLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
 		voiceLabel.setFixedHeight(30);
 		voiceLabel.setFixedWidth(100);
-		voiceLabel.setPosition(MenuModel.moduleBounds.x + 20, musicLabel.getBounds().y - voiceLabel.getFixedHeight() - 20);
 		voiceVolumeSlider = new LabeledSlider(new ValueChangeAction() {
 			
 			@Override
@@ -90,7 +70,6 @@ public class SettingsRenderer extends BaseModuleRenderer {
 			}
 			
 		});
-		voiceVolumeSlider.setBounds(new Rectangle(MenuModel.moduleBounds.x + MenuModel.moduleBounds.width - 160 - 20, voiceLabel.getBounds().y, 160, 30));
 		voiceVolumeSlider.getSlider().setDragEndAction(new Action() {
 			
 			@Override
@@ -102,9 +81,9 @@ public class SettingsRenderer extends BaseModuleRenderer {
 		});
 		
 		sfxLabel = new Label("SFX Volume");
+		sfxLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
 		sfxLabel.setFixedHeight(30);
 		sfxLabel.setFixedWidth(100);
-		sfxLabel.setPosition(MenuModel.moduleBounds.x + 20, voiceLabel.getBounds().y - sfxLabel.getFixedHeight() - 20);
 		sfxVolumeSlider = new LabeledSlider(new ValueChangeAction() {
 			
 			@Override
@@ -120,7 +99,6 @@ public class SettingsRenderer extends BaseModuleRenderer {
 			}
 			
 		});
-		sfxVolumeSlider.setBounds(new Rectangle(MenuModel.moduleBounds.x + MenuModel.moduleBounds.width - 160 - 20, sfxLabel.getBounds().y, 160, 30));
 		sfxVolumeSlider.getSlider().setDragEndAction(new Action() {
 			
 			@Override
@@ -130,6 +108,26 @@ public class SettingsRenderer extends BaseModuleRenderer {
 			}
 			
 		});
+	}
+
+	@Override
+	public void update() {
+		sfxLabel.setPosition(MenuModel.moduleBounds.x + 20, voiceLabel.getBounds().y - sfxLabel.getFixedHeight() - 20);
+		sfxVolumeSlider.setBounds(MenuModel.moduleBounds.x + MenuModel.moduleBounds.width - 160 - 20, sfxLabel.getBounds().y, 160, 30);
+		voiceLabel.setPosition(MenuModel.moduleBounds.x + 20, musicLabel.getBounds().y - voiceLabel.getFixedHeight() - 20);
+		voiceVolumeSlider.setBounds(MenuModel.moduleBounds.x + MenuModel.moduleBounds.width - 160 - 20, voiceLabel.getBounds().y, 160, 30);
+		musicLabel.setPosition(MenuModel.moduleBounds.x + 20, MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - musicLabel.getFixedHeight() - 20);
+		musicVolumeSlider.setBounds(MenuModel.moduleBounds.x + MenuModel.moduleBounds.width - 160 - 20, musicLabel.getBounds().y, 160, 30);
+	}
+
+	@Override
+	public void render() {
+		musicVolumeSlider.render();
+		voiceVolumeSlider.render();
+		sfxVolumeSlider.render();
+		musicLabel.render();
+		voiceLabel.render();
+		sfxLabel.render();
 	}
 
 	@Override

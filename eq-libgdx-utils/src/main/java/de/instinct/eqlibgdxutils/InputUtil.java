@@ -12,9 +12,18 @@ public class InputUtil {
 	private static boolean touched;
 	private static boolean pressed;
 	private static boolean released;
+	private static boolean justPressed;
+	
+	private static Vector2 mousePosition = new Vector2();
+	private static Vector2 virtualMousePosition = new Vector2();
 	
 	public static void update() {
 		if (Gdx.input.isTouched()) {
+			if (!pressed) {
+				justPressed = true;
+			} else {
+				justPressed = false;
+			}
 			pressed = true;
 			released = false;
 		} else {
@@ -32,7 +41,7 @@ public class InputUtil {
 	}
 	
 	public static boolean mouseIsOver(Rectangle rectangle) {
-		Vector2 virtualMousePos = getNormalizedMousePosition();
+		Vector2 virtualMousePos = getVirtualMousePosition();
 		return rectangle.contains(virtualMousePos.x, virtualMousePos.y);
 	}
 
@@ -52,6 +61,10 @@ public class InputUtil {
 		return touched;
 	}
 	
+	public static boolean isJustPressed() {
+		return justPressed;
+	}
+	
 	public static boolean rightMouseIsClicked() {
 		return Gdx.input.isButtonJustPressed(Buttons.RIGHT);
 	}
@@ -65,12 +78,13 @@ public class InputUtil {
 	}
 
 	public static Vector2 getMousePosition() {
-		return new Vector2(getMouseX(), getMouseY());
+		mousePosition.set(getMouseX(), getMouseY());
+		return mousePosition;
 	}
 	
-	public static Vector2 getNormalizedMousePosition() {
-		Rectangle normalizedScreenBounds = GraphicsUtil.scaleFactorDeducted(new Rectangle(0, 0, getMouseX(), getMouseY()));
-		return new Vector2(normalizedScreenBounds.width, normalizedScreenBounds.height);
+	public static Vector2 getVirtualMousePosition() {
+		virtualMousePosition.set(GraphicsUtil.translateToVirtual(getMousePosition()));
+		return virtualMousePosition;
 	}
 
 }

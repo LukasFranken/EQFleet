@@ -34,8 +34,19 @@ private List<LabeledModelButton> turretButtons;
 			i++;
 		}
 	}
+	
+	@Override
+	public void init() {
+		// TODO Auto-generated method stub
+		
+	}
 
 	@Override
+	public void update() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	public void reload() {
 		turretButtons = new ArrayList<>();
 		if (ConstructionModel.infrastructure != null && ConstructionModel.playerInfrastructure != null) {

@@ -25,8 +25,11 @@ import de.instinct.api.starmap.dto.StarsystemData;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
 import de.instinct.eqfleet.menu.common.components.label.DefaultLabelFactory;
+import de.instinct.eqfleet.menu.common.synchronizer.ListSynchronizer;
+import de.instinct.eqfleet.menu.common.synchronizer.SynchronizationConfiguration;
 import de.instinct.eqfleet.menu.main.MenuModel;
-import de.instinct.eqfleet.menu.module.ship.Shipyard;
+import de.instinct.eqfleet.menu.module.ship.ShipyardModuleAPI;
+import de.instinct.eqfleet.menu.module.starmap.message.types.StartConquestMessage;
 import de.instinct.eqfleet.menu.module.starmap.model.Galaxy;
 import de.instinct.eqfleet.menu.module.starmap.model.MapPreviewSection;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
@@ -58,6 +61,7 @@ public class StarmapRenderer extends BaseModuleRenderer {
 	private GridRenderer gridRenderer;
 
 	private List<Galaxy> galaxies;
+	private ListSynchronizer<GalaxyData, Galaxy> galaxySynchronizer;
 
 	private float zoomDuration = 1f;
 
@@ -74,6 +78,87 @@ public class StarmapRenderer extends BaseModuleRenderer {
 
 	private boolean isLoading;
 	private Rectangle screenAdjustedModuleBounds;
+	
+	@Override
+	public void init() {
+		screenAdjustedModuleBounds = new Rectangle(MenuModel.moduleBounds);
+		GraphicsUtil.translateToPhysical(screenAdjustedModuleBounds);
+		isLoading = false;
+		backButton = DefaultButtonFactory.colorButton("Back", new Action() {
+
+			@Override
+			public void execute() {
+				zoomIn = false;
+			}
+
+		});
+		zoomIn = false;
+		backButton.setFixedHeight(30);
+		backButton.setFixedWidth(100);
+		backButton.setPosition(MenuModel.moduleBounds.x + (MenuModel.moduleBounds.width / 2) - (backButton.getFixedWidth() / 2), MenuModel.moduleBounds.y + 20);
+
+		camera = new PerspectiveCamera(60, screenAdjustedModuleBounds.width, screenAdjustedModuleBounds.height);
+		camera.position.set(BASE_CAM_POS);
+		camera.lookAt(0f, 0f, 0f);
+		camera.up.set(0f, 1f, 0f);
+		camera.near = 1f;
+		camera.far = 1000f;
+		camera.update();
+
+		gridRenderer = new GridRenderer(GridConfiguration.builder()
+				.step(2)
+				.build());
+
+		decalBatch = new DecalBatch(new CameraGroupStrategy(camera));
+
+		StarmapModel.selectedGalaxyId = -1;
+		galaxyZoomElapsed = 0f;
+		galaxyZoomFactor = 0f;
+		
+		galaxies = new ArrayList<>();
+		galaxySynchronizer = ListSynchronizer.<GalaxyData, Galaxy>builder()
+				.synchronizationConfiguration(SynchronizationConfiguration.<GalaxyData, Galaxy>builder()
+						.comparator((galaxyData, galaxy) -> galaxyData.getId() == galaxy.getData().getId())
+						.generator(galaxyData -> createGalaxy(galaxyData))
+						.disposer(galaxy -> disposeGalaxy(galaxy))
+						.build())
+				.build();
+	}
+	
+	private Galaxy createGalaxy(GalaxyData galaxy) {
+		Texture galaxyTexture = TextureManager.getTexture("ui/image", "galaxy");
+		Decal decal = Decal.newDecal(10, 10, new TextureRegion(galaxyTexture), true);
+		decal.setPosition(galaxy.getMapPosX(), galaxy.getMapPosY(), 0);
+		
+		Label galaxyNameLabel = new Label(galaxy.getName().toUpperCase());
+        galaxyNameLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
+        galaxyNameLabel.setType(FontType.SMALL);
+        galaxyNameLabel.setFixedWidth(100f);
+        galaxyNameLabel.setFixedHeight(20f);
+        galaxyNameLabel.setColor(Color.GRAY);
+
+        Label galaxyLevelLabel = new Label("Threat: " + getMinThreatLevel(galaxy) + "-" + getMaxThreatLevel(galaxy));
+        galaxyLevelLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
+        galaxyLevelLabel.setType(FontType.SMALL);
+        galaxyLevelLabel.setFixedWidth(100f);
+        galaxyLevelLabel.setFixedHeight(20f);
+        galaxyLevelLabel.setColor(Color.GRAY);
+		
+		return Galaxy.builder()
+				.data(galaxy)
+				.decal(decal)
+				.nameLabel(galaxyNameLabel)
+				.levelLabel(galaxyLevelLabel)
+				.build();
+	}
+
+	@Override
+	public void update() {
+		if (StarmapModel.starmapData != null && StarmapModel.dataUpdated) {
+			galaxySynchronizer.update(StarmapModel.starmapData.getSectorData().getGalaxies(), galaxies);
+			StarmapModel.dataUpdated = false;
+		}
+	}
 
 	@Override
 	public void render() {
@@ -143,7 +228,7 @@ public class StarmapRenderer extends BaseModuleRenderer {
 				if (zoomIn) {
 					StarsystemData starsystemAtMouse = getClickedStarsystem();
 					if (starsystemAtMouse != null) {
-						if (Shipyard.hasActiveShip()) {
+						if (ShipyardModuleAPI.hasActiveShip()) {
 							createCombatInfoPopup(starsystemAtMouse);
 						} else {
 							PopupRenderer.createMessageDialog("ERROR", "No active ship\nin Shipyard");
@@ -181,7 +266,7 @@ public class StarmapRenderer extends BaseModuleRenderer {
                 screenAdjustedModuleBounds.height
         );
 
-        Vector2 projectedBaseScreen = GraphicsUtil.scaleFactorDeducted(new Vector2(projectedPhysical.x, projectedPhysical.y));
+        Vector2 projectedBaseScreen = GraphicsUtil.translateToVirtual(new Vector2(projectedPhysical.x, projectedPhysical.y));
         galaxy.setScreenPos(projectedBaseScreen);
     }
 
@@ -207,32 +292,20 @@ public class StarmapRenderer extends BaseModuleRenderer {
             for (Galaxy galaxy : galaxies) {
                 Vector2 centerBaseScreen = galaxy.getScreenPos();
 
-                Label galaxyNameLabel = new Label(galaxy.getData().getName().toUpperCase());
-                galaxyNameLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
-                galaxyNameLabel.setType(FontType.SMALL);
-                galaxyNameLabel.setFixedWidth(100f);
-                galaxyNameLabel.setFixedHeight(20f);
-                galaxyNameLabel.setColor(Color.GRAY);
-                galaxyNameLabel.setAlpha(MenuModel.alpha);
-                galaxyNameLabel.setPosition(centerBaseScreen.x - (galaxyNameLabel.getFixedWidth() / 2f), centerBaseScreen.y + 20f);
-                galaxyNameLabel.render();
+                galaxy.getNameLabel().setAlpha(MenuModel.alpha);
+                galaxy.getNameLabel().setPosition(centerBaseScreen.x - (galaxy.getNameLabel().getFixedWidth() / 2f), centerBaseScreen.y + 20f);
+                galaxy.getNameLabel().render();
 
-                Label galaxyLevelLabel = new Label("Threat: " + getMinThreatLevel(galaxy) + "-" + getMaxThreatLevel(galaxy));
-                galaxyLevelLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
-                galaxyLevelLabel.setType(FontType.SMALL);
-                galaxyLevelLabel.setFixedWidth(100f);
-                galaxyLevelLabel.setFixedHeight(20f);
-                galaxyLevelLabel.setColor(Color.GRAY);
-                galaxyLevelLabel.setAlpha(MenuModel.alpha);
-                galaxyLevelLabel.setPosition(centerBaseScreen.x - (galaxyLevelLabel.getFixedWidth() / 2f), centerBaseScreen.y - 40f);
-                galaxyLevelLabel.render();
+                galaxy.getLevelLabel().setAlpha(MenuModel.alpha);
+                galaxy.getLevelLabel().setPosition(centerBaseScreen.x - (galaxy.getLevelLabel().getFixedWidth() / 2f), centerBaseScreen.y - 40f);
+                galaxy.getLevelLabel().render();
             }
         }
     }
 
-	private int getMaxThreatLevel(Galaxy galaxy) {
+	private int getMaxThreatLevel(GalaxyData galaxyData) {
 		int maxThreat = Integer.MIN_VALUE;
-		for (StarsystemData starsystem : galaxy.getData().getStarsystems()) {
+		for (StarsystemData starsystem : galaxyData.getStarsystems()) {
 			if (starsystem.getThreatLevel() > maxThreat) {
 				maxThreat = starsystem.getThreatLevel();
 			}
@@ -240,9 +313,9 @@ public class StarmapRenderer extends BaseModuleRenderer {
 		return maxThreat;
 	}
 
-	private int getMinThreatLevel(Galaxy galaxy) {
+	private int getMinThreatLevel(GalaxyData galaxyData) {
 		int minThreat = Integer.MAX_VALUE;
-		for (StarsystemData starsystem : galaxy.getData().getStarsystems()) {
+		for (StarsystemData starsystem : galaxyData.getStarsystems()) {
 			if (starsystem.getThreatLevel() < minThreat) {
 				minThreat = starsystem.getThreatLevel();
 			}
@@ -256,7 +329,10 @@ public class StarmapRenderer extends BaseModuleRenderer {
 
 			@Override
 			public void execute() {
-				Starmap.createLobby(selectedGalaxy.getData().getId(), starsystem.getId());
+				StarmapModel.messageQueue.add(StartConquestMessage.builder()
+						.galaxyId(selectedGalaxy.getData().getId())
+						.starsystemId(starsystem.getId())
+						.build());
 				PopupRenderer.close();
 				isLoading = true;
 			}
@@ -268,8 +344,8 @@ public class StarmapRenderer extends BaseModuleRenderer {
 		ElementList systemInfoElements = new ElementList();
 		systemInfoElements.setMargin(10);
 		MapPreviewSection mapPreviewSection = new MapPreviewSection(starsystem.getMapPreview());
-		mapPreviewSection.setFixedWidth(popupWidth);
-		mapPreviewSection.setFixedHeight(popupWidth * 1.5f);
+		mapPreviewSection.getBounds().width = popupWidth;
+		mapPreviewSection.getBounds().height = popupWidth * 2f;
 		systemInfoElements.getElements().add(mapPreviewSection);
 		if (hasAncient(starsystem.getMapPreview()))
 			systemInfoElements.getElements().add(DefaultLabelFactory.createLabelStack("Req. AP", (int) starsystem.getAncientPoints() + "", popupWidth));
@@ -282,7 +358,11 @@ public class StarmapRenderer extends BaseModuleRenderer {
 			systemInfoElements.getElements().add(DefaultLabelFactory.createLabelStack(resource.getType().toString(), StringUtils.formatBigNumber(resource.getAmount()), popupWidth));
 		}
 		systemInfoElements.getElements().add(travelButton);
-		Popup systemInfoPopup = Popup.builder().closeOnClickOutside(true).title(starsystem.getName()).contentContainer(systemInfoElements).build();
+		Popup systemInfoPopup = Popup.builder()
+				.closeOnClickOutside(true)
+				.title(starsystem.getName())
+				.contentContainer(systemInfoElements)
+				.build();
 		PopupRenderer.create(systemInfoPopup);
 	}
 
@@ -326,54 +406,7 @@ public class StarmapRenderer extends BaseModuleRenderer {
 	}
 
 	private Vector2 getStarsystemActualScreenPosition(StarsystemData starsystem) {
-		return MathUtil.translate(new Vector2(starsystem.getMapPosX(), starsystem.getMapPosY()), MAP_BOUNDS, GraphicsUtil.scaleFactorAdjusted(getBaseMapPreviewSectionBounds()));
-	}
-
-	@Override
-	public void reload() {
-		screenAdjustedModuleBounds = GraphicsUtil.scaleFactorAdjusted(MenuModel.moduleBounds);
-		isLoading = false;
-		backButton = DefaultButtonFactory.colorButton("Back", new Action() {
-
-			@Override
-			public void execute() {
-				zoomIn = false;
-			}
-
-		});
-		zoomIn = false;
-		backButton.setFixedHeight(30);
-		backButton.setFixedWidth(100);
-		backButton.setPosition(MenuModel.moduleBounds.x + (MenuModel.moduleBounds.width / 2) - (backButton.getFixedWidth() / 2), MenuModel.moduleBounds.y + 20);
-
-		camera = new PerspectiveCamera(60, screenAdjustedModuleBounds.width, screenAdjustedModuleBounds.height);
-		camera.position.set(BASE_CAM_POS);
-		camera.lookAt(0f, 0f, 0f);
-		camera.up.set(0f, 1f, 0f);
-		camera.near = 1f;
-		camera.far = 1000f;
-		camera.update();
-
-		gridRenderer = new GridRenderer(GridConfiguration.builder().step(2).build());
-
-		decalBatch = new DecalBatch(new CameraGroupStrategy(camera));
-
-		StarmapModel.selectedGalaxyId = -1;
-		galaxyZoomElapsed = 0f;
-		galaxyZoomFactor = 0f;
-		galaxies = new ArrayList<>();
-		if (StarmapModel.starmapData != null) {
-			for (GalaxyData galaxy : StarmapModel.starmapData.getSectorData().getGalaxies()) {
-				galaxies.add(createGalaxy(galaxy));
-			}
-		}
-	}
-
-	private Galaxy createGalaxy(GalaxyData galaxy) {
-		Texture galaxyTexture = TextureManager.getTexture("ui/image", "galaxy");
-		Decal decal = Decal.newDecal(10, 10, new TextureRegion(galaxyTexture), true);
-		decal.setPosition(galaxy.getMapPosX(), galaxy.getMapPosY(), 0);
-		return Galaxy.builder().data(galaxy).decal(decal).build();
+		return MathUtil.translate(new Vector2(starsystem.getMapPosX(), starsystem.getMapPosY()), MAP_BOUNDS, GraphicsUtil.translateToPhysical(getBaseMapPreviewSectionBounds()));
 	}
 
 	private Galaxy getClickedGalaxy() {
@@ -418,6 +451,19 @@ public class StarmapRenderer extends BaseModuleRenderer {
 		if (decalBatch != null) {
 			decalBatch.dispose();
 		}
+		if (gridRenderer != null) {
+			gridRenderer.dispose();
+		}
+		if (galaxies != null) {
+			for (Galaxy galaxy : galaxies) {
+				disposeGalaxy(galaxy);
+			}
+		}
+	}
+
+	private void disposeGalaxy(Galaxy galaxy) {
+		galaxy.getLevelLabel().dispose();
+		galaxy.getNameLabel().dispose();
 	}
 
 }

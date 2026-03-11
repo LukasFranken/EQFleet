@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.api.meta.dto.Resource;
-import de.instinct.eqfleet.menu.module.profile.inventory.Inventory;
+import de.instinct.eqfleet.menu.module.profile.ProfileModuleAPI;
 import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.image.Image;
@@ -42,10 +42,10 @@ public class ResourceHeaderComponent extends Component {
 
 	@Override
 	protected void updateComponent() {
-		creditsBounds.set(getBounds().x + getBounds().width - 103, getBounds().y + 10, 85, 20);
+		creditsBounds.set(getBounds().x + getBounds().width - 103, getBounds().y, 85, 20);
 		
 		creditsLabel.setBounds(creditsBounds.x + 8, creditsBounds.y, creditsBounds.width - 16, creditsBounds.height);
-		creditsLabel.setText(StringUtils.formatBigNumber(Inventory.getResource(Resource.CREDITS)));
+		creditsLabel.setText(StringUtils.formatBigNumber(ProfileModuleAPI.getResource(Resource.CREDITS)));
 		creditsLabel.setAlpha(getAlpha());
 		
 		creditsImage.setBounds(creditsBounds.x + creditsBounds.width + 2, creditsBounds.y + 2, 16, 16);

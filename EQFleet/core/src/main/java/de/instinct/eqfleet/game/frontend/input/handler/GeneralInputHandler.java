@@ -14,15 +14,19 @@ import de.instinct.engine.util.EngineUtility;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.frontend.input.InputHandler;
 import de.instinct.eqfleet.game.frontend.input.model.GameInputModel;
-import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.InputUtil;
 
 public class GeneralInputHandler extends InputHandler {
+	
+	private Rectangle timerBounds;
+	
+	public GeneralInputHandler() {
+		timerBounds = new Rectangle(320, 820, 80, 50);
+	}
 
 	@Override
 	public void handleInput(PerspectiveCamera camera, GameState state) {
-        Rectangle timerBounds = GraphicsUtil.scaleFactorAdjusted(new Rectangle(320, 820, 80, 50));
-        if (timerBounds.contains(InputUtil.getMousePosition()) && InputUtil.isClicked()) {
+        if (timerBounds.contains(InputUtil.getVirtualMousePosition()) && InputUtil.isClicked()) {
         	GamePauseMessage order = new GamePauseMessage();
         	order.gameUUID = state.gameUUID;
         	order.userUUID = API.authKey;

@@ -79,7 +79,7 @@ public class MenuWindow extends Component {
 	@Override
 	protected void updateComponent() {
 		float titleHorizontalMargin = 20f;
-		titleBounds.set(getBounds().x, getBounds().y + getBounds().height - titleHeight, getBounds().width, titleHeight);
+		titleBounds.set(getBounds().x, getBounds().y + getBounds().height, getBounds().width, titleHeight);
 		
 		title.setText(MenuModel.activeModule == null ? "MENU" : MenuModel.activeModule.toString());
 		title.setPosition(titleBounds.x + titleHorizontalMargin, titleBounds.y);
@@ -97,13 +97,13 @@ public class MenuWindow extends Component {
 		closeModuleButton.getColor().a = MenuModel.alpha;
 		
 		float ratio = MathUtil.easeInOut(0f, 1f, MenuModel.openAnimationElapsed);
-		menuBackground.getBounds().set(getBounds().x, getBounds().y, getBounds().width, getBounds().height * ratio);
+		menuBackground.getBounds().set(getBounds().x, getBounds().y, getBounds().width, (getBounds().height + titleHeight) * ratio);
 	}
 
 	@Override
 	protected void renderComponent() {
 		title.render();
-		closeModuleButton.render();
+		if (MenuModel.activeModule != null) closeModuleButton.render();
 		Shapes.draw(titleDividerShape);
 		Shapes.draw(menuBackground);
 	}

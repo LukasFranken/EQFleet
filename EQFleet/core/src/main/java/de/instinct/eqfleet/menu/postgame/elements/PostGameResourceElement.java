@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.instinct.api.meta.dto.ResourceAmount;
-import de.instinct.eqfleet.menu.module.profile.inventory.Inventory;
+import de.instinct.eqfleet.menu.module.profile.ProfileModuleAPI;
 import de.instinct.eqfleet.menu.module.profile.inventory.element.ResourceChange;
 import de.instinct.eqfleet.menu.module.profile.inventory.element.ResourceSection;
 import de.instinct.eqfleet.menu.postgame.PostGameModel;
@@ -53,7 +53,7 @@ public class PostGameResourceElement implements PostGameElement {
 			ResourceChange currentResource = new ResourceChange();
 			currentResource.setCurrentResource(new ResourceAmount());
 			currentResource.getCurrentResource().setType(resource.getType());
-			currentResource.getCurrentResource().setAmount(Inventory.getResource(resource.getType()) + currentChange);
+			currentResource.getCurrentResource().setAmount(ProfileModuleAPI.getResource(resource.getType()) + currentChange);
 			currentResource.setChangeAmount(currentChange);
 			currentResources.add(currentResource);
 		}

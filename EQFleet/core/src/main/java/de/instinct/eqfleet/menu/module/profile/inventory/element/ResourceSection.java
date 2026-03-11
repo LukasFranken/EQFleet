@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.instinct.eqfleet.menu.common.components.label.DefaultLabelFactory;
-import de.instinct.eqfleet.menu.module.profile.inventory.Inventory;
+import de.instinct.eqfleet.menu.module.profile.ProfileModuleAPI;
 import de.instinct.eqfleet.menu.postgame.PostGameModel;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.StringUtils;
@@ -45,7 +45,7 @@ public class ResourceSection extends Component {
 				if (resourceChange.getChangeAmount() > 0) {
 					Label changeLabel = new Label("+" + StringUtils.formatBigNumber(resourceChange.getChangeAmount(), 1));
 					changeLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
-					changeLabel.setColor(Inventory.getColorForResource(resourceChange.getCurrentResource().getType()));
+					changeLabel.setColor(ProfileModuleAPI.getColorForResource(resourceChange.getCurrentResource().getType()));
 					changeLabel.setFixedWidth(GraphicsUtil.screenBounds().width - (resourceLabels.getBounds().x + resourceLabels.getFixedWidth() + 5));
 					changeLabel.setPosition(resourceLabels.getBounds().x + resourceLabels.getFixedWidth() + 5, resourceLabels.getBounds().y);
 					uiElements.add(changeLabel);

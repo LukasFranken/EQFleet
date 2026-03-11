@@ -1,25 +1,14 @@
-package de.instinct.eqfleet.menu.module.profile.inventory;
+package de.instinct.eqfleet.menu.module.profile;
 
 import com.badlogic.gdx.graphics.Color;
 
-import de.instinct.api.core.API;
 import de.instinct.api.meta.dto.Resource;
 import de.instinct.api.meta.dto.ResourceAmount;
-import de.instinct.eqfleet.net.WebManager;
 
-public class Inventory {
-	
-	public static void loadData() {
-		WebManager.enqueue(
-			    () -> API.meta().resources(API.authKey),
-			    result -> {
-			        InventoryModel.resources = result;
-			    }
-		);
-	}
+public class ProfileModuleAPI {
 	
 	public static long getResource(Resource type) {
-		for (ResourceAmount amount : InventoryModel.resources.getResources()) {
+		for (ResourceAmount amount : ProfileModel.resources.getResources()) {
 			if (amount.getType() == type) {
 				return amount.getAmount();
 			}

@@ -17,12 +17,14 @@ public class ShopItemElement {
 	private Label priceLabel;
 	private Image creditsIcon;
 	private ColorButton buyButton;
+	private boolean active;
 	
 	public void dispose() {
 		if (nameLabel != null) nameLabel.dispose();
 		if (descriptionLabel != null) descriptionLabel.dispose();
 		if (priceLabel != null) priceLabel.dispose();
 		if (buyButton != null) buyButton.dispose();
+		if (creditsIcon != null) creditsIcon.dispose();
 	}
 
 }

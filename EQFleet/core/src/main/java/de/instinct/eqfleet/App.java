@@ -14,6 +14,7 @@ import de.instinct.eqlibgdxutils.InputUtil;
 import de.instinct.eqlibgdxutils.debug.console.Console;
 import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
+import de.instinct.eqlibgdxutils.debug.logging.service.LoggingTimeFormat;
 import de.instinct.eqlibgdxutils.debug.metrics.types.NumberMetric;
 import de.instinct.eqlibgdxutils.debug.profiler.Profiler;
 import de.instinct.eqlibgdxutils.rendering.particle.ParticleRenderer;
@@ -21,13 +22,14 @@ import de.instinct.eqlibgdxutils.rendering.ui.popup.PopupRenderer;
 
 public class App extends ApplicationAdapter {
 
-    public static final String VERSION = "0.1.14";
+    public static final String VERSION = "0.2.0";
     private final String LOGTAG = "APP";
 
     private boolean halted;
 
     @Override
     public void create() {
+    	Logger.config.setTimeFormat(LoggingTimeFormat.TIME_ONLY);
     	Logger.log(LOGTAG, "Welcome to EQFLEET v" + VERSION, ConsoleColor.YELLOW);
     	LibraryManager.init();
     	AudioManager.init();

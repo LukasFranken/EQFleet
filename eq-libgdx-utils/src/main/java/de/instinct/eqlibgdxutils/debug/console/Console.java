@@ -50,6 +50,13 @@ public class Console {
 	private static int lastCommandIndex = -1;
 	private static List<String> tagFilter;
 	
+	private static Rectangle logsBounds;
+	
+	private static EQRectangle logsContainerShape;
+	
+	private static Label logLineLabel;
+	private static List<LogLine> logLines;
+	
 	public static void init() {
 		commandProcessor = new CommandProcessor();
 		BaseCommandLoader baseCommandLoader = new BaseCommandLoader();
@@ -57,6 +64,18 @@ public class Console {
 		inputList = new ArrayList<>();
 		MetricUtil.init();
 		Profiler.init();
+		logsBounds = new Rectangle();
+		
+		logsContainerShape = EQRectangle.builder()
+				.bounds(logsBounds)
+				.color(new Color(SkinManager.skinColor))
+				.thickness(1)
+				.round(true)
+				.build();
+		
+		logLineLabel = new Label("");
+		logLineLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
+		logLineLabel.setType(FontType.MICRO);
 	}
 	
 	public static void build() {
@@ -153,6 +172,7 @@ public class Console {
 			Shapes.draw(EQRectangle.builder()
 					.bounds(GraphicsUtil.screenBounds())
 					.color(new Color(0, 0, 0, 0.85f))
+					.filled(true)
 					.build());
 			MetricUtil.render();
 			Profiler.render();
@@ -179,33 +199,24 @@ public class Console {
 
 	private static void renderLogs() {
 		int logPanelMargin = 10;
-		Rectangle logsBounds = new Rectangle(
-				logPanelMargin, 
-				consoleInputHeight + logPanelMargin + borderMargin, 
-				GraphicsUtil.screenBounds().getWidth() - (logPanelMargin * 2), 
-				GraphicsUtil.screenBounds().getHeight() - consoleInputHeight - metricsHeight - profilerHeight - (logPanelMargin * 2) - borderMargin);
-		Shapes.draw(EQRectangle.builder()
-				.bounds(logsBounds)
-				.color(SkinManager.skinColor)
-				.thickness(1)
-				.round(true)
-				.build());
+		logsBounds.set(logPanelMargin, 
+					consoleInputHeight + logPanelMargin + borderMargin, 
+					GraphicsUtil.screenBounds().getWidth() - (logPanelMargin * 2), 
+					GraphicsUtil.screenBounds().getHeight() - consoleInputHeight - metricsHeight - profilerHeight - (logPanelMargin * 2) - borderMargin);
+		Shapes.draw(logsContainerShape);
 		
 		int logLineHorizontalMargin = 5;
-		List<LogLine> logLines = Logger.getLogs((int)(logsBounds.height / logLineHeight), tagFilter);
+		logLines = Logger.getLogs((int)(logsBounds.height / logLineHeight), tagFilter);
 		for (int i = 0; i < logLines.size(); i++) {
 			LogLine logLine = logLines.get(logLines.size() - 1 - i);
 			String logMessage = "[" + StringUtils.getTime(logLine.getTimestamp()) + "] " + logLine.getTag() + " - " + logLine.getMessage();
 			String labelText = StringUtils.limitWithDotDotDot(logMessage, (int)((logsBounds.width - (logLineHorizontalMargin * 2)) / FontUtil.getFontTextWidthPx(1, FontType.MICRO)));
-			Label logLineLabel = new Label(labelText);
-			logLineLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
-			logLineLabel.setType(FontType.MICRO);
+			logLineLabel.setText(labelText);
 			logLineLabel.setColor(logLine.getColor().getGameColor());
-			logLineLabel.setBounds(new Rectangle(
-					logsBounds.x + logLineHorizontalMargin,
+			logLineLabel.setBounds(logsBounds.x + logLineHorizontalMargin,
 					logsBounds.y + (i * logLineHeight),
 					logsBounds.width - (logLineHorizontalMargin * 2),
-					logLineHeight));
+					logLineHeight);
 			logLineLabel.render();
 		}
 	}
@@ -230,7 +241,7 @@ public class Console {
 		if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
 			commandTextField.setContent(commandProcessor.autocomplete(commandTextField.getContent()));
 		}
-		commandTextField.setBounds(new Rectangle(borderMargin, borderMargin, GraphicsUtil.screenBounds().getWidth() - (borderMargin * 2), consoleInputHeight));
+		commandTextField.setBounds(borderMargin, borderMargin, GraphicsUtil.screenBounds().getWidth() - (borderMargin * 2), consoleInputHeight);
 		commandTextField.render();
 	}
 

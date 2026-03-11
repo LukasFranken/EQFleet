@@ -24,7 +24,8 @@ import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.shapes.EQRectangle;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -56,11 +57,15 @@ public class LimitedInputField extends Component {
 	
 	private Label contentLabel;
 	private Label limitLabel;
+	
+	private EQRectangle backgroundShape;
+	private EQRectangle limitDividerShape;
 
 	public LimitedInputField() {
 		super();
 		Border border = new Border();
 		border.setSize(2);
+		border.setColor(new Color(SkinManager.skinColor));
 		setBorder(border);
 
 		content = "";
@@ -78,6 +83,18 @@ public class LimitedInputField extends Component {
 		contentLabel = new Label(content);
 		contentLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
 		limitLabel = new Label("" + maxChars);
+		
+		backgroundShape = EQRectangle.builder()
+				.bounds(getBounds())
+				.color(new Color(Color.BLACK))
+				.filled(true)
+				.build();
+		
+		limitDividerShape = EQRectangle.builder()
+				.bounds(new Rectangle())
+				.color(getBorder().getColor())
+				.filled(true)
+				.build();
 		
 		createMobileInputListener();
 	}
@@ -124,7 +141,7 @@ public class LimitedInputField extends Component {
 	
 	@Override
 	protected void updateComponent() {
-		contentLabel.setBounds(new Rectangle(getBounds().x + 10, getBounds().y, getBounds().width - 20 - maxCharsLabelWidth, getBounds().height));
+		contentLabel.setBounds(getBounds().x + 10, getBounds().y, getBounds().width - 20 - maxCharsLabelWidth, getBounds().height);
 		contentLabel.setColor(getFontColor());
 		contentLabel.setText(getRenderText());
 		
@@ -141,14 +158,18 @@ public class LimitedInputField extends Component {
 	    }
 		
 		String remainingChars = (maxChars - content.length()) + "";
-		limitLabel.setBounds(new Rectangle(getBounds().x + getBounds().width - maxCharsLabelWidth, getBounds().y, maxCharsLabelWidth, getBounds().height));
+		limitLabel.setBounds(getBounds().x + getBounds().width - maxCharsLabelWidth, getBounds().y, maxCharsLabelWidth, getBounds().height);
 		limitLabel.setColor(getBorder().getColor());
 		limitLabel.setText(remainingChars);
+		
+		backgroundShape.getColor().a = getAlpha();
+		
+		limitDividerShape.getBounds().set(getBounds().x + getBounds().width - maxCharsLabelWidth, getBounds().y, 2, getBounds().height);
 	}
 
 	@Override
 	protected void renderComponent() {
-		TextureManager.draw(TextureManager.createTexture(Color.BLACK), getBounds(), getAlpha());
+		Shapes.draw(backgroundShape);
 	    contentLabel.render();
 	    if (renderMaxCharsLabel) {
 	    	drawLimit();
@@ -160,8 +181,7 @@ public class LimitedInputField extends Component {
 			focused = true;
 			((InputMultiplexer) Gdx.input.getInputProcessor()).addProcessor(inputProcessor);
 
-			if (Gdx.app.getType() == Application.ApplicationType.Android ||
-				    Gdx.app.getType() == Application.ApplicationType.iOS) {
+			if (Gdx.app.getType() == Application.ApplicationType.Android || Gdx.app.getType() == Application.ApplicationType.iOS) {
 					Gdx.input.getTextInput(mobileTextInputListener, popupMessage, content, popupHint);
 			}
 		}
@@ -198,12 +218,11 @@ public class LimitedInputField extends Component {
 	}
 
 	private void updateBorderColor() {
-		 getBorder().setColor(enabled ? (focused ? new Color(SkinManager.skinColor) : Color.GRAY) : Color.DARK_GRAY);
+		 getBorder().getColor().set(enabled ? (focused ? SkinManager.skinColor : Color.GRAY) : Color.DARK_GRAY);
 	}
 
 	private void drawLimit() {
-		Rectangle screenAdjustedLabelBounds = GraphicsUtil.scaleFactorAdjusted(new Rectangle(getBounds().x + getBounds().width - maxCharsLabelWidth, getBounds().y, 2, getBounds().height));
-		TextureManager.draw(TextureManager.createTexture(getBorder().getColor()), screenAdjustedLabelBounds, getAlpha());
+		Shapes.draw(limitDividerShape);
 	    limitLabel.render();
 	}
 
@@ -242,7 +261,8 @@ public class LimitedInputField extends Component {
 
 	@Override
 	public void dispose() {
-
+		contentLabel.dispose();
+		limitLabel.dispose();
 	}
 
 }

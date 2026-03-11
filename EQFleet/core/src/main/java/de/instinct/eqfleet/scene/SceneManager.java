@@ -3,8 +3,10 @@ package de.instinct.eqfleet.scene;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.intro.Intro;
 import de.instinct.eqfleet.menu.main.Menu;
+import de.instinct.eqfleet.menu.postgame.PostGame;
 import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
 
@@ -22,6 +24,10 @@ public class SceneManager {
 		scenes.get(SceneType.INTRO).init();
 		scenes.put(SceneType.MENU, new Menu());
 		scenes.get(SceneType.MENU).init();
+		scenes.put(SceneType.GAME, new Game());
+		scenes.get(SceneType.GAME).init();
+		scenes.put(SceneType.POSTGAME, new PostGame());
+		scenes.get(SceneType.POSTGAME).init();
 	}
 	
 	public static void update() {
@@ -37,6 +43,10 @@ public class SceneManager {
 		currentScene = sceneType;
 		scenes.get(currentScene).open();
 		Logger.log(TAG, "Changed to scene: " + sceneType, ConsoleColor.YELLOW);
+	}
+	
+	public static SceneType getCurrentScene() {
+		return currentScene;
 	}
 	
 	public static void dispose() {

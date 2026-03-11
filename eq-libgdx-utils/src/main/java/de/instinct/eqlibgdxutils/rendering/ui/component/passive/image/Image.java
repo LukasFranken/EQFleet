@@ -12,12 +12,28 @@ import lombok.EqualsAndHashCode;
 public class Image extends Component {
 
 	private Texture texture;
+	
+	private String texturePath;
+	private String textureName;
 
 	public Image(Texture texture) {
 		super();
 		this.texture = texture;
 		getBounds().width = texture.getWidth();
 		getBounds().height = texture.getHeight();
+	}
+	
+	public Image() {
+		super();
+	}
+
+	public void updateTexture(String texturePath, String textureName) {
+		if (this.texturePath != null && this.textureName != null) {
+			if (this.texturePath.contentEquals(texturePath) && this.textureName.contentEquals(textureName)) return;
+		}
+		this.texturePath = texturePath;
+		this.textureName = textureName;
+		texture = TextureManager.getTexture(texturePath, textureName);
 	}
 
 	@Override
@@ -37,12 +53,12 @@ public class Image extends Component {
 	
 	@Override
 	public void renderComponent() {
-		TextureManager.draw(texture, getBounds(), getAlpha());
+		if (texture != null) TextureManager.draw(texture, getBounds(), getAlpha());
 	}
 
 	@Override
 	public void dispose() {
-		TextureManager.dispose(texture);
+		if (texture != null) TextureManager.dispose(texture);
 	}
 
 }

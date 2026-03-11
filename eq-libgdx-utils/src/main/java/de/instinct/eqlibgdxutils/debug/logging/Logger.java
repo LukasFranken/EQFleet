@@ -1,19 +1,25 @@
 package de.instinct.eqlibgdxutils.debug.logging;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
+
+import de.instinct.eqlibgdxutils.debug.logging.config.LoggingConfiguration;
+import de.instinct.eqlibgdxutils.debug.logging.service.LoggingTimeFormat;
+import de.instinct.eqlibgdxutils.debug.logging.service.TimeFormatter;
 
 public class Logger {
 	
 	private static List<LogLine> logs = new ArrayList<>();
 	private static final Object logsLock = new Object();
-
-	private static final SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy - HH:mm:ss");
+	private static final TimeFormatter timeFormatter = new TimeFormatter();
+	private static ArrayList<LogLine> tagSortedLogs = new ArrayList<>();
+	
+	public static final LoggingConfiguration config = LoggingConfiguration.builder()
+			.timeFormat(LoggingTimeFormat.FULL)
+			.build();
 	
 	public static void log(String tag, Exception e) {
 		log(tag, e.getMessage(), ConsoleColor.RED);
@@ -39,7 +45,7 @@ public class Logger {
 	
 	public static void log(String tag, String message, ConsoleColor color) {
 		long timestamp = System.currentTimeMillis();
-		String formattedTime = formatter.format(new Date(timestamp));
+		String formattedTime = timeFormatter.format(timestamp, config.getTimeFormat());
 		System.out.print(color.getCode());
 		if (Gdx.app != null) Gdx.app.log(formattedTime, tag + " - " + message);
 		System.out.print(ConsoleColor.DEFAULT.getCode());
@@ -67,7 +73,7 @@ public class Logger {
 	}
 	
 	public static List<LogLine> getLogs(int lastN, List<String> tagBlacklist) {
-		ArrayList<LogLine> tagSortedLogs = new ArrayList<>();
+		tagSortedLogs.clear();
 		synchronized(logsLock) {
 	        for (LogLine log : logs) {
 	            if (!tagBlacklist.contains(log.getTag())) {
@@ -76,7 +82,7 @@ public class Logger {
 	        }
 	    }
 	    synchronized(logsLock) {
-	        return Collections.unmodifiableList(new ArrayList<>(tagSortedLogs).subList(tagSortedLogs.size() > lastN ? tagSortedLogs.size() - lastN : 0, tagSortedLogs.size()));
+	        return Collections.unmodifiableList(tagSortedLogs.subList(tagSortedLogs.size() > lastN ? tagSortedLogs.size() - lastN : 0, tagSortedLogs.size()));
 	    }
 	}
 	

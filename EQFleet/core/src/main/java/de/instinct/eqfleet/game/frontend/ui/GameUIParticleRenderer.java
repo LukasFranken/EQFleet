@@ -32,8 +32,8 @@ public class GameUIParticleRenderer {
 			    Vector3 projected = camera.project(new Vector3(activeAncientPlanet.position.x, activeAncientPlanet.position.y, 0));
 			    Vector2 source = new Vector2(projected.x, projected.y);
 			    Vector2 target = (owner.teamId == self.teamId)
-			        ? GraphicsUtil.scaleFactorAdjusted(new Vector2(50, 260))
-			        : GraphicsUtil.scaleFactorAdjusted(new Vector2(50, 600));
+			        ? GraphicsUtil.translateToPhysical(new Vector2(50, 260))
+			        : GraphicsUtil.translateToPhysical(new Vector2(50, 600));
 
 			    Vector2 dir = new Vector2(target).sub(source);
 			    float angle = dir.angleDeg();

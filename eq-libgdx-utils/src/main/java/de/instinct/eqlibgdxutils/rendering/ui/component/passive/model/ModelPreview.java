@@ -19,14 +19,17 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class ModelPreview extends Component {
 
-	private final Vector3 BASE_CAM_POS = new Vector3(0f, 0f, 100f);
-	private PerspectiveCamera camera;
-	
 	private GridRenderer gridRenderer;
 	
+	private final Vector3 BASE_CAM_POS = new Vector3(0f, 0f, 100f);
+	private PerspectiveCamera camera;
 	private float currentRotation = 0f;
-    
     private ModelPreviewConfiguration config;
+    
+    private Rectangle physicalBounds;
+    private Matrix4 modelTransform;
+    private Matrix4 worldRotation;
+    
 
 	public ModelPreview(ModelPreviewConfiguration config) {
 		super();
@@ -38,6 +41,10 @@ public class ModelPreview extends Component {
 		camera.up.set(0f, 1f, 0f);
 		camera.near = 1f;
 		camera.far = 1000f;
+		
+		physicalBounds = new Rectangle();
+		modelTransform = new Matrix4();
+		worldRotation = new Matrix4();
 		
 		if (config.getGridConfig() != null) gridRenderer = new GridRenderer(config.getGridConfig());
 	}
@@ -54,35 +61,37 @@ public class ModelPreview extends Component {
 
 	@Override
 	protected void updateComponent() {
-		Rectangle bounds = GraphicsUtil.scaleFactorAdjusted(getBounds());
-		camera.viewportWidth = bounds.width;
-		camera.viewportHeight = bounds.height;
+		camera.viewportWidth = getBounds().width * GraphicsUtil.getHorizontalDisplayScaleFactor();
+		camera.viewportHeight = getBounds().height * GraphicsUtil.getVerticalDisplayScaleFactor();
 		camera.update();
-	}
-
-	@Override
-	protected void renderComponent() {
-		Rectangle bounds = GraphicsUtil.scaleFactorAdjusted(getBounds());
-		if (bounds.width <= 0 || bounds.height <= 0) return;
-
-		ViewportUtil.apply(bounds);
-		if (gridRenderer != null) {
-	        gridRenderer.drawGrid(camera);
-	    }
 		
 		if (config.getModel() != null) {
 			currentRotation += config.getRotationSpeed() * Gdx.graphics.getDeltaTime();
-		    Matrix4 modelTransform = new Matrix4();
+		    modelTransform.idt();
 		    if (config.getBaseRotationAxis().len2() > 0) {
 		        modelTransform.rotate(config.getBaseRotationAxis(), config.getBaseRotationAngle());
 		    }
 		    modelTransform.scale(config.getScale(), config.getScale(), config.getScale());
-		    Matrix4 worldRotation = new Matrix4().rotate(Vector3.Y, currentRotation);
-		    Matrix4 finalTransform = new Matrix4(worldRotation).mul(modelTransform);
-		    config.getModel().transform.set(finalTransform);
+		    worldRotation.idt();
+		    worldRotation.rotate(Vector3.Y, currentRotation);
+		    worldRotation.mul(modelTransform);
+		    config.getModel().transform.set(worldRotation);
+		}
+	}
+
+	@Override
+	protected void renderComponent() {
+		physicalBounds.set(getBounds());
+		GraphicsUtil.translateToPhysical(physicalBounds);
+		if (physicalBounds.width <= 0 || physicalBounds.height <= 0) return;
+
+		ViewportUtil.apply(physicalBounds);
+		if (gridRenderer != null) {
+	        gridRenderer.drawGrid(camera);
+	    }
+		if (config.getModel() != null) {
 		    ModelRenderer.render(camera, config.getModel(), getAlpha());
 		}
-	    
 		ViewportUtil.restore();
 	}
 

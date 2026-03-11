@@ -11,6 +11,7 @@ import de.instinct.eqfleet.game.backend.driver.local.tutorial.TutorialDriver;
 import de.instinct.eqfleet.game.backend.driver.local.tutorial.TutorialMode;
 import de.instinct.eqfleet.game.backend.driver.online.OnlineDriver;
 import de.instinct.eqfleet.game.frontend.GameRenderer;
+import de.instinct.eqfleet.scene.Scene;
 import de.instinct.eqfleet.scene.SceneManager;
 import de.instinct.eqfleet.scene.SceneType;
 import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
@@ -18,13 +19,14 @@ import de.instinct.eqlibgdxutils.debug.logging.Logger;
 import de.instinct.eqlibgdxutils.debug.profiler.Profiler;
 import de.instinct.eqlibgdxutils.net.MessageQueue;
 
-public class Game {
+public class Game extends Scene {
 
     private static GameRenderer renderer;
     
     private static Driver currentDriver;
-
-    public static void init() {
+    
+    @Override
+    public void init() {
     	GameModel.outputMessageQueue = new MessageQueue<>();
     	GameModel.inputMessageQueue = new MessageQueue<>();
     	GameModel.receivedGameState = new ConcurrentLinkedQueue<>();
@@ -65,12 +67,28 @@ public class Game {
     	currentDriver.stop();
     	GameModel.inputEnabled = false;
 	}
+    
+    @Override
+	public void open() {
+		
+	}
 
-    public static void render() {
+	@Override
+	public void close() {
+		
+	}
+
+	@Override
+	public void update() {
+		if (GameModel.active) {
+			currentDriver.update();
+		}
+	}
+
+    @Override
+    public void render() {
         if (GameModel.active) {
         	Profiler.startFrame("GAME");
-            currentDriver.update();
-            Profiler.checkpoint("GAME", "update");
             if (GameModel.activeGameState != null && GameModel.visible) {
                 renderer.render(GameModel.activeGameState);
                 Profiler.checkpoint("GAME", "render");
@@ -79,7 +97,24 @@ public class Game {
         }
     }
 
-	public static void dispose() {
+    public static void end() {
+    	GameModel.visible = false;
+		GameModel.active = false;
+		if (renderer != null) {
+			renderer.dispose();
+		}
+		if (currentDriver != null) {
+			currentDriver.dispose();
+		}
+		if (GameModel.lastGameUUID == null || GameModel.lastGameUUID.contentEquals("custom") || GameModel.lastGameUUID.contentEquals("tutorial")) {
+			SceneManager.changeTo(SceneType.MENU);
+		} else {
+			SceneManager.changeTo(SceneType.POSTGAME);
+		}
+    }
+    
+    @Override
+	public void dispose() {
 		GameModel.visible = false;
 		GameModel.active = false;
 		if (renderer != null) {
@@ -88,7 +123,6 @@ public class Game {
 		if (currentDriver != null) {
 			currentDriver.dispose();
 		}
-		SceneManager.changeTo(SceneType.MENU);
 	}
 
 	public static void assignPlayer(PlayerAssigned playerAssigned) {

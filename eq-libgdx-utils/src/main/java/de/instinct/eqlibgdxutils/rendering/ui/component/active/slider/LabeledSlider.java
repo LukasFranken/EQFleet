@@ -1,7 +1,6 @@
 package de.instinct.eqlibgdxutils.rendering.ui.component.active.slider;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
@@ -31,7 +30,7 @@ public class LabeledSlider extends Component {
 		label.setType(FontType.SMALL);
 		Border labelBorder = new Border();
 		labelBorder.setColor(new Color(SkinManager.skinColor));
-		labelBorder.setSize(2f);
+		labelBorder.setSize(1f);
 		label.setBorder(labelBorder);
 		labelSliderMargin = 10f;
 		labelInnerMargin = 10f;
@@ -54,16 +53,14 @@ public class LabeledSlider extends Component {
 		label.setText(labelUpdateAction.getLabelText(slider.getCurrentValue()));
 		label.getBorder().setBounds(getBounds());
 		label.setAlpha(getAlpha());
+		label.setPosition(getBounds().x + getBounds().width - label.getFixedWidth(), getBounds().y);
 		
-		Rectangle sliderBounds = new Rectangle(getBounds());
-		sliderBounds.width -= label.getBounds().width + labelSliderMargin;
-		slider.setBounds(sliderBounds);
+		slider.setBounds(getBounds().x, getBounds().y, getBounds().width - (label.getBounds().width + labelSliderMargin), getBounds().height);
 		slider.setAlpha(getAlpha());
 	}
 	
 	@Override
 	protected void renderComponent() {
-		label.setPosition(getBounds().x + getBounds().width - label.getFixedWidth(), getBounds().y);
 		label.render();
 		slider.render();
 	}

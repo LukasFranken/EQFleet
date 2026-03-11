@@ -1,22 +1,20 @@
 package de.instinct.eqfleet.menu.module.ship;
 
-import com.badlogic.gdx.graphics.Color;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import de.instinct.api.core.API;
 import de.instinct.api.core.modules.MenuModule;
 import de.instinct.api.shipyard.dto.ShipBuildResponse;
 import de.instinct.api.shipyard.dto.UnuseShipResponseCode;
 import de.instinct.api.shipyard.dto.UseShipResponseCode;
-import de.instinct.api.shipyard.dto.ship.PlayerShipData;
-import de.instinct.api.shipyard.dto.ship.component.ShipComponentType;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
-import de.instinct.eqfleet.menu.main.Menu;
-import de.instinct.eqfleet.menu.module.core.ModuleMessage;
-import de.instinct.eqfleet.menu.module.profile.inventory.Inventory;
-import de.instinct.eqfleet.menu.module.ship.message.BuildShipMessage;
-import de.instinct.eqfleet.menu.module.ship.message.ReloadShipyardMessage;
-import de.instinct.eqfleet.menu.module.ship.message.UnuseShipMessage;
-import de.instinct.eqfleet.menu.module.ship.message.UseShipMessage;
+import de.instinct.eqfleet.menu.module.profile.ProfileModel;
+import de.instinct.eqfleet.menu.module.profile.message.types.LoadProfileMessage;
+import de.instinct.eqfleet.menu.module.ship.message.ShipyardMessage;
+import de.instinct.eqfleet.menu.module.ship.message.types.BuildShipMessage;
+import de.instinct.eqfleet.menu.module.ship.message.types.ReloadShipyardMessage;
+import de.instinct.eqfleet.menu.module.ship.message.types.UnuseShipMessage;
+import de.instinct.eqfleet.menu.module.ship.message.types.UseShipMessage;
 import de.instinct.eqfleet.net.WebManager;
 
 public class Shipyard extends BaseModule {
@@ -28,41 +26,24 @@ public class Shipyard extends BaseModule {
 
 	@Override
 	public void init() {
-		
+		ShipyardModel.messageQueue = new ConcurrentLinkedQueue<>();
 	}
 
 	@Override
-	public void open() {
+	public void load() {
 		loadData();
-	}
-	
-	private void loadData() {
-		//Menu.queue(ReloadShipyardMessage.builder().build());
 	}
 
 	@Override
 	public void update() {
-		
+		if (!ShipyardModel.messageQueue.isEmpty()) {
+			process(ShipyardModel.messageQueue.poll());
+		}
 	}
 
-	@Override
-	public boolean process(ModuleMessage message) {
+	public void process(ShipyardMessage message) {
 		if (message instanceof ReloadShipyardMessage) {
-			WebManager.enqueue(
-					() -> API.shipyard().data(API.authKey),
-				    result -> {
-				    	ShipyardModel.playerShipyard = result;
-				    	super.requireUIReload();
-				    }
-			);
-			WebManager.enqueue(
-					() -> API.shipyard().shipyard(),
-				    result -> {
-				    	ShipyardModel.shipyard = result;
-				    	super.requireUIReload();
-				    }
-			);
-			return true;
+			loadData();
 		}
 		if (message instanceof UseShipMessage) {
 			UseShipMessage useShipMessage = (UseShipMessage) message;
@@ -74,7 +55,6 @@ public class Shipyard extends BaseModule {
 						}
 					}
 			);
-			return true;
 		}
 		if (message instanceof UnuseShipMessage) {
 			UnuseShipMessage unuseShipMessage = (UnuseShipMessage) message;
@@ -86,7 +66,6 @@ public class Shipyard extends BaseModule {
 						}
 					}
 			);
-			return true;
 		}
 		if (message instanceof BuildShipMessage) {
 			BuildShipMessage buildShipMessage = (BuildShipMessage) message;
@@ -94,43 +73,28 @@ public class Shipyard extends BaseModule {
 					() -> API.shipyard().build(buildShipMessage.getShipUUID()),
 				    result -> {
 				    	if (result == ShipBuildResponse.SUCCESS) {
-				    		Inventory.loadData();
+				    		ProfileModel.messageQueue.add(LoadProfileMessage.builder().build());
 				    		loadData();
-				    	} else {
-				    		super.requireUIReload();
 				    	}
 				    }
 			);
-			return true;
 		}
-		return false;
-	}
-
-	public static boolean hasActiveShip() {
-		boolean hasActiveShip = false;
-		for (PlayerShipData ship : ShipyardModel.playerShipyard.getShips()) {
-			if (ship.isInUse()) {
-				hasActiveShip = true;
-				break;
-			}
-		}
-		return hasActiveShip;
 	}
 	
-	public static Color getPartTypeColor(ShipComponentType type) {
-		switch (type) {
-			case CORE:
-				return Color.PURPLE;
-			case ENGINE:
-				return Color.YELLOW;
-			case HULL:
-				return Color.ORANGE;
-			case SHIELD:
-				return Color.CYAN;
-			case WEAPON:
-				return Color.RED;
-		}
-		return Color.GRAY;
+	private void loadData() {
+		WebManager.enqueue(
+				() -> API.shipyard().data(API.authKey),
+			    result -> {
+			    	ShipyardModel.playerShipyard = result;
+			    }
+		);
+		WebManager.enqueue(
+				() -> API.shipyard().shipyard(),
+			    result -> {
+			    	ShipyardModel.shipyard = result;
+			    	ShipyardModel.dataUpdated = true;
+			    }
+		);
 	}
 
 	@Override

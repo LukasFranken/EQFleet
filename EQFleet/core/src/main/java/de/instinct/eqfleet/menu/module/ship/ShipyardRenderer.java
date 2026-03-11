@@ -19,13 +19,12 @@ import de.instinct.api.shipyard.dto.ship.ShipComponent;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
 import de.instinct.eqfleet.menu.common.components.label.DefaultLabelFactory;
-import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.main.MenuModel;
-import de.instinct.eqfleet.menu.module.profile.inventory.Inventory;
+import de.instinct.eqfleet.menu.module.profile.ProfileModuleAPI;
 import de.instinct.eqfleet.menu.module.ship.component.shippart.ShipPartOverview;
-import de.instinct.eqfleet.menu.module.ship.message.BuildShipMessage;
-import de.instinct.eqfleet.menu.module.ship.message.UnuseShipMessage;
-import de.instinct.eqfleet.menu.module.ship.message.UseShipMessage;
+import de.instinct.eqfleet.menu.module.ship.message.types.BuildShipMessage;
+import de.instinct.eqfleet.menu.module.ship.message.types.UnuseShipMessage;
+import de.instinct.eqfleet.menu.module.ship.message.types.UseShipMessage;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.grid.GridConfiguration;
 import de.instinct.eqlibgdxutils.rendering.model.ModelLoader;
@@ -55,51 +54,9 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 	private final float popupWidth = 220f;
 
 	private Color blueprintColor = new Color(0f, 0f, 0.5f, 1f);
-
+	
 	@Override
-	public void render() {
-		if (ShipyardModel.shipyard != null) {
-			spaceLabel.render();
-			activeLabel.render();
-			if (shipButtons != null) {
-				renderUsedShips();
-				TextureManager.draw(TextureManager.createTexture(new Color(1f, 1f, 1f, 0.2f)),
-						new Rectangle(MenuModel.moduleBounds.x + 20, MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - 120, MenuModel.moduleBounds.width - 40, 1));
-				renderUnusedShips();
-			}
-		}
-	}
-
-	private void renderUsedShips() {
-		int elementsPerRow = 5;
-		float margin = (((float) MenuModel.moduleBounds.width) - (50 * elementsPerRow)) / ((float) (elementsPerRow + 1));
-
-		int i = 0;
-		for (Button shipButton : activeShipButtons) {
-			int column = i % elementsPerRow;
-			shipButton.setPosition(MenuModel.moduleBounds.x + margin + ((50 + margin) * column),
-					MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - 20 - (((shipButton instanceof ColorButton ? 50 : 70) + margin)));
-			shipButton.render();
-			i++;
-		}
-	}
-
-	private void renderUnusedShips() {
-		int elementsPerRow = 5;
-		float margin = (((float) MenuModel.moduleBounds.width) - (50 * elementsPerRow)) / ((float) (elementsPerRow + 1));
-
-		int i = 0;
-		for (Button shipButton : shipButtons) {
-			int column = i % elementsPerRow;
-			int row = 1 + ((int) i / elementsPerRow);
-			shipButton.setPosition(MenuModel.moduleBounds.x + margin + ((50 + margin) * column), MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - 100 - 20 - ((70 + margin) * row));
-			shipButton.render();
-			i++;
-		}
-	}
-
-	@Override
-	public void reload() {
+	public void init() {
 		if (ShipyardModel.playerShipyard != null) {
 			Rectangle activeLabelBounds = new Rectangle(MenuModel.moduleBounds.x + 10, MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - 25, MenuModel.moduleBounds.width - 20, 20);
 			int active = 0;
@@ -139,7 +96,7 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 			}
 		}
 	}
-
+	
 	private ShipBlueprint getShipBlueprint(int shipId, ShipyardData shipyard) {
 		for (ShipBlueprint shipBlueprint : shipyard.getShipBlueprints()) {
 			if (shipBlueprint.getId() == shipId) {
@@ -210,7 +167,7 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 		shipButton.setFixedWidth(50f);
 		shipButton.setFixedHeight(70f);
 		shipButton.getModelPreview().getBorder().setColor(blueprintColor);
-		shipButton.setHoverTexture(TextureManager.createTexture(blueprintColor));
+		shipButton.getHoverShape().setColor(blueprintColor);
 		shipButton.getLabel().setColor(blueprintColor);
 		return shipButton;
 	}
@@ -247,9 +204,9 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 				@Override
 				public void execute() {
 					if (playerShip.isInUse()) {
-						Menu.queue(UnuseShipMessage.builder().shipUUID(playerShip.getUuid()).build());
+						ShipyardModel.messageQueue.add(UnuseShipMessage.builder().shipUUID(playerShip.getUuid()).build());
 					} else {
-						Menu.queue(UseShipMessage.builder().shipUUID(playerShip.getUuid()).build());
+						ShipyardModel.messageQueue.add(UseShipMessage.builder().shipUUID(playerShip.getUuid()).build());
 					}
 
 					PopupRenderer.close();
@@ -272,14 +229,14 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 				ElementStack costStack = DefaultLabelFactory.createCostStack(cost);
 				costStack.setFixedWidth(popupWidth);
 				popupContent.getElements().add(costStack);
-				if (!Inventory.canAfford(cost)) canAfford = false;
+				if (!ProfileModuleAPI.canAfford(cost)) canAfford = false;
 			}
 
 			ColorButton buildButton = DefaultButtonFactory.colorButton("Build", new Action() {
 
 				@Override
 				public void execute() {
-					Menu.queue(BuildShipMessage.builder().shipUUID(playerShip.getUuid()).build());
+					ShipyardModel.messageQueue.add(BuildShipMessage.builder().shipUUID(playerShip.getUuid()).build());
 					PopupRenderer.close();
 				}
 
@@ -312,6 +269,56 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public void update() {
+		if (ShipyardModel.dataUpdated) {
+			ShipyardModel.dataUpdated = false;
+			init();
+		}
+	}
+
+	@Override
+	public void render() {
+		if (ShipyardModel.shipyard != null) {
+			spaceLabel.render();
+			activeLabel.render();
+			if (shipButtons != null) {
+				renderUsedShips();
+				TextureManager.draw(TextureManager.createTexture(new Color(1f, 1f, 1f, 0.2f)),
+						new Rectangle(MenuModel.moduleBounds.x + 20, MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - 120, MenuModel.moduleBounds.width - 40, 1));
+				renderUnusedShips();
+			}
+		}
+	}
+
+	private void renderUsedShips() {
+		int elementsPerRow = 5;
+		float margin = (((float) MenuModel.moduleBounds.width) - (50 * elementsPerRow)) / ((float) (elementsPerRow + 1));
+
+		int i = 0;
+		for (Button shipButton : activeShipButtons) {
+			int column = i % elementsPerRow;
+			shipButton.setPosition(MenuModel.moduleBounds.x + margin + ((50 + margin) * column),
+					MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - 20 - (((shipButton instanceof ColorButton ? 50 : 70) + margin)));
+			shipButton.render();
+			i++;
+		}
+	}
+
+	private void renderUnusedShips() {
+		int elementsPerRow = 5;
+		float margin = (((float) MenuModel.moduleBounds.width) - (50 * elementsPerRow)) / ((float) (elementsPerRow + 1));
+
+		int i = 0;
+		for (Button shipButton : shipButtons) {
+			int column = i % elementsPerRow;
+			int row = 1 + ((int) i / elementsPerRow);
+			shipButton.setPosition(MenuModel.moduleBounds.x + margin + ((50 + margin) * column), MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - 100 - 20 - ((70 + margin) * row));
+			shipButton.render();
+			i++;
+		}
 	}
 
 	@Override

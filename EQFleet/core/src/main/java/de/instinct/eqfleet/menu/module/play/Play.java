@@ -13,11 +13,9 @@ import de.instinct.api.matchmaking.dto.MatchmakingStatusResponseCode;
 import de.instinct.api.matchmaking.model.GameType;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
-import de.instinct.eqfleet.menu.main.Menu;
-import de.instinct.eqfleet.menu.main.MenuModel;
-import de.instinct.eqfleet.menu.module.core.ModuleMessage;
-import de.instinct.eqfleet.menu.module.play.message.UpdateLobbyStatusMessage;
 import de.instinct.eqfleet.net.WebManager;
+import de.instinct.eqfleet.scene.SceneManager;
+import de.instinct.eqfleet.scene.SceneType;
 
 public class Play extends BaseModule {
 	
@@ -36,7 +34,7 @@ public class Play extends BaseModule {
 	}
 
 	@Override
-	public void open() {
+	public void load() {
 		WebManager.enqueue(
     			() -> API.matchmaking().get(),
 			    result -> {
@@ -49,20 +47,11 @@ public class Play extends BaseModule {
 	public void update() {
 		
 	}
-
-	@Override
-	public boolean process(ModuleMessage message) {
-		if (message instanceof UpdateLobbyStatusMessage) {
-			updateLobby();
-			return true;
-		}
-		return false;
-	}
 	
 	private static void connectToGameserver() {
 		Gdx.app.postRunnable(() -> {
 		    Game.start();
-		    //Menu.close();
+		    SceneManager.changeTo(SceneType.GAME);
 		  });
 	}
 
@@ -163,7 +152,7 @@ public class Play extends BaseModule {
 		PlayModel.currentMatchmakingStatus = null;
 		scheduler.scheduleAtFixedRate(() -> {
 			try {
-				if (MenuModel.active) {
+				if (SceneManager.getCurrentScene() == SceneType.MENU) {
 					updateLobby();
 					if (PlayModel.lobbyUUID == null || PlayModel.lobbyUUID.isEmpty()) {
 		        		WebManager.enqueue(

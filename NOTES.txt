@@ -18,6 +18,32 @@ GENERAL:
   x eel (after beam rework)
   x shellshock
   x fallout
+- refactor all modules
+ -> MODULE CHECKLIST
+  o menu
+  o settings
+  o profile
+  ? play
+  x shipyard
+  x construction
+  o shop
+  x starmap
+  x postgame
+  x game
+  
+for every idle stuff: dont calculate offline time on boot, hand out offline time credits
+prevents people from feeling bad about going offline in the wrong state
+make offline credits a tradable resource
+
+- make inventory an own module (depot)
+ - with proper inventory grid of clickable model buttons
+ 
+- disable play module outside of development
+
+- maybe rework resources to be elements from the periodic table?
+ -> with exotic matter being massless particles
+ -> all elements can be obtained differnetly
+ -> rename dueterium to fuel and make resoruces craftable with elements and extractable with % change of each element
  
 - remove all object allocations in all components
  -> buttons already done

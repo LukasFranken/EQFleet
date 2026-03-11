@@ -3,7 +3,7 @@ package de.instinct.eqfleet.menu.common.components.label;
 import com.badlogic.gdx.graphics.Color;
 
 import de.instinct.api.meta.dto.ResourceAmount;
-import de.instinct.eqfleet.menu.module.profile.inventory.Inventory;
+import de.instinct.eqfleet.menu.module.profile.ProfileModuleAPI;
 import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.HorizontalAlignment;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
@@ -23,6 +23,7 @@ public class DefaultLabelFactory {
 		valueLabel.setHorizontalAlignment(HorizontalAlignment.RIGHT);
 		valueLabel.setColor(colorValue);
 		labelStack.getElements().add(valueLabel);
+		labelStack.setFixedHeight(12f);
 		return labelStack;
 	}
 	
@@ -30,16 +31,17 @@ public class DefaultLabelFactory {
 		ElementStack labelStack = new ElementStack();
 		Label tagLabel = new Label(config.getTag());
 		tagLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
-		tagLabel.setColor(config.getColorTag());
-		tagLabel.setType(config.getType());
+		if (config.getColorTag() != null) tagLabel.setColor(config.getColorTag());
+		if (config.getType() != null) tagLabel.setType(config.getType());
 		labelStack.getElements().add(tagLabel);
 		
 		Label valueLabel = new Label(config.getValue());
 		valueLabel.setHorizontalAlignment(HorizontalAlignment.RIGHT);
-		valueLabel.setColor(config.getColorValue());
-		valueLabel.setType(config.getType());
+		if (config.getColorTag() != null) valueLabel.setColor(config.getColorTag());
+		if (config.getType() != null) valueLabel.setType(config.getType());
 		labelStack.getElements().add(valueLabel);
 		labelStack.setFixedWidth(config.getWidth());
+		labelStack.setFixedHeight(12f);
 		return labelStack;
 	}
 	
@@ -60,14 +62,14 @@ public class DefaultLabelFactory {
 	}
 	
 	public static ElementStack createCostStack(ResourceAmount cost) {
-		String valueString = (Inventory.canAfford(cost) ? "" : Inventory.getResource(cost.getType()) + "/") + StringUtils.formatBigNumber(Math.abs(cost.getAmount()));
-		Color costColor = Inventory.canAfford(cost) ? Color.GREEN : Color.RED;
-		return createLabelStack(cost.getType().toString(), valueString, Inventory.getColorForResource(cost.getType()), costColor);
+		String valueString = (ProfileModuleAPI.canAfford(cost) ? "" : ProfileModuleAPI.getResource(cost.getType()) + "/") + StringUtils.formatBigNumber(Math.abs(cost.getAmount()));
+		Color costColor = ProfileModuleAPI.canAfford(cost) ? Color.GREEN : Color.RED;
+		return createLabelStack(cost.getType().toString(), valueString, ProfileModuleAPI.getColorForResource(cost.getType()), costColor);
 	}
 	
 	public static ElementStack createResourceStack(ResourceAmount cost) {
 		String valueString = StringUtils.formatBigNumber(Math.abs(cost.getAmount()));
-		Color resourceColor = Inventory.getColorForResource(cost.getType());
+		Color resourceColor = ProfileModuleAPI.getColorForResource(cost.getType());
 		return createLabelStack(cost.getType().toString(), valueString, resourceColor, resourceColor);
 	}
 	

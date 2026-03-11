@@ -67,6 +67,7 @@ public class AudioManager {
 		availableRadioTracks.add("neon_horizon_ambient");
 		availableRadioTracks.add("to_the_stars_70s");
 		availableRadioTracks.add("to_the_stars_synth");
+		availableRadioTracks.add("to_the_stars_western");
 		availableRadioTracks.add("to_the_stars_intro");
 		
 		availableNonRadioTracks = new ArrayList<>();

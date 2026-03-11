@@ -35,11 +35,12 @@ public class PostGameExperienceElement implements PostGameElement {
 	private ExperienceSection uiElement;
 	private AnimationAction animationAction;
 	
+	private long offset;
+	
 	public PostGameExperienceElement(float itemDuration, int offset) {
 		uiElement = new ExperienceSection();
-		uiElement.init(50, GraphicsUtil.screenBounds().getHeight() - offset, GraphicsUtil.screenBounds().getWidth() - 100);
 		this.itemDuration = itemDuration;
-		
+		this.offset = offset;
 		buildAnimationAction();
 	}
 
@@ -53,6 +54,7 @@ public class PostGameExperienceElement implements PostGameElement {
 			public void update(float progression) {
 				long currentExperience = (long)MathUtil.easeInOut(startExperience, targetExperience, progression);
 				ProfileModel.profile.setCurrentExp(currentExperience);
+				uiElement.setBounds(50, GraphicsUtil.screenBounds().getHeight() - offset, GraphicsUtil.screenBounds().getWidth() - 100, 80);
 				uiElement.setCurrentGainedExperience(currentExperience - startExperience);
 				while (ProfileModel.profile.getRank().getNextRequiredExp() <= ProfileModel.profile.getCurrentExp()) {
 					ProfileModel.profile.setRank(ProfileModel.profile.getRank().getNextRank());

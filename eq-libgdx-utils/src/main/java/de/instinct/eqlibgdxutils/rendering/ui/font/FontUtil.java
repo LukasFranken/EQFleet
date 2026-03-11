@@ -40,7 +40,7 @@ public class FontUtil {
         	}
         	FreeTypeFontGenerator generator = new FreeTypeFontGenerator(fontFile);
             FreeTypeFontParameter params = new FreeTypeFontParameter();
-            params.size = Math.round(fontTypeConfiguration.getSize() * GraphicsUtil.getHorizontalDisplayScaleFactor());
+            params.size = Math.round(fontTypeConfiguration.getSize() * GraphicsUtil.getScaleFactor());
             BitmapFont bitmapFont = generator.generateFont(params);
             bitmapFont.getData().markupEnabled = true;
             fonts.put(fontTypeConfiguration.getType(), bitmapFont);
@@ -68,7 +68,7 @@ public class FontUtil {
 	}
 
 	public static float getFontTextWidthPx(int length, FontType type) {
-		return (fonts.get(type).getSpaceXadvance() * length) / GraphicsUtil.getHorizontalDisplayScaleFactor();
+		return (fonts.get(type).getSpaceXadvance() * length) / GraphicsUtil.getScaleFactor();
 	}
 
 	public static float getFontHeightPx() {
@@ -76,7 +76,7 @@ public class FontUtil {
 	}
 
 	public static float getFontHeightPx(FontType type) {
-		return fonts.get(type).getCapHeight() / GraphicsUtil.getVerticalDisplayScaleFactor();
+		return fonts.get(type).getCapHeight() / GraphicsUtil.getScaleFactor();
 	}
 	
 }

@@ -4,14 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.api.core.API;
 import de.instinct.api.core.modules.MenuModule;
@@ -19,20 +12,18 @@ import de.instinct.api.matchmaking.model.GameMode;
 import de.instinct.api.meta.dto.modules.ModuleData;
 import de.instinct.api.meta.dto.modules.ModuleInfoRequest;
 import de.instinct.eqfleet.GlobalStaticData;
-import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
+import de.instinct.eqfleet.menu.main.message.MenuMessage;
+import de.instinct.eqfleet.menu.main.message.types.OpenModuleMessage;
 import de.instinct.eqfleet.menu.module.construction.Construction;
 import de.instinct.eqfleet.menu.module.construction.ConstructionRenderer;
 import de.instinct.eqfleet.menu.module.core.ModuleManager;
-import de.instinct.eqfleet.menu.module.core.ModuleMessage;
 import de.instinct.eqfleet.menu.module.play.Play;
 import de.instinct.eqfleet.menu.module.play.PlayModel;
 import de.instinct.eqfleet.menu.module.play.PlayRenderer;
-import de.instinct.eqfleet.menu.module.play.message.UpdateLobbyStatusMessage;
 import de.instinct.eqfleet.menu.module.profile.Profile;
 import de.instinct.eqfleet.menu.module.profile.ProfileRenderer;
-import de.instinct.eqfleet.menu.module.profile.message.LoadProfileMessage;
 import de.instinct.eqfleet.menu.module.settings.Settings;
 import de.instinct.eqfleet.menu.module.settings.SettingsRenderer;
 import de.instinct.eqfleet.menu.module.ship.Shipyard;
@@ -41,11 +32,8 @@ import de.instinct.eqfleet.menu.module.shop.Shop;
 import de.instinct.eqfleet.menu.module.shop.ShopRenderer;
 import de.instinct.eqfleet.menu.module.starmap.Starmap;
 import de.instinct.eqfleet.menu.module.starmap.StarmapRenderer;
-import de.instinct.eqfleet.menu.postgame.PostGameModel;
-import de.instinct.eqfleet.menu.postgame.PostGameRenderer;
 import de.instinct.eqfleet.net.WebManager;
 import de.instinct.eqfleet.scene.Scene;
-import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
 import de.instinct.eqlibgdxutils.debug.profiler.Profiler;
@@ -54,20 +42,15 @@ import de.instinct.eqlibgdxutils.rendering.grid.GridRenderer;
 
 public class Menu extends Scene {
 	
-	private PostGameRenderer postGameRenderer;
+	private ModuleManager moduleManager;
 	private MenuRenderer menuRenderer;
 	private GridRenderer gridRenderer;
 	
-	private ScheduledExecutorService scheduler;
-	private long UPDATE_CLOCK_MS = 20;
-	
-	private Queue<ModuleMessage> moduleMessageQueue;
-	private Queue<MenuModule> reloadRequired;
-	
 	@Override
 	public void init() {
-		ModuleManager.init();
-		postGameRenderer = new PostGameRenderer();
+		MenuModel.messageQueue = new ConcurrentLinkedQueue<>();
+		
+		moduleManager = new ModuleManager();
 		menuRenderer = new MenuRenderer();
 		menuRenderer.init();
 		
@@ -75,12 +58,8 @@ public class Menu extends Scene {
 				.step(10f)
 				.build());
 		
-		reloadRequired = new ConcurrentLinkedQueue<>();
-		
 		MenuModel.modules = new HashMap<>();
 		MenuModel.renderers = new LinkedHashMap<>();
-		
-		MenuModel.active = false;
 		
 		MenuModel.renderers.put(MenuModule.PROFILE, new ProfileRenderer());
 		MenuModel.renderers.put(MenuModule.SETTINGS, new SettingsRenderer());
@@ -98,143 +77,75 @@ public class Menu extends Scene {
 		MenuModel.modules.put(MenuModule.SHOP, new Shop());
 		MenuModel.modules.put(MenuModule.STARMAP, new Starmap());
 		
-		for (BaseModule module : MenuModel.modules.values()) {
-			module.init();
+		for (BaseModuleRenderer renderer : MenuModel.renderers.values()) {
+			renderer.init();
 		}
 		
-		moduleMessageQueue = new ConcurrentLinkedQueue<>();
+		for (BaseModule module : MenuModel.modules.values()) {
+			module.init();
+			module.load();
+		}
 		
 		MenuModel.loaded = false;
-		scheduler = Executors.newSingleThreadScheduledExecutor();
-		scheduler.scheduleAtFixedRate(() -> {
-			try {
-				update();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}, 0, UPDATE_CLOCK_MS, TimeUnit.MILLISECONDS);
-	}
-	
-	private void calculateMenuBounds() {
-		float margin = 20f;
-		//MenuModel.moduleBounds = new Rectangle(margin, margin + 20, GraphicsUtil.screenBounds().width - (margin * 2), GraphicsUtil.screenBounds().height - 150 - 40f);
 	}
 	
 	@Override
 	public void open() {
-		Logger.log("MENU", "Opening Menu with last game UUID: " + GameModel.lastGameUUID, ConsoleColor.YELLOW);
-		if (GameModel.lastGameUUID == null || GameModel.lastGameUUID.contentEquals("custom") || GameModel.lastGameUUID.contentEquals("tutorial")) {
-			load();
-			MenuModel.active = true;
-		} else {
-			WebManager.enqueue(
-				    () -> API.matchmaking().result(GameModel.lastGameUUID),
-				    result -> {
-				    	if (result == null) {
-				    		Logger.log("Menu", "Failed to load post game data for UUID " + GameModel.lastGameUUID, ConsoleColor.RED);
-					    	load();
-					    	MenuModel.active = true;
-				    	} else {
-				    		PostGameModel.reward = result;
-					    	Gdx.app.postRunnable(() -> {
-					    		postGameRenderer.reload();
-					    		MenuModel.active = true;
-					    	});
-				    	}
-				    },
-				    error -> {
-				    	Logger.log("Menu", "Failed to load post game data for UUID " + GameModel.lastGameUUID + " with error: " + error.getMessage(), ConsoleColor.RED);
-				    	load();
-				    	MenuModel.active = true;
-				    }
-			);
-		}
+		load();
 	}
 	
 	@Override
 	public void close() {
-		MenuModel.active = false;
 		MenuModel.activeModule = null;
 	}
 	
 	public void load() {
 		MenuModel.loaded = false;
-		calculateMenuBounds();
-		updateBaseInfo();
 		loadModules();
 		if (PlayModel.lobbyStatus != null && PlayModel.lobbyStatus.getType().getGameMode() == GameMode.CONQUEST) Play.leaveLobby();
-	}
-
-	private void updateBaseInfo() {
-		if (WebManager.isOnline()) {
-			queue(LoadProfileMessage.builder().build());
-			queue(UpdateLobbyStatusMessage.builder().build());
-		}
 	}
 	
 	@Override
 	public void update() {
-		while (!moduleMessageQueue.isEmpty()) {
-			ModuleMessage message = moduleMessageQueue.poll();
-			BaseModule module = MenuModel.modules.get(message.getMenuModule());
-			if (module == null) continue;
-			module.processBackendMessage(message);
+		if (!MenuModel.messageQueue.isEmpty()) {
+			processMessage(MenuModel.messageQueue.poll());
 		}
 		for (BaseModule module : MenuModel.modules.values()) {
 			if (MenuModel.unlockedModules != null && MenuModel.unlockedModules.getEnabledModules().contains(module.getMenuModule())) {
 				module.update();
 			}
 		}
+		if (MenuModel.activeModule != null) {
+			MenuModel.renderers.get(MenuModel.activeModule).update();
+		}
 		menuRenderer.update();
 	}
 	
+	private void processMessage(MenuMessage message) {
+		if (message instanceof OpenModuleMessage) {
+			moduleManager.openModule(((OpenModuleMessage) message).getModule());
+		}
+	}
+
 	@Override
 	public void render() {
 		Profiler.startFrame("MENU");
-		while (reloadRequired.peek() != null) {
-			//MenuModel.renderers.get(reloadRequired.poll()).reload();
-		}
-		Profiler.checkpoint("MENU", "reload");
-		if (MenuModel.active) {
+		if (MenuModel.loaded) {
 			if (GlobalStaticData.showDebugGrid) gridRenderer.drawGrid();
 			Profiler.checkpoint("MENU", "grid render");
-			if (PostGameModel.reward != null) {
-				postGameRenderer.render();
-				Profiler.checkpoint("MENU", "postgame render");
-			} else {
-				if (MenuModel.activeModule != null) {
-					MenuModel.renderers.get(MenuModel.activeModule).render();
-					Profiler.checkpoint("MENU", "module render");
-				}
-				menuRenderer.render();
-				Profiler.checkpoint("MENU", "menu render");
+			if (MenuModel.activeModule != null) {
+				MenuModel.renderers.get(MenuModel.activeModule).render();
+				Profiler.checkpoint("MENU", "module render");
 			}
+			menuRenderer.render();
+			Profiler.checkpoint("MENU", "menu render");
 		}
 		Profiler.endFrame("MENU");
 	}
 	
-	public void queue(ModuleMessage message) {
-		moduleMessageQueue.add(message);
-	}
-	
-	public static void openModule(MenuModule menuModule) {
-		BaseModule module = MenuModel.modules.get(menuModule);
-		if (module == null) {
-			Logger.log("Menu", "Tried to open missing module: " + menuModule);
-			return;
-		}
-		module.open();
-		MenuModel.activeModule = menuModule;
-		ModuleManager.openModule(menuModule);
-	}
-	
-	public void closeModule() {
-		MenuModel.activeModule = null;
-		updateBaseInfo();
-	}
-	
 	public void loadModules() {
 		if (WebManager.isOnline()) {
+			MenuModel.modules.get(MenuModule.PROFILE).load();
 			WebManager.enqueue(
 				    () -> API.meta().modules(API.authKey),
 				    modulesResult -> {
@@ -259,8 +170,8 @@ public class Menu extends Scene {
     				lockedModules.add(module);
     			}
     		}
-    		loadLockedModuleInfo(lockedModules);
     		loadButtons();
+    		loadLockedModuleInfo(lockedModules);
 		} else {
 			Logger.log("Menu", "ModuleData couldn't be loaded!", ConsoleColor.RED);
 		}
@@ -288,24 +199,13 @@ public class Menu extends Scene {
 					} else {
 						Logger.log("Menu", "Locked ModuleData couldn't be loaded!", ConsoleColor.RED);
 					}
+			    	MenuModel.loaded = true;
 			    }
 		);
-	}
-	
-	public void reloadContent() {
-		
-	}
-	
-	public void requireReload(MenuModule module) {
-		reloadRequired.add(module);
 	}
 
 	@Override
 	public void dispose() {
-		postGameRenderer.dispose();
-		if (scheduler != null) {
-			scheduler.shutdownNow();
-		}
 		close();
 		menuRenderer.dispose();
 		for (BaseModule module : MenuModel.modules.values()) {

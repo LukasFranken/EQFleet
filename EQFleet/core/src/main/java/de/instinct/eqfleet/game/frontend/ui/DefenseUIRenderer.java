@@ -21,6 +21,8 @@ public class DefenseUIRenderer {
 	
 	private Color armorColor = new Color(1f, 0.5f, 0f, 0.8f);
 	
+	private Rectangle workingBounds = new Rectangle();
+	
 	public void render(GameState state, PerspectiveCamera camera) {
 		for (Turret turret : state.entityData.turrets) {
 			if (turret.hull != null) {
@@ -94,7 +96,7 @@ public class DefenseUIRenderer {
 	private void renderBar(PerspectiveCamera camera, Rectangle bounds, Color color, float current) {
 		Shapes.draw(EQRectangle.builder()
 				.projectionMatrix(camera.combined)
-				.bounds(new Rectangle(bounds.x + 1, bounds.y + 1, (bounds.width - 2) * current, bounds.height - 2))
+				.bounds(workingBounds.set(bounds.x + 1, bounds.y + 1, (bounds.width - 2) * current, bounds.height - 2))
 				.color(color)
 				.round(true)
 				.build());

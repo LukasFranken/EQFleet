@@ -3,7 +3,7 @@ package de.instinct.eqfleet.menu.module.ship.component.shippart;
 import com.badlogic.gdx.graphics.Color;
 
 import de.instinct.api.shipyard.dto.ship.component.ShipComponentType;
-import de.instinct.eqfleet.menu.module.ship.Shipyard;
+import de.instinct.eqfleet.menu.module.ship.ShipyardModuleAPI;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.HorizontalAlignment;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
@@ -29,12 +29,12 @@ public class ShipComponentProgressBar extends Component {
 		
 		partLabel = new Label(type.toString());
 		partLabel.setType(FontType.MICRO);
-		partLabel.setColor(Shipyard.getPartTypeColor(type));
+		partLabel.setColor(ShipyardModuleAPI.getPartTypeColor(type));
 		partLabel.setFixedHeight(6);
 		partLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
 		
 		progressBar = new PlainRectangularLoadingBar();
-		progressBar.setBar(TextureManager.createTexture(Shipyard.getPartTypeColor(type)));
+		progressBar.setBar(TextureManager.createTexture(ShipyardModuleAPI.getPartTypeColor(type)));
 		progressBar.setBackground(TextureManager.createTexture(new Color(0f, 0f, 0f, 0f)));
 		progressBar.setMaxValue(maxProgress);
 		progressBar.setCustomDescriptor("");
@@ -42,7 +42,7 @@ public class ShipComponentProgressBar extends Component {
 		
 		Border border = new Border();
 		border.setAlpha(1f);
-		border.setColor(Shipyard.getPartTypeColor(type));
+		border.setColor(ShipyardModuleAPI.getPartTypeColor(type));
 		border.setSize(1f);
 		progressBar.setBorder(border);
 	}

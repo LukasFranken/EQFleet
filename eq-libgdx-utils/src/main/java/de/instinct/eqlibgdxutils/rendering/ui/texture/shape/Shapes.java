@@ -41,7 +41,7 @@ public class Shapes {
 		}
 		if (shape instanceof EQCircle) {
 			EQCircle eqCircle = (EQCircle) shape;
-			Vector2 physicalPosition = shape.getProjectionMatrix() == null ? GraphicsUtil.scaleFactorAdjusted(eqCircle.getPosition()) : eqCircle.getPosition();
+			Vector2 physicalPosition = shape.getProjectionMatrix() == null ? GraphicsUtil.translateToPhysical(eqCircle.getPosition()) : eqCircle.getPosition();
 			float radius = shape.getProjectionMatrix() == null ? eqCircle.getRadius() * GraphicsUtil.getVerticalDisplayScaleFactor() : eqCircle.getRadius();
 			circle(physicalPosition, radius);
 		}

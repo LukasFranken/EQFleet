@@ -31,12 +31,43 @@ public class PopupRenderer {
 	private static boolean flagForDestroy;
 	private static boolean inCreationFrame;
 	
+	private static EQRectangle bgDarkeningShape;
+	private static EQRectangle bgPopupShape;
+	private static EQRectangle popupOutlineShape;
+	private static EQRectangle popupTitleDividerShape;
+	
 	public static void init() {
 		activePopups = new ArrayList<>();
 		Console.registerMetric(NumberMetric.builder()
         		.decimals(0)
         		.tag("current_layer")
         		.build());
+		
+		bgDarkeningShape = EQRectangle.builder()
+				.bounds(GraphicsUtil.screenBounds())
+				.color(new Color(0f, 0f, 0f, BG_DARKENING))
+				.filled(true)
+				.build();
+		
+		bgPopupShape = EQRectangle.builder()
+				.bounds(new Rectangle())
+				.color(Color.BLACK)
+				.filled(true)
+				.build();
+		
+		popupOutlineShape = EQRectangle.builder()
+				.bounds(new Rectangle())
+				.color(new Color(SkinManager.skinColor))
+				.glowConfig(EQGlowConfig.builder().build())
+				.thickness(2f)
+				.build();
+		
+		popupTitleDividerShape = EQRectangle.builder()
+				.bounds(new Rectangle())
+				.color(new Color(SkinManager.skinColor))
+				.glowConfig(EQGlowConfig.builder().build())
+				.thickness(2f)
+				.build();
 	}
 	
 	public static void createMessageDialog(String title, String message) {
@@ -108,30 +139,7 @@ public class PopupRenderer {
 			newPopupModel = null;
 		}
 		for (PopupModel popup : activePopups) {
-			Shapes.draw(EQRectangle.builder()
-					.bounds(GraphicsUtil.screenBounds())
-					.color(new Color(0f, 0f, 0f, BG_DARKENING))
-					.build());
-			
-			Shapes.draw(EQRectangle.builder()
-					.bounds(popup.getBounds())
-					.color(Color.BLACK)
-					.build());
-			
-			Shapes.draw(EQRectangle.builder()
-					.bounds(popup.getBounds())
-					.color(popup.getWindowColor())
-					.glowConfig(EQGlowConfig.builder().build())
-					.thickness(2f)
-					.build());
-			
-			Shapes.draw(EQRectangle.builder()
-					.bounds(new Rectangle(popup.getBounds().x, popup.getBounds().y + popup.getBounds().height - TITLE_BAR_HEIGHT, popup.getBounds().width, 2))
-					.color(popup.getWindowColor())
-					.glowConfig(EQGlowConfig.builder().build())
-					.thickness(2f)
-					.build());
-			
+			drawPopupShapes(popup);
 			popup.getTitleLabel().setBounds(new Rectangle(
 					popup.getBounds().x + MARGIN,
 					popup.getBounds().y + popup.getBounds().height - TITLE_BAR_HEIGHT,
@@ -143,13 +151,28 @@ public class PopupRenderer {
 				inCreationFrame = false;
 			} else {
 				popup.getPopup().getContentContainer().render();
-				if (popup.getPopup().isCloseOnClickOutside() && InputUtil.isClicked() && !GraphicsUtil.scaleFactorAdjusted(popup.getBounds()).contains(InputUtil.getMousePosition())) {
+				if (popup.getPopup().isCloseOnClickOutside() && InputUtil.isClicked() && !InputUtil.mouseIsOver(popup.getBounds())) {
 					close();
 				}
 			}
 		}
 	}
 	
+	private static void drawPopupShapes(PopupModel popup) {
+		Shapes.draw(bgDarkeningShape);
+		
+		bgPopupShape.setBounds(popup.getBounds());
+		Shapes.draw(bgPopupShape);
+		
+		popupOutlineShape.setBounds(popup.getBounds());
+		if (popup.getWindowColor() != null) popupOutlineShape.setColor(popup.getWindowColor());
+		Shapes.draw(popupOutlineShape);
+		
+		popupTitleDividerShape.getBounds().set(popup.getBounds().x, popup.getBounds().y + popup.getBounds().height - TITLE_BAR_HEIGHT, popup.getBounds().width, 2);
+		if (popup.getWindowColor() != null) popupTitleDividerShape.setColor(popup.getWindowColor());
+		Shapes.draw(popupTitleDividerShape);
+	}
+
 	public static void close() {
 		flagForDestroy = true;
 	}

@@ -5,24 +5,29 @@ import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 
+import de.instinct.api.core.API;
 import de.instinct.api.matchmaking.dto.ShipResult;
-import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
+import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
 import de.instinct.eqfleet.menu.postgame.elements.PostGameExperienceElement;
 import de.instinct.eqfleet.menu.postgame.elements.PostGameResourceElement;
 import de.instinct.eqfleet.menu.postgame.elements.PostGameShipProgressOverview;
 import de.instinct.eqfleet.menu.postgame.model.DynamicPostGameElement;
 import de.instinct.eqfleet.menu.postgame.model.PostGameElement;
+import de.instinct.eqfleet.net.WebManager;
+import de.instinct.eqfleet.scene.Scene;
 import de.instinct.eqfleet.scene.SceneManager;
 import de.instinct.eqfleet.scene.SceneType;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
+import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
+import de.instinct.eqlibgdxutils.debug.logging.Logger;
 import de.instinct.eqlibgdxutils.debug.profiler.Profiler;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
 
-public class PostGameRenderer extends BaseModuleRenderer {
+public class PostGame extends Scene {
 	
 	private float PER_ITEM_DURATION_MS = 0.8f;
 	
@@ -33,9 +38,8 @@ public class PostGameRenderer extends BaseModuleRenderer {
 	
 	private boolean halted;
 	private boolean skipped;
-	private boolean loaded;
 	
-	public PostGameRenderer() {
+	public PostGame() {
 		skipButton = DefaultButtonFactory.colorButton("Skip", new Action() {
 			
 			@Override
@@ -49,7 +53,6 @@ public class PostGameRenderer extends BaseModuleRenderer {
 			@Override
 			public void execute() {
 				PostGameModel.reward = null;
-				loaded = false;
 				SceneManager.changeTo(SceneType.MENU);
 			}
 			
@@ -57,60 +60,8 @@ public class PostGameRenderer extends BaseModuleRenderer {
 	}
 
 	@Override
-	public void render() {
-		if (loaded) {
-			Profiler.startFrame("POSTGAME_RNDR");
-			update();
-			Profiler.checkpoint("POSTGAME_RNDR", "update");
-			for (PostGameElement element : elements) {
-				if (element.getElapsed() > 0) {
-					if (element.getUiElement() != null) {
-						element.getUiElement().render();
-					}
-				}
-			}
-			Profiler.checkpoint("POSTGAME_RNDR", "render");
-			Profiler.endFrame("POSTGAME_RNDR");
-		}
-	}
-
-	private void update() {
-		float thisFrameDelta = Gdx.graphics.getDeltaTime();
-		boolean anyHalted = false;
-		for (PostGameElement element : elements) {
-			if (thisFrameDelta <= 0) break;
-			if (element.getElapsed() < element.getDuration()) {
-				if (!halted) {
-					if (skipped) {
-						element.setElapsed(element.getDuration());
-					} else {
-						if (thisFrameDelta > element.getDuration() - element.getElapsed()) {
-							float difference = element.getDuration() - element.getElapsed();
-							element.setElapsed(element.getElapsed() + difference);
-							thisFrameDelta -= difference;
-						} else {
-							element.setElapsed(element.getElapsed() + thisFrameDelta);
-							thisFrameDelta = 0;
-						}
-					}
-					
-					if (element.getAnimationAction() != null) {
-						float progression = element.getElapsed() / element.getDuration();
-						element.getAnimationAction().update(progression);
-					}
-				}
-				if (element.isHalted()) {
-					anyHalted = true;
-					break;
-				}
-			}
-		}
-		halted = anyHalted;
-	}
-
-	@Override
-	public void reload() {
-		if (PostGameModel.reward != null) {
+	public void init() {
+		if (PostGameModel.reward != null && PostGameModel.dataUpdated) {
 			halted = false;
 			skipped = false;
 			elements = new ArrayList<>();
@@ -159,10 +110,87 @@ public class PostGameRenderer extends BaseModuleRenderer {
 					.duration(PER_ITEM_DURATION_MS)
 					.uiElement(claimButton)
 					.build());
-			loaded = true;
+			PostGameModel.dataUpdated = false;
 		}
 	}
 
+	@Override
+	public void open() {
+		WebManager.enqueue(
+			    () -> API.matchmaking().result(GameModel.lastGameUUID),
+			    result -> {
+			    	if (result == null) {
+			    		Logger.log("Menu", "Failed to load post game data for UUID " + GameModel.lastGameUUID, ConsoleColor.RED);
+			    	} else {
+			    		PostGameModel.reward = result;
+			    		PostGameModel.dataUpdated = true;
+			    	}
+			    },
+			    error -> {
+			    	Logger.log("Menu", "Failed to load post game data for UUID " + GameModel.lastGameUUID + " with error: " + error.getMessage(), ConsoleColor.RED);
+			    }
+		);
+	}
+
+	@Override
+	public void update() {
+		init();
+		if (PostGameModel.reward != null) {
+			float thisFrameDelta = Gdx.graphics.getDeltaTime();
+			boolean anyHalted = false;
+			for (PostGameElement element : elements) {
+				if (thisFrameDelta <= 0) break;
+				if (element.getElapsed() < element.getDuration()) {
+					if (!halted) {
+						if (skipped) {
+							element.setElapsed(element.getDuration());
+						} else {
+							if (thisFrameDelta > element.getDuration() - element.getElapsed()) {
+								float difference = element.getDuration() - element.getElapsed();
+								element.setElapsed(element.getElapsed() + difference);
+								thisFrameDelta -= difference;
+							} else {
+								element.setElapsed(element.getElapsed() + thisFrameDelta);
+								thisFrameDelta = 0;
+							}
+						}
+						
+						if (element.getAnimationAction() != null) {
+							float progression = element.getElapsed() / element.getDuration();
+							element.getAnimationAction().update(progression);
+						}
+					}
+					if (element.isHalted()) {
+						anyHalted = true;
+						break;
+					}
+				}
+			}
+			halted = anyHalted;
+		}
+	}
+	
+	@Override
+	public void render() {
+		if (PostGameModel.reward != null) {
+			Profiler.startFrame("POSTGAME_RNDR");
+			for (PostGameElement element : elements) {
+				if (element.getElapsed() > 0) {
+					if (element.getUiElement() != null) {
+						element.getUiElement().render();
+					}
+				}
+			}
+			Profiler.checkpoint("POSTGAME_RNDR", "render");
+			Profiler.endFrame("POSTGAME_RNDR");
+		}
+	}
+	
+	@Override
+	public void close() {
+		
+	}
+	
 	@Override
 	public void dispose() {
 		

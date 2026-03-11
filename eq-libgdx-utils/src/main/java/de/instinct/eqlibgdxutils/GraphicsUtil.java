@@ -42,7 +42,7 @@ public class GraphicsUtil {
 		return screenBounds;
 	}
 	
-	public static Rectangle scaleFactorAdjusted(Rectangle bounds) {
+	public static Rectangle translateToPhysical(Rectangle bounds) {
 		if (bounds == null) return null;
 		float horizontalScaleFactor = getHorizontalDisplayScaleFactor();
 		float verticalScaleFactor = getVerticalDisplayScaleFactor();
@@ -53,7 +53,7 @@ public class GraphicsUtil {
 		return bounds;
 	}
 	
-	public static Vector2 scaleFactorAdjusted(Vector2 position) {
+	public static Vector2 translateToPhysical(Vector2 position) {
 		if (position == null) return null;
 		float horizontalScaleFactor = getHorizontalDisplayScaleFactor();
 		float verticalScaleFactor = getVerticalDisplayScaleFactor();
@@ -62,7 +62,7 @@ public class GraphicsUtil {
 		return position;
 	}
 	
-	public static Rectangle scaleFactorDeducted(Rectangle bounds) {
+	public static Rectangle translateToVirtual(Rectangle bounds) {
 		if (bounds == null) return null;
 		float horizontalScaleFactor = getHorizontalDisplayScaleFactor();
 		float verticalScaleFactor = getVerticalDisplayScaleFactor();
@@ -73,7 +73,7 @@ public class GraphicsUtil {
 		return bounds;
 	}
 	
-	public static Vector2 scaleFactorDeducted(Vector2 position) {
+	public static Vector2 translateToVirtual(Vector2 position) {
 		if (position == null) return null;
 		float horizontalScaleFactor = getHorizontalDisplayScaleFactor();
 		float verticalScaleFactor = getVerticalDisplayScaleFactor();

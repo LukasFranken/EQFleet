@@ -2,7 +2,6 @@ package de.instinct.eqfleet.menu.module.settings;
 
 import de.instinct.api.core.modules.MenuModule;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
-import de.instinct.eqfleet.menu.module.core.ModuleMessage;
 
 public class Settings extends BaseModule {
 
@@ -17,18 +16,13 @@ public class Settings extends BaseModule {
 	}
 
 	@Override
-	public void open() {
+	public void load() {
 		
 	}
 
 	@Override
 	public void update() {
 		
-	}
-
-	@Override
-	public boolean process(ModuleMessage message) {
-		return false;
 	}
 
 	@Override

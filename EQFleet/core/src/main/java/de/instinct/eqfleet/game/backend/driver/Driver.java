@@ -74,7 +74,7 @@ public abstract class Driver {
         scheduler.schedule(() -> {
 			
 			try {
-				Game.dispose();
+				Game.end();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

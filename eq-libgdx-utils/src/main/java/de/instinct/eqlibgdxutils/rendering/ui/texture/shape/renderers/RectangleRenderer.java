@@ -17,6 +17,9 @@ public class RectangleRenderer {
 	
 	private Label labeledRectangleLabel;
 	
+	private Rectangle virtualWorkingBounds;
+	private Rectangle physicalWorkingBounds;
+	private Rectangle partialRectWorkingBounds;
 	
 	public RectangleRenderer(ExtendedShapeRenderer extendedShapeRenderer, GlowRenderer glowRenderer) {
 		this.extendedShapeRenderer = extendedShapeRenderer;
@@ -29,62 +32,73 @@ public class RectangleRenderer {
 		labelBorder.setColor(new Color());
 		labelBorder.setSize(1f);
 		labeledRectangleLabel.setBorder(labelBorder);
+		virtualWorkingBounds = new Rectangle();
+		physicalWorkingBounds = new Rectangle();
+		partialRectWorkingBounds = new Rectangle();
 	}
 	
 	public void render(EQRectangle rectangle) {
-		if (rectangle.getLabel() != null) {
-			labeledRectangle(rectangle.getBounds(), rectangle.getLabel(), rectangle.getColor());
+		virtualWorkingBounds.set(rectangle.getBounds());
+		physicalWorkingBounds.set(rectangle.getBounds());
+		if (rectangle.getProjectionMatrix() != null) {
+			extendedShapeRenderer.setProjectionMatrix(rectangle.getProjectionMatrix());
 		} else {
-			Rectangle bounds = rectangle.getProjectionMatrix() == null ? GraphicsUtil.scaleFactorAdjusted(rectangle.getBounds()) : rectangle.getBounds();
+			GraphicsUtil.translateToPhysical(physicalWorkingBounds);
+		}
+		
+		if (rectangle.getLabel() != null) {
+			labeledRectangle(rectangle.getLabel(), rectangle.getColor());
+		} else {
 			float thickness = rectangle.getProjectionMatrix() == null ? GraphicsUtil.getScaleFactor() * rectangle.getThickness() : rectangle.getThickness();
 			if (rectangle.isRound()) {
 				if (rectangle.getThickness() == 0) {
-					filledRoundRectangle(bounds);
+					filledRoundRectangle();
 				} else {
-					roundRectangle(bounds, thickness);
+					roundRectangle(thickness);
 				}
 			} else {
 				if (rectangle.isFilled()) {
-					rectangle(bounds);
+					rectangle();
 				} else {
-					rectangle(bounds, thickness);
+					rectangle(thickness);
 				}
-				if (rectangle.getGlowConfig() != null) glowRenderer.rectangle(bounds, rectangle.getThickness(), rectangle.getGlowConfig());
+				if (rectangle.getGlowConfig() != null) glowRenderer.rectangle(physicalWorkingBounds, rectangle.getThickness(), rectangle.getGlowConfig());
 			}
 		}
 	}
 	
-	private void rectangle(Rectangle bounds) {
-		extendedShapeRenderer.rect(bounds);
+	private void rectangle() {
+		extendedShapeRenderer.rect(physicalWorkingBounds);
 	}
 	
-	private void rectangle(Rectangle bounds, float thickness) {
-		extendedShapeRenderer.rect(bounds, thickness);
+	private void rectangle(float thickness) {
+		extendedShapeRenderer.rect(physicalWorkingBounds, thickness);
 	}
 	
-	private void labeledRectangle(Rectangle bounds, String text, Color color) {
+	private void labeledRectangle(String text, Color color) {
 		float offset = 20;
 		float labelWidth = FontUtil.getFontTextWidthPx(text.length(), FontType.SMALL) + offset;
 		
-		float adjustedOffset = GraphicsUtil.getHorizontalDisplayScaleFactor() * offset;
-		float adjustedLabelWidth = GraphicsUtil.getHorizontalDisplayScaleFactor() * labelWidth;
-		Rectangle adjustedBounds = GraphicsUtil.scaleFactorAdjusted(bounds);
-		extendedShapeRenderer.partialRect(new Rectangle(adjustedBounds.x, adjustedBounds.y, adjustedBounds.width, adjustedBounds.height - (adjustedOffset / 2)), adjustedLabelWidth, adjustedOffset, 1f);
+		float adjustedOffset = GraphicsUtil.getScaleFactor() * offset;
+		float adjustedLabelWidth = GraphicsUtil.getScaleFactor() * labelWidth;
+
+		partialRectWorkingBounds.set(physicalWorkingBounds.x, physicalWorkingBounds.y, physicalWorkingBounds.width, physicalWorkingBounds.height - (adjustedOffset / 2));
+		extendedShapeRenderer.partialRect(partialRectWorkingBounds, adjustedLabelWidth, adjustedOffset, 1f);
 		extendedShapeRenderer.end();
 		
 		labeledRectangleLabel.setText(text);
-		labeledRectangleLabel.getBounds().set(bounds.x + offset, bounds.y + bounds.height - offset, labelWidth, offset);
+		labeledRectangleLabel.setBounds(virtualWorkingBounds.x + offset, virtualWorkingBounds.y + virtualWorkingBounds.height - offset, labelWidth, offset);
 		labeledRectangleLabel.setColor(color);
 		labeledRectangleLabel.getBorder().setColor(color);
 		labeledRectangleLabel.render();
 	}
 	
-	private void roundRectangle(Rectangle bounds, float thickness) {
-		extendedShapeRenderer.roundRectangle(bounds, thickness);
+	private void roundRectangle(float thickness) {
+		extendedShapeRenderer.roundRectangle(physicalWorkingBounds, thickness);
 	}
 	
-	private void filledRoundRectangle(Rectangle bounds) {
-		extendedShapeRenderer.filledRoundRectangle(bounds);
+	private void filledRoundRectangle() {
+		extendedShapeRenderer.filledRoundRectangle(physicalWorkingBounds);
 	}
 
 }

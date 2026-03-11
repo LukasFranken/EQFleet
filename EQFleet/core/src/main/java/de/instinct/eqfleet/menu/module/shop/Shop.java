@@ -1,14 +1,14 @@
 package de.instinct.eqfleet.menu.module.shop;
 
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 import de.instinct.api.core.API;
 import de.instinct.api.core.modules.MenuModule;
 import de.instinct.api.shop.dto.BuyResponseCode;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
-import de.instinct.eqfleet.menu.main.Menu;
-import de.instinct.eqfleet.menu.module.core.ModuleMessage;
-import de.instinct.eqfleet.menu.module.profile.inventory.Inventory;
-import de.instinct.eqfleet.menu.module.shop.message.BuyMessage;
-import de.instinct.eqfleet.menu.module.shop.message.ReloadShopMessage;
+import de.instinct.eqfleet.menu.module.shop.message.ShopMessage;
+import de.instinct.eqfleet.menu.module.shop.message.types.BuyMessage;
+import de.instinct.eqfleet.menu.module.shop.message.types.ReloadShopMessage;
 import de.instinct.eqfleet.net.WebManager;
 
 public class Shop extends BaseModule {
@@ -20,52 +20,53 @@ public class Shop extends BaseModule {
 
 	@Override
 	public void init() {
-		
+		ShopModel.messageQueue = new ConcurrentLinkedQueue<>();
 	}
 
 	@Override
-	public void open() {
-		//Menu.queue(ReloadShopMessage.builder().build());
+	public void load() {
+		loadData();
 	}
 
 	@Override
 	public void update() {
-		
+		if (!ShopModel.messageQueue.isEmpty()) {
+			process(ShopModel.messageQueue.poll());
+		}
 	}
-
-	@Override
-	public boolean process(ModuleMessage message) {
+	
+	private void process(ShopMessage message) {
 		if (message instanceof ReloadShopMessage) {
-			WebManager.enqueue(
-					() -> API.shop().shop(),
-				    result -> {
-				    	ShopModel.shopData = result;
-				    	WebManager.enqueue(
-								() -> API.shop().data(API.authKey),
-							    result2 -> {
-							    	ShopModel.playerShopData = result2;
-							    	super.requireUIReload();
-							    }
-						);
-				    }
-			);
-			return true;
+			loadData();
 		}
 		if (message instanceof BuyMessage) {
 			WebManager.enqueue(
 					() -> API.shop().buy(API.authKey, ((BuyMessage) message).getItemId()),
 				    result -> {
 				    	if (result.getCode() == BuyResponseCode.SUCCESS) {
-				    		Inventory.loadData();
-				    		//Menu.queue(ReloadShopMessage.builder().build());
+				    		loadData();
 				    	} else {
 				    		ShopModel.buyResponse = result;
 				    	}
 				    }
 			);
-			return true;
 		}
-		return false;
+	}
+	
+	private void loadData() {
+		WebManager.enqueue(
+				() -> API.shop().shop(),
+			    result -> {
+			    	ShopModel.shopData = result;
+			    }
+		);
+		WebManager.enqueue(
+				() -> API.shop().data(API.authKey),
+			    result -> {
+			    	ShopModel.playerShopData = result;
+			    }
+		);
+		ShopModel.dataUpdated = true;
 	}
 
 	@Override

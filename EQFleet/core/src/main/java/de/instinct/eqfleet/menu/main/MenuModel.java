@@ -2,6 +2,7 @@ package de.instinct.eqfleet.menu.main;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 import com.badlogic.gdx.math.Rectangle;
 
@@ -10,10 +11,12 @@ import de.instinct.api.meta.dto.modules.ModuleData;
 import de.instinct.api.meta.dto.modules.ModuleInfoResponse;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
+import de.instinct.eqfleet.menu.main.message.MenuMessage;
 
 public class MenuModel {
 	
-	public static volatile boolean active;
+	public static volatile Queue<MenuMessage> messageQueue;
+	
 	public static volatile Rectangle moduleBounds;
 	public static volatile MenuModule activeModule;
 	public static volatile ModuleData unlockedModules;

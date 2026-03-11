@@ -18,7 +18,10 @@ public class GridRenderer {
 
 	private GridConfiguration config;
 	
+	private Rectangle workingBounds = new Rectangle();
+	
 	private float alpha = 1f;
+	private Color finalColor = new Color();
 
 	public GridRenderer(GridConfiguration config) {
 		this.shapeRenderer = new ShapeRenderer();
@@ -36,7 +39,7 @@ public class GridRenderer {
 
 		shapeRenderer.setProjectionMatrix(camera.combined);
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-		Color finalColor = new Color(config.getLineColor());
+		finalColor.set(config.getLineColor());
 		finalColor.a *= alpha;
 		shapeRenderer.setColor(finalColor);
 
@@ -92,7 +95,7 @@ public class GridRenderer {
 		for (float x = 0; x <= GraphicsUtil.screenBounds().getWidth(); x += config.getStep()) {
 			Shapes.draw(EQRectangle.builder()
 					.color(config.getLineColor())
-					.bounds(new Rectangle(x, 0, config.getLineThickness(), GraphicsUtil.screenBounds().getHeight()))
+					.bounds(workingBounds.set(x, 0, config.getLineThickness(), GraphicsUtil.screenBounds().getHeight()))
 					.thickness(config.getLineThickness())
 					.build());
 		}
@@ -100,7 +103,7 @@ public class GridRenderer {
 		for (float y = 0; y <= GraphicsUtil.screenBounds().getHeight(); y += config.getStep()) {
 			Shapes.draw(EQRectangle.builder()
 					.color(config.getLineColor())
-					.bounds(new Rectangle(0, y, GraphicsUtil.screenBounds().getWidth(), config.getLineThickness()))
+					.bounds(workingBounds.set(0, y, GraphicsUtil.screenBounds().getWidth(), config.getLineThickness()))
 					.thickness(config.getLineThickness())
 					.build());
 		}

@@ -3,8 +3,6 @@ package de.instinct.eqfleet.intro;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.math.Rectangle;
-
 import de.instinct.api.auth.dto.TokenVerificationResponse;
 import de.instinct.api.core.API;
 import de.instinct.eqfleet.App;
@@ -47,7 +45,7 @@ public class Intro extends Scene {
 	public void init() {
 		introSlideshow = new Slideshow();
 		versionLabel = new Label("v" + App.VERSION);
-		versionLabel.setBounds(new Rectangle(30, 30, 60, 20));
+		versionLabel.setBounds(30, 30, 60, 20);
 		versionLabel.setColor(SkinManager.skinColor);
 	}
 	

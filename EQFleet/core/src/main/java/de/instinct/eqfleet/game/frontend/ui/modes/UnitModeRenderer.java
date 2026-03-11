@@ -159,7 +159,7 @@ public class UnitModeRenderer extends ModeRenderer {
 	        Color labelColor = new Color(selected.currentResources >= ship.resourceCost && owner.currentCommandPoints >= ship.cpCost ? Color.GREEN : Color.RED);
 	        Label shipLabel = new Label(shipName);
 	        shipLabel.setColor(labelColor);
-	        shipLabel.setBounds(new Rectangle(InputUtil.getNormalizedMousePosition().x - (labelWidth / 2), InputUtil.getNormalizedMousePosition().y - 10f + arrowLabelYOffset, labelWidth, 20f));
+	        shipLabel.setBounds(new Rectangle(InputUtil.getVirtualMousePosition().x - (labelWidth / 2), InputUtil.getVirtualMousePosition().y - 10f + arrowLabelYOffset, labelWidth, 20f));
 	        shipLabel.setType(FontType.SMALL);
 	        shipLabel.render();
 		}
@@ -231,7 +231,7 @@ public class UnitModeRenderer extends ModeRenderer {
 	        float labelWidth = FontUtil.getFontTextWidthPx(shipName.length(), FontType.SMALL);
 	        Label shipLabel = new Label(shipName);
 	        shipLabel.setColor(isSelected ? (isAffordable ? selectedAffordableColor : selectedColor) : unselectedColorLabel);
-	        shipLabel.setBounds(GraphicsUtil.scaleFactorDeducted(new Rectangle(labelPos.x - (labelWidth / 2), labelPos.y - 10f, labelWidth, 20f)));
+	        shipLabel.setBounds(GraphicsUtil.translateToVirtual(new Rectangle(labelPos.x - (labelWidth / 2), labelPos.y - 10f, labelWidth, 20f)));
 	        shipLabel.setType(FontType.SMALL);
 	        shipLabel.render();
 	    }

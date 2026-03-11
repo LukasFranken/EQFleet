@@ -4,6 +4,7 @@ public enum SceneType {
 	
 	INTRO,
 	MENU,
-	GAME;
+	GAME,
+	POSTGAME;
 
 }

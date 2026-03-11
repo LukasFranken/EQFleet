@@ -1,14 +1,14 @@
 package de.instinct.eqfleet.menu.module.profile;
 
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 import de.instinct.api.core.API;
 import de.instinct.api.core.modules.MenuModule;
 import de.instinct.api.meta.dto.NameRegisterResponseCode;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
-import de.instinct.eqfleet.menu.main.Menu;
-import de.instinct.eqfleet.menu.module.core.ModuleMessage;
-import de.instinct.eqfleet.menu.module.profile.inventory.Inventory;
-import de.instinct.eqfleet.menu.module.profile.message.LoadProfileMessage;
-import de.instinct.eqfleet.menu.module.profile.message.RegisterMessage;
+import de.instinct.eqfleet.menu.module.profile.message.ProfileMessage;
+import de.instinct.eqfleet.menu.module.profile.message.types.LoadProfileMessage;
+import de.instinct.eqfleet.menu.module.profile.message.types.RegisterMessage;
 import de.instinct.eqfleet.net.WebManager;
 
 public class Profile extends BaseModule {
@@ -20,32 +20,30 @@ public class Profile extends BaseModule {
 	
 	@Override
 	public void init() {
-		
+		ProfileModel.messageQueue = new ConcurrentLinkedQueue<>();
 	}
 	
 	@Override
-	public void open() {
+	public void load() {
 		loadData();
 	}
 
 	@Override
 	public void update() {
-		
+		if (!ProfileModel.messageQueue.isEmpty()) {
+			process(ProfileModel.messageQueue.poll());
+		}
 	}
 	
-	@Override
-	public boolean process(ModuleMessage message) {
-		if (message instanceof RegisterMessage) {
-			register(((RegisterMessage)message).getUsername());
-			return true;
-		}
+	private void process(ProfileMessage message) {
 		if (message instanceof LoadProfileMessage) {
 			loadData();
-			return true;
 		}
-		return false;
+		if (message instanceof RegisterMessage) {
+			register(((RegisterMessage) message).getUsername());
+		}
 	}
-	
+
 	public void register(String username) {
 		WebManager.enqueue(
 			    () -> API.meta().registerName(username),
@@ -53,8 +51,6 @@ public class Profile extends BaseModule {
 			    	ProfileModel.nameRegisterResponseCode = result;
 			    	if (result == NameRegisterResponseCode.SUCCESS) {
 			    		loadData();
-			    	} else {
-			    		super.requireUIReload();
 			    	}
 			    }
 		);
@@ -65,17 +61,20 @@ public class Profile extends BaseModule {
 			    () -> API.meta().profile(API.authKey),
 			    result -> {
 			    	ProfileModel.profile = result;
-			    	//Menu.reloadContent();
-			    	WebManager.enqueue(
-						    () -> API.commander().data(API.authKey),
-						    result2 -> {
-						    	ProfileModel.commanderData = result2;
-						    	super.requireUIReload();
-						    }
-					);
 			    }
 		);
-		Inventory.loadData();
+		WebManager.enqueue(
+			    () -> API.commander().data(API.authKey),
+			    result -> {
+			    	ProfileModel.commanderData = result;
+			    }
+		);
+		WebManager.enqueue(
+			    () -> API.meta().resources(API.authKey),
+			    result -> {
+			        ProfileModel.resources = result;
+			    }
+		);
 	}
 
 	@Override

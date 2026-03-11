@@ -31,9 +31,12 @@ public abstract class Button extends Component {
 	@Override
 	public void updateComponent() {
 		if (enabled && getLayer() >= PopupRenderer.getCurrentLayer()) {
-	        if (InputUtil.mouseIsOver(getBounds())) {
-	        	if (consoleBypass ? InputUtil.isPressedConsole() : InputUtil.isPressed()) {
-	    			if (!down) {
+			boolean pressed = consoleBypass ? InputUtil.isPressedConsole() : InputUtil.isPressed();
+			boolean mouseOver = InputUtil.mouseIsOver(getBounds());
+			boolean onMobile = Gdx.app.getType() == Application.ApplicationType.Android || Gdx.app.getType() == Application.ApplicationType.iOS;
+	        if (mouseOver) {
+	        	if (pressed) {
+	    			if (!down && InputUtil.isJustPressed()) {
 	    				down = true;
 	            	}
 	    			hovered = false;
@@ -44,7 +47,7 @@ public abstract class Button extends Component {
 	    				}
 	    				down = false;
 	    			} else {
-	    				if (Gdx.app.getType() != Application.ApplicationType.Android && Gdx.app.getType() != Application.ApplicationType.iOS) hovered = true;
+	    				if (!onMobile) hovered = true;
 	    			}
 	    		}
 	        } else {

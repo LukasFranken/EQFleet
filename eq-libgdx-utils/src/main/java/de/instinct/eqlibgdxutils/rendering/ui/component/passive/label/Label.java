@@ -10,7 +10,8 @@ import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.shapes.EQRectangle;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -25,6 +26,9 @@ public class Label extends Component {
 	private Color backgroundColor;
 	private float lineSpacing;
 	private FontType type;
+	
+	private Rectangle physicalTextBounds;
+	private EQRectangle backgroundShape;
 
 	public Label(String text) {
 		super();
@@ -34,6 +38,12 @@ public class Label extends Component {
 		horizontalAlignment = HorizontalAlignment.CENTER;
 		lineSpacing = 5;
 		type = FontType.NORMAL;
+		
+		physicalTextBounds = new Rectangle();
+		backgroundShape = EQRectangle.builder()
+				.filled(true)
+				.bounds(getBounds())
+				.build();
 	}
 
 	@Override
@@ -56,15 +66,17 @@ public class Label extends Component {
 	}
 	
 	@Override
-	protected void updateComponent() {}
+	protected void updateComponent() {
+		physicalTextBounds.set(getBounds().x, getBounds().y, getBounds().width, getBounds().height);
+		GraphicsUtil.translateToPhysical(physicalTextBounds);
+	}
 
 	@Override
 	protected void renderComponent() {
-		Rectangle bounds = GraphicsUtil.scaleFactorAdjusted(getBounds());
 		if (backgroundColor != null) {
-			TextureManager.draw(TextureManager.createTexture(backgroundColor), getBounds(), getAlpha());
+			backgroundShape.setColor(new Color(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a * getAlpha()));
+			Shapes.draw(backgroundShape);
 		}
-		
 		Color finalColor = new Color(color);
 		finalColor.a = finalColor.a * getAlpha();
 		FontUtil.setLayoutText("[#" + finalColor.toString() + "]" + text, type);
@@ -74,25 +86,25 @@ public class Label extends Component {
 
 		switch (verticalAlignment) {
 		case TOP:
-			y = bounds.y + (bounds.height) + (layout.height);
+			y = physicalTextBounds.y + (physicalTextBounds.height) + (layout.height);
 			break;
 		case CENTER:
-			y = bounds.y + (bounds.height / 2f) + (layout.height / 2f);
+			y = physicalTextBounds.y + (physicalTextBounds.height / 2f) + (layout.height / 2f);
 			break;
 		case BOTTOM:
-			y = bounds.y;
+			y = physicalTextBounds.y;
 			break;
 		}
 
 		switch (horizontalAlignment) {
 		case LEFT:
-			x = bounds.x;
+			x = physicalTextBounds.x;
 			break;
 		case CENTER:
-			x = bounds.x + (bounds.width / 2f) - (layout.width / 2f);
+			x = physicalTextBounds.x + (physicalTextBounds.width / 2f) - (layout.width / 2f);
 			break;
 		case RIGHT:
-			x = bounds.x + bounds.width - layout.width;
+			x = physicalTextBounds.x + physicalTextBounds.width - layout.width;
 			break;
 		}
 		

@@ -1,5 +1,7 @@
 package de.instinct.eqfleet.menu.module.starmap;
 
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 import de.instinct.api.core.API;
 import de.instinct.api.core.modules.MenuModule;
 import de.instinct.api.matchmaking.model.FactionMode;
@@ -7,11 +9,11 @@ import de.instinct.api.matchmaking.model.GameMode;
 import de.instinct.api.matchmaking.model.GameType;
 import de.instinct.api.matchmaking.model.VersusMode;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
-import de.instinct.eqfleet.menu.main.Menu;
-import de.instinct.eqfleet.menu.module.core.ModuleMessage;
 import de.instinct.eqfleet.menu.module.play.Play;
 import de.instinct.eqfleet.menu.module.play.PlayModel;
-import de.instinct.eqfleet.menu.module.starmap.message.ReloadStarmapMessage;
+import de.instinct.eqfleet.menu.module.starmap.message.StarmapMessage;
+import de.instinct.eqfleet.menu.module.starmap.message.types.ReloadStarmapMessage;
+import de.instinct.eqfleet.menu.module.starmap.message.types.StartConquestMessage;
 import de.instinct.eqfleet.net.WebManager;
 
 public class Starmap extends BaseModule {
@@ -25,31 +27,39 @@ public class Starmap extends BaseModule {
 	public void init() {
 		StarmapModel.selectedGalaxyId = -1;
 		StarmapModel.selectedStarsystemId = -1;
+		StarmapModel.messageQueue = new ConcurrentLinkedQueue<>();
 	}
 
 	@Override
-	public void open() {
-		//Menu.queue(ReloadStarmapMessage.builder().build());
+	public void load() {
+		loadData();
 	}
 
 	@Override
 	public void update() {
-
+		if (!StarmapModel.messageQueue.isEmpty()) {
+			process(StarmapModel.messageQueue.poll());
+		}
 	}
 
-	@Override
-	public boolean process(ModuleMessage message) {
+	public void process(StarmapMessage message) {
 		if (message instanceof ReloadStarmapMessage) {
-			WebManager.enqueue(
-					() -> API.starmap().data(),
-				    result -> {
-				    	StarmapModel.starmapData = result;
-				    	super.requireUIReload();
-				    }
-			);
-			return true;
+			loadData();
 		}
-		return false;
+		if (message instanceof StartConquestMessage) {
+			StartConquestMessage startConquestMessage = (StartConquestMessage) message;
+			startConquest(startConquestMessage.getGalaxyId(), startConquestMessage.getStarsystemId());
+		}
+	}
+	
+	private void loadData() {
+		WebManager.enqueue(
+				() -> API.starmap().data(),
+			    result -> {
+			    	StarmapModel.starmapData = result;
+			    	StarmapModel.dataUpdated = true;
+			    }
+		);
 	}
 
 	@Override
@@ -57,7 +67,7 @@ public class Starmap extends BaseModule {
 		
 	}
 
-	public static void createLobby(int galaxyId, int starsystemId) {
+	private void startConquest(int galaxyId, int starsystemId) {
 		WebManager.enqueue(
 			    () -> API.matchmaking().create(),
 			    resultCreateLobby -> {

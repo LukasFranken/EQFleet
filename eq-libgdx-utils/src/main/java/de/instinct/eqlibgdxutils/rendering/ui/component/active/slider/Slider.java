@@ -2,14 +2,12 @@ package de.instinct.eqlibgdxutils.rendering.ui.component.active.slider;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 
 import de.instinct.eqlibgdxutils.InputUtil;
 import de.instinct.eqlibgdxutils.MathUtil;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
-import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
 import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.shapes.EQRectangle;
@@ -26,22 +24,27 @@ public class Slider extends Component {
 	private ValueChangeAction valueChangeAction;
 	private Action dragEndAction;
 	
-	private Vector2 lastUpdateMousePosition;
+	private float initialMouseDelta;
 	private float currentValue;
 	
+	private EQRectangle sliderLineShape;
+	
 	public Slider(ValueChangeAction valueChangeAction, float initialValue) {
+		super();
 		this.valueChangeAction = valueChangeAction;
 		this.currentValue = initialValue;
 		sliderButton = new ColorButton("");
-		Border buttonBorder = new Border();
-		buttonBorder.setColor(new Color(SkinManager.skinColor));
-		buttonBorder.setSize(2);
-		sliderButton.setBorder(buttonBorder);
 		sliderButton.setColor(Color.BLACK);
 		sliderButton.setLabelColor(new Color(SkinManager.skinColor));
-		sliderButton.setHoverColor(new Color(SkinManager.darkerSkinColor));
-		sliderButton.setDownColor(new Color(SkinManager.lighterSkinColor));
+		sliderButton.setHoverColor(new Color(SkinManager.darkestSkinColor));
+		sliderButton.setDownColor(Color.BLACK);
 		labelCharCount = 3;
+		sliderLineShape = EQRectangle.builder()
+				.bounds(new Rectangle())
+				.color(new Color(SkinManager.darkerSkinColor))
+				.filled(true)
+				.build();
+		initialMouseDelta = -1;
 	}
 	
 	@Override
@@ -56,38 +59,43 @@ public class Slider extends Component {
 	
 	@Override
 	protected void updateComponent() {
-		sliderButton.setFixedHeight(getBounds().height);
-		sliderButton.setFixedWidth(getBounds().height);
+		updateValue();
+		
+		float sliderXPos = MathUtil.linear(getBounds().x, getMaxButtonXPos(), currentValue);
+		sliderButton.setBounds(sliderXPos, getBounds().y, getBounds().height, getBounds().height);
 		sliderButton.setAlpha(getAlpha());
-		if (sliderButton.isDown()) {
-			if (lastUpdateMousePosition != null) {
-				Vector2 thisUpdateMousePosition = InputUtil.getNormalizedMousePosition();
-				float deltaX = thisUpdateMousePosition.x - lastUpdateMousePosition.x;
-				currentValue = MathUtil.clamp(currentValue + (deltaX / (getMaxButtonXPos() - getBounds().x)), 0, 1f);
-				valueChangeAction.execute(currentValue);
+		
+		sliderLineShape.getBounds().set(getBounds().x, getBounds().y + (getBounds().height / 2) + 1, getBounds().width, 2);
+		sliderLineShape.getColor().a = getAlpha();
+	}
+
+	private void updateValue() {
+		if (initialMouseDelta == -1) {
+			if (sliderButton.isDown()) {
+				initialMouseDelta = InputUtil.getVirtualMousePosition().x - sliderButton.getBounds().x;
 			}
-			lastUpdateMousePosition = InputUtil.getNormalizedMousePosition();
 		} else {
-			if (lastUpdateMousePosition != null) {
-				if (dragEndAction != null) {
-					dragEndAction.execute();
-				}
-				lastUpdateMousePosition = null;
+			if (InputUtil.isPressed()) {
+				valueChanged();
+			} else {
+				dragEnded();
+				initialMouseDelta = -1;
 			}
 		}
-		float sliderXPos = MathUtil.linear(getBounds().x, getMaxButtonXPos(), currentValue);
-		sliderButton.setPosition(sliderXPos, getBounds().y);
+	}
+
+	private void valueChanged() {
+		currentValue = MathUtil.clamp(((InputUtil.getVirtualMousePosition().x - initialMouseDelta) - getBounds().x) / (getMaxButtonXPos() - getBounds().x), 0f, 1f);
+		if (valueChangeAction != null) valueChangeAction.execute(currentValue);
 	}
 	
+	private void dragEnded() {
+		if (dragEndAction != null) dragEndAction.execute();
+	}
+
 	@Override
 	protected void renderComponent() {
-		Rectangle sliderLineRect = new Rectangle(getBounds().x, getBounds().y + (getBounds().height / 2) + 1, getBounds().width, 2);
-		Color sliderLineColor = new Color(SkinManager.darkerSkinColor);
-		sliderLineColor.a *= getAlpha();
-		Shapes.draw(EQRectangle.builder()
-				.bounds(sliderLineRect)
-				.color(sliderLineColor)
-				.build());
+		Shapes.draw(sliderLineShape);
 		sliderButton.render();
 	}
 

@@ -5,13 +5,14 @@ import java.util.List;
 
 import de.instinct.api.core.modules.MenuModule;
 import de.instinct.eqfleet.PreferenceManager;
+import de.instinct.eqfleet.menu.main.MenuModel;
 import de.instinct.eqlibgdxutils.rendering.ui.popup.PopupRenderer;
 
 public class ModuleManager {
 	
-	private static List<InitialModuleOpenMessage> moduleOpenMessages;
+	private List<InitialModuleOpenMessage> moduleOpenMessages;
 	
-	public static void init() {
+	public ModuleManager() {
 		String preferenceLoadedModules = PreferenceManager.load("initialmodule");
 		moduleOpenMessages = new ArrayList<>();
 		moduleOpenMessages.add(InitialModuleOpenMessage.builder()
@@ -61,7 +62,10 @@ public class ModuleManager {
 				.build());
 	}
 	
-	public static void openModule(MenuModule module) {
+	public void openModule(MenuModule module) {
+		MenuModel.activeModule = module;
+		MenuModel.modules.get(module).load();
+		MenuModel.renderers.get(module).init();
 		for (InitialModuleOpenMessage message : moduleOpenMessages) {
 			if (message.getModule() == module) {
 				if (!message.isOpened()) {

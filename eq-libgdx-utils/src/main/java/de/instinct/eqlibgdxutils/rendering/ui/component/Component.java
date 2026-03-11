@@ -12,6 +12,10 @@ import lombok.EqualsAndHashCode;
 public abstract class Component extends UIElement {
 	
 	private Border border;
+	
+	public Component() {
+		super();
+	}
 
 	@Override
 	public void updateElement() {
