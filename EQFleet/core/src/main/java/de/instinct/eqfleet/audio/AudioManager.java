@@ -39,13 +39,13 @@ public class AudioManager {
 	private static Cache<Sound> sfxs;
 	private static Cache<Music> musics;
 
-	private static float targetMusicVolume = 0.4f;
+	private static float targetMusicVolume = 0.5f;
 	private static final float swapDuration = 5f;
 	private static float currentSwapElapsed = 0f;
 
-	private static float userMusicVolume = 0.5f;
-	private static float userVoiceVolume = 0.5f;
-	private static float userSfxVolume = 0.5f;
+	private static float userMusicVolume = 0.3f;
+	private static float userVoiceVolume = 0.3f;
+	private static float userSfxVolume = 0.3f;
 
 	private static boolean radioMode;
 
@@ -64,11 +64,12 @@ public class AudioManager {
 		availableRadioTracks.add("to_the_stars_funk");
 		availableRadioTracks.add("to_the_stars_ambient");
 		availableRadioTracks.add("to_the_stars_disco");
-		availableRadioTracks.add("neon_horizon_ambient");
 		availableRadioTracks.add("to_the_stars_70s");
 		availableRadioTracks.add("to_the_stars_synth");
 		availableRadioTracks.add("to_the_stars_western");
-		availableRadioTracks.add("to_the_stars_intro");
+		availableRadioTracks.add("to_the_stars_orchestral");
+		availableRadioTracks.add("to_the_stars_violin");
+		availableRadioTracks.add("to_the_stars_military");
 		
 		availableNonRadioTracks = new ArrayList<>();
 		availableNonRadioTracks.add("to_the_stars_short");
@@ -110,9 +111,6 @@ public class AudioManager {
 		for (String tag : availableNonRadioTracks) {
 			musics.get(tag);
 		}
-		
-		//Music music = Gdx.audio.newMusic(Gdx.files.internal("audio/music/to_the_stars.wav"));
-		//music.play();
 	}
 
 	public static void playMusic(String tag, boolean loop) {

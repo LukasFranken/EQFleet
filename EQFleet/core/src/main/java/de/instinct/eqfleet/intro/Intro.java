@@ -3,8 +3,6 @@ package de.instinct.eqfleet.intro;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.instinct.api.auth.dto.TokenVerificationResponse;
-import de.instinct.api.core.API;
 import de.instinct.eqfleet.App;
 import de.instinct.eqfleet.PreferenceManager;
 import de.instinct.eqfleet.audio.AudioManager;
@@ -14,6 +12,7 @@ import de.instinct.eqfleet.language.LanguageManager;
 import de.instinct.eqfleet.language.model.Language;
 import de.instinct.eqfleet.menu.main.MenuModel;
 import de.instinct.eqfleet.net.WebManager;
+import de.instinct.eqfleet.net.model.ConnectionStatus;
 import de.instinct.eqfleet.scene.Scene;
 import de.instinct.eqfleet.scene.SceneManager;
 import de.instinct.eqfleet.scene.SceneType;
@@ -36,7 +35,6 @@ import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 
 public class Intro extends Scene {
 	
-	private boolean active;
 	private Slideshow introSlideshow;
 	private ClipboardDialog authKeyInsertDialog;
 	private Label versionLabel;
@@ -52,24 +50,20 @@ public class Intro extends Scene {
 	@Override
 	public void open() {
 		loadWelcomeSlides();
-		active = true;
 		AudioManager.stopRadio();
-		AudioManager.playMusic("to_the_stars_intro", true);
 	}
 
 	@Override
 	public void close() {
 		introSlideshow.getSlideList().clear();
-		active = false;
-		AudioManager.startRadio();
 	}
 	
-	private void loadMenu() {
+	private void changeScene(SceneType sceneType) {
 		Macro startClientMacro = new Macro(new Action() {
 			
 			@Override
 			public void execute() {
-				SceneManager.changeTo(SceneType.MENU);
+				SceneManager.changeTo(sceneType);
 			}
 			
 		});
@@ -96,15 +90,14 @@ public class Intro extends Scene {
 			
 		});
 		introSlideshow.add(welcomeMessage);
-		Logger.log("INTRO", "Creating welcome slides", ConsoleColor.YELLOW);
 		Macro checkAuthAndConnection = new Macro(new Action() {
 			
 			@Override
 			public void execute() {
-				if (WebManager.isOnline() && API.authKey.contentEquals("invalid") || API.authKey.isEmpty()) {
-					createFirstTimeSlides();
+				if (WebManager.status == ConnectionStatus.ONLINE) {
+					changeScene(SceneType.MENU);
 				} else {
-					loadMenu();
+					createFirstTimeSlides();
 				}
 			}
 			
@@ -194,18 +187,11 @@ public class Intro extends Scene {
 					@Override
 					public void execute() {
 						final String authKey = authKeyInsertDialog.getAuthKey();
-						WebManager.enqueue(
-							    () -> API.authentication().verify(authKey),
-							    result -> {
-									if (result == TokenVerificationResponse.VERIFIED) {
-										API.authKey = authKey;
-										PreferenceManager.save("authkey", authKey);
-										loadMenu();
-									} else {
-										authKeyInsertDialog.setResponse("INVALID KEY"); 
-									}
-							    }
-						);
+						if (WebManager.authenticate(authKey)) {
+							changeScene(SceneType.MENU);
+						} else {
+							authKeyInsertDialog.setResponse("INVALID KEY"); 
+						}
 					}
 					
 				};
@@ -239,14 +225,9 @@ public class Intro extends Scene {
 
 			@Override
 			public void execute() {
-				WebManager.enqueue(
-					    () -> API.authentication().register(),
-					    result -> {
-					    	handleRegister(result);
-							Game.startTutorial(TutorialMode.FULL);
-							active = false;
-					    }
-				);
+				WebManager.register();
+				changeScene(SceneType.GAME);
+				Game.startTutorial(TutorialMode.FULL);
 			}
 			
 		});
@@ -258,14 +239,9 @@ public class Intro extends Scene {
 
 			@Override
 			public void execute() {
-				WebManager.enqueue(
-					    () -> API.authentication().register(),
-					    result -> {
-					    	handleRegister(result);
-							Game.startTutorial(TutorialMode.SHORT);
-							active = false;
-					    }
-				);
+				WebManager.register();
+				changeScene(SceneType.GAME);
+				Game.startTutorial(TutorialMode.SHORT);
 			}
 			
 		});
@@ -277,24 +253,13 @@ public class Intro extends Scene {
 
 			@Override
 			public void execute() {
-				WebManager.enqueue(
-					    () -> API.authentication().register(),
-					    result -> {
-					    	handleRegister(result);
-							loadMenu();
-					    }
-				);
+				WebManager.register();
+				changeScene(SceneType.MENU);
 			}
 
 		});
 		choices.add(slideChoiceNo);
 		return choices;
-	}
-	
-	private void handleRegister(String result) {
-		if (result != null) {
-			PreferenceManager.save("authkey", result);
-		}
 	}
 
 	@Override
@@ -304,10 +269,8 @@ public class Intro extends Scene {
 	
 	@Override
 	public void render() {
-		if (active) {
-			introSlideshow.render();
-			versionLabel.render();
-		}
+		introSlideshow.render();
+		versionLabel.render();
 	}
 
 	@Override

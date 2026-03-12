@@ -2,8 +2,6 @@ package de.instinct.eqfleet.game;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import com.badlogic.gdx.Gdx;
-
 import de.instinct.engine.net.message.types.PlayerAssigned;
 import de.instinct.eqfleet.game.backend.driver.Driver;
 import de.instinct.eqfleet.game.backend.driver.local.custom.CustomDriver;
@@ -45,9 +43,7 @@ public class Game extends Scene {
     
     public static void startTutorial(TutorialMode mode) {
     	currentDriver = new TutorialDriver();
-		Gdx.app.postRunnable(() -> {
-			renderer.init();
-		});
+    	renderer.init();
 		GameModel.active = true;
 		((TutorialDriver)currentDriver).setMode(mode);
 		currentDriver.start();
@@ -89,7 +85,7 @@ public class Game extends Scene {
     public void render() {
         if (GameModel.active) {
         	Profiler.startFrame("GAME");
-            if (GameModel.activeGameState != null && GameModel.visible) {
+            if (GameModel.activeGameState != null) {
                 renderer.render(GameModel.activeGameState);
                 Profiler.checkpoint("GAME", "render");
             }
@@ -106,10 +102,14 @@ public class Game extends Scene {
 		if (currentDriver != null) {
 			currentDriver.dispose();
 		}
-		if (GameModel.lastGameUUID == null || GameModel.lastGameUUID.contentEquals("custom") || GameModel.lastGameUUID.contentEquals("tutorial")) {
-			SceneManager.changeTo(SceneType.MENU);
+		if (GameModel.lastGameUUID.contentEquals("tutorial")) {
+			SceneManager.changeTo(SceneType.COVER);
 		} else {
-			SceneManager.changeTo(SceneType.POSTGAME);
+			if (GameModel.lastGameUUID == null || GameModel.lastGameUUID.contentEquals("custom")) {
+				SceneManager.changeTo(SceneType.MENU);
+			} else {
+				SceneManager.changeTo(SceneType.POSTGAME);
+			}
 		}
     }
     

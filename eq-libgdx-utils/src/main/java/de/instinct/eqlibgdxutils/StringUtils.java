@@ -43,22 +43,26 @@ public class StringUtils {
 	}
 
 	public static String limitWithAppendix(String message) {
-		return message.length() > MESSAGE_MAX_LENGTH ? message.substring(0, MESSAGE_MAX_LENGTH) + "... (cut string length: " + (message.length() - MESSAGE_MAX_LENGTH) + ")" : message;
-	}
-
-	public static String limit(String message) {
-		return message.length() > MESSAGE_MAX_LENGTH ? message.substring(0, MESSAGE_MAX_LENGTH) : message;
+		return limitWithAppendix(message, MESSAGE_MAX_LENGTH);
 	}
 
 	public static String limitWithAppendix(String message, int limit) {
 		return message.length() > limit ? message.substring(0, limit) + "... (cut string length: " + (message.length() - limit) + ")" : message;
+	}
+	
+	public static String limit(String message) {
+		return limit(message, MESSAGE_MAX_LENGTH);
 	}
 
 	public static String limit(String message, int limit) {
 		return message.length() > limit ? message.substring(0, limit) : message;
 	}
 	
-	public static String limitWithDotDotDot(String message, int limit) {
+	public static String limitWithDots(String message) {
+		return limitWithDots(message, MESSAGE_MAX_LENGTH);
+	}
+	
+	public static String limitWithDots(String message, int limit) {
 		return message.length() > limit ? message.substring(0, limit - 3) + "..." : message;
 	}
 

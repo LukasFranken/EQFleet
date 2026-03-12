@@ -10,10 +10,12 @@ import de.instinct.api.core.API;
 import de.instinct.api.core.logging.LoggingHook;
 import de.instinct.eqfleet.GlobalStaticData;
 import de.instinct.eqfleet.PreferenceManager;
+import de.instinct.eqfleet.net.model.ConnectionStatus;
 import de.instinct.eqfleet.net.model.Request;
 import de.instinct.eqfleet.net.model.RequestConsumer;
 import de.instinct.eqfleet.net.model.RequestErrorConsumer;
 import de.instinct.eqfleet.net.model.RequestSupplier;
+import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.debug.console.Console;
 import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
@@ -29,15 +31,17 @@ public class WebManager {
     public static ConcurrentLinkedQueue<Request<?>> requestQueue;
 
     private static final long NETWORK_UPDATE_CLOCK_MS = 50;
-    private static final int PING_UPDATE_CLOCK_MS = 500;
+    private static final int PING_UPDATE_CLOCK_MS = 1000;
     
     private static long lastPingTime;
     
     private static ScheduledExecutorService scheduler;
     
-    private static boolean online;
+    public static ConnectionStatus status;
 
     public static void init() {
+    	status = ConnectionStatus.OFFLINE;
+    	
     	initializeAPI();
         requestQueue = new ConcurrentLinkedQueue<>();
         scheduler = Executors.newSingleThreadScheduledExecutor();
@@ -56,6 +60,8 @@ public class WebManager {
 		Console.registerMetric(StringMetric.builder()
         		.tag(CONNECTION_STATUS_TAG)
         		.build());
+		
+		ping();
     }
 
     private static void initializeAPI() {
@@ -64,39 +70,56 @@ public class WebManager {
 			
 			@Override
 			public void log(String message) {
-				Logger.log("API", message, ConsoleColor.MAGENTA);
+				Logger.log("API", StringUtils.limitWithAppendix(message, 500), ConsoleColor.MAGENTA);
 			}
 			
 		});
         API.initialize(GlobalStaticData.configuration);
 	}
+    
+    public static void register() {
+    	String authKey = API.authentication().register();
+    	PreferenceManager.save("authkey", authKey);
+    	API.authKey = authKey;
+    	status = ConnectionStatus.ONLINE;
+    }
+    
+    public static boolean authenticate(String authKey) {
+    	TokenVerificationResponse response = API.authentication().verify(authKey);
+    	if (response == TokenVerificationResponse.VERIFIED) {
+			API.authKey = authKey;
+			PreferenceManager.save("authkey", authKey);
+			return true;
+		}
+    	return false;
+    }
 
-	private static void verifyAuthKey() {
+    public static void loadAuthKey() {
 		final String authKey = PreferenceManager.load("authkey");
 		if (!authKey.isEmpty()) {
 			TokenVerificationResponse result = API.authentication().verify(authKey);
 			if (result == TokenVerificationResponse.VERIFIED) {
 				API.authKey = authKey;
-				PreferenceManager.save("authkey", authKey);
+				status = ConnectionStatus.ONLINE;
+				Logger.log(LOGTAG, "Logged in", ConsoleColor.GREEN);
 			} else {
 				API.authKey = "invalid";
 			}
+		} else {
+			status = ConnectionStatus.UNAUTHORIZED;
 		}
 	}
 
 	public static void update() {
-    	Console.updateMetric(CONNECTION_STATUS_TAG, "" + online);
+    	Console.updateMetric(CONNECTION_STATUS_TAG, status.toString());
     	
     	lastPingTime += NETWORK_UPDATE_CLOCK_MS;
     	if (lastPingTime > PING_UPDATE_CLOCK_MS) {
     		ping();
     		lastPingTime = 0;
-    		if (API.authKey.isEmpty()) {
-        		verifyAuthKey();
-        	}
     	}
     	
-    	if (online) {
+    	if (status == ConnectionStatus.ONLINE) {
     		if (!API.authKey.isEmpty()) {
     			Request<?> request = requestQueue.peek();
                 if (request != null) {
@@ -108,8 +131,12 @@ public class WebManager {
                     if (!requestQueue.isEmpty()) requestQueue.remove();
                 }
         	}
-    	} else {
-    		//TODO work against offline engine
+    	}
+    	if (status == ConnectionStatus.OFFLINE) {
+    		//work against offline engine
+    	}
+    	if (status == ConnectionStatus.AUTHENTICATING) {
+    		loadAuthKey();
     	}
     }
     
@@ -117,12 +144,13 @@ public class WebManager {
     	long ping = API.discovery().ping();
 		Console.updateMetric(PING_METRIC_TAG, ping);
 		if (ping == -1) {
-			online = false;
-			API.authKey = "offline";
+			status = ConnectionStatus.OFFLINE;
+			API.authKey = "";
+			Logger.log(LOGTAG, "Disconnected", ConsoleColor.RED);
 		} else {
-			online = true;
-			if (API.authKey.equals("offline")) {
-				API.authKey = "";
+			if (status == ConnectionStatus.OFFLINE) {
+				status = ConnectionStatus.AUTHENTICATING;
+				Logger.log(LOGTAG, "Connected", ConsoleColor.GREEN);
 			}
 		}
 	}
@@ -155,9 +183,5 @@ public class WebManager {
         }
         if (requestQueue != null) requestQueue.clear();
     }
-
-	public static boolean isOnline() {
-		return online;
-	}
     
 }

@@ -8,7 +8,6 @@ import de.instinct.engine.order.types.ShipMovementOrder;
 import de.instinct.engine_api.core.model.GameStateInitialization;
 import de.instinct.engine_api.core.service.GameStateInitializer;
 import de.instinct.eqfleet.audio.AudioManager;
-import de.instinct.eqfleet.cover.CoverManager;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.backend.driver.local.LocalDriver;
@@ -84,8 +83,7 @@ public class TutorialDriver extends LocalDriver {
 		GameModel.guidedEvents = null;
 		mode = null;
 		finished = true;
-		CoverManager.start();
-		return CoverManager.getDuration() + 500;
+		return 500;
 	}
 
 	@Override

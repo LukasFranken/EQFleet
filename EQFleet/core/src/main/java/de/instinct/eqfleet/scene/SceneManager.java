@@ -3,6 +3,7 @@ package de.instinct.eqfleet.scene;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.instinct.eqfleet.cover.Cover;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.intro.Intro;
 import de.instinct.eqfleet.menu.main.Menu;
@@ -21,13 +22,14 @@ public class SceneManager {
 	public static void init() {
 		scenes = new HashMap<>();
 		scenes.put(SceneType.INTRO, new Intro());
-		scenes.get(SceneType.INTRO).init();
 		scenes.put(SceneType.MENU, new Menu());
-		scenes.get(SceneType.MENU).init();
 		scenes.put(SceneType.GAME, new Game());
-		scenes.get(SceneType.GAME).init();
 		scenes.put(SceneType.POSTGAME, new PostGame());
-		scenes.get(SceneType.POSTGAME).init();
+		scenes.put(SceneType.COVER, new Cover());
+		
+		for (SceneType sceneType : scenes.keySet()) {
+			scenes.get(sceneType).init();
+		}
 	}
 	
 	public static void update() {

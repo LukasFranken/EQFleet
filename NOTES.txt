@@ -34,27 +34,17 @@ GENERAL:
 for every idle stuff: dont calculate offline time on boot, hand out offline time credits
 prevents people from feeling bad about going offline in the wrong state
 make offline credits a tradable resource
-
-- make inventory an own module (depot)
- - with proper inventory grid of clickable model buttons
  
 - disable play module outside of development
-
-- maybe rework resources to be elements from the periodic table?
- -> with exotic matter being massless particles
- -> all elements can be obtained differnetly
- -> rename dueterium to fuel and make resoruces craftable with elements and extractable with % change of each element
  
 - remove all object allocations in all components
  -> buttons already done
 
 - implement offline mode
- -> might be nessecary to fix  
+ -> might be nessecary to fix
  -> symbol for server connectivity
 
 - full dual-language
-
-- clearer postgame sections
 
 - remove starmap until ship is equipped
  -> fixed with categorized menu (show main ship shipyard first)
@@ -163,7 +153,14 @@ Jan 30 21:46:58 ip-172-30-0-159.eu-central-1.compute.internal bash[10704]: at ja
   - create linux command to see status of all fleet services
 ---------------------------------------------------------------------
 FUTURE RELEASES TODO:
+- clearer postgame sections
 
+- maybe rework resources to be elements from the periodic table?
+ -> with exotic matter being massless particles
+ -> all elements can be obtained differnetly
+ -> rename dueterium to fuel and make resoruces craftable with elements and extractable with % change of each element
+- make inventory an own module (depot)
+ - with proper inventory grid of clickable model buttons
 
 CONTROL:
 - mapmaker part of control

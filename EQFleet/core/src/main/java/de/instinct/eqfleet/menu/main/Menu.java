@@ -12,6 +12,7 @@ import de.instinct.api.matchmaking.model.GameMode;
 import de.instinct.api.meta.dto.modules.ModuleData;
 import de.instinct.api.meta.dto.modules.ModuleInfoRequest;
 import de.instinct.eqfleet.GlobalStaticData;
+import de.instinct.eqfleet.audio.AudioManager;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.main.message.MenuMessage;
@@ -33,6 +34,7 @@ import de.instinct.eqfleet.menu.module.shop.ShopRenderer;
 import de.instinct.eqfleet.menu.module.starmap.Starmap;
 import de.instinct.eqfleet.menu.module.starmap.StarmapRenderer;
 import de.instinct.eqfleet.net.WebManager;
+import de.instinct.eqfleet.net.model.ConnectionStatus;
 import de.instinct.eqfleet.scene.Scene;
 import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
@@ -91,6 +93,7 @@ public class Menu extends Scene {
 	
 	@Override
 	public void open() {
+		AudioManager.startRadio();
 		load();
 	}
 	
@@ -99,7 +102,7 @@ public class Menu extends Scene {
 		MenuModel.activeModule = null;
 	}
 	
-	public void load() {
+	private void load() {
 		MenuModel.loaded = false;
 		loadModules();
 		if (PlayModel.lobbyStatus != null && PlayModel.lobbyStatus.getType().getGameMode() == GameMode.CONQUEST) Play.leaveLobby();
@@ -143,8 +146,8 @@ public class Menu extends Scene {
 		Profiler.endFrame("MENU");
 	}
 	
-	public void loadModules() {
-		if (WebManager.isOnline()) {
+	private void loadModules() {
+		if (WebManager.status == ConnectionStatus.ONLINE) {
 			MenuModel.modules.get(MenuModule.PROFILE).load();
 			WebManager.enqueue(
 				    () -> API.meta().modules(API.authKey),

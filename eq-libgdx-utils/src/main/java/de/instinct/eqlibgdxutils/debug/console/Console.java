@@ -210,7 +210,7 @@ public class Console {
 		for (int i = 0; i < logLines.size(); i++) {
 			LogLine logLine = logLines.get(logLines.size() - 1 - i);
 			String logMessage = "[" + StringUtils.getTime(logLine.getTimestamp()) + "] " + logLine.getTag() + " - " + logLine.getMessage();
-			String labelText = StringUtils.limitWithDotDotDot(logMessage, (int)((logsBounds.width - (logLineHorizontalMargin * 2)) / FontUtil.getFontTextWidthPx(1, FontType.MICRO)));
+			String labelText = StringUtils.limitWithDots(logMessage, (int)((logsBounds.width - (logLineHorizontalMargin * 2)) / FontUtil.getFontTextWidthPx(1, FontType.MICRO)));
 			logLineLabel.setText(labelText);
 			logLineLabel.setColor(logLine.getColor().getGameColor());
 			logLineLabel.setBounds(logsBounds.x + logLineHorizontalMargin,

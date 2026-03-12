@@ -33,7 +33,7 @@ public class Macro extends Slide {
 	
 	@Override
 	protected void updateSlide(float slideAlpha) {
-		action.execute();
+		if (!executed) action.execute();
 		executed = true;
 	}
 

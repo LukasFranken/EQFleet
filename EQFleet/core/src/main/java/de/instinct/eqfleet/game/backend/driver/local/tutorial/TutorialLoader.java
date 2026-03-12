@@ -123,7 +123,7 @@ public class TutorialLoader {
 		ShieldData tutorialShipShield = new ShieldData();
 		tutorialShipShield.type = ShieldType.PLASMA;
 		tutorialShipShield.strength = 2f;
-		tutorialShipShield.generation = 0.2f;
+		tutorialShipShield.generation = 0.4f;
 		tutorialShip.shields.add(tutorialShipShield);
 		player.ships.add(tutorialShip);
 		player.turrets = new ArrayList<>();
@@ -227,7 +227,6 @@ public class TutorialLoader {
 				Game.setUIElementVisible("teamAP", false);
 				Game.setUIElementVisible("enemyAP", false);
 				Game.setUIElementVisible("time", false);
-				AudioManager.updateUserVoiceVolume(0.7f);
 			}
 			
 			@Override
@@ -252,7 +251,7 @@ public class TutorialLoader {
 			@Override
 			public void execute() {
 				GameModel.visible = true;
-				AudioManager.playMusic("to_the_stars_ambient", true);
+				AudioManager.playMusic("to_the_stars_military", true);
 				AudioManager.startRadio();
 			}
 			
@@ -353,9 +352,6 @@ public class TutorialLoader {
 		
 		if (mode == TutorialMode.TOO_MUCH) {
 			guideQueue.add(eventLoader.dialog(19, VerticalAlignment.TOP));
-		}
-		if (mode == TutorialMode.FULL) {
-			guideQueue.add(eventLoader.dialog(20, VerticalAlignment.TOP));
 		}
 		guideQueue.add(eventLoader.action(new Action() {
 			
@@ -504,7 +500,6 @@ public class TutorialLoader {
 			public void execute() {
 				GameModel.inputEnabled = true;
 				GameModel.activeGameState.staticData.maxGameTimeMS = GameModel.activeGameState.gameTimeMS + 30_000;
-				AudioManager.updateUserVoiceVolume(0.5f);
 			}
 			
 		}));
