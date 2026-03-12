@@ -31,41 +31,18 @@ GENERAL:
   x postgame
   x game
 
-- fix postgame rankup old rank not showing
-
-- disable play module outside of development
-
-- remove fixed- variables from elements
- 
-- remove all object allocations in all components
- -> buttons already done
-
-- implement offline mode
- -> might be nessecary to fix
- -> symbol for server connectivity
- -> save last info like loadout state to play custom with
-
 - full dual-language
 
-- remove starmap until ship is equipped
- -> fixed with categorized menu (show main ship shipyard first)
+- clearer postgame sections
 
 - ion weapon type
  -> ramps dmg while shooting
-- repair ray weapon type
- -> targets the most damaged friendly entity in range
- -> can either repair shield, hull or both
- -> can also have a damage weapon
- -> maybe first cruiser as support ship?
- -> after laser rework
 
 - fix voice volume much higher after tutorial
 - fix frametime metric disabled after game
 - fix shipyard comp glow keeps resetting
 - fix tutorial not updated postgame sometimes
 - fix no camera zoom value in play pvp/pve
-
-- more resource types with maybe craftable ones in station
 
 - main screen tab bar bottom (combat, flagship, station, profile)
 
@@ -84,23 +61,17 @@ SERVER:
 
 MENU:
 - settings tabs (audio, video, gameplay, account)
-- slider logic change to screenwide drag and drop (especially for mobile)
 - better nullpoint shield bar visual (fragmentbar)
 - change hangar space needed for build blueprint, not buy blueprint
-- proper profile
- -> instead of just numbers show actual cp bar
-- when disabling manuparticles make 3 options:
- -> on, off, static (is only an image)
+- menuparticles -> background image
+ -> maybe with animation
 
 TUTORAL:
 - full menu ship component tutorial
 - full cover sequence
- -> show cover logo at end
 
 AUDIO:
-- ios audio issues still exist on loudspeaker
- -> probably move over to miniaudio
- -> probably check out audio effects
+- move over to miniaudio
 - reward cash with digital number up sound
 - radio: show track, skip track, previous track
  -> add/remove tracks from playlist
@@ -118,6 +89,11 @@ GAME:
 - check and fix projectile trajectory calculation
 
 LAST STEPS:
+- remove all object allocations in all components
+ -> buttons already done
+- disable play module outside of development
+- remove fixed- variables from elements
+
 - random amazon requests killing apis
 Jan 30 21:46:58 ip-172-30-0-159.eu-central-1.compute.internal bash[10704]: Note: further occurrences of HTTP request parsing errors will be logged at DEBUG level.
 Jan 30 21:46:58 ip-172-30-0-159.eu-central-1.compute.internal bash[10704]: java.lang.IllegalArgumentException: Invalid character found in method name [0x160x030x010x000xee0x010x000x000xea0x030x030x940x9cb0xf4B20x040x1a0xde0xa30xbf0xb00xd4>ybs0xafi0xe00xf30xca;80x990xff0xf8;jI7p ]. HTTP method names must be tokens
@@ -135,6 +111,7 @@ Jan 30 21:46:58 ip-172-30-0-159.eu-central-1.compute.internal bash[10704]: at ja
 - actual dbs for data
 
 - test and live environment
+- move building over to home server
 - build apk
 
 - build all as binary 
@@ -154,12 +131,23 @@ Jan 30 21:46:58 ip-172-30-0-159.eu-central-1.compute.internal bash[10704]: at ja
   - create linux command to see status of all fleet services
 ---------------------------------------------------------------------
 FUTURE RELEASES TODO:
+- duo campaign
+
+- implement offline mode
+ -> might be nessecary to fix
+ -> symbol for server connectivity
+ -> save last info like loadout state to play custom with
+
+- repair ray weapon type
+ -> targets the most damaged friendly entity in range
+ -> can either repair shield, hull or both
+ -> can also have a damage weapon
+ -> maybe first cruiser as support ship?
+ -> after laser rework
+
 for every idle stuff: dont calculate offline time on boot, hand out offline time credits
 prevents people from feeling bad about going offline in the wrong state
 make offline credits a tradable resource
-
-
-- clearer postgame sections
 
 - maybe rework resources to be elements from the periodic table?
  -> with exotic matter being massless particles
@@ -167,6 +155,7 @@ make offline credits a tradable resource
  -> rename dueterium to fuel and make resoruces craftable with elements and extractable with % change of each element
 - make inventory an own module (depot)
  - with proper inventory grid of clickable model buttons
+- more resource types with maybe craftable ones in station
 
 CONTROL:
 - mapmaker part of control

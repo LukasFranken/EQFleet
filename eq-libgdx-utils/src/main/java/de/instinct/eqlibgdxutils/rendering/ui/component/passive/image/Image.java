@@ -58,7 +58,7 @@ public class Image extends Component {
 
 	@Override
 	public void dispose() {
-		if (texture != null) TextureManager.dispose(texture);
+		
 	}
 
 }
