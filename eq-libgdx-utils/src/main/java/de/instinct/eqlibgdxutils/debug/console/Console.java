@@ -268,11 +268,11 @@ public class Console {
 		commandCompleteButton.setBounds(45, borderMargin, 30, consoleInputHeight);
 		commandCompleteButton.render();
 		
-		commandDownButton.setBounds(GraphicsUtil.screenBounds().getWidth() - 75, borderMargin, 30, consoleInputHeight);
-		commandDownButton.render();
-		
-		commandSendButton.setBounds(GraphicsUtil.screenBounds().getWidth() - 40, borderMargin, 30, consoleInputHeight);
+		commandSendButton.setBounds(GraphicsUtil.screenBounds().getWidth() - 75, borderMargin, 30, consoleInputHeight);
 		commandSendButton.render();
+		
+		commandDownButton.setBounds(GraphicsUtil.screenBounds().getWidth() - 40, borderMargin, 30, consoleInputHeight);
+		commandDownButton.render();
 		
 		commandTextField.setBounds(80, borderMargin, GraphicsUtil.screenBounds().getWidth() - 160, consoleInputHeight);
 		commandTextField.render();

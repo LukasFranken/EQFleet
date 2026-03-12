@@ -33,11 +33,9 @@ GENERAL:
 
 - fix postgame rankup old rank not showing
 
-- verify the blueprint blue color
-
 - disable play module outside of development
 
-- remove fixed variables from elements
+- remove fixed- variables from elements
  
 - remove all object allocations in all components
  -> buttons already done
@@ -45,6 +43,7 @@ GENERAL:
 - implement offline mode
  -> might be nessecary to fix
  -> symbol for server connectivity
+ -> save last info like loadout state to play custom with
 
 - full dual-language
 

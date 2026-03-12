@@ -62,14 +62,14 @@ public class GameUIRenderer {
 		if (state != null) {
 			if (initialized && state.resultData.winner == 0) {
 				Profiler.startFrame("GAME_UI_RNDR");
-				staticUIRenderer.render();
-				Profiler.checkpoint("GAME_UI_RNDR", "staticUI");
 				inputManager.handleInput(camera, state);
 				Profiler.checkpoint("GAME_UI_RNDR", "input");
 				renderResourceCircles();
 				Profiler.checkpoint("GAME_UI_RNDR", "resource");
 				defenseUIRenderer.render(state, camera);
 				Profiler.checkpoint("GAME_UI_RNDR", "defenseUI");
+				staticUIRenderer.render();
+				Profiler.checkpoint("GAME_UI_RNDR", "staticUI");
 				modeUIRenderer.render(camera);
 				Profiler.checkpoint("GAME_UI_RNDR", "modeUI");
 				particleUIRenderer.render(camera);

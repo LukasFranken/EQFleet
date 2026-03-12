@@ -25,7 +25,7 @@ public class ClipboardDialog extends InteractiveSlide {
 
 	private final float CONTENT_FADE_IN_DURATION = 0.5f;
 	private final float LABEL_MAX_OFFSET = 20f;
-	private final float DIALOG_FADE_IN_DELAY = 2f;
+	private final float DIALOG_FADE_IN_DELAY = 1.5f;
 	private final float CLIPBOARD_LOAD_FREQUENCY = 0.25f;
 
 	private String response;

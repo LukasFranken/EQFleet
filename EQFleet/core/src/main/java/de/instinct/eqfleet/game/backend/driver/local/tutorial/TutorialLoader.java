@@ -266,11 +266,11 @@ public class TutorialLoader {
 			
 		}));
 		guideQueue.add(eventLoader.dialog(8, VerticalAlignment.TOP));
-		guideQueue.add(eventLoader.pan(2f, new Vector3(0f, -800f, 2000f)));
+		guideQueue.add(eventLoader.pan(1.5f, new Vector3(0f, -800f, 2000f)));
 		guideQueue.add(eventLoader.dialog(9, VerticalAlignment.TOP));
 		guideQueue.add(eventLoader.dialog(10, VerticalAlignment.TOP));
 		guideQueue.add(eventLoader.pause(1f));
-		guideQueue.add(eventLoader.pan(2f, new Vector3(-50f, -700f, 2000f)));
+		guideQueue.add(eventLoader.pan(1.5f, new Vector3(-50f, -700f, 2000f)));
 		if (mode == TutorialMode.FULL) {
 			guideQueue.add(eventLoader.dialog(11, VerticalAlignment.TOP));
 		}
@@ -374,7 +374,7 @@ public class TutorialLoader {
 			}
 			
 		}));
-		guideQueue.add(eventLoader.pan(3.5f, new Vector3(130f, -700f, 3000f)));
+		guideQueue.add(eventLoader.pan(3f, new Vector3(130f, -700f, 3000f)));
 		guideQueue.add(eventLoader.action(new Action() {
 			
 			@Override
@@ -440,7 +440,7 @@ public class TutorialLoader {
 		guideQueue.add(eventLoader.dialog(24, VerticalAlignment.TOP));
 		guideQueue.add(panToShipGuideEvent);
 		guideQueue.add(eventLoader.dialog(25, VerticalAlignment.TOP));
-		guideQueue.add(eventLoader.pan(2f, new Vector3(200f, -600f, 1800f)));
+		guideQueue.add(eventLoader.pan(1.5f, new Vector3(200f, -600f, 1800f)));
 		guideQueue.add(eventLoader.action(new Action() {
 			
 			@Override
@@ -458,9 +458,9 @@ public class TutorialLoader {
 			
 		}));
 		guideQueue.add(eventLoader.dialog(26, VerticalAlignment.TOP));
-		guideQueue.add(eventLoader.pan(2f, new Vector3(0f, 0f, 2000f)));
+		guideQueue.add(eventLoader.pan(1.5f, new Vector3(0f, 0f, 2000f)));
 		guideQueue.add(eventLoader.dialog(27, VerticalAlignment.TOP));
-		guideQueue.add(eventLoader.pan(2f, new Vector3(130f, -200f, 3800f)));
+		guideQueue.add(eventLoader.pan(1.5f, new Vector3(130f, -200f, 3800f)));
 		guideQueue.add(eventLoader.dialog(28, VerticalAlignment.TOP));
 		guideQueue.add(eventLoader.action(new Action() {
 			
@@ -512,6 +512,7 @@ public class TutorialLoader {
 			}
 			
 		}));
+		guideQueue.add(eventLoader.dialog(34, VerticalAlignment.CENTER));
 		return guideQueue;
 	}
 

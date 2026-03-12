@@ -16,15 +16,12 @@ import lombok.EqualsAndHashCode;
 public abstract class InteractiveSlide extends Slide {
 	
 	private ColorButton backButton;
+	private Action backAction;
 	private boolean backButtonEnabled;
 	
 	public InteractiveSlide() {
 		super();
 		backButtonEnabled = true;
-	}
-	
-	@Override
-	protected void initSlide() {
 		backButton = createSlideButton("Back");
 		backButton.setFixedWidth(80);
 		backButton.setAction(new Action() {
@@ -32,9 +29,14 @@ public abstract class InteractiveSlide extends Slide {
 			@Override
 			public void execute() {
 				setBack(true);
+				if (backAction != null) backAction.execute();
 			}
 			
 		});
+	}
+	
+	@Override
+	protected void initSlide() {
 		initInteractiveSlide();
 	}
 	

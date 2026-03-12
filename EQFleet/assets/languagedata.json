@@ -11,6 +11,146 @@
 	],
 	"translations": [
 		{
+			"key": "intro_welcome_0",
+			"translations": {
+				"de": "Willkommen",
+				"en": "Welcome"
+			}
+		},
+		{
+			"key": "intro_welcome_1",
+			"translations": {
+				"de": "Hallo",
+				"en": "Hello"
+			}
+		},
+		{
+			"key": "intro_welcome_2",
+			"translations": {
+				"de": "Willkommen zurück\nKommandant",
+				"en": "Welcome back\ncommander"
+			}
+		},
+		{
+			"key": "intro_welcome_3",
+			"translations": {
+				"de": "Systeme aktualisiert",
+				"en": "Systems up to date"
+			}
+		},
+		{
+			"key": "intro_welcome_4",
+			"translations": {
+				"de": "Kommandoschnittstelle\ninitialisiert",
+				"en": "Command interface\ninitialized"
+			}
+		},
+		{
+			"key": "intro_welcome_5",
+			"translations": {
+				"de": "Flotte einsatzbereit",
+				"en": "Fleet ready"
+			}
+		},
+		{
+			"key": "intro_welcome_6",
+			"translations": {
+				"de": "Zu Diensten",
+				"en": "At your service"
+			}
+		},
+		{
+			"key": "intro_welcome_7",
+			"translations": {
+				"de": "Erwarte Befehle",
+				"en": "Awaiting orders"
+			}
+		},
+		{
+			"key": "intro_language",
+			"translations": {
+				"de": "Sprache",
+				"en": "Choose your prefered language"
+			}
+		},
+		{
+			"key": "intro_volume",
+			"translations": {
+				"de": "Lautstärke",
+				"en": "Adjust the audio volume"
+			}
+		},
+		{
+			"key": "intro_account",
+			"translations": {
+				"de": "Haben Sie einen Account?",
+				"en": "Do you have an account?"
+			}
+		},
+		{
+			"key": "generic_yes",
+			"translations": {
+				"de": "Ja",
+				"en": "yes"
+			}
+		},
+		{
+			"key": "generic_no",
+			"translations": {
+				"de": "Nein",
+				"en": "no"
+			}
+		},
+		{
+			"key": "generic_confirm",
+			"translations": {
+				"de": "Bestätigen",
+				"en": "Confirm"
+			}
+		},
+		{
+			"key": "generic_back",
+			"translations": {
+				"de": "Zurück",
+				"en": "Back"
+			}
+		},
+		{
+			"key": "intro_authkey",
+			"translations": {
+				"de": "Kopieren Sie den Auth-Key",
+				"en": "Copy your auth key to the clipboard"
+			}
+		},
+		{
+			"key": "intro_tutorial",
+			"translations": {
+				"de": "Präferierte Einführung",
+				"en": "Choose your prefered tutorial"
+			}
+		},
+		{
+			"key": "intro_tutorial_full",
+			"translations": {
+				"de": "Vollständig (~5 min)",
+				"en": "Full (~5 min)"
+			}
+		},
+		{
+			"key": "intro_tutorial_short",
+			"translations": {
+				"de": "Verkürzt (~3 min)",
+				"en": "Short (~3 min)"
+			}
+		},
+		{
+			"key": "intro_tutorial_none",
+			"translations": {
+				"de": "Keine",
+				"en": "None"
+			}
+		},
+		{
 			"key": "tutorial_voiceline_1",
 			"translations": {
 				"de": "Achtung!",
@@ -97,7 +237,7 @@
 		{
 			"key": "tutorial_voiceline_13",
 			"translations": {
-				"de": "Du hast ein Schiff zum neutralen Planeten gesendet",
+				"de": "Du hast ein Schiff zum\nneutralen Planeten gesendet",
 				"en": "You have sent a ship to the neutral planet"
 			}
 		},
@@ -239,6 +379,13 @@
 			"translations": {
 				"de": "Beende die Mission!",
 				"en": "Complete the mission in any way!"
+			}
+		},
+		{
+			"key": "tutorial_voiceline_34",
+			"translations": {
+				"de": "Simulation abgeschlossen.\nViel Glück, Kommandant!",
+				"en": "Simulation completed.\nGood luck, commander!"
 			}
 		}
 	]

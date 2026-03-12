@@ -39,7 +39,7 @@ public class AudioManager {
 	private static Cache<Sound> sfxs;
 	private static Cache<Music> musics;
 
-	private static float targetMusicVolume = 0.5f;
+	private static float targetMusicVolume = 0.4f;
 	private static final float swapDuration = 5f;
 	private static float currentSwapElapsed = 0f;
 
@@ -120,6 +120,7 @@ public class AudioManager {
 		if (next == null) return;
 
 		next.setLooping(loop);
+		lastPlayedRadioTrackIdx = availableRadioTracks.indexOf(tag);
 
 		if (currentMusic == null) {
 			currentMusic = next;
@@ -138,7 +139,6 @@ public class AudioManager {
 			transitionedInMusic.play();
 			Logger.log(LOGTAG, "Playing queued music: " + tag, ConsoleColor.YELLOW);
 		} catch (Exception e) {
-			Gdx.app.error("AudioManager", "Failed to play queued music: " + tag, e);
 			Logger.log(LOGTAG, "Failed to play queued music: " + tag, ConsoleColor.YELLOW);
 		}
 	}
@@ -178,7 +178,6 @@ public class AudioManager {
 		if (radioMode) {
 			if (currentMusic == null || !currentMusic.isPlaying()) {
 				Music next = null;
-				
 				if (queuedInMusic != null) {
 					next = queuedInMusic;
 					queuedInMusic = null;
@@ -196,9 +195,7 @@ public class AudioManager {
 						Logger.log(LOGTAG, "Updating music to random: " + tag, ConsoleColor.YELLOW);
 					}
 				}
-				
 				if (next == null) return;
-
 				currentMusic = next;
 				currentMusic.setVolume(targetMusicVolume * userMusicVolume);
 				currentMusic.setLooping(false);
@@ -220,7 +217,6 @@ public class AudioManager {
 				transitionedInMusic = null;
 				currentSwapElapsed = 0f;
 			}
-
 			currentSwapElapsed += Gdx.graphics.getDeltaTime();
 		}
 	}

@@ -20,8 +20,8 @@ import de.instinct.eqlibgdxutils.net.MessageQueue;
 public class Game extends Scene {
 
     private static GameRenderer renderer;
-    
     private static Driver currentDriver;
+    private static TutorialMode tutorialMode;
     
     @Override
     public void init() {
@@ -42,6 +42,7 @@ public class Game extends Scene {
     }
     
     public static void startTutorial(TutorialMode mode) {
+    	tutorialMode = mode;
     	currentDriver = new TutorialDriver();
     	renderer.init();
 		GameModel.active = true;
@@ -103,7 +104,12 @@ public class Game extends Scene {
 			currentDriver.dispose();
 		}
 		if (GameModel.lastGameUUID.contentEquals("tutorial")) {
-			SceneManager.changeTo(SceneType.COVER);
+			if (tutorialMode == TutorialMode.FULL) {
+				SceneManager.changeTo(SceneType.COVER);
+			} else {
+				SceneManager.changeTo(SceneType.MENU);
+			}
+			tutorialMode = null;
 		} else {
 			if (GameModel.lastGameUUID == null || GameModel.lastGameUUID.contentEquals("custom")) {
 				SceneManager.changeTo(SceneType.MENU);

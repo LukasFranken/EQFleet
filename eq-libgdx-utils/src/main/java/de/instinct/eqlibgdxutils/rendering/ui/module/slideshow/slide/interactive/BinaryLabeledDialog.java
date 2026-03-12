@@ -20,7 +20,7 @@ public class BinaryLabeledDialog extends InteractiveSlide {
 
 	private float LABEL_MOVE_DURATION = 0.5f;
 	private float LABEL_MAX_OFFSET = 20f;
-	private float DIALOG_FADE_IN_DELAY = 2f;
+	private float DIALOG_FADE_IN_DELAY = 1.5f;
 
 	private Label messageLabel;
 	

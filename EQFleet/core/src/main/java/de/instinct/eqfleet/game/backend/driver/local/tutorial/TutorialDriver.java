@@ -11,6 +11,7 @@ import de.instinct.eqfleet.audio.AudioManager;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.backend.driver.local.LocalDriver;
+import de.instinct.eqfleet.game.backend.driver.local.tutorial.guide.GuideEvent;
 import de.instinct.eqfleet.language.LanguageManager;
 
 public class TutorialDriver extends LocalDriver {
@@ -68,10 +69,15 @@ public class TutorialDriver extends LocalDriver {
 	protected void postEngineUpdate() {
 		if (TutorialModel.skipped) {
 			GameModel.activeGameState.resultData.winner = 1;
+			GuideEvent lastElement = null;
+			while (GameModel.guidedEvents.size() > 0) {
+				lastElement = GameModel.guidedEvents.poll();
+			}
+			GameModel.guidedEvents.add(lastElement);
+			TutorialModel.skipped = false;
 		}
 		if (GameModel.activeGameState != null && GameModel.activeGameState.started && !finished) {
         	if (GameModel.activeGameState.resultData.winner != 0) {
-    			GameModel.guidedEvents = null;
     			Game.stop();
     		}
     	}
@@ -79,16 +85,14 @@ public class TutorialDriver extends LocalDriver {
 
 	@Override
 	public long finish() {
-		AudioManager.playVoice("tutorial/" + LanguageManager.getCurrentLanguage().getCode(), "voiceline_34");
-		GameModel.guidedEvents = null;
 		mode = null;
 		finished = true;
-		return 500;
+		return (long) (AudioManager.getVoiceDuration("tutorial/" + LanguageManager.getCurrentLanguage().getCode(), "voiceline_34") * 1000) + 100;
 	}
 
 	@Override
 	public void cleanup() {
-		
+		GameModel.guidedEvents = null;
 	}
 	
 }

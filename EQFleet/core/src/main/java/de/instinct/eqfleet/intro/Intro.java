@@ -2,6 +2,7 @@ package de.instinct.eqfleet.intro;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import de.instinct.eqfleet.App;
 import de.instinct.eqfleet.PreferenceManager;
@@ -37,6 +38,7 @@ public class Intro extends Scene {
 	
 	private Slideshow introSlideshow;
 	private ClipboardDialog authKeyInsertDialog;
+	private MultiChoiceDialog languageSelectionDialog;
 	private Label versionLabel;
 
 	@Override
@@ -78,7 +80,8 @@ public class Intro extends Scene {
 		startDelay.setDuration(1f);
 		introSlideshow.add(startDelay);
 		
-		Message welcomeMessage = new Message("Welcome");
+		int welcomeMessageIndex = LanguageManager.languageIsSet() ? new Random().nextInt(8) : 0;
+		Message welcomeMessage = new Message(LanguageManager.get("intro_welcome_" + welcomeMessageIndex));
 		welcomeMessage.setDuration(2f);
 		welcomeMessage.getConditions().add(new SlideCondition() {
 			
@@ -115,7 +118,7 @@ public class Intro extends Scene {
 	}
 	
 	private void createSelectLanguageSlide() {
-		MultiChoiceDialog languageSelectionDialog = new MultiChoiceDialog("Choose your prefered language:", getLanguageChoices());
+		languageSelectionDialog = new MultiChoiceDialog(LanguageManager.get("intro_language"), getLanguageChoices());
 		languageSelectionDialog.setBackButtonEnabled(false);
 		introSlideshow.add(languageSelectionDialog);
 	}
@@ -131,6 +134,7 @@ public class Intro extends Scene {
 				public void execute() {
 					LanguageManager.setLanguage(language.getCode());
 					createVolumeSelectionSlide(true);
+					languageSelectionDialog.getLabel().setText(LanguageManager.get("intro_language"));
 				}
 				
 			});
@@ -168,8 +172,18 @@ public class Intro extends Scene {
 				}
 				
 			};
-			SliderSlide volumeSelectionSlide = new SliderSlide("Adjust the audio volume", volumeChangeAction, AudioManager.getUserMusicVolume(), volumeConfirmAction);
+			SliderSlide volumeSelectionSlide = new SliderSlide(LanguageManager.get("intro_volume"), volumeChangeAction, AudioManager.getUserMusicVolume(), volumeConfirmAction);
 			volumeSelectionSlide.setBackButtonEnabled(backButtonEnabled);
+			volumeSelectionSlide.getBackButton().getLabel().setText(LanguageManager.get("generic_back"));
+			volumeSelectionSlide.setBackAction(new Action() {
+				
+				@Override
+				public void execute() {
+					AudioManager.stop();
+				}
+				
+			});
+			volumeSelectionSlide.getAcceptButton().getLabel().setText(LanguageManager.get("generic_confirm"));
 			introSlideshow.add(volumeSelectionSlide);
 			
 		} else {
@@ -196,7 +210,9 @@ public class Intro extends Scene {
 					
 				};
 				
-				authKeyInsertDialog = new ClipboardDialog("Copy your auth key to the clipboard", useAction);
+				authKeyInsertDialog = new ClipboardDialog(LanguageManager.get("intro_authkey"), useAction);
+				authKeyInsertDialog.setBackButtonEnabled(true);
+				authKeyInsertDialog.getBackButton().getLabel().setText(LanguageManager.get("generic_back"));
 				introSlideshow.add(authKeyInsertDialog);
 			}
 			
@@ -206,21 +222,22 @@ public class Intro extends Scene {
 			
 			@Override
 			public void execute() {
-				MultiChoiceDialog tutorialSelectionDialog = new MultiChoiceDialog("Choose your prefered tutorial:", getTutorialChoices());
+				MultiChoiceDialog tutorialSelectionDialog = new MultiChoiceDialog(LanguageManager.get("intro_tutorial"), getTutorialChoices());
 				introSlideshow.add(tutorialSelectionDialog);
 			}
 			
 		};
 		
-		BinaryLabeledDialog firstTimeDialog = new BinaryLabeledDialog("Do you have an account?", "Yes", "No", acceptAction, denyAction);
+		BinaryLabeledDialog firstTimeDialog = new BinaryLabeledDialog(LanguageManager.get("intro_account"), LanguageManager.get("generic_yes"), LanguageManager.get("generic_no"), acceptAction, denyAction);
 		firstTimeDialog.setBackButtonEnabled(backButtonEnabled);
+		firstTimeDialog.getBackButton().getLabel().setText(LanguageManager.get("generic_back"));
 		introSlideshow.add(firstTimeDialog);
 	}
 
 	private List<SlideChoice> getTutorialChoices() {
 		List<SlideChoice> choices = new ArrayList<>();
 		SlideChoice slideChoiceFull = new SlideChoice();
-		slideChoiceFull.setLabelText("Full (~3 min)");
+		slideChoiceFull.setLabelText(LanguageManager.get("intro_tutorial_full"));
 		slideChoiceFull.setAction(new Action() {
 
 			@Override
@@ -234,7 +251,7 @@ public class Intro extends Scene {
 		choices.add(slideChoiceFull);
 		
 		SlideChoice slideChoiceShort = new SlideChoice();
-		slideChoiceShort.setLabelText("Shorter (~2 min)");
+		slideChoiceShort.setLabelText(LanguageManager.get("intro_tutorial_short"));
 		slideChoiceShort.setAction(new Action() {
 
 			@Override
@@ -248,7 +265,7 @@ public class Intro extends Scene {
 		choices.add(slideChoiceShort);
 		
 		SlideChoice slideChoiceNo = new SlideChoice();
-		slideChoiceNo.setLabelText("None");
+		slideChoiceNo.setLabelText(LanguageManager.get("intro_tutorial_none"));
 		slideChoiceNo.setAction(new Action() {
 
 			@Override
