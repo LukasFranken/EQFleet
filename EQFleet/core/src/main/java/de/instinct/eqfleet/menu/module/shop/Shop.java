@@ -6,6 +6,8 @@ import de.instinct.api.core.API;
 import de.instinct.api.core.modules.MenuModule;
 import de.instinct.api.shop.dto.BuyResponseCode;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
+import de.instinct.eqfleet.menu.module.profile.ProfileModel;
+import de.instinct.eqfleet.menu.module.profile.message.types.LoadProfileMessage;
 import de.instinct.eqfleet.menu.module.shop.message.ShopMessage;
 import de.instinct.eqfleet.menu.module.shop.message.types.BuyMessage;
 import de.instinct.eqfleet.menu.module.shop.message.types.ReloadShopMessage;
@@ -44,6 +46,7 @@ public class Shop extends BaseModule {
 					() -> API.shop().buy(API.authKey, ((BuyMessage) message).getItemId()),
 				    result -> {
 				    	if (result.getCode() == BuyResponseCode.SUCCESS) {
+				    		ProfileModel.messageQueue.add(LoadProfileMessage.builder().build());
 				    		loadData();
 				    	} else {
 				    		ShopModel.buyResponse = result;

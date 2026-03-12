@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.InputUtil;
+import de.instinct.eqlibgdxutils.PlatformUtil;
 import de.instinct.eqlibgdxutils.PreferenceUtil;
 import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.debug.logging.LogLine;
@@ -17,6 +18,7 @@ import de.instinct.eqlibgdxutils.debug.logging.Logger;
 import de.instinct.eqlibgdxutils.debug.metrics.Metric;
 import de.instinct.eqlibgdxutils.debug.metrics.MetricUtil;
 import de.instinct.eqlibgdxutils.debug.profiler.Profiler;
+import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.LimitedInputField;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.model.TextfieldActionHandler;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.HorizontalAlignment;
@@ -57,6 +59,11 @@ public class Console {
 	private static Label logLineLabel;
 	private static List<LogLine> logLines;
 	
+	private static ColorButton commandUpButton;
+	private static ColorButton commandDownButton;
+	private static ColorButton commandCompleteButton;
+	private static ColorButton commandSendButton;
+	
 	public static void init() {
 		commandProcessor = new CommandProcessor();
 		BaseCommandLoader baseCommandLoader = new BaseCommandLoader();
@@ -76,8 +83,32 @@ public class Console {
 		logLineLabel = new Label("");
 		logLineLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
 		logLineLabel.setType(FontType.MICRO);
+		
+		commandUpButton = new ColorButton("^");
+		commandUpButton.setConsoleBypass(true);
+		commandUpButton.setAction(() -> {
+			commandListUp();
+		});
+		
+		commandDownButton = new ColorButton("v");
+		commandDownButton.setConsoleBypass(true);
+		commandDownButton.setAction(() -> {
+			commandListDown();
+		});
+		
+		commandCompleteButton = new ColorButton("..");
+		commandCompleteButton.setConsoleBypass(true);
+		commandCompleteButton.setAction(() -> {
+			autoCompleteCommand();
+		});
+		
+		commandSendButton = new ColorButton(">>");
+		commandSendButton.setConsoleBypass(true);
+		commandSendButton.setAction(() -> {
+			sendCommand();
+		});
 	}
-	
+
 	public static void build() {
 		buildMetrics();
 		buildProfiler();
@@ -92,17 +123,16 @@ public class Console {
 				.build());
 		
 		commandTextField = new LimitedInputField();
-		commandTextField.setMaxChars(50);
+		commandTextField.getContentLabel().setType(FontType.SMALL);
+		commandTextField.setMaxChars(25);
 		commandTextField.setPopupMessage("Enter command");
 		commandTextField.setAction(new TextfieldActionHandler() {
 			
 			@Override
 			public void confirmed() {
-				lastCommandIndex = -1;
-				Logger.log("Command", commandTextField.getContent());
-				inputList.add(commandTextField.getContent());
-				commandProcessor.process(commandTextField.getContent());
-				commandTextField.setContent("");
+				if (!PlatformUtil.isMobile()) {
+					sendCommand();
+				}
 			}
 			
 		});
@@ -223,26 +253,62 @@ public class Console {
 	
 	private static void renderConsoleInput() {
 		if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-	        if (!inputList.isEmpty()) {
-	            if (lastCommandIndex < inputList.size() - 1) {
-	                lastCommandIndex++;
-	            }
-	            commandTextField.setContent(inputList.get(inputList.size() - 1 - lastCommandIndex));
-	        }
-	    } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-	        if (lastCommandIndex > 0) {
-	            lastCommandIndex--;
-	            commandTextField.setContent(inputList.get(inputList.size() - 1 - lastCommandIndex));
-	        } else if (lastCommandIndex == 0) {
-	            lastCommandIndex = -1;
-	            commandTextField.setContent("");
-	        }
+	        commandListUp();
+	    }
+		if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+	        commandListDown();
 	    }
 		if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
-			commandTextField.setContent(commandProcessor.autocomplete(commandTextField.getContent()));
+			autoCompleteCommand();
 		}
-		commandTextField.setBounds(borderMargin, borderMargin, GraphicsUtil.screenBounds().getWidth() - (borderMargin * 2), consoleInputHeight);
+		
+		commandUpButton.setBounds(10, borderMargin, 30, consoleInputHeight);
+		commandUpButton.render();
+		
+		commandCompleteButton.setBounds(45, borderMargin, 30, consoleInputHeight);
+		commandCompleteButton.render();
+		
+		commandDownButton.setBounds(GraphicsUtil.screenBounds().getWidth() - 75, borderMargin, 30, consoleInputHeight);
+		commandDownButton.render();
+		
+		commandSendButton.setBounds(GraphicsUtil.screenBounds().getWidth() - 40, borderMargin, 30, consoleInputHeight);
+		commandSendButton.render();
+		
+		commandTextField.setBounds(80, borderMargin, GraphicsUtil.screenBounds().getWidth() - 160, consoleInputHeight);
 		commandTextField.render();
+	}
+	
+	private static void commandListUp() {
+		if (!inputList.isEmpty()) {
+            if (lastCommandIndex < inputList.size() - 1) {
+                lastCommandIndex++;
+            }
+            commandTextField.setContent(inputList.get(inputList.size() - 1 - lastCommandIndex));
+        }
+	}
+	
+	private static void commandListDown() {
+		if (lastCommandIndex > 0) {
+            lastCommandIndex--;
+            commandTextField.setContent(inputList.get(inputList.size() - 1 - lastCommandIndex));
+        } else if (lastCommandIndex == 0 || lastCommandIndex == -1) {
+            lastCommandIndex = -1;
+            commandTextField.setContent("");
+        }
+	}
+	
+	private static void autoCompleteCommand() {
+		commandTextField.setContent(commandProcessor.autocomplete(commandTextField.getContent()));
+	}
+	
+	private static void sendCommand() {
+		if (!commandTextField.getContent().contentEquals("")) {
+			lastCommandIndex = -1;
+			Logger.log("Command", commandTextField.getContent());
+			inputList.add(commandTextField.getContent());
+			commandProcessor.process(commandTextField.getContent());
+			commandTextField.setContent("");
+		}
 	}
 
 	private static void pollForConsoleActivation() {

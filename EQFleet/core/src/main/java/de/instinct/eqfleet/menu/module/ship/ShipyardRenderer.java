@@ -53,7 +53,7 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 
 	private final float popupWidth = 220f;
 
-	private Color blueprintColor = new Color(0f, 0f, 0.5f, 1f);
+	private final Color blueprintColor = new Color(0.1f, 0.1f, 1f, 1f);
 	
 	@Override
 	public void init() {
@@ -166,9 +166,9 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 		});
 		shipButton.setFixedWidth(50f);
 		shipButton.setFixedHeight(70f);
-		shipButton.getModelPreview().getBorder().setColor(blueprintColor);
-		shipButton.getHoverShape().setColor(blueprintColor);
-		shipButton.getLabel().setColor(blueprintColor);
+		shipButton.getModelPreview().getBorder().getColor().set(blueprintColor);
+		shipButton.getHoverShape().getColor().set(blueprintColor);
+		shipButton.getLabel().getColor().set(blueprintColor);
 		return shipButton;
 	}
 
@@ -246,7 +246,7 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 			buildButton.setLayer(1);
 			buildButton.getBorder().setColor(blueprintColor);
 			buildButton.getLabel().setColor(blueprintColor);
-			Color hoverColor = canAfford ? new Color(0f, 1f, 0f, 0.2f) : new Color(1f, 0f, 0f, 0.2f);
+			Color hoverColor = canAfford ? new Color(0f, 0.5f, 0f, 0.2f) : new Color(0.5f, 0f, 0f, 0.2f);
 			buildButton.setHoverColor(hoverColor);
 			Color downColor = new Color(hoverColor);
 			downColor.a *= 2f;

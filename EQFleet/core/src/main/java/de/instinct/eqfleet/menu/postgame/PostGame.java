@@ -70,7 +70,7 @@ public class PostGame extends Scene {
 					.duration(PER_ITEM_DURATION_MS)
 					.build());
 			
-			skipButton.setFixedWidth(90);
+			skipButton.setFixedWidth(100);
 			skipButton.setFixedHeight(30);
 			skipButton.setPosition((GraphicsUtil.screenBounds().width / 2) - (skipButton.getFixedWidth() / 2), 50);
 			elements.add(DynamicPostGameElement.builder()
@@ -103,7 +103,7 @@ public class PostGame extends Scene {
 				offset += postGameShipProgressOverview.getHeight() + 20;
 			}
 			
-			claimButton.setFixedWidth(90);
+			claimButton.setFixedWidth(100);
 			claimButton.setFixedHeight(30);
 			claimButton.setPosition((GraphicsUtil.screenBounds().width / 2) - (claimButton.getFixedWidth() / 2), 50);
 			elements.add(DynamicPostGameElement.builder()

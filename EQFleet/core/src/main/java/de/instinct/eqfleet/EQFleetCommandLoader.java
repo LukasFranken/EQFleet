@@ -11,6 +11,7 @@ import de.instinct.api.meta.dto.Resource;
 import de.instinct.api.meta.dto.ResourceAmount;
 import de.instinct.api.meta.dto.ResourceData;
 import de.instinct.api.meta.dto.ResourceUpdateResponseCode;
+import de.instinct.eqfleet.audio.AudioManager;
 import de.instinct.eqfleet.game.backend.driver.local.tutorial.TutorialModel;
 import de.instinct.eqfleet.net.WebManager;
 import de.instinct.eqfleet.scene.SceneManager;
@@ -61,6 +62,7 @@ public class EQFleetCommandLoader implements CommandLoader {
 		commands.addAll(getMenuCommands());
 		commands.addAll(getConfigCommands());
 		commands.addAll(getGameCommands());
+		commands.addAll(getAudioCommands());
 		return commands;
 	}
 
@@ -394,6 +396,25 @@ public class EQFleetCommandLoader implements CommandLoader {
 				})
 				.build());
 		return gameCommands;
+	}
+	
+	private List<Command> getAudioCommands() {
+		List<Command> menuCommands = new ArrayList<>();
+		menuCommands.add(Command.builder()
+				.method("audio.skip")
+				.logMethod("audio.skip")
+				.description("skip to the next track")
+				.action(new CommandAction() {
+					
+					@Override
+					public void execute(String message) {
+						AudioManager.skipTrack();
+						log("Current track skipped");
+					}
+					
+				})
+				.build());
+		return menuCommands;
 	}
 
 	private void log(String message) {

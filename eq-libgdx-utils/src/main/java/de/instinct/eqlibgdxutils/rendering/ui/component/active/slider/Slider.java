@@ -100,7 +100,7 @@ public class Slider extends Component {
 	}
 
 	private float getMaxButtonXPos() {
-		return getBounds().x + getBounds().width - sliderButton.getFixedWidth();
+		return getBounds().x + getBounds().width - sliderButton.getBounds().width;
 	}
 
 	@Override

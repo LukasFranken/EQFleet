@@ -224,6 +224,10 @@ public class AudioManager {
 			currentSwapElapsed += Gdx.graphics.getDeltaTime();
 		}
 	}
+	
+	public static void skipTrack() {
+		currentMusic.stop();
+	}
 
 	public static void playVoice(String category, String tag) {
 		String categoryPath = category;

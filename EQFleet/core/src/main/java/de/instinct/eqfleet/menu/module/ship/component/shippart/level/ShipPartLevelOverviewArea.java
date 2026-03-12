@@ -35,6 +35,7 @@ public class ShipPartLevelOverviewArea extends Component {
 	private Label maxLabel;
 	private PlainRectangularLoadingBar partProgressBar;
 	private ColorButton levelUpButton;
+	private EQRectangle dividerShape;
 	
 	public ShipPartLevelOverviewArea(ShipPartLevelOverviewAreaConfig config) {
 		super();
@@ -92,6 +93,12 @@ public class ShipPartLevelOverviewArea extends Component {
 			levelUpButton.setHoverColor(new Color(adjustedColor.r, adjustedColor.g, adjustedColor.b, 0.2f));
 			levelUpButton.setDownColor(adjustedColor);
 		}
+		
+		dividerShape = EQRectangle.builder()
+				.bounds(new Rectangle())
+				.color(adjustedColor)
+				.filled(true)
+				.build();
 	}
 	
 	@Override
@@ -138,23 +145,17 @@ public class ShipPartLevelOverviewArea extends Component {
 		minLabel.render();
 		maxLabel.render();
 		partProgressBar.render();
+		dividerShape.getBounds().set(getBounds().x + 5f, getBounds().y + 25f, getBounds().width - 10, 1f);
 		if (levelUpButton != null) {
-			Shapes.draw(EQRectangle.builder()
-					.bounds(new Rectangle(getBounds().x + 5f, getBounds().y + 25f + 40f, getBounds().width - 10, 1f))
-					.color(adjustedColor)
-					.build());
+			dividerShape.getBounds().y += 40f;
 			levelUpButton.render();
-		} else {
-			Shapes.draw(EQRectangle.builder()
-					.bounds(new Rectangle(getBounds().x + 5f, getBounds().y + 25f, getBounds().width - 10, 1f))
-					.color(adjustedColor)
-					.build());
 		}
+		Shapes.draw(dividerShape);
 	}
 
 	@Override
 	public float calculateHeight() {
-		return 130f + levelUpInfoSection.calculateHeight() + (levelUpButton != null ? 40f : 0f);
+		return 135f + levelUpInfoSection.calculateHeight() + (levelUpButton != null ? 40f : 0f);
 	}
 
 	@Override

@@ -3,7 +3,6 @@ package de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.TextInputListener;
@@ -13,6 +12,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.InputUtil;
+import de.instinct.eqlibgdxutils.PlatformUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.model.EnableConditionHandler;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.model.InputFieldProcessor;
@@ -181,9 +181,7 @@ public class LimitedInputField extends Component {
 			focused = true;
 			((InputMultiplexer) Gdx.input.getInputProcessor()).addProcessor(inputProcessor);
 
-			if (Gdx.app.getType() == Application.ApplicationType.Android || Gdx.app.getType() == Application.ApplicationType.iOS) {
-					Gdx.input.getTextInput(mobileTextInputListener, popupMessage, content, popupHint);
-			}
+			if (PlatformUtil.isMobile()) Gdx.input.getTextInput(mobileTextInputListener, popupMessage, content, popupHint);
 		}
 	}
 
