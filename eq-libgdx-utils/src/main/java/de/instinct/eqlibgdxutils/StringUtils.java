@@ -19,6 +19,8 @@ public class StringUtils {
 
 	private static DecimalFormat decimalFormat = new DecimalFormat();
 	private static SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+	
+	private static StringBuilder spacer = new StringBuilder();
 
 	public static String getTime(long timeMillis) {
 	    return timeFormat.format(new Date(timeMillis));
@@ -161,6 +163,14 @@ public class StringUtils {
 	    }
 
 	    return "";
+	}
+	
+	public static String getSpacer(int length) {
+		spacer.delete(0, spacer.length());
+		for (int i = 0; i < length; i++) {
+			spacer.append(" ");
+		}
+		return spacer.toString();
 	}
 	
 	public static String formatNanoTime(long value, int decimals) {

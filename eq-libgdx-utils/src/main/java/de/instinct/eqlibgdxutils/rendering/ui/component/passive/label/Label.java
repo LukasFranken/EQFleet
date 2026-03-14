@@ -26,9 +26,12 @@ public class Label extends Component {
 	private Color backgroundColor;
 	private float lineSpacing;
 	private FontType type;
+	private float startMargin;
 	
 	private Rectangle physicalTextBounds;
 	private EQRectangle backgroundShape;
+	
+	private Vector2 finalTextPosition;
 
 	public Label(String text) {
 		super();
@@ -43,7 +46,10 @@ public class Label extends Component {
 		backgroundShape = EQRectangle.builder()
 				.filled(true)
 				.bounds(getBounds())
+				.color(new Color(0f, 0f, 0f, 1f))
 				.build();
+		
+		finalTextPosition = new Vector2();
 	}
 
 	@Override
@@ -74,19 +80,18 @@ public class Label extends Component {
 	@Override
 	protected void renderComponent() {
 		if (backgroundColor != null) {
-			backgroundShape.setColor(new Color(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a * getAlpha()));
+			backgroundShape.getColor().set(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a * getAlpha());
 			Shapes.draw(backgroundShape);
 		}
-		Color finalColor = new Color(color);
-		finalColor.a = finalColor.a * getAlpha();
-		FontUtil.setLayoutText("[#" + finalColor.toString() + "]" + text, type);
+		color.a = getAlpha();
+		FontUtil.setLayoutText("[#" + color.toString() + "]" + text, type);
 		GlyphLayout layout = FontUtil.getGlyphLayout();
 		float x = 0;
 		float y = 0;
 
 		switch (verticalAlignment) {
 		case TOP:
-			y = physicalTextBounds.y + (physicalTextBounds.height) + (layout.height);
+			y = physicalTextBounds.y + physicalTextBounds.height - startMargin;
 			break;
 		case CENTER:
 			y = physicalTextBounds.y + (physicalTextBounds.height / 2f) + (layout.height / 2f);
@@ -98,17 +103,18 @@ public class Label extends Component {
 
 		switch (horizontalAlignment) {
 		case LEFT:
-			x = physicalTextBounds.x;
+			x = physicalTextBounds.x + startMargin;
 			break;
 		case CENTER:
 			x = physicalTextBounds.x + (physicalTextBounds.width / 2f) - (layout.width / 2f);
 			break;
 		case RIGHT:
-			x = physicalTextBounds.x + physicalTextBounds.width - layout.width;
+			x = physicalTextBounds.x + physicalTextBounds.width - layout.width - startMargin;
 			break;
 		}
 		
-		FontUtil.draw(new Vector2(x, y), type);
+		finalTextPosition.set(x, y);
+		FontUtil.draw(finalTextPosition, type);
 	}
 
 	@Override

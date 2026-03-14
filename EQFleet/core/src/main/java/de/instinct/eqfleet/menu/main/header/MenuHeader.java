@@ -3,32 +3,32 @@ package de.instinct.eqfleet.menu.main.header;
 import de.instinct.api.core.modules.MenuModule;
 import de.instinct.eqfleet.menu.main.MenuModel;
 import de.instinct.eqfleet.menu.main.header.components.ProfileHeaderComponent;
-import de.instinct.eqfleet.menu.main.header.components.ResourceHeaderComponent;
+import de.instinct.eqfleet.menu.main.header.components.SocialHeaderComponent;
 import de.instinct.eqfleet.menu.module.profile.ProfileModel;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
 
 public class MenuHeader extends Component {
 	
 	private ProfileHeaderComponent profileComponent;
-	private ResourceHeaderComponent resourceComponent;
+	private SocialHeaderComponent socialComponent;
 	
 	public MenuHeader() {
 		profileComponent = new ProfileHeaderComponent();
-		resourceComponent = new ResourceHeaderComponent();
+		socialComponent = new SocialHeaderComponent();
 	}
 
 	public void init() {
 		profileComponent.init();
-		resourceComponent.init();
+		socialComponent.init();
 	}
 	
 	@Override
 	protected void updateComponent() {
 		profileComponent.getBounds().set(getBounds().x, getBounds().y, getBounds().width / 2, getBounds().height);
-		resourceComponent.getBounds().set(getBounds().x + (getBounds().width / 2), getBounds().y, getBounds().width / 2, getBounds().height);
+		socialComponent.getBounds().set(getBounds().x + (getBounds().width / 2), getBounds().y, getBounds().width / 2, getBounds().height);
 		
 		profileComponent.setAlpha(getAlpha());
-		resourceComponent.setAlpha(getAlpha());
+		socialComponent.setAlpha(getAlpha());
 	}
 	
 	@Override
@@ -39,9 +39,9 @@ public class MenuHeader extends Component {
 					profileComponent.render();
 				}
 			}
-			if (ProfileModel.resources != null && MenuModel.unlockedModules.getEnabledModules().contains(MenuModule.PROFILE)) {
-				if (MenuModel.activeModule != MenuModule.PROFILE) {
-					resourceComponent.render();
+			if (ProfileModel.resources != null && MenuModel.unlockedModules.getEnabledModules().contains(MenuModule.SOCIAL)) {
+				if (MenuModel.activeModule != MenuModule.SOCIAL) {
+					socialComponent.render();
 				}
 			}
 		}
@@ -60,7 +60,7 @@ public class MenuHeader extends Component {
 	@Override
 	public void dispose() {
 		profileComponent.dispose();
-		resourceComponent.dispose();
+		socialComponent.dispose();
 	}
 
 }

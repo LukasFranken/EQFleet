@@ -31,6 +31,16 @@ GENERAL:
   x postgame
   x game
 
+- API delete service interfaces and use API interfaces
+ -> they are the same and meant to be the same
+
+- duo/trio conquest
+
+- make chat messages 10€ each (reducable with upgrades)
+ -> for spam protection
+ 
+- background stars that move with tilt of phone
+
 - full dual-language
 
 - clearer postgame sections
@@ -58,6 +68,7 @@ SERVER:
  -> implement dynamic delay
  -> implement long delay catchup
  -> fix state desync
+- skip 
 
 MENU:
 - settings tabs (audio, video, gameplay, account)
@@ -131,12 +142,15 @@ Jan 30 21:46:58 ip-172-30-0-159.eu-central-1.compute.internal bash[10704]: at ja
   - create linux command to see status of all fleet services
 ---------------------------------------------------------------------
 FUTURE RELEASES TODO:
-- duo campaign
+- players can form alliances
+ -> alliances can be leveled
+ -> levels provide buffs and access to more players/functions
 
 - implement offline mode
  -> might be nessecary to fix
  -> symbol for server connectivity
  -> save last info like loadout state to play custom with
+ -> alliance storage
 
 - repair ray weapon type
  -> targets the most damaged friendly entity in range

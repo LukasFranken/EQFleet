@@ -73,6 +73,7 @@ public class PopupRenderer {
 	public static void createMessageDialog(String title, String message) {
 		Label messageLabel = new Label(message);
 		ElementList popupContent = new ElementList();
+		popupContent.setMargin(10f);
 		popupContent.getElements().add(messageLabel);
 		
 		ColorButton acceptButton = new ColorButton("Accept");

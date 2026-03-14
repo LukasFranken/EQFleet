@@ -31,6 +31,8 @@ import de.instinct.eqfleet.menu.module.ship.Shipyard;
 import de.instinct.eqfleet.menu.module.ship.ShipyardRenderer;
 import de.instinct.eqfleet.menu.module.shop.Shop;
 import de.instinct.eqfleet.menu.module.shop.ShopRenderer;
+import de.instinct.eqfleet.menu.module.social.Social;
+import de.instinct.eqfleet.menu.module.social.SocialRenderer;
 import de.instinct.eqfleet.menu.module.starmap.Starmap;
 import de.instinct.eqfleet.menu.module.starmap.StarmapRenderer;
 import de.instinct.eqfleet.net.WebManager;
@@ -70,6 +72,7 @@ public class Menu extends Scene {
 		MenuModel.renderers.put(MenuModule.CONSTRUCTION, new ConstructionRenderer());
 		MenuModel.renderers.put(MenuModule.SHOP, new ShopRenderer());
 		MenuModel.renderers.put(MenuModule.PLAY, new PlayRenderer());
+		MenuModel.renderers.put(MenuModule.SOCIAL, new SocialRenderer());
 		
 		MenuModel.modules.put(MenuModule.PLAY, new Play());
 		MenuModel.modules.put(MenuModule.PROFILE, new Profile());
@@ -78,6 +81,7 @@ public class Menu extends Scene {
 		MenuModel.modules.put(MenuModule.CONSTRUCTION, new Construction());
 		MenuModel.modules.put(MenuModule.SHOP, new Shop());
 		MenuModel.modules.put(MenuModule.STARMAP, new Starmap());
+		MenuModel.modules.put(MenuModule.SOCIAL, new Social());
 		
 		for (BaseModuleRenderer renderer : MenuModel.renderers.values()) {
 			renderer.init();
@@ -152,6 +156,7 @@ public class Menu extends Scene {
 			WebManager.enqueue(
 				    () -> API.meta().modules(API.authKey),
 				    modulesResult -> {
+				    	modulesResult.getEnabledModules().add(MenuModule.SOCIAL);
 				    	processModulesResult(modulesResult);
 				    }
 			);

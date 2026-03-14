@@ -3,7 +3,14 @@ package de.instinct.eqfleet.menu.main.header.components;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
+import de.instinct.api.core.modules.MenuModule;
+import de.instinct.api.meta.dto.Resource;
+import de.instinct.eqfleet.menu.main.MenuModel;
+import de.instinct.eqfleet.menu.main.message.types.OpenModuleMessage;
 import de.instinct.eqfleet.menu.module.profile.ProfileModel;
+import de.instinct.eqfleet.menu.module.profile.ProfileModuleAPI;
+import de.instinct.eqlibgdxutils.InputUtil;
+import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.image.Image;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.HorizontalAlignment;
@@ -23,6 +30,8 @@ public class ProfileHeaderComponent extends Component {
 	private Label usernameLabel;
 	private Label expLabel;
 	private Image rankImage;
+	private Label creditsLabel;
+	private Label equilibriumLabel;
 	
 	private Rectangle rankBounds;
 	private Rectangle nameBounds;
@@ -30,6 +39,9 @@ public class ProfileHeaderComponent extends Component {
 	
 	private EQRectangle nameBorder;
 	private EQRectangle rankBorder;
+	
+	private String creditsTextCache;
+	private String equilibriumTextCache;
 	
 	public void init() {
 		rankBounds = new Rectangle();
@@ -47,8 +59,31 @@ public class ProfileHeaderComponent extends Component {
 		usernameLabel = new Label("");
 		usernameLabel.setColor(Color.LIGHT_GRAY);
 		usernameLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
+		usernameLabel.setType(FontType.SMALL);
 		
 		rankImage = new Image(TextureManager.getTexture("ui/image/rank", "recruit1"));
+		
+		Color creditsColor = new Color(ProfileModuleAPI.getColorForResource(Resource.CREDITS));
+		Border creditsBorder = new Border();
+		creditsBorder.setSize(1f);
+		creditsBorder.setColor(creditsColor);
+		creditsLabel = new Label("");
+		creditsLabel.setColor(creditsColor);
+		creditsLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
+		creditsLabel.setType(FontType.TINY);
+		creditsLabel.setBorder(creditsBorder);
+		creditsLabel.setStartMargin(4);
+		
+		Color equilibriumColor = new Color(ProfileModuleAPI.getColorForResource(Resource.EQUILIBRIUM));
+		Border equilibriumBorder = new Border();
+		equilibriumBorder.setSize(1f);
+		equilibriumBorder.setColor(equilibriumColor);
+		equilibriumLabel = new Label("");
+		equilibriumLabel.setColor(equilibriumColor);
+		equilibriumLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
+		equilibriumLabel.setType(FontType.TINY);
+		equilibriumLabel.setBorder(equilibriumBorder);
+		equilibriumLabel.setStartMargin(4);
 		
 		expLabel = new Label("EXP");
 		expLabel.setColor(Color.BLUE);
@@ -67,6 +102,9 @@ public class ProfileHeaderComponent extends Component {
 				.glowConfig(EQGlowConfig.builder().build())
 				.thickness(1f)
 				.build();
+		
+		creditsTextCache = "0";
+		equilibriumTextCache = "0";
 	}
 
 	@Override
@@ -77,27 +115,43 @@ public class ProfileHeaderComponent extends Component {
 		expBar.setMaxValue(ProfileModel.profile.getRank().getNextRequiredExp() - ProfileModel.profile.getRank().getRequiredExp());
 		expBar.setCurrentValue(ProfileModel.profile.getCurrentExp() - ProfileModel.profile.getRank().getRequiredExp());
 		
+		creditsTextCache = StringUtils.formatBigNumber(ProfileModuleAPI.getResource(Resource.CREDITS));
+		creditsLabel.setText("€" + StringUtils.getSpacer(9 - creditsTextCache.length()) + creditsTextCache);
+		
+		equilibriumTextCache = StringUtils.formatBigNumber(ProfileModuleAPI.getResource(Resource.EQUILIBRIUM));
+		equilibriumLabel.setText("E" + StringUtils.getSpacer(9 - equilibriumTextCache.length()) + equilibriumTextCache);
+		
 		updateBounds();
 		updateAlphas();
+		
+		if (InputUtil.isClicked() && InputUtil.mouseIsOver(getBounds())) {
+			MenuModel.messageQueue.add(OpenModuleMessage.builder().module(MenuModule.PROFILE).build());
+		}
 	}
 	
 	private void updateBounds() {
-		rankBounds.set(getBounds().x, getBounds().y, 35, 35);
+		rankBounds.set(getBounds().x, getBounds().y, 45, 45);
 		rankImage.setBounds(rankBounds.x + 5, rankBounds.y + 5, rankBounds.width - 10, rankBounds.height - 10);
 		
-		expBounds.set(getBounds().x + 40, getBounds().y, getBounds().width - 40, 7);
+		expBounds.set(getBounds().x + 50, getBounds().y + 15, getBounds().width - 50, 7);
 		expLabel.setBounds(expBounds.x, expBounds.y, 18, expBounds.height);
 		expBar.setBounds(expBounds.x + 20, expBounds.y, expBounds.width - 20, expBounds.height);
 		
-		nameBounds.set(getBounds().x + 40, getBounds().y + 10, getBounds().width - 40, 25);
+		nameBounds.set(getBounds().x + 50, getBounds().y + 25, getBounds().width - 50, 20);
 		usernameLabel.setBounds(nameBounds.x + 5, nameBounds.y, nameBounds.width - 5, nameBounds.height);
+		
+		float resourceLabelWidth = (getBounds().width - 50) / 2f - 1;
+		creditsLabel.setBounds(getBounds().x + 50, getBounds().y, resourceLabelWidth, 12);
+		equilibriumLabel.setBounds(getBounds().x + 50 + resourceLabelWidth + 2, getBounds().y, resourceLabelWidth, 12);
 	}
 
 	private void updateAlphas() {
 		rankImage.setAlpha(getAlpha());
 		expBar.setAlpha(getAlpha());
-		usernameLabel.getColor().a =getAlpha();
-		expLabel.getColor().a = getAlpha();
+		usernameLabel.setAlpha(getAlpha());
+		expLabel.setAlpha(getAlpha());
+		creditsLabel.setAlpha(getAlpha());
+		equilibriumLabel.setAlpha(getAlpha());
 		nameBorder.getColor().a = getAlpha();
 		rankBorder.getColor().a = getAlpha();
 	}
@@ -108,6 +162,8 @@ public class ProfileHeaderComponent extends Component {
 		usernameLabel.render();
 		expLabel.render();
 		expBar.render();
+		creditsLabel.render();
+		if (ProfileModuleAPI.getResource(Resource.EQUILIBRIUM) > 0) equilibriumLabel.render();
 		Shapes.draw(nameBorder);
 		Shapes.draw(rankBorder);
 	}
