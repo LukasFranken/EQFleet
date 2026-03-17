@@ -7,7 +7,8 @@ import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
 import de.instinct.eqlibgdxutils.rendering.ui.core.UIElement;
 import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.shapes.EQRectangle;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -20,6 +21,8 @@ public abstract class BaseModule extends UIElement {
 	private Color backgroundColor;
 	private boolean decorated;
 	private Border defaultBorder;
+	
+	private EQRectangle backgroundShape;
 
     public BaseModule() {
 		transparency = 1f;
@@ -32,6 +35,11 @@ public abstract class BaseModule extends UIElement {
 		Color borderColor = new Color(SkinManager.skinColor);
 		borderColor.mul(0.5f, 0.5f, 0.5f, 1f);
 		defaultBorder.setColor(borderColor);
+		backgroundShape = EQRectangle.builder()
+				.color(backgroundColor)
+				.bounds(getBounds())
+				.filled(true)
+				.build();
     }
 
     @Override
@@ -51,20 +59,17 @@ public abstract class BaseModule extends UIElement {
 	@Override
 	public void renderElement() {
 		if (decorated) {
+			backgroundShape.getColor().set(backgroundColor);
+			backgroundShape.getColor().a = getAlpha();
+			Shapes.draw(backgroundShape);
 			defaultBorder.setBounds(getBounds());
 			defaultBorder.setAlpha(getAlpha());
 			defaultBorder.render();
-			renderBackground();
 		}
 		renderContent();
 	}
 
 	protected abstract void renderContent();
-
-	private void renderBackground() {
-		backgroundColor.a = transparency;
-		TextureManager.draw(TextureManager.createTexture(backgroundColor), super.getBounds());
-	}
 
 	private void restrictTo(Rectangle restrictionBounds) {
 		if (super.getBounds().x + super.getBounds().width > restrictionBounds.x + restrictionBounds.width) {

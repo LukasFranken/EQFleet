@@ -181,6 +181,7 @@ public class PopupRenderer {
 	private static void destroy() {
 		if (flagForDestroy) {
 			PopupModel activePopup = activePopups.get(activePopups.size() - 1);
+			if (activePopup.getPopup().getOnCloseAction() != null) activePopup.getPopup().getOnCloseAction().execute();
 			activePopup.getPopup().getContentContainer().dispose();
 			activePopup.getTitleLabel().dispose();
 			activePopups.remove(activePopups.size() - 1);

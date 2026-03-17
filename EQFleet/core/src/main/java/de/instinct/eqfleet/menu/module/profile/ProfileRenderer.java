@@ -11,12 +11,11 @@ import de.instinct.eqfleet.menu.module.profile.inventory.InventoryRenderer;
 import de.instinct.eqfleet.menu.module.profile.message.types.RegisterMessage;
 import de.instinct.eqfleet.menu.module.profile.model.TabButtonBar;
 import de.instinct.eqfleet.menu.module.profile.model.TabOption;
+import de.instinct.eqfleet.menu.module.profile.model.UsernameTextField;
 import de.instinct.eqfleet.menu.module.profile.overview.OverviewRenderer;
 import de.instinct.eqfleet.menu.module.profile.statistics.StatisticsRenderer;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
-import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.LimitedInputField;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.model.TextfieldActionHandler;
-import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.model.inputfilter.UsernameTexfieldInputFilter;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 
 public class ProfileRenderer extends BaseModuleRenderer {
@@ -24,7 +23,8 @@ public class ProfileRenderer extends BaseModuleRenderer {
 	private Label registrationLabel;
 	private Label registrationResponseLabel;
 	private ColorButton registrationConfirmButton;
-	private LimitedInputField usernameTextField;
+	
+	private UsernameTextField usernameTextField;
 	
 	private TabButtonBar tabButtonBar;
 	
@@ -39,11 +39,7 @@ public class ProfileRenderer extends BaseModuleRenderer {
 			register(usernameTextField.getContent());
 		});
 		
-		usernameTextField = new LimitedInputField();
-		usernameTextField.setMaxChars(12);
-		usernameTextField.setInputFilter(new UsernameTexfieldInputFilter());
-		usernameTextField.setPopupMessage("Enter name");
-		usernameTextField.setAction(new TextfieldActionHandler() {
+		usernameTextField = new UsernameTextField(new TextfieldActionHandler() {
 			
 			@Override
 			public void confirmed() {

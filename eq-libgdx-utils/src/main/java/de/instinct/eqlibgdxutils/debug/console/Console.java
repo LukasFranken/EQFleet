@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
@@ -312,6 +313,9 @@ public class Console {
 	}
 
 	private static void pollForConsoleActivation() {
+		if (InputUtil.isJustPressed(Keys.F1)) {
+			toggle();
+		}
 		if (InputUtil.isClickedConsole()) {
 			boolean wasValidTap = false;
 			for (ActivationScreenTap screenTap : activationScreenTaps) {

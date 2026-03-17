@@ -43,7 +43,7 @@ public class ProfileHeaderComponent extends Component {
 	private String creditsTextCache;
 	private String equilibriumTextCache;
 	
-	public void init() {
+	public ProfileHeaderComponent() {
 		rankBounds = new Rectangle();
 		nameBounds = new Rectangle();
 		expBounds = new Rectangle();

@@ -1,9 +1,5 @@
 package de.instinct.eqfleet.menu.module.play;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
 import com.badlogic.gdx.Gdx;
 
 import de.instinct.api.core.API;
@@ -19,8 +15,8 @@ import de.instinct.eqfleet.scene.SceneType;
 
 public class Play extends BaseModule {
 	
-	private static ScheduledExecutorService scheduler;
 	private static int QUEUE_UPDATE_CLOCK_MS = 1000;
+	private static long lastQueueUpdateTime = 0;
 
 	@Override
 	public MenuModule getMenuModule() {
@@ -29,8 +25,7 @@ public class Play extends BaseModule {
 
 	@Override
 	public void init() {
-		scheduler = Executors.newSingleThreadScheduledExecutor();
-		startUpdateCycle();
+		
 	}
 
 	@Override
@@ -45,7 +40,37 @@ public class Play extends BaseModule {
 
 	@Override
 	public void update() {
-		
+		if (lastQueueUpdateTime + QUEUE_UPDATE_CLOCK_MS < System.currentTimeMillis()) {
+			lastQueueUpdateTime = System.currentTimeMillis();
+			try {
+				if (SceneManager.getCurrentScene() == SceneType.MENU) {
+					updateLobby();
+					if (PlayModel.lobbyUUID == null || PlayModel.lobbyUUID.isEmpty()) {
+		        		WebManager.enqueue(
+		            			() -> API.matchmaking().invites(),
+		    				    result -> {
+		    				    	PlayModel.inviteStatus = result;
+		    				    }
+		        		);
+		    		} else {
+		    			if (PlayModel.lobbyStatus != null && (PlayModel.lobbyStatus.getCode() == LobbyStatusCode.MATCHING || PlayModel.lobbyStatus.getCode() == LobbyStatusCode.IN_GAME)) {
+		    				WebManager.enqueue(
+		    	        			() -> API.matchmaking().matchmaking(PlayModel.lobbyUUID),
+		    					    result -> {
+		    					    	PlayModel.currentMatchmakingStatus = result;
+		    					    	if (result.getCode() == MatchmakingStatusResponseCode.READY) {
+		    					    		connectToGameserver();
+		    					    	}
+		    					    }
+		    				);
+		    			}
+		    		}
+				}
+			} catch (Exception e) {
+				System.out.println("Play routine failed");
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	private static void connectToGameserver() {
@@ -150,43 +175,11 @@ public class Play extends BaseModule {
 		PlayModel.lobbyUUID = null;
 		PlayModel.lobbyStatus = null;
 		PlayModel.currentMatchmakingStatus = null;
-		scheduler.scheduleAtFixedRate(() -> {
-			try {
-				if (SceneManager.getCurrentScene() == SceneType.MENU) {
-					updateLobby();
-					if (PlayModel.lobbyUUID == null || PlayModel.lobbyUUID.isEmpty()) {
-		        		WebManager.enqueue(
-		            			() -> API.matchmaking().invites(),
-		    				    result -> {
-		    				    	PlayModel.inviteStatus = result;
-		    				    }
-		        		);
-		    		} else {
-		    			if (PlayModel.lobbyStatus != null && (PlayModel.lobbyStatus.getCode() == LobbyStatusCode.MATCHING || PlayModel.lobbyStatus.getCode() == LobbyStatusCode.IN_GAME)) {
-		    				WebManager.enqueue(
-		    	        			() -> API.matchmaking().matchmaking(PlayModel.lobbyUUID),
-		    					    result -> {
-		    					    	PlayModel.currentMatchmakingStatus = result;
-		    					    	if (result.getCode() == MatchmakingStatusResponseCode.READY) {
-		    					    		connectToGameserver();
-		    					    	}
-		    					    }
-		    				);
-		    			}
-		    		}
-				}
-			} catch (Exception e) {
-				System.out.println("Play routine failed");
-				e.printStackTrace();
-			}
-		}, 0, QUEUE_UPDATE_CLOCK_MS, TimeUnit.MILLISECONDS);
 	}
 
 	@Override
 	public void close() {
-		if (scheduler != null) {
-			scheduler.shutdownNow();
-		}
+		
 	}
 
 }

@@ -30,7 +30,7 @@ public class MenuWindow extends Component {
 	private EQRectangle titleDividerShape;
 	private EQRectangle menuBackground;
 	
-	public void init() {
+	public MenuWindow() {
 		menuBackground = EQRectangle.builder()
 				.bounds(new Rectangle())
 				.color(SkinManager.skinColor)

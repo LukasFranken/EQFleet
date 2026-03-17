@@ -61,7 +61,7 @@ public class LibraryManager {
 		fontTypes.add(FontTypeConfiguration.builder()
 				.type(FontType.SMALL)
 				.name("larabie")
-				.size(12)
+				.size(11)
 				.build());
 		fontTypes.add(FontTypeConfiguration.builder()
 				.type(FontType.TINY)

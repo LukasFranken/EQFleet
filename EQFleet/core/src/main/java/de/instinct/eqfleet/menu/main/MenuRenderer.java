@@ -43,8 +43,6 @@ public class MenuRenderer extends BaseModuleRenderer {
 
 	@Override
 	public void init() {
-		window.init();
-		header.init();
 		resetWindowAnimation();
 	}
 	
@@ -63,7 +61,7 @@ public class MenuRenderer extends BaseModuleRenderer {
 		float margin = 20f;
 		MenuModel.moduleBounds.set(margin, margin + 20, GraphicsUtil.screenBounds().width - (margin * 2), GraphicsUtil.screenBounds().height - 150f - 40f);
 		updateWindowAnimation();
-		header.getBounds().set(MenuModel.moduleBounds.x, MenuModel.moduleBounds.y + MenuModel.moduleBounds.height + 50, MenuModel.moduleBounds.width, 50);
+		header.getBounds().set(MenuModel.moduleBounds.x, MenuModel.moduleBounds.y + MenuModel.moduleBounds.height + 50, MenuModel.moduleBounds.width, 45);
 		window.getBounds().set(MenuModel.moduleBounds);
 		header.setAlpha(MenuModel.alpha);
 	}

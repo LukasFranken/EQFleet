@@ -87,4 +87,8 @@ public class InputUtil {
 		return virtualMousePosition;
 	}
 
+	public static boolean isJustPressed(int key) {
+		return Gdx.input.isKeyJustPressed(key);
+	}
+
 }

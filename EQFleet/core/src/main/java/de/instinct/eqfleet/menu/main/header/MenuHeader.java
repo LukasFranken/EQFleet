@@ -16,11 +16,6 @@ public class MenuHeader extends Component {
 		profileComponent = new ProfileHeaderComponent();
 		socialComponent = new SocialHeaderComponent();
 	}
-
-	public void init() {
-		profileComponent.init();
-		socialComponent.init();
-	}
 	
 	@Override
 	protected void updateComponent() {

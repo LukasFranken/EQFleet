@@ -2,6 +2,7 @@ package de.instinct.eqlibgdxutils.rendering.ui.popup;
 
 import com.badlogic.gdx.graphics.Color;
 
+import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.container.ElementContainer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,5 +20,6 @@ public class Popup {
 	private boolean closeOnClickOutside;
 	private Color windowColor;
 	private Color titleColor;
+	private Action onCloseAction;
 
 }

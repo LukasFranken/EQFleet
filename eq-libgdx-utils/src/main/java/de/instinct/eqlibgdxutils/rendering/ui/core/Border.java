@@ -15,15 +15,23 @@ public class Border {
 	private Rectangle bounds;
 	private float alpha;
 	
+	private EQRectangle borderShape;
+	
+	public Border() {
+		borderShape = EQRectangle.builder()
+				.color(new Color(0, 0, 0, 1))
+				.bounds(new Rectangle())
+				.thickness(1f)
+				.build();
+	}
+	
 	public void render() {
-		Color finalColor = new Color(color);
-		finalColor.a *= alpha;
+		borderShape.getColor().set(color);
+		borderShape.getColor().a *= alpha;
+		borderShape.getBounds().set(bounds);
+		borderShape.setThickness(size);
 		
-		Shapes.draw(EQRectangle.builder()
-				.color(finalColor)
-				.bounds(bounds)
-				.thickness(size)
-				.build());
+		Shapes.draw(borderShape);
 	}
 
 }
