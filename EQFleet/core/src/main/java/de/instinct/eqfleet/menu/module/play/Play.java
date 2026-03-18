@@ -43,31 +43,28 @@ public class Play extends BaseModule {
 		if (lastQueueUpdateTime + QUEUE_UPDATE_CLOCK_MS < System.currentTimeMillis()) {
 			lastQueueUpdateTime = System.currentTimeMillis();
 			try {
-				if (SceneManager.getCurrentScene() == SceneType.MENU) {
-					updateLobby();
-					if (PlayModel.lobbyUUID == null || PlayModel.lobbyUUID.isEmpty()) {
-		        		WebManager.enqueue(
-		            			() -> API.matchmaking().invites(),
-		    				    result -> {
-		    				    	PlayModel.inviteStatus = result;
-		    				    }
-		        		);
-		    		} else {
-		    			if (PlayModel.lobbyStatus != null && (PlayModel.lobbyStatus.getCode() == LobbyStatusCode.MATCHING || PlayModel.lobbyStatus.getCode() == LobbyStatusCode.IN_GAME)) {
-		    				WebManager.enqueue(
-		    	        			() -> API.matchmaking().matchmaking(PlayModel.lobbyUUID),
-		    					    result -> {
-		    					    	PlayModel.currentMatchmakingStatus = result;
-		    					    	if (result.getCode() == MatchmakingStatusResponseCode.READY) {
-		    					    		connectToGameserver();
-		    					    	}
-		    					    }
-		    				);
-		    			}
-		    		}
-				}
+				updateLobby();
+				if (PlayModel.lobbyUUID == null || PlayModel.lobbyUUID.isEmpty()) {
+	        		WebManager.enqueue(
+	            			() -> API.matchmaking().invites(),
+	    				    result -> {
+	    				    	PlayModel.inviteStatus = result;
+	    				    }
+	        		);
+	    		} else {
+	    			if (PlayModel.lobbyStatus != null && (PlayModel.lobbyStatus.getCode() == LobbyStatusCode.MATCHING || PlayModel.lobbyStatus.getCode() == LobbyStatusCode.IN_GAME)) {
+	    				WebManager.enqueue(
+	    	        			() -> API.matchmaking().matchmaking(PlayModel.lobbyUUID),
+	    					    result -> {
+	    					    	PlayModel.currentMatchmakingStatus = result;
+	    					    	if (result.getCode() == MatchmakingStatusResponseCode.READY) {
+	    					    		connectToGameserver();
+	    					    	}
+	    					    }
+	    				);
+	    			}
+	    		}
 			} catch (Exception e) {
-				System.out.println("Play routine failed");
 				e.printStackTrace();
 			}
 		}
@@ -75,9 +72,9 @@ public class Play extends BaseModule {
 	
 	private static void connectToGameserver() {
 		Gdx.app.postRunnable(() -> {
-		    Game.start();
+			Game.start();
 		    SceneManager.changeTo(SceneType.GAME);
-		  });
+		});
 	}
 
 	public static void startMatchmaking() {

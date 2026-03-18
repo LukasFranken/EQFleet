@@ -92,6 +92,7 @@ public class SocialRenderer extends BaseModuleRenderer {
 			
 			@Override
 			public void confirmed() {
+				System.out.println("Send friend request to: " + addFriendField.getContent());
 				SocialModel.messageQueue.add(FriendRequestMessage.builder().toName(addFriendField.getContent()).build());
 			}
 			
@@ -149,51 +150,55 @@ public class SocialRenderer extends BaseModuleRenderer {
 
 	@Override
 	public void update() {
-		addFriendField.setBounds(MenuModel.moduleBounds.x + 20, MenuModel.moduleBounds.y + 30, (MenuModel.moduleBounds.width / 2) - 40, 25);
-		friendAddMessageLabel.setBounds(addFriendField.getBounds().x, addFriendField.getBounds().y - 20, addFriendField.getBounds().width, 15);
-		if (friendAddRemainingTime > 0) {
-			friendAddRemainingTime -= Gdx.graphics.getDeltaTime();
-			if (friendAddRemainingTime <= 0) {
-				friendAddMessageLabel.setText("");
-				friendAddRemainingTime = 0;
+		if (SocialModel.playerData != null) {
+			addFriendField.setBounds(MenuModel.moduleBounds.x + 20, MenuModel.moduleBounds.y + 30, (MenuModel.moduleBounds.width / 2) - 40, 25);
+			friendAddMessageLabel.setBounds(addFriendField.getBounds().x, addFriendField.getBounds().y - 20, addFriendField.getBounds().width, 15);
+			if (friendAddRemainingTime > 0) {
+				friendAddRemainingTime -= Gdx.graphics.getDeltaTime();
+				if (friendAddRemainingTime <= 0) {
+					friendAddMessageLabel.setText("");
+					friendAddRemainingTime = 0;
+				}
 			}
-		}
-		if (SocialModel.friendRequestSendResponse != null) {
-			if (SocialModel.friendRequestSendResponse == FriendRequestSendResponse.SUCCESS) {
-				friendAddMessageLabel.getColor().set(Color.GREEN);
+			if (SocialModel.friendRequestSendResponse != null) {
+				if (SocialModel.friendRequestSendResponse == FriendRequestSendResponse.SUCCESS) {
+					friendAddMessageLabel.getColor().set(Color.GREEN);
+				} else {
+					friendAddMessageLabel.getColor().set(Color.GRAY);
+				}
+				friendAddMessageLabel.setText(SocialModel.friendRequestSendResponse.toString());
+				friendAddRemainingTime = FRIEND_ADD_MESSAGE_DURATION;
+				SocialModel.friendRequestSendResponse = null;
+			}
+			addFriendLabel.setBounds(addFriendField.getBounds().x, addFriendField.getBounds().y + addFriendField.getBounds().height, addFriendField.getBounds().width, 20);
+			
+			friendList.setBounds(MenuModel.moduleBounds.x + 20, MenuModel.moduleBounds.y + 20 + 100, (MenuModel.moduleBounds.width / 2) - 40, MenuModel.moduleBounds.height - 40 - 40 - 100);
+			friendList.getElements().clear();
+			if (SocialModel.playerData.getFriends() != null) {
+				for (Friend friend : SocialModel.playerData.getFriends()) {
+					friendList.getElements().add(ActionListElement.builder()
+							.value(friend.getName())
+							.label(friend.getName())
+							.build());
+				}
+			}
+			friendsLabel.setBounds(friendList.getBounds().x, friendList.getBounds().y + friendList.getBounds().height, friendList.getBounds().width, 40);
+			
+			groupList.setBounds(MenuModel.moduleBounds.x + (MenuModel.moduleBounds.width / 2) + 20, MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - 150, (MenuModel.moduleBounds.width / 2) - 40, 90);
+			groupList.getElements().clear();
+			groupLabel.setBounds(groupList.getBounds().x, groupList.getBounds().y + groupList.getBounds().height, groupList.getBounds().width, 40);
+			groupInteractButton.setBounds(MenuModel.moduleBounds.x + (MenuModel.moduleBounds.width / 2) + 20, groupList.getBounds().y - 40, (MenuModel.moduleBounds.width / 2) - 40, 30);
+			if (SocialModel.groupData != null && SocialModel.groupData.getMembers() != null) {
+				for (String groupMember : SocialModel.groupData.getMembers()) {
+					groupList.getElements().add(ActionListElement.builder()
+							.value(groupMember)
+							.label(groupMember)
+							.build());
+				}
+				groupInteractButton.getLabel().setText("Leave Group");
 			} else {
-				friendAddMessageLabel.getColor().set(Color.GRAY);
+				groupInteractButton.getLabel().setText("Create Group");
 			}
-			friendAddMessageLabel.setText(SocialModel.friendRequestSendResponse.toString());
-			friendAddRemainingTime = FRIEND_ADD_MESSAGE_DURATION;
-			SocialModel.friendRequestSendResponse = null;
-		}
-		addFriendLabel.setBounds(addFriendField.getBounds().x, addFriendField.getBounds().y + addFriendField.getBounds().height, addFriendField.getBounds().width, 20);
-		
-		friendList.setBounds(MenuModel.moduleBounds.x + 20, MenuModel.moduleBounds.y + 20 + 100, (MenuModel.moduleBounds.width / 2) - 40, MenuModel.moduleBounds.height - 40 - 40 - 100);
-		friendList.getElements().clear();
-		for (Friend friend : SocialModel.playerData.getFriends()) {
-			friendList.getElements().add(ActionListElement.builder()
-					.value(friend.getName())
-					.label(friend.getName())
-					.build());
-		}
-		friendsLabel.setBounds(friendList.getBounds().x, friendList.getBounds().y + friendList.getBounds().height, friendList.getBounds().width, 40);
-		
-		groupList.setBounds(MenuModel.moduleBounds.x + (MenuModel.moduleBounds.width / 2) + 20, MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - 150, (MenuModel.moduleBounds.width / 2) - 40, 90);
-		groupList.getElements().clear();
-		groupLabel.setBounds(groupList.getBounds().x, groupList.getBounds().y + groupList.getBounds().height, groupList.getBounds().width, 40);
-		groupInteractButton.setBounds(MenuModel.moduleBounds.x + (MenuModel.moduleBounds.width / 2) + 20, groupList.getBounds().y - 40, (MenuModel.moduleBounds.width / 2) - 40, 30);
-		if (SocialModel.groupData != null && SocialModel.groupData.getMembers() != null) {
-			for (String groupMember : SocialModel.groupData.getMembers()) {
-				groupList.getElements().add(ActionListElement.builder()
-						.value(groupMember)
-						.label(groupMember)
-						.build());
-			}
-			groupInteractButton.getLabel().setText("Leave Group");
-		} else {
-			groupInteractButton.getLabel().setText("Create Group");
 		}
 	}
 
