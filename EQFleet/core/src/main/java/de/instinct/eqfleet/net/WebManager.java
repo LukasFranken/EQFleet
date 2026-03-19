@@ -85,29 +85,26 @@ public class WebManager {
     }
     
     public static boolean authenticate(String authKey) {
-    	TokenVerificationResponse response = API.authentication().verify(authKey);
-    	if (response == TokenVerificationResponse.VERIFIED) {
-			API.authKey = authKey;
-			PreferenceManager.save("authkey", authKey);
-			return true;
+    	if (!authKey.isEmpty()) {
+    		TokenVerificationResponse response = API.authentication().verify(authKey);
+        	if (response == TokenVerificationResponse.VERIFIED) {
+    			API.authKey = authKey;
+    			PreferenceManager.save("authkey", authKey);
+    			status = ConnectionStatus.ONLINE;
+    			Logger.log(LOGTAG, "Logged in", ConsoleColor.GREEN);
+    			return true;
+    		}
+        	if (response == TokenVerificationResponse.DOESNT_EXIST) {
+    			PreferenceManager.save("authkey", "");
+    		}
 		}
+    	status = ConnectionStatus.UNAUTHORIZED;
     	return false;
     }
 
     public static void loadAuthKey() {
 		final String authKey = PreferenceManager.load("authkey");
-		if (!authKey.isEmpty()) {
-			TokenVerificationResponse result = API.authentication().verify(authKey);
-			if (result == TokenVerificationResponse.VERIFIED) {
-				API.authKey = authKey;
-				status = ConnectionStatus.ONLINE;
-				Logger.log(LOGTAG, "Logged in", ConsoleColor.GREEN);
-			} else {
-				API.authKey = "invalid";
-			}
-		} else {
-			status = ConnectionStatus.UNAUTHORIZED;
-		}
+		authenticate(authKey);
 	}
 
 	public static void update() {
