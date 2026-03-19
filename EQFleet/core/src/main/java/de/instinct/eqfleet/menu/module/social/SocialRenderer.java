@@ -92,7 +92,6 @@ public class SocialRenderer extends BaseModuleRenderer {
 			
 			@Override
 			public void confirmed() {
-				System.out.println("Send friend request to: " + addFriendField.getContent());
 				SocialModel.messageQueue.add(FriendRequestMessage.builder().toName(addFriendField.getContent()).build());
 			}
 			
