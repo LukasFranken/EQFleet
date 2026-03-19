@@ -7,6 +7,7 @@ import de.instinct.api.core.modules.MenuModule;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
 import de.instinct.eqfleet.menu.module.social.message.CreateGroupMessage;
 import de.instinct.eqfleet.menu.module.social.message.FriendRequestMessage;
+import de.instinct.eqfleet.menu.module.social.message.InviteToGroupMessage;
 import de.instinct.eqfleet.menu.module.social.message.LeaveGroupMessage;
 import de.instinct.eqfleet.menu.module.social.message.RemoveFriendMessage;
 import de.instinct.eqfleet.menu.module.social.message.RespondToFriendRequestMessage;
@@ -124,6 +125,15 @@ public class Social extends BaseModule {
 					() -> API.social().sendFriendRequest(API.authKey, friendRequestMessage.getToName()),
 				    result -> {
 				    	SocialModel.friendRequestSendResponse = result;
+				    }
+			);
+		}
+		if (message instanceof InviteToGroupMessage) {
+			InviteToGroupMessage inviteToGroupMessage = (InviteToGroupMessage) message;
+			WebManager.enqueue(
+					() -> API.social().inviteToGroup(API.authKey, inviteToGroupMessage.getFriendName()),
+				    result -> {
+				    	SocialModel.groupInviteSendResponse = result;
 				    }
 			);
 		}

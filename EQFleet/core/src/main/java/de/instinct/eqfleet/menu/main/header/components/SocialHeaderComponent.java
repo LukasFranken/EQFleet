@@ -2,7 +2,6 @@ package de.instinct.eqfleet.menu.main.header.components;
 
 import de.instinct.eqfleet.menu.main.header.components.social.FriendsSocialHeaderComponent;
 import de.instinct.eqfleet.menu.main.header.components.social.GroupSocialHeaderComponent;
-import de.instinct.eqfleet.menu.module.social.SocialModel;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
 
 public class SocialHeaderComponent extends Component {
@@ -23,10 +22,8 @@ public class SocialHeaderComponent extends Component {
 	
 	@Override
 	protected void renderComponent() {
-		if (SocialModel.playerData != null) {
-			friendsComponent.render();
-			groupComponent.render();
-		}
+		friendsComponent.render();
+		groupComponent.render();
 	}
 
 	@Override

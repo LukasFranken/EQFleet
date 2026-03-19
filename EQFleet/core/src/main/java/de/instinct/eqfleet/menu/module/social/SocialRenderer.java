@@ -10,6 +10,7 @@ import de.instinct.eqfleet.menu.main.MenuModel;
 import de.instinct.eqfleet.menu.module.profile.model.UsernameTextField;
 import de.instinct.eqfleet.menu.module.social.message.CreateGroupMessage;
 import de.instinct.eqfleet.menu.module.social.message.FriendRequestMessage;
+import de.instinct.eqfleet.menu.module.social.message.InviteToGroupMessage;
 import de.instinct.eqfleet.menu.module.social.message.LeaveGroupMessage;
 import de.instinct.eqfleet.menu.module.social.message.RemoveFriendMessage;
 import de.instinct.eqlibgdxutils.generic.Action;
@@ -108,6 +109,21 @@ public class SocialRenderer extends BaseModuleRenderer {
 		popupContent = new ElementList();
 		popupContent.setMargin(10f);
 		popupContent.setFixedWidth(150f);
+		ColorButton inviteToGroupButton = new ColorButton("Invite Group");
+		inviteToGroupButton.setFixedWidth(150f);
+		inviteToGroupButton.setFixedHeight(30f);
+		inviteToGroupButton.setLayer(1);
+		inviteToGroupButton.setAction(new Action() {
+			
+			@Override
+			public void execute() {
+				SocialModel.messageQueue.add(InviteToGroupMessage.builder().friendName(friendName).build());
+				PopupRenderer.close();
+			}
+			
+		});
+		if (isFriend && SocialModel.groupData != null) popupContent.getElements().add(inviteToGroupButton);
+		
 		ColorButton deleteButton = new ColorButton("Delete Friend");
 		deleteButton.setFixedWidth(150f);
 		deleteButton.setFixedHeight(30f);

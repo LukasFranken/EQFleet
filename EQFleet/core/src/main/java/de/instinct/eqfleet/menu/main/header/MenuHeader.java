@@ -5,6 +5,7 @@ import de.instinct.eqfleet.menu.main.MenuModel;
 import de.instinct.eqfleet.menu.main.header.components.ProfileHeaderComponent;
 import de.instinct.eqfleet.menu.main.header.components.SocialHeaderComponent;
 import de.instinct.eqfleet.menu.module.profile.ProfileModel;
+import de.instinct.eqfleet.menu.module.social.SocialModel;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
 
 public class MenuHeader extends Component {
@@ -34,10 +35,8 @@ public class MenuHeader extends Component {
 					profileComponent.render();
 				}
 			}
-			if (ProfileModel.resources != null && MenuModel.unlockedModules.getEnabledModules().contains(MenuModule.SOCIAL)) {
-				if (MenuModel.activeModule != MenuModule.SOCIAL) {
-					socialComponent.render();
-				}
+			if (SocialModel.playerData != null && MenuModel.unlockedModules.getEnabledModules().contains(MenuModule.SOCIAL)) {
+				socialComponent.render();
 			}
 		}
 	}
