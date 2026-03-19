@@ -46,8 +46,8 @@ public class MiniWindow extends Component {
 	protected void updateComponent() {
 		titleLabel.setBounds(getBounds().x, getBounds().y + getBounds().height - 13, getBounds().width, 13);
 		contentLabel.setBounds(getBounds().x, getBounds().y + getBounds().height - 27, getBounds().width, 14);
-		acceptButton.setBounds(getBounds().x, getBounds().y, (getBounds().width / 2) - 2, 15);
-		declineButton.setBounds(getBounds().x + (getBounds().width / 2) + 2, getBounds().y, (getBounds().width / 2) - 2, 15);
+		acceptButton.setBounds(getBounds().x, getBounds().y, (getBounds().width / 2) - 2, 17);
+		declineButton.setBounds(getBounds().x + (getBounds().width / 2) + 2, getBounds().y, (getBounds().width / 2) - 2, 17);
 	}
 	
 	@Override
