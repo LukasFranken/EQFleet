@@ -16,6 +16,7 @@ import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
+import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.shapes.EQCircle;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.shapes.EQRectangle;
@@ -112,16 +113,18 @@ public class PlanetDefenseRenderer {
 	        hullText = StringUtils.formatBigNumber(value, 1).replaceAll(" ", "");
 	    }
 
-	    float labelHeight = 10f;
-	    float vx = projectedPosition.x / GraphicsUtil.getScaleFactor();
+	    float scaleFactor = GraphicsUtil.getScaleFactor();
+
+	    float labelHeight = FontUtil.getFontHeightPx(FontType.MICRO_BOLD);
+	    float vx = projectedPosition.x / scaleFactor;
 	    float vy;
 	    if (top) {
-	        vy = projectedPosition.y / GraphicsUtil.getScaleFactor();
+	        vy = projectedPosition.y / scaleFactor + 2;
 	    } else {
-	        vy = (projectedPosition.y / GraphicsUtil.getScaleFactor()) - labelHeight;
+	        vy = (projectedPosition.y / scaleFactor) - labelHeight - 2;
 	    }
 
-	    float labelWidth = (projectedRight.x - projectedPosition.x) / GraphicsUtil.getScaleFactor();
+	    float labelWidth = (projectedRight.x - projectedPosition.x) / scaleFactor;
 
 	    workingLabel.setText(hullText);
 	    workingLabel.setBounds(vx, vy, labelWidth, labelHeight);

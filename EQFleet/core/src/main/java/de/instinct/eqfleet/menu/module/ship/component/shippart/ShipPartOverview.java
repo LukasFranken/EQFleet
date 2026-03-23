@@ -191,11 +191,12 @@ public class ShipPartOverview extends Component {
 
 			double currentValue = currAttr != null ? currAttr.getValue() : 0;
 			double nextValue = nextAttr != null ? nextAttr.getValue() : 0;
+			double changeValue = nextValue - currentValue;
 
 		 	levelUpInfos.add(LevelUpInfo.builder()
 		                .tagValue(ShipyardUtility.getAttributeName(attrForName).replaceAll("_", " "))
 		                .currentValue(StringUtils.format(currentValue, 1))
-		                .changeValue(nextAttr != null ? (nextValue - currentValue > 0 ? "+" : "") + StringUtils.format(nextValue - currentValue, 1) : "")
+		                .changeValue(nextAttr != null ? changeValue == 0 ? "" : ((changeValue > 0 ? "+" : "") + StringUtils.format(changeValue, 1)) : "")
 		                .nextValue(nextAttr != null ? StringUtils.format(nextValue, 1) : "")
 		                .build());
 		}

@@ -32,6 +32,10 @@ GENERAL:
   x game
 
 REDESIGN:
+- fix labels
+ -> ingame planet defense ui labels
+
+- shop buy popup with more information
 - start with flagship instead of planet
 - planets, when captured get some sort of base defense
  -> starts off with a base armor
@@ -281,6 +285,12 @@ META:
 - Technology module to unlock abilities and stuff like range and defensebar
 
 ability ideas
+- obtain equilibrium drive
+ -> start with 1 ability
+ -> unlock more abilities by using abilities
+ -> upgrade abilities by using abilities
+ -> use eqidle skilltree
+ -> unlock new trees some other way (progression, other modules?)
 -> called flagship (appears visually on screen, origin of casts)
  -> use skilltree from eqidle with alternative paths based on use
   -> eg ion beam: boost friendly planet shield regen by 3x for 5 sec

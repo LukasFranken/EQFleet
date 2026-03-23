@@ -1,7 +1,6 @@
 package de.instinct.eqfleet.game.frontend.ui;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.api.core.API;
 import de.instinct.engine.model.GameState;
@@ -17,17 +16,23 @@ import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.shapes.EQRectangle;
 
 public class PauseUIRenderer {
 	
 	private ColorButton surrenderButton;
     private ColorButton resumeButton;
-    
-    public static Color bluroutColor;
+    private EQRectangle bluroutShape;
+    private Label workingLabel;
 	
 	public void init() {
-		bluroutColor = new Color(0f, 0f, 0f, 0.5f);
+		workingLabel = new Label("");
+		bluroutShape = EQRectangle.builder()
+				.bounds(GraphicsUtil.screenBounds())
+				.color(new Color(0f, 0f, 0f, 0.7f))
+				.filled(true)
+				.build();
 		surrenderButton = DefaultButtonFactory.colorButton("Surrender", () -> {
     		SurrenderMessage order = new SurrenderMessage();
     		order.gameUUID = GameModel.activeGameState.gameUUID;
@@ -41,10 +46,8 @@ public class PauseUIRenderer {
         	order.pause = false;
         	GameModel.outputMessageQueue.add(order);
     	});
-    	Rectangle surrenderBounds = new Rectangle((GraphicsUtil.screenBounds().width / 2) - 60, 200, 120, 40);
-    	surrenderButton.setBounds(surrenderBounds);
-        Rectangle resumeBounds = new Rectangle((GraphicsUtil.screenBounds().width / 2) - 60, 100, 120, 40);
-        resumeButton.setBounds(resumeBounds);
+    	surrenderButton.getBounds().set((GraphicsUtil.screenBounds().width / 2) - 60, 200, 120, 40);
+        resumeButton.getBounds().set((GraphicsUtil.screenBounds().width / 2) - 60, 100, 120, 40);
 	}
 	
 	public void render() {
@@ -58,31 +61,31 @@ public class PauseUIRenderer {
 	
 	private void renderCountdownScreen(GameState state) {
 		if (state.pauseData.resumeCountdownMS > 0) {
-			TextureManager.draw(TextureManager.createTexture(bluroutColor), GraphicsUtil.screenBounds());
-			Label pauseLabel = new Label(StringUtils.format(Math.min((state.pauseData.resumeCountdownMS / 1000) + 1, 3), 0));
-			pauseLabel.setType(FontType.GIANT);
-			pauseLabel.setBounds(new Rectangle(100, (GraphicsUtil.screenBounds().getHeight() / 2), GraphicsUtil.screenBounds().getWidth() - 200, 60));
-			pauseLabel.render();
+			Shapes.draw(bluroutShape);
+			workingLabel.setText(StringUtils.format(Math.min((state.pauseData.resumeCountdownMS / 1000) + 1, 3), 0));
+			workingLabel.setType(FontType.GIANT);
+			workingLabel.getBounds().set(100, (GraphicsUtil.screenBounds().getHeight() / 2), GraphicsUtil.screenBounds().getWidth() - 200, 60);
+			workingLabel.render();
 		}
 	}
 
 	private void renderPauseScreen(GameState state) {
 		if (state.pauseData.teamPause != 0) {
-			TextureManager.draw(TextureManager.createTexture(bluroutColor), GraphicsUtil.screenBounds());
+			Shapes.draw(bluroutShape);
 			Player self = EngineUtility.getPlayer(state.staticData.playerData.players, GameModel.playerId);
 			String teamName = self.teamId == state.pauseData.teamPause ? "OWN" : "ENEMY";
-			Label pauseLabel = new Label("PAUSED - " + teamName + " TEAM");
-			pauseLabel.setType(FontType.LARGE);
-			pauseLabel.setBounds(new Rectangle(50, (GraphicsUtil.screenBounds().getHeight() / 2) + 200, GraphicsUtil.screenBounds().getWidth() - 100, 60));
-			pauseLabel.setBackgroundColor(Color.BLACK);
-			pauseLabel.render();
+			workingLabel.setText("PAUSED - " + teamName + " TEAM");
+			workingLabel.setType(FontType.LARGE);
+			workingLabel.getBounds().set(50, (GraphicsUtil.screenBounds().getHeight() / 2) + 200, GraphicsUtil.screenBounds().getWidth() - 100, 60);
+			workingLabel.setBackgroundColor(Color.BLACK);
+			workingLabel.render();
 			
 			long teamPauseMS = state.pauseData.teamPausesMS.get(state.pauseData.teamPause);
-			Label remainingTimeLabel = new Label("Remaining Time: " + StringUtils.format(((float)(state.staticData.maxPauseMS - teamPauseMS) / 1000f), 0) + "s");
-			remainingTimeLabel.setType(FontType.NORMAL);
-			remainingTimeLabel.setBounds(new Rectangle(100, (GraphicsUtil.screenBounds().getHeight() / 2) + 100, GraphicsUtil.screenBounds().getWidth() - 200, 30));
-			remainingTimeLabel.setBackgroundColor(Color.BLACK);
-			remainingTimeLabel.render();
+			workingLabel.setText("Remaining Time: " + StringUtils.format(((float)(state.staticData.maxPauseMS - teamPauseMS) / 1000f), 0) + "s");
+			workingLabel.setType(FontType.NORMAL);
+			workingLabel.getBounds().set(100, (GraphicsUtil.screenBounds().getHeight() / 2) + 100, GraphicsUtil.screenBounds().getWidth() - 200, 30);
+			workingLabel.setBackgroundColor(Color.BLACK);
+			workingLabel.render();
 			
 			if (self.teamId == state.pauseData.teamPause && state.pauseData.currentPauseElapsedMS > state.staticData.minPauseMS) {
 				surrenderButton.render();
@@ -94,16 +97,16 @@ public class PauseUIRenderer {
 	private void renderLoadingScreen(GameState state) {
 		int i = 1;
 		float labelHeight = 30;
-		Label header = new Label("NAME - CONNECTED - LOADED");
-		header.setBounds(new Rectangle(0, 500, GraphicsUtil.screenBounds().getWidth(), labelHeight));
-		header.render();
+		workingLabel.setText("NAME - CONNECTED - LOADED");
+		workingLabel.getBounds().set(0, 500, GraphicsUtil.screenBounds().getWidth(), labelHeight);
+		workingLabel.render();
 		for (Player player : state.staticData.playerData.players) {
 			if (player.teamId == 0) continue;
 			for (PlayerConnectionStatus status : state.staticData.playerData.connectionStati) {
 				if (status.playerId == player.id) {
-					Label row = new Label(player.name + " - " + status.connected + " - " + status.loaded);
-					row.setBounds(new Rectangle(0, 500 - (i * labelHeight), GraphicsUtil.screenBounds().getWidth(), labelHeight));
-					row.render();
+					workingLabel.setText(player.name + " - " + status.connected + " - " + status.loaded);
+					workingLabel.getBounds().set(0, 500 - (i * labelHeight), GraphicsUtil.screenBounds().getWidth(), labelHeight);
+					workingLabel.render();
 					i++;
 				}
 			}
