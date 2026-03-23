@@ -49,15 +49,15 @@ public class StatCollector {
 			shipStatistic.setModel(ship.model);
 			
 			CoreStatistic newCoreStatistic = new CoreStatistic();
-			newCoreStatistic.setId(ship.core.id);
+			newCoreStatistic.setId(0);
 			shipStatistic.setCoreStatistic(newCoreStatistic);
 			
 			EngineStatistic newEngineStatistic = new EngineStatistic();
-			newEngineStatistic.setId(ship.engine.id);
+			newEngineStatistic.setId(0);
 			shipStatistic.setEngineStatistic(newEngineStatistic);
 			
 			HullStatistic newHullStatistic = new HullStatistic();
-			newHullStatistic.setId(ship.hull.id);
+			newHullStatistic.setId(0);
 			shipStatistic.setHullStatistic(newHullStatistic);
 			
 			shipStatistic.setShieldStatistics(new ArrayList<>());

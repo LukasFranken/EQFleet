@@ -1,19 +1,19 @@
 package de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.LoadingBar;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.shapes.EQRectangle;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
 public abstract class RectangularLoadingBar extends LoadingBar {
-
-	private Texture background;
+	
+	private EQRectangle backgroundShape;
 	
 	public RectangularLoadingBar() {
 		super();
@@ -31,7 +31,7 @@ public abstract class RectangularLoadingBar extends LoadingBar {
 	}
 
 	private void renderBackground() {
-		if (getBackground() != null) TextureManager.draw(getBackground(), getBounds());
+		if (backgroundShape != null) Shapes.draw(backgroundShape);
 	}
 
 	protected abstract void renderContent();

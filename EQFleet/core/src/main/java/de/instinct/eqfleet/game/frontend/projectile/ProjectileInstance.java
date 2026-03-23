@@ -12,7 +12,7 @@ public class ProjectileInstance {
 	
 	private int projectileId;
 	private Vector2 lastPosition;
-	private float aoeRadius;
+	private double aoeRadius;
 	private ModelInstance model;
 	private String particlesTag;
 	private boolean active;

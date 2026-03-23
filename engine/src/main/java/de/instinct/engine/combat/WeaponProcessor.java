@@ -12,15 +12,9 @@ import de.instinct.engine.stats.model.unit.component.types.WeaponStatistic;
 
 public class WeaponProcessor {
     
-    private ProjectileProcessor projectileProcessor;
-    
-    public WeaponProcessor() {
-        projectileProcessor = new ProjectileProcessor();
-    }
-    
-    public void updateWeapons(GameState state, Unit unit, long deltaTime) {
+    public static void updateWeapons(GameState state, Unit unit, long deltaTime) {
     	for (Weapon weapon : unit.weapons) {
-    		float cooledDownMS = deltaTime;
+    		double cooledDownMS = deltaTime;
     		if (weapon.currentCooldown <= deltaTime) {
     			cooledDownMS = weapon.currentCooldown;
     			weapon.currentCooldown = 0;
@@ -39,11 +33,11 @@ public class WeaponProcessor {
 		}
 	}
     
-    public void aimAtTarget(Unit unit, Unit closestTarget, GameState state, long deltaTime) {
+    public static void aimAtTarget(Unit unit, Unit closestTarget, GameState state, long deltaTime) {
         for (Weapon weapon : unit.weapons) {
         	if (weapon.currentCooldown == 0) {
                 if (EntityManager.entityDistance(unit, closestTarget) <= weapon.data.range) {
-                	state.entityData.projectiles.add(projectileProcessor.createProjectile(unit, weapon.id, closestTarget, state));
+                	state.entityData.projectiles.add(ProjectileProcessor.createProjectile(unit, weapon.id, closestTarget, state));
                     weapon.currentCooldown = weapon.data.cooldown;
                 }
             }

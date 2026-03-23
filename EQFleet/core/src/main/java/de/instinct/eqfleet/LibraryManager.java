@@ -55,12 +55,17 @@ public class LibraryManager {
 				.build());
 		fontTypes.add(FontTypeConfiguration.builder()
 				.type(FontType.BOLD)
-				.name("larabie")
+				.name("source_bold")
 				.size(16)
 				.build());
 		fontTypes.add(FontTypeConfiguration.builder()
 				.type(FontType.SMALL)
 				.name("larabie")
+				.size(11)
+				.build());
+		fontTypes.add(FontTypeConfiguration.builder()
+				.type(FontType.SMALL_BOLD)
+				.name("source_bold")
 				.size(11)
 				.build());
 		fontTypes.add(FontTypeConfiguration.builder()
@@ -71,6 +76,11 @@ public class LibraryManager {
 		fontTypes.add(FontTypeConfiguration.builder()
 				.type(FontType.MICRO)
 				.name("source")
+				.size(7)
+				.build());
+		fontTypes.add(FontTypeConfiguration.builder()
+				.type(FontType.MICRO_BOLD)
+				.name("source_bold")
 				.size(7)
 				.build());
 

@@ -52,7 +52,7 @@ public class GameVisualisationPanel extends JPanel {
 			g.setColor(Color.GRAY);
 			g.drawRect((int)screenPosition.x - 7, (int)screenPosition.y + 18, 30, 3);
 			g.setColor(Color.YELLOW);
-			g.drawRect((int)screenPosition.x - 6, (int)screenPosition.y + 19, (int)(28 * (turret.hull.currentStrength / turret.data.hull.strength)), 1);
+			g.drawRect((int)screenPosition.x - 6, (int)screenPosition.y + 19, (int)(28 * (turret.currentHull / turret.data.hullStrength)), 1);
 			int shieldCounter = 0;
 			for (Shield shield : turret.shields) {
 				g.setColor(Color.GRAY);
@@ -77,15 +77,15 @@ public class GameVisualisationPanel extends JPanel {
 		g.setColor(Color.LIGHT_GRAY);
 		g.drawString("Game Time: " + state.gameTimeMS + "ms", 8, 15);
 		g.drawString(state.started ? "running" : (state.gameTimeMS == 0 ? "not started" : "paused"), 8, 28);
-		g.drawString("Own CP: " + format(EngineUtility.getPlayer(state.staticData.playerData.players, 1).currentCommandPoints, 1), 190, 800);
-		g.drawString("Enemy1 CP: " + format(EngineUtility.getPlayer(state.staticData.playerData.players, 4).currentCommandPoints, 1), 190, 15);
-		if (state.staticData.playerData.players.size() > 2) {
-			g.drawString("Teammate1 CP: " + format(EngineUtility.getPlayer(state.staticData.playerData.players, 2).currentCommandPoints, 1), 190, 785);
-			g.drawString("Enemy2 CP: " + format(EngineUtility.getPlayer(state.staticData.playerData.players, 5).currentCommandPoints, 1), 190, 30);
+		g.drawString("Own RES: " + format(EngineUtility.getPlayer(state.staticData.playerData.players, 1).currentResources, 1), 190, 800);
+		g.drawString("Enemy1 RES: " + format(EngineUtility.getPlayer(state.staticData.playerData.players, 4).currentResources, 1), 190, 15);
+		if (state.staticData.playerData.players.size() > 3) {
+			g.drawString("Teammate1 RES: " + format(EngineUtility.getPlayer(state.staticData.playerData.players, 2).currentResources, 1), 190, 785);
+			g.drawString("Enemy2 RES: " + format(EngineUtility.getPlayer(state.staticData.playerData.players, 5).currentResources, 1), 190, 30);
 		}
-		if (state.staticData.playerData.players.size() > 4) {
-			g.drawString("Teammate2 CP: " + format(EngineUtility.getPlayer(state.staticData.playerData.players, 3).currentCommandPoints, 1), 190, 770);
-			g.drawString("Enemy3 CP: " + format(EngineUtility.getPlayer(state.staticData.playerData.players, 6).currentCommandPoints, 1), 190, 45);
+		if (state.staticData.playerData.players.size() > 5) {
+			g.drawString("Teammate2 RES: " + format(EngineUtility.getPlayer(state.staticData.playerData.players, 3).currentResources, 1), 190, 770);
+			g.drawString("Enemy3 RES: " + format(EngineUtility.getPlayer(state.staticData.playerData.players, 6).currentResources, 1), 190, 45);
 		}
 		g.drawString("Own ATP: " + format(state.teamATPs.get(1), 1), 8, 615);
 		g.drawString("Enemy ATP: " + format(state.teamATPs.get(2), 1), 8, 200);
@@ -94,7 +94,6 @@ public class GameVisualisationPanel extends JPanel {
 	private void renderPlanets(Graphics g, GameState state) {
 		for (Planet planet : state.entityData.planets) {
 			renderPlanetCircle(g, planet);
-			renderPlanetUI(g, planet);
 		}
 	}
 
@@ -109,19 +108,6 @@ public class GameVisualisationPanel extends JPanel {
 		           (int) screenPosition.y, 
 		           radius * 2, 
 		           radius * 2);
-	}
-
-	private void renderPlanetUI(Graphics g, Planet planet) {
-		Vector2 screenPosition = convertToScreenPosition(planet.position);
-		screenPosition.x -= 8;
-		screenPosition.y += 5;
-		g.setColor(Color.WHITE);
-		g.drawString(format(planet.currentResources, 1), (int) screenPosition.x, (int) screenPosition.y);
-		g.setColor(Color.GRAY);
-		g.drawString(planet.id + "", (int) screenPosition.x - 18, (int) screenPosition.y - 18);
-		Color planetColor = EngineUtils.getPlanetColor(planet.ownerId, planet.ancient);
-		g.setColor(planetColor);
-		
 	}
 	
 	private void renderShips(Graphics g, GameState state) {

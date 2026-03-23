@@ -9,15 +9,15 @@ import de.instinct.engine.stats.model.unit.UnitStatistic;
 
 public class DefenseProcessor {
 	
-	public void updateDefense(GameState state, Unit unit, float delta) {
+	public static void updateDefense(GameState state, Unit unit, double delta) {
 		PlayerStatistic originUnitOwnerStatistic = StatCollector.getPlayer(state.gameUUID, unit.ownerId);
 		UnitStatistic unitStat = originUnitOwnerStatistic.getUnit(unit.data.model);
-		if (unit.hull.currentStrength < unit.hull.data.strength) {
-			float hullRepaired = unit.hull.data.repairSpeed * (delta / 1000f);
-			unit.hull.currentStrength += hullRepaired;
-			if (unit.hull.currentStrength > unit.hull.data.strength) {
-				hullRepaired = unit.hull.data.strength - (unit.hull.currentStrength - hullRepaired);
-				unit.hull.currentStrength = unit.hull.data.strength;
+		if (unit.currentHull < unit.data.hullStrength) {
+			double hullRepaired = unit.data.hullRepairSpeed * (delta / 1000D);
+			unit.currentHull += hullRepaired;
+			if (unit.currentHull > unit.data.hullStrength) {
+				hullRepaired = unit.data.hullStrength - (unit.currentHull - hullRepaired);
+				unit.currentHull = unit.data.hullStrength;
 			}
 			if (unitStat.getHullStatistic() != null) unitStat.getHullStatistic().setHullRepaired(unitStat.getHullStatistic().getHullRepaired() + hullRepaired);
 		}

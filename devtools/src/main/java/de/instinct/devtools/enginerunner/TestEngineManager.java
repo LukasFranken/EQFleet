@@ -13,13 +13,11 @@ import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.Player;
 import de.instinct.engine.model.planet.PlanetData;
 import de.instinct.engine.model.ship.ShipData;
-import de.instinct.engine.model.ship.components.CoreData;
-import de.instinct.engine.model.ship.components.EngineData;
-import de.instinct.engine.model.ship.components.HullData;
 import de.instinct.engine.model.ship.components.ShieldData;
 import de.instinct.engine.model.ship.components.WeaponData;
 import de.instinct.engine.model.ship.components.types.CoreType;
 import de.instinct.engine.model.ship.components.types.EngineType;
+import de.instinct.engine.model.ship.components.types.HullType;
 import de.instinct.engine.model.ship.components.types.ShieldType;
 import de.instinct.engine.model.ship.components.types.WeaponType;
 import de.instinct.engine.model.turret.PlatformData;
@@ -38,7 +36,6 @@ public class TestEngineManager {
 	
 	public static GameState state;
 	
-	private static FleetEngine engine;
 	private static AiEngine aiEngine;
 	private static AIPlayerLoader aiPlayerLoader;
 	private static GameStateInitializer gameStateInitializer;
@@ -46,19 +43,17 @@ public class TestEngineManager {
 	public static void init() {
 		aiEngine = new AiEngine();
 		aiPlayerLoader = new AIPlayerLoader();
-		engine = new FleetEngine();
-		engine.initialize();
 		gameStateInitializer = new GameStateInitializer();
 		state = gameStateInitializer.initialize(getGameStateInitialization());
 	}
 	
 	public static void update(long deltaTime) {
-		engine.update(state, deltaTime);
+		FleetEngine.update(state, deltaTime);
 		for (Player player : state.staticData.playerData.players) {
 			if (player instanceof AiPlayer) {
 				List<GameOrder> aiOrders = aiEngine.act((AiPlayer)player, state);
 				for (GameOrder order : aiOrders) {
-					engine.queue(state, order);
+					FleetEngine.queue(state, order);
 				}
 			}
 		}
@@ -71,14 +66,14 @@ public class TestEngineManager {
 	}
 	
 	public static void queue(GameOrder order) {
-		engine.queue(state, order);
+		FleetEngine.queue(state, order);
 	}
 	
 	private static GameStateInitialization getGameStateInitialization() {
 		GameStateInitialization init = new GameStateInitialization();
 		init.setGameUUID(UUID.randomUUID().toString());
-		init.setPlayers(initializePlayers(3));
-		init.setMap(initializeMap(3));
+		init.setPlayers(initializePlayers(1));
+		init.setMap(initializeMap(1));
 		init.setAncientPlanetResourceDegradationFactor(0.5f);;
 		init.setGameTimeLimitMS(180_000);
 		init.setAtpToWin(50);
@@ -108,7 +103,7 @@ public class TestEngineManager {
 		players.add(aiPlayer);
 		
 		if (playerCount > 1) {
-			Player player2 = createPlayer();
+			Player player2 = aiPlayerLoader.initialize(500);
 			player2.id = 2;
 			player2.teamId = 1;
 			player2.name = "Player 2";
@@ -121,7 +116,7 @@ public class TestEngineManager {
 		}
 		
 		if (playerCount > 2) {
-			Player player3 = createPlayer();
+			Player player3 = aiPlayerLoader.initialize(10);
 			player3.id = 3;
 			player3.teamId = 1;
 			player3.name = "Player 3";
@@ -137,28 +132,22 @@ public class TestEngineManager {
 	
 	private static Player createNeutralPlayer() {
 		Player neutralPlayer = new Player();
-		neutralPlayer.commandPointsGenerationSpeed = 0;
-		neutralPlayer.startCommandPoints = 0;
-		neutralPlayer.maxCommandPoints = 0;
+		
 		PlanetData neutralPlanetData = new PlanetData();
-		neutralPlanetData.resourceGenerationSpeed = 0;
-		neutralPlanetData.maxResourceCapacity = 0;
+		neutralPlanetData.baseResourceGenerationSpeed = 0;
 		neutralPlayer.planetData = neutralPlanetData;
 		
 		neutralPlayer.turrets = new ArrayList<>();
 		TurretData neutralTurret = new TurretData();
 		neutralTurret.model = "projectile";
-		neutralTurret.cpCost = 0;
 		neutralTurret.resourceCost = 0;
 		
 		PlatformData neutralTurretPlatform = new PlatformData();
 		neutralTurretPlatform.type = PlatformType.SERVO;
-		neutralTurretPlatform.rotationSpeed = 1f;
 		neutralTurret.platform = neutralTurretPlatform;
-		
-		HullData neutralTurretHull = new HullData();
-		neutralTurretHull.strength = 50;
-		neutralTurret.hull = neutralTurretHull;
+
+		neutralTurret.hullType = HullType.CARBON;
+		neutralTurret.hullStrength = 50;
 		
 		neutralTurret.weapons = new ArrayList<>();
 		WeaponData neutralTurretWeapon = new WeaponData();
@@ -188,29 +177,25 @@ public class TestEngineManager {
 
 	private static Player createPlayer() {
 		Player player = new Player();
-		player.commandPointsGenerationSpeed = 0.1;
-		player.startCommandPoints = 3;
-		player.maxCommandPoints = 10;
+		player.resourceGenerationSpeed = 0.2;
+		player.maxResources = 10;
+		player.startResources = 3;
 		
 		PlanetData playerPlanetData = new PlanetData();
-		playerPlanetData.resourceGenerationSpeed = 1f;
-		playerPlanetData.maxResourceCapacity = 20;
+		playerPlanetData.baseResourceGenerationSpeed = 0.1f;
 		player.planetData = playerPlanetData;
 		
 		player.turrets = new ArrayList<>();
 		TurretData playerTurret = new TurretData();
 		playerTurret.model = "projectile";
-		playerTurret.cpCost = 3;
 		playerTurret.resourceCost = 10;
 		
 		PlatformData playerTurretPlatform = new PlatformData();
 		playerTurretPlatform.type = PlatformType.SERVO;
-		playerTurretPlatform.rotationSpeed = 1f;
 		playerTurret.platform = playerTurretPlatform;
 		
-		HullData playerTurretHull = new HullData();
-		playerTurretHull.strength = 30;
-		playerTurret.hull = playerTurretHull;
+		playerTurret.hullType = HullType.CARBON;
+		playerTurret.hullStrength = 30;
 		
 		playerTurret.weapons = new ArrayList<>();
 		WeaponData playerTurretWeapon = new WeaponData();
@@ -232,39 +217,33 @@ public class TestEngineManager {
 		player.ships = new ArrayList<>();
 		ShipData playerShipHawk = new ShipData();
 		playerShipHawk.model = "hawk";
-		playerShipHawk.cpCost = 1;
+		
+		playerShipHawk.coreType = CoreType.FIGHTER;
 		playerShipHawk.resourceCost = 3;
 		
-		CoreData playerShipHawkCore = new CoreData();
-		playerShipHawkCore.type = CoreType.FIGHTER;
-		playerShipHawk.core = playerShipHawkCore;
+		playerShipHawk.engineType = EngineType.ION;
+		playerShipHawk.speed = 60;
+		playerShipHawk.acceleration = 1f;
 		
-		EngineData playerShipHawkEngine = new EngineData();
-		playerShipHawkEngine.type = EngineType.ION;
-		playerShipHawkEngine.speed = 60;
-		playerShipHawkEngine.acceleration = 1f;
-		playerShipHawk.engine = playerShipHawkEngine;
-		
-		HullData playerShipHawkHull = new HullData();
-		playerShipHawkHull.strength = 1000;
-		playerShipHawk.hull = playerShipHawkHull;
+		playerShipHawk.hullType = HullType.CARBON;
+		playerShipHawk.hullStrength = 20;
 
 		playerShipHawk.weapons = new ArrayList<>();
 		WeaponData playerShipWeaponHawk2 = new WeaponData();
 		playerShipWeaponHawk2.type = WeaponType.PROJECTILE;
 		playerShipWeaponHawk2.damage = 22;
 		playerShipWeaponHawk2.range = 160f;
-		playerShipWeaponHawk2.cooldown = 3000;
+		playerShipWeaponHawk2.cooldown = 1000;
 		playerShipWeaponHawk2.speed = 80f;
 		playerShipHawk.weapons.add(playerShipWeaponHawk2);
 		
-		WeaponData playerShipWeaponHawk = new WeaponData();
+		/*WeaponData playerShipWeaponHawk = new WeaponData();
 		playerShipWeaponHawk.type = WeaponType.BEAM;
 		playerShipWeaponHawk.damage = 5;
 		playerShipWeaponHawk.range = 120f;
 		playerShipWeaponHawk.cooldown = 2000;
 		playerShipWeaponHawk.speed = 80f;
-		playerShipHawk.weapons.add(playerShipWeaponHawk);
+		playerShipHawk.weapons.add(playerShipWeaponHawk);*/
 		
 		playerShipHawk.shields = new ArrayList<>();
 		ShieldData playerShipShieldHawk = new ShieldData();

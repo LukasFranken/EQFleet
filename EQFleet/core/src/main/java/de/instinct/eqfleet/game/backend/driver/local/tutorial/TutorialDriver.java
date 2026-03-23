@@ -1,5 +1,6 @@
 package de.instinct.eqfleet.game.backend.driver.local.tutorial;
 
+import de.instinct.engine.FleetEngine;
 import de.instinct.engine.net.message.NetworkMessage;
 import de.instinct.engine.net.message.types.FleetMovementMessage;
 import de.instinct.engine.net.message.types.LoadedMessage;
@@ -57,7 +58,7 @@ public class TutorialDriver extends LocalDriver {
 		NetworkMessage newMessage = GameModel.outputMessageQueue.next();
 		if (newMessage != null) {
 			if (newMessage instanceof FleetMovementMessage) {
-				engine.queue(GameModel.activeGameState, getOrder((FleetMovementMessage)newMessage));
+				FleetEngine.queue(GameModel.activeGameState, getOrder((FleetMovementMessage)newMessage));
 			}
 			if (newMessage instanceof LoadedMessage) {
 				GameModel.activeGameState.started = true;

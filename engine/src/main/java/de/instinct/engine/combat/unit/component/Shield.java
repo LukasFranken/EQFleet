@@ -7,7 +7,7 @@ import lombok.ToString;
 public class Shield {
 	
 	public int id;
-	public float currentStrength;
+	public double currentStrength;
 	public ShieldData data;
 
 }

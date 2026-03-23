@@ -5,52 +5,48 @@ import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.Player;
 import de.instinct.engine.model.planet.Planet;
 import de.instinct.engine.model.planet.PlanetData;
+import de.instinct.engine.player.PlayerProcessor;
 import de.instinct.engine.stats.StatCollector;
 import de.instinct.engine.stats.model.PlayerStatistic;
 import de.instinct.engine.util.EngineUtility;
 
-public class PlanetProcessor extends EntityProcessor {
+public class PlanetProcessor {
 	
-	public void update(GameState state, long deltaMS) {
+	public static void update(GameState state, long deltaMS) {
 		for (Planet planet : state.entityData.planets) {
 	        if (planet.ownerId != 0) {
 	            Player owner = EngineUtility.getPlayer(state.staticData.playerData.players, planet.ownerId);
 	            if (planet.ancient) {
-	            	double available = planet.currentResources;
+	            	double available = owner.currentResources;
 	            	double desired = ((double) deltaMS / 1000D) * state.staticData.ancientPlanetResourceDegradationFactor;
-	            	double actualGain = Math.min(available, desired);
+	            	double actualLoss = Math.min(available, desired);
 
-	            	planet.currentResources -= actualGain;
-	            	double newATPValue = state.teamATPs.get(owner.teamId) + (actualGain / state.staticData.ancientPlanetResourceDegradationFactor);
+	            	double atpGain = actualLoss / state.staticData.ancientPlanetResourceDegradationFactor;
+	            	double newATPValue = state.teamATPs.get(owner.teamId) + atpGain;
 	            	state.teamATPs.put(owner.teamId, newATPValue > state.staticData.atpToWin ? state.staticData.atpToWin : newATPValue);
 
-	            	if (planet.currentResources <= 0) {
+	            	if (available < desired) {
 	            	    planet.ownerId = 0;
-	            	    planet.currentResources = 0;
+	            	    owner.currentResources = 0;
 	            	}
 	            	
 	            	PlayerStatistic playerStat = StatCollector.getPlayer(state.gameUUID, owner.id);
-	            	playerStat.setAtpGained(playerStat.getAtpGained() + (actualGain / state.staticData.ancientPlanetResourceDegradationFactor));
+	            	playerStat.setAtpGained(playerStat.getAtpGained() + atpGain);
 	            } else {
-	                double resourceIncrease = calculateResourceGeneration(owner, deltaMS);
-	                planet.currentResources += resourceIncrease;
-	                if (planet.currentResources > owner.planetData.maxResourceCapacity) {
-	                	planet.currentResources = owner.planetData.maxResourceCapacity;
-	                }
+	                PlayerProcessor.addResources(owner, calculateResourceGeneration(planet, deltaMS));
 	            }
 	        }
 	    }
 	}
 	
-	private double calculateResourceGeneration(Player player, long deltaMS) {
-		return ((double)deltaMS / 1000D) * player.planetData.resourceGenerationSpeed;
+	private static double calculateResourceGeneration(Planet planet, long deltaMS) {
+		return ((double)deltaMS / 1000D) * planet.resourceGenerationSpeed;
 	}
 	
-	public Planet createPlanet(PlanetData planetData, GameState state) {
+	public static Planet createPlanet(PlanetData planetData, GameState state) {
 		Planet planet = new Planet();
-		super.initializeEntity(planet, state);
-		planet.resourceGenerationSpeed = planetData.resourceGenerationSpeed;
-		planet.maxResourceCapacity = planetData.maxResourceCapacity;
+		EntityProcessor.initializeEntity(planet, state);
+		planet.resourceGenerationSpeed = planetData.baseResourceGenerationSpeed;
 		planet.radius = EngineUtility.PLANET_RADIUS;
 		return planet;
 	}

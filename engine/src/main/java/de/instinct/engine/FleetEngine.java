@@ -10,21 +10,14 @@ import de.instinct.engine.util.VictoryCalculator;
 
 public class FleetEngine {
 	
-	private final int UPDATE_INTERVAL_MS = 20;
+	private static final int UPDATE_INTERVAL_MS = 20;
 	
-	private PlanetProcessor planetProcessor;
-	private PlayerProcessor playerProcessor;
-	private CombatProcessor combatProcessor;
-	private MetaProcessor metaProcessor;
-	
-	public void initialize() {
-		planetProcessor = new PlanetProcessor();
-		playerProcessor = new PlayerProcessor();
-		combatProcessor = new CombatProcessor();
-		metaProcessor = new MetaProcessor();
+	public static void initialize(GameState state) {
+		PlayerProcessor.initialize(state);
+		CombatProcessor.initialize(state);
 	}
 
-	public void update(GameState state, long progressionMS) {
+	public static void update(GameState state, long progressionMS) {
 		try {
 			if (state.started && state.resultData.winner == 0) {
 				advanceTime(state, progressionMS);
@@ -36,7 +29,7 @@ public class FleetEngine {
 		}
 	}
 	
-	private void integrateNewOrders(GameState state) {
+	private static void integrateNewOrders(GameState state) {
 		while (!state.orderData.unprocessedOrders.isEmpty() && state.orderData.unprocessedOrders.peek().processGameTimeStamp <= state.gameTimeMS) {
 			GameOrder order = state.orderData.unprocessedOrders.poll();
 			if (processOrder(state, order)) {
@@ -46,28 +39,28 @@ public class FleetEngine {
 		}
 	}
 
-	private boolean processOrder(GameState state, GameOrder order) {
-		if (combatProcessor.integrateNewOrder(state, order)) return true;
-		if (metaProcessor.integrateNewOrder(state, order)) return true;
+	private static boolean processOrder(GameState state, GameOrder order) {
+		if (CombatProcessor.integrateNewOrder(state, order)) return true;
+		if (MetaProcessor.integrateNewOrder(state, order)) return true;
 		return false;
 	}
 
-	private void advanceTime(GameState state, long progressionMS) {
+	private static void advanceTime(GameState state, long progressionMS) {
 		long remainingTime = progressionMS;
 		while (remainingTime > 0) {
 			long deltaTime = Math.min(UPDATE_INTERVAL_MS, remainingTime);
 			remainingTime -= deltaTime;
-			metaProcessor.update(state, deltaTime);
+			MetaProcessor.update(state, deltaTime);
 			if (state.pauseData.teamPause == 0 && state.pauseData.resumeCountdownMS <= 0) {
-				combatProcessor.update(state, deltaTime);
-			    planetProcessor.update(state, deltaTime);
-			    playerProcessor.update(state, deltaTime);
+				CombatProcessor.update(state, deltaTime);
+				PlanetProcessor.update(state, deltaTime);
+			    PlayerProcessor.update(state, deltaTime);
 			    state.gameTimeMS += deltaTime;
 			}
 		}
 	}
 	
-	public void queue(GameState state, GameOrder order) {
+	public static void queue(GameState state, GameOrder order) {
 		state.orderData.unprocessedOrders.add(order);
 	}
 	

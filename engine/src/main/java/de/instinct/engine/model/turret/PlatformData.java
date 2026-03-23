@@ -6,6 +6,5 @@ import lombok.ToString;
 public class PlatformData {
 	
 	public PlatformType type;
-	public float rotationSpeed;
 
 }

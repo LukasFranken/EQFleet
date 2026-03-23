@@ -12,17 +12,13 @@ import de.instinct.eqfleet.game.GameModel;
 
 public abstract class Driver {
 	
-	protected FleetEngine engine;
-	
 	private ScheduledExecutorService scheduler;
 	
 	public Driver() {
-		engine = new FleetEngine();
 		scheduler = Executors.newSingleThreadScheduledExecutor();
 	}
 
 	public void start() {
-		engine.initialize();
 		setup();
 	}
 	
@@ -39,7 +35,7 @@ public abstract class Driver {
 	protected void updateEngine() {
 		if (GameModel.activeGameState != null && GameModel.activeGameState.started && !GameModel.paused) {
     		long currentTime = System.currentTimeMillis();
-        	engine.update(GameModel.activeGameState, currentTime - GameModel.lastUpdateTimestampMS);
+    		FleetEngine.update(GameModel.activeGameState, currentTime - GameModel.lastUpdateTimestampMS);
         	GameModel.lastUpdateTimestampMS = currentTime;
     	}
 	}

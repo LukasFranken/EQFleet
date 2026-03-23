@@ -11,10 +11,10 @@ public abstract class Projectile extends Entity {
 	public int weaponId;
 	public String originModel;
 	public WeaponType weaponType;
-	public float movementSpeed;
-	public float damage;
-	public float aoeRadius;
-	public float elapsedMS;
+	public double movementSpeed;
+	public double damage;
+	public double aoeRadius;
+	public int elapsedMS;
 	public int lifetimeMS;
 
 	public Projectile clone() {

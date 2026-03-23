@@ -14,10 +14,10 @@ public class Player {
 	public int teamId;
 	public String name;
 	
-	public double currentCommandPoints;
-	public double commandPointsGenerationSpeed;
-	public double startCommandPoints;
-	public double maxCommandPoints;
+	public double currentResources;
+	public double resourceGenerationSpeed;
+	public double startResources;
+	public double maxResources;
 	
 	public PlanetData planetData;
 	public List<ShipData> ships;

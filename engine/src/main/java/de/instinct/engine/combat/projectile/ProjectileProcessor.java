@@ -26,17 +26,19 @@ import de.instinct.engine.stats.model.unit.component.types.WeaponStatistic;
 import de.instinct.engine.util.EngineUtility;
 import de.instinct.engine.util.VectorUtil;
 
-public class ProjectileProcessor extends EntityProcessor {
+public class ProjectileProcessor {
+	
+	private static List<ShieldDamageInstance> shieldDamageInstances = new ArrayList<>();
 
-    public void updateProjectiles(GameState state, long deltaTime) {
+    public static void updateProjectiles(GameState state, long deltaTime) {
         for (Projectile projectile : state.entityData.projectiles) {
         	updateProjectile(projectile, state, deltaTime);
         }
-        super.removeDestroyed(state.entityData.projectiles.iterator());
+        EntityProcessor.removeDestroyed(state.entityData.projectiles.iterator());
     }
 
-    private void updateProjectile(Projectile projectile, GameState state, long deltaTime) {
-    	super.updateEntity(projectile, state, deltaTime);
+    private static void updateProjectile(Projectile projectile, GameState state, long deltaTime) {
+    	EntityProcessor.updateEntity(projectile, state, deltaTime);
         calculateMovement(projectile, state, deltaTime);
         calculateHit(projectile, state);
         if (projectile.elapsedMS >= projectile.lifetimeMS) {
@@ -44,14 +46,14 @@ public class ProjectileProcessor extends EntityProcessor {
 		}
     }
 
-    private void calculateMovement(Projectile projectile, GameState state, float deltaTime) {
+    private static void calculateMovement(Projectile projectile, GameState state, float deltaTime) {
     	if (projectile.lifetimeMS < projectile.elapsedMS + deltaTime) {
 			deltaTime = projectile.lifetimeMS - projectile.elapsedMS;
 			projectile.elapsedMS = projectile.lifetimeMS;
 		} else {
 			projectile.elapsedMS += deltaTime;
 		}
-    	float distanceTraveled = projectile.movementSpeed * ((float) deltaTime / 1000f);
+    	double distanceTraveled = projectile.movementSpeed * ((float) deltaTime / 1000f);
         Vector2 targetPosition = projectile.position;
         if (projectile instanceof HomingProjectile) {
         	HomingProjectile homingProjectile = (HomingProjectile) projectile;
@@ -60,24 +62,24 @@ public class ProjectileProcessor extends EntityProcessor {
         		target = findNewTarget(homingProjectile, state);
         	}
         	if (target == null) {
-        		targetPosition = VectorUtil.getDirectionalTargetPosition(projectile.position, homingProjectile.lastDirection, distanceTraveled);
+        		targetPosition = VectorUtil.getDirectionalTargetPosition(projectile.position, homingProjectile.lastDirection, (float) distanceTraveled);
         	} else {
-        		targetPosition = VectorUtil.getTargetPosition(projectile.position, target.position, distanceTraveled);
+        		targetPosition = VectorUtil.getTargetPosition(projectile.position, target.position, (float) distanceTraveled);
         		homingProjectile.lastDirection = VectorUtil.getDirection(projectile.position, target.position);
         	}
         }
 		if (projectile instanceof DirectionalProjectile) {
 			DirectionalProjectile directionalProjectile = (DirectionalProjectile) projectile;
-			targetPosition = VectorUtil.getDirectionalTargetPosition(projectile.position, directionalProjectile.direction, distanceTraveled);
+			targetPosition = VectorUtil.getDirectionalTargetPosition(projectile.position, directionalProjectile.direction, (float) distanceTraveled);
 		}
         projectile.position = targetPosition;
     }
 
-    private Unit findNewTarget(HomingProjectile projectile, GameState state) {
+    private static Unit findNewTarget(HomingProjectile projectile, GameState state) {
 		return UnitProcessor.getClosestTarget(projectile, state);
 	}
 
-	private void calculateHit(Projectile projectile, GameState state) {
+	private static void calculateHit(Projectile projectile, GameState state) {
     	Player projectileOwner = EngineUtility.getPlayer(state.staticData.playerData.players, projectile.ownerId);
         for (Ship ship : state.entityData.ships) {
         	if (checkHit(projectile, projectileOwner, ship, state)) {
@@ -98,27 +100,25 @@ public class ProjectileProcessor extends EntityProcessor {
         
     }
 
-    private boolean checkHit(Projectile projectile, Player projectileOwner, Unit potencialTarget, GameState state) {
+    private static boolean checkHit(Projectile projectile, Player projectileOwner, Unit potencialTarget, GameState state) {
     	float distanceToTarget = EntityManager.entityDistance(projectile, potencialTarget);
     	if (distanceToTarget <= 0) {
     		Player targetOwner = EngineUtility.getPlayer(state.staticData.playerData.players, potencialTarget.ownerId);
-        	if (projectileOwner.teamId != targetOwner.teamId && potencialTarget.hull != null) {
+        	if (projectileOwner.teamId != targetOwner.teamId) {
         		return true;
         	}
     	}
     	return false;
 	}
 
-	private void calculateDamage(Projectile projectile, Unit target, GameState state) {
+	private static void calculateDamage(Projectile projectile, Unit target, GameState state) {
         if (projectile.aoeRadius > 0) {
         	Player projectileOwner = EngineUtility.getPlayer(state.staticData.playerData.players, projectile.ownerId);
         	for (Ship pentencialTargetShip : state.entityData.ships) {
         		float distanceToTarget = EntityManager.entityDistance(projectile, pentencialTargetShip);
         		if (distanceToTarget < projectile.aoeRadius) {
         			if (projectileOwner.teamId != EngineUtility.getPlayer(state.staticData.playerData.players, pentencialTargetShip.ownerId).teamId) {
-        				if (pentencialTargetShip.hull != null) {
-        					dealDamage(projectile, pentencialTargetShip, state);
-        				}
+        				dealDamage(projectile, pentencialTargetShip, state);
         			}
         		}
         	}
@@ -126,9 +126,7 @@ public class ProjectileProcessor extends EntityProcessor {
         		float distanceToTarget = EntityManager.entityDistance(projectile, pentencialTargetTurret);
         		if (distanceToTarget < projectile.aoeRadius) {
         			if (projectileOwner.teamId != EngineUtility.getPlayer(state.staticData.playerData.players, pentencialTargetTurret.ownerId).teamId) {
-        				if (pentencialTargetTurret.hull != null) {
-        					dealDamage(projectile, pentencialTargetTurret, state);
-        				}
+        				dealDamage(projectile, pentencialTargetTurret, state);
         			}
         		}
         	}
@@ -137,17 +135,14 @@ public class ProjectileProcessor extends EntityProcessor {
         }
     }
 
-    private void dealDamage(Projectile projectile, Unit target, GameState state) {
-    	float remainingDamage = projectile.damage;
-		
-    	List<ShieldDamageInstance> shieldDamageInstances = new ArrayList<>();
-    	
-    	float finalHullDamage = 0f;
+    private static void dealDamage(Projectile projectile, Unit target, GameState state) {
+    	double remainingDamage = projectile.damage;
+    	double finalHullDamage = 0f;
 		for (Shield shield : target.shields) {
 			if (remainingDamage <= 0) break;
 			switch (shield.data.type) {
 			case PLASMA:
-				float shieldDamage = Math.min(shield.currentStrength, remainingDamage);
+				double shieldDamage = Math.min(shield.currentStrength, remainingDamage);
 				shield.currentStrength -= shieldDamage;
 				remainingDamage -= shieldDamage;
 				ShieldDamageInstance plasmaDamageInstance = new ShieldDamageInstance();
@@ -172,13 +167,13 @@ public class ProjectileProcessor extends EntityProcessor {
 		}
 		
 		if (remainingDamage > 0) {
-			target.hull.currentStrength -= remainingDamage;
+			target.currentHull -= remainingDamage;
 			finalHullDamage = remainingDamage;
 		}
 		
-		if (target.hull.currentStrength <= 0) {
-			finalHullDamage = remainingDamage + target.hull.currentStrength;
-			target.hull.currentStrength = 0;
+		if (target.currentHull <= 0) {
+			finalHullDamage = remainingDamage + target.currentHull;
+			target.currentHull = 0;
 		}
 		
 		PlayerStatistic originUnitOwnerStatistic = StatCollector.getPlayer(state.gameUUID, projectile.ownerId);
@@ -188,7 +183,7 @@ public class ProjectileProcessor extends EntityProcessor {
 				if (weaponStat.getId() == projectile.weaponId) {
 					weaponStat.setDamageDealt(weaponStat.getDamageDealt() + projectile.damage);
 					
-					if (target.hull.currentStrength <= 0) {
+					if (target.currentHull <= 0) {
 						weaponStat.setKills(weaponStat.getKills() + 1);
 					}
 				}
@@ -208,9 +203,10 @@ public class ProjectileProcessor extends EntityProcessor {
 				}
 			}
 		}
+		shieldDamageInstances.clear();
 	}
 
-	public Projectile createProjectile(Unit origin, int weaponId, Unit target, GameState state) {
+	public static Projectile createProjectile(Unit origin, int weaponId, Unit target, GameState state) {
         Projectile projectile = null;
         Weapon weapon = null;
         for (Weapon w : origin.weapons) {
@@ -234,7 +230,7 @@ public class ProjectileProcessor extends EntityProcessor {
 			break;
 		}
         
-        super.initializeEntity(projectile, state);
+        EntityProcessor.initializeEntity(projectile, state);
         projectile.ownerId = origin.ownerId;
         projectile.weaponId = weapon.id;
         projectile.originModel = origin.data.model;
@@ -271,7 +267,7 @@ public class ProjectileProcessor extends EntityProcessor {
         return projectile;
     }
     
-    private Vector2 calculateInterceptionDirection(Unit origin, Projectile projectile, Unit target, GameState state) {
+    private static Vector2 calculateInterceptionDirection(Unit origin, Projectile projectile, Unit target, GameState state) {
         Vector2 directAim = VectorUtil.getDirection(projectile.position, target.position);
         
         if (target instanceof Ship) {
@@ -280,24 +276,24 @@ public class ProjectileProcessor extends EntityProcessor {
                 Planet targetPlanet = EngineUtility.getPlanet(state.entityData.planets, ship.targetPlanetId);
                 if (targetPlanet != null) {
                     Vector2 shipDirection = VectorUtil.getDirection(ship.position, targetPlanet.position);
-                    Vector2 shipVelocity = new Vector2(shipDirection).scl(((ShipData)ship.data).engine.speed);
+                    Vector2 shipVelocity = new Vector2(shipDirection).scl(((ShipData)ship.data).speed);
                     
                     Vector2 currentShipPosition = new Vector2(ship.position);
-                    float projectileSpeed = projectile.movementSpeed;
+                    double projectileSpeed = projectile.movementSpeed;
                     
-                    float initialDistance = projectile.position.dst(currentShipPosition);
-                    float estimatedTime = initialDistance / projectileSpeed;
+                    double initialDistance = projectile.position.dst(currentShipPosition);
+                    double estimatedTime = initialDistance / projectileSpeed;
                     
                     Vector2 predictedPosition = new Vector2(currentShipPosition).add(
-                        new Vector2(shipVelocity).scl(estimatedTime)
+                        new Vector2(shipVelocity).scl((float) estimatedTime)
                     );
                     
                     for (int i = 0; i < 5; i++) {
-                        float distance = projectile.position.dst(predictedPosition);
-                        float timeToImpact = distance / projectileSpeed;
+                    	double distance = projectile.position.dst(predictedPosition);
+                    	double timeToImpact = distance / projectileSpeed;
                         
                         predictedPosition = new Vector2(currentShipPosition).add(
-                            new Vector2(shipVelocity).scl(timeToImpact)
+                            new Vector2(shipVelocity).scl((float) timeToImpact)
                         );
                     }
                     

@@ -2,6 +2,7 @@ package de.instinct.eqfleet.game.frontend.ui;
 
 import de.instinct.engine.model.GameState;
 import de.instinct.engine.model.Player;
+import de.instinct.engine.model.planet.Planet;
 import de.instinct.engine.util.EngineUtility;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.frontend.ui.model.PlayerData;
@@ -43,6 +44,16 @@ public class UIDataUtility {
 			}
 		}
 		return playerData;
+	}
+	
+	public static double calculateTotalResourceGenerationSpeed(GameState state, Player player) {
+		double totalResourceGenerationSpeed = player.resourceGenerationSpeed;
+		for (Planet planet : state.entityData.planets) {
+			if (planet.ownerId == player.id) {
+				totalResourceGenerationSpeed += planet.resourceGenerationSpeed;
+			}
+		}
+		return totalResourceGenerationSpeed;
 	}
 	
 }

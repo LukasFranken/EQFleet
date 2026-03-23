@@ -32,16 +32,14 @@ GENERAL:
   x game
 
 REDESIGN:
-- remove CP (until QLink)
- -> planetary resources are the only currency
- -> planetary resources are global (no ugly circle)
 - start with flagship instead of planet
 - planets, when captured get some sort of base defense
  -> starts off with a base armor
-- show numbers next to planet/flagship defense
 - show resourcebar numbers
 - make componentlevels buyable
  -> level through use only for QLink
+- enable shipmodule upgrading after few lvls
+ -> short tutorial where player buys weapon upgrade and feels it
  
 - construction mode
  -> screen blurs except for planets
@@ -158,6 +156,8 @@ Jan 30 21:46:58 ip-172-30-0-159.eu-central-1.compute.internal bash[10704]: at ja
   - create linux command to see status of all fleet services
 ---------------------------------------------------------------------
 FUTURE RELEASES TODO:
+- refactor ui element rendering and modularity
+
 - players can form alliances
  -> alliances can be leveled
  -> levels provide buffs and access to more players/functions

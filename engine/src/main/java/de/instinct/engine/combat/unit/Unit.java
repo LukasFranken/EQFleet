@@ -2,7 +2,6 @@ package de.instinct.engine.combat.unit;
 
 import java.util.List;
 
-import de.instinct.engine.combat.unit.component.Hull;
 import de.instinct.engine.combat.unit.component.Shield;
 import de.instinct.engine.combat.unit.component.Weapon;
 import de.instinct.engine.entity.Entity;
@@ -13,7 +12,7 @@ import lombok.ToString;
 public class Unit extends Entity {
 
 	public int originPlanetId;
-	public Hull hull;
+	public double currentHull;
 	public List<Weapon> weapons;
 	public List<Shield> shields;
 	public UnitData data;

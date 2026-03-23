@@ -7,7 +7,7 @@ import lombok.ToString;
 public class ShieldData extends ComponentData {
 	
 	public ShieldType type;
-	public float strength;
-	public float generation;
+	public double strength;
+	public double generation;
 
 }

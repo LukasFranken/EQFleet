@@ -80,7 +80,7 @@ public class PostGameExperienceElement implements PostGameElement {
 				rankUpElementList.getElements().add(newRankLabel);
 				
 				for (CommanderUpgrade upgrade : rankUpCommanderUpgrade.getUpgrades()) {
-					ElementStack stack = DefaultLabelFactory.createLabelStack(upgrade.getStat().getLabel(), "+" + (upgrade.getStat() == CommanderStat.CP_PER_SECOND ? StringUtils.format(upgrade.getValue(), 2) : StringUtils.format(upgrade.getValue(), 0)));
+					ElementStack stack = DefaultLabelFactory.createLabelStack(upgrade.getStat().getLabel(), "+" + (upgrade.getStat() == CommanderStat.RES_PER_SECOND ? StringUtils.format(upgrade.getValue(), 2) : StringUtils.format(upgrade.getValue(), 0)));
 					stack.setFixedWidth(120);
 					rankUpElementList.getElements().add(stack);
 				}

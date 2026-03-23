@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.badlogic.gdx.math.Vector2;
 
-import de.instinct.api.core.API;
 import de.instinct.api.matchmaking.model.FactionMode;
 import de.instinct.api.matchmaking.model.GameMode;
 import de.instinct.api.matchmaking.model.GameType;
@@ -13,17 +12,9 @@ import de.instinct.api.matchmaking.model.VersusMode;
 import de.instinct.api.meta.dto.LoadoutData;
 import de.instinct.engine.model.AiPlayer;
 import de.instinct.engine.model.Player;
-import de.instinct.engine.model.planet.PlanetData;
-import de.instinct.engine.model.ship.components.HullData;
-import de.instinct.engine.model.ship.components.ShieldData;
-import de.instinct.engine.model.ship.components.WeaponData;
-import de.instinct.engine.model.ship.components.types.ShieldType;
-import de.instinct.engine.model.ship.components.types.WeaponType;
-import de.instinct.engine.model.turret.PlatformData;
-import de.instinct.engine.model.turret.PlatformType;
-import de.instinct.engine.model.turret.TurretData;
 import de.instinct.engine.util.EngineUtility;
 import de.instinct.engine_api.ai.service.AIPlayerLoader;
+import de.instinct.engine_api.ai.service.NeutralPlayerLoader;
 import de.instinct.engine_api.core.model.GameMap;
 import de.instinct.engine_api.core.model.GameStateInitialization;
 import de.instinct.engine_api.core.model.PlanetInitialization;
@@ -32,9 +23,11 @@ import de.instinct.engine_api.core.service.EngineDataInterface;
 public class CustomLoader {
 
 	private AIPlayerLoader aiPlayerLoader;
+	private NeutralPlayerLoader neutralPlayerLoader;
 
 	public CustomLoader() {
 		aiPlayerLoader = new AIPlayerLoader();
+		neutralPlayerLoader = new NeutralPlayerLoader();
 	}
 	
 	public GameStateInitialization generateInitialGameState(LoadoutData loadout, int threatLevel) {
@@ -57,13 +50,13 @@ public class CustomLoader {
 	public List<Player> loadPlayers(LoadoutData loadout, int threatLevel) {
 		List<Player> players = new ArrayList<>();
 		
-		Player neutralPlayer = createNeutralPlayer(threatLevel);
+		Player neutralPlayer = neutralPlayerLoader.createNeutralPlayer(threatLevel);
 		neutralPlayer.id = 0;
 		neutralPlayer.teamId = 0;
 		neutralPlayer.name = "Neutral Player";
 		players.add(neutralPlayer);
 		
-		Player userPlayer = getPlayer(loadout);
+		Player userPlayer = EngineDataInterface.getPlayer(loadout);
 		userPlayer.id = 1;
 		userPlayer.teamId = 1;
 		players.add(userPlayer);
@@ -74,68 +67,6 @@ public class CustomLoader {
 		players.add(aiPlayer);
 		
 		return players;
-	}
-	
-	private Player createNeutralPlayer(int threatLevel) {
-		Player neutralPlayer = new Player();
-		neutralPlayer.commandPointsGenerationSpeed = 0;
-		neutralPlayer.startCommandPoints = 0;
-		neutralPlayer.maxCommandPoints = 0;
-		PlanetData neutralPlanetData = new PlanetData();
-		neutralPlanetData.resourceGenerationSpeed = 0;
-		neutralPlanetData.maxResourceCapacity = 0;
-		neutralPlayer.planetData = neutralPlanetData;
-		
-		neutralPlayer.turrets = new ArrayList<>();
-		TurretData neutralTurret = new TurretData();
-		neutralTurret.model = "projectile";
-		neutralTurret.cpCost = 0;
-		neutralTurret.resourceCost = 0;
-		
-		PlatformData neutralTurretPlatform = new PlatformData();
-		neutralTurretPlatform.type = PlatformType.SERVO;
-		neutralTurretPlatform.rotationSpeed = 1f;
-		neutralTurret.platform = neutralTurretPlatform;
-		
-		HullData neutralTurretHull = new HullData();
-		neutralTurretHull.strength = 50;
-		neutralTurret.hull = neutralTurretHull;
-		
-		neutralTurret.weapons = new ArrayList<>();
-		WeaponData neutralTurretWeapon = new WeaponData();
-		neutralTurretWeapon.type = WeaponType.MISSILE;
-		neutralTurretWeapon.damage = 2 + (2 * ((float)threatLevel/100f));;
-		neutralTurretWeapon.range = 100f;
-		neutralTurretWeapon.cooldown = 1000;
-		neutralTurretWeapon.speed = 120f;
-		neutralTurret.weapons.add(neutralTurretWeapon);
-		
-		neutralTurret.shields = new ArrayList<>();
-		ShieldData neutralTurretShield1 = new ShieldData();
-		neutralTurretShield1.type = ShieldType.NULLPOINT;
-		neutralTurretShield1.strength = 3f;
-		neutralTurretShield1.generation = 0.2f;
-		neutralTurret.shields.add(neutralTurretShield1);
-		ShieldData neutralTurretShield2 = new ShieldData();
-		neutralTurretShield2.type = ShieldType.PLASMA;
-		neutralTurretShield2.strength = 10f;
-		neutralTurretShield2.generation = 2f;
-		neutralTurret.shields.add(neutralTurretShield2);
-		neutralPlayer.turrets.add(neutralTurret);
-		
-		neutralPlayer.ships = new ArrayList<>();
-		return neutralPlayer;
-	}
-	
-	private Player getPlayer(LoadoutData loadout) {
-		Player newPlayer = new Player();
-		newPlayer.commandPointsGenerationSpeed = loadout.getCommander().getCommandPointsGenerationSpeed();
-		newPlayer.startCommandPoints = loadout.getCommander().getStartCommandPoints();
-		newPlayer.maxCommandPoints = loadout.getCommander().getMaxCommandPoints();
-		newPlayer.planetData = EngineDataInterface.getPlanetData(loadout.getPlayerInfrastructure(), API.construction().construction());
-		newPlayer.ships = EngineDataInterface.getShips(loadout.getShips(), API.shipyard().shipyard());
-		newPlayer.turrets = EngineDataInterface.getPlayerTurretData(loadout.getPlayerInfrastructure(), API.construction().construction());
-		return newPlayer;
 	}
 
 	private GameMap generateMap(GameType gameType) {

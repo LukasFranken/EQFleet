@@ -85,7 +85,7 @@ public class MenuWindow extends Component {
 		title.setPosition(titleBounds.x + titleHorizontalMargin, titleBounds.y);
 		title.setFixedWidth(titleBounds.width - (titleHorizontalMargin * 2));
 		title.setFixedHeight(titleBounds.height);
-		title.getColor().a = MenuModel.alpha;
+		title.setAlpha(MenuModel.alpha);
 		
 		titleDividerBounds.set(titleBounds.x, titleBounds.y, titleBounds.width, 2f);
 		titleDividerShape.getColor().a = MenuModel.alpha;
@@ -116,7 +116,7 @@ public class MenuWindow extends Component {
 	@Override
 	public float calculateWidth() {
 		return getBounds().width;
-	}
+	} 
 
 	@Override
 	public void dispose() {

@@ -41,14 +41,14 @@ public class ExplosionRenderer {
 		for (Explosion explosion : explosions) {
 			Shapes.draw(EQCircle.builder()
 					.position(explosion.getPosition())
-					.radius(explosion.getRadius())
+					.radius((float)explosion.getRadius())
 					.color(new Color(0.3f, 0f, 0f, 1f - (explosion.getElapsed() / explosionDuration)))
 					.projectionMatrix(camera.combined)
 					.build());
 		}
 	}
 
-	public void addExplosion(Vector2 position, float radius) {
+	public void addExplosion(Vector2 position, double radius) {
 		explosions.add(Explosion.builder()
 				.position(position)
 				.radius(radius)

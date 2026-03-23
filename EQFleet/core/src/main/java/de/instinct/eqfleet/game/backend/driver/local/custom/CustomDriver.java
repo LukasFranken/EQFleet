@@ -4,6 +4,7 @@ import java.util.List;
 
 import de.instinct.api.core.API;
 import de.instinct.api.meta.dto.LoadoutData;
+import de.instinct.engine.FleetEngine;
 import de.instinct.engine.ai.AiEngine;
 import de.instinct.engine.model.AiPlayer;
 import de.instinct.engine.model.Player;
@@ -55,16 +56,16 @@ public class CustomDriver extends LocalDriver {
 			NetworkMessage newMessage = GameModel.outputMessageQueue.next();
 			if (newMessage != null) {
 				if (newMessage instanceof FleetMovementMessage) {
-					engine.queue(GameModel.activeGameState, getOrder((FleetMovementMessage)newMessage));
+					FleetEngine.queue(GameModel.activeGameState, getOrder((FleetMovementMessage)newMessage));
 				}
 				if (newMessage instanceof BuildTurretMessage) {
-					engine.queue(GameModel.activeGameState, getOrder((BuildTurretMessage)newMessage));
+					FleetEngine.queue(GameModel.activeGameState, getOrder((BuildTurretMessage)newMessage));
 				}
 				if (newMessage instanceof GamePauseMessage) {
-					engine.queue(GameModel.activeGameState, getOrder((GamePauseMessage)newMessage));
+					FleetEngine.queue(GameModel.activeGameState, getOrder((GamePauseMessage)newMessage));
 				}
 				if (newMessage instanceof SurrenderMessage) {
-					engine.queue(GameModel.activeGameState, getOrder((SurrenderMessage)newMessage));
+					FleetEngine.queue(GameModel.activeGameState, getOrder((SurrenderMessage)newMessage));
 				}
 				if (newMessage instanceof LoadedMessage) {
 					GameModel.activeGameState.started = true;
@@ -111,7 +112,7 @@ public class CustomDriver extends LocalDriver {
 					if (player instanceof AiPlayer) {
 						List<GameOrder> aiOrders = aiEngine.act((AiPlayer)player, GameModel.activeGameState);
 						for (GameOrder order : aiOrders) {
-							engine.queue(GameModel.activeGameState, order);
+							FleetEngine.queue(GameModel.activeGameState, order);
 						}
 					}
 				}

@@ -41,7 +41,7 @@ public abstract class Component extends UIElement {
 		border.setColor(Color.ORANGE);
 		border.setAlpha(1f);
 		border.setBounds(getBounds());
-		border.setSize(2f);
+		border.setSize(1f);
 	}
 
 }

@@ -5,7 +5,8 @@ import lombok.ToString;
 @ToString
 public class PlanetData {
 	
-	public float resourceGenerationSpeed;
-	public float maxResourceCapacity;
+	public float baseResourceGenerationSpeed;
+	public float baseArmor;
+	public float baseShield;
 
 }

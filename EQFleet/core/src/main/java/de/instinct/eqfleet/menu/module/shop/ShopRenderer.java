@@ -22,13 +22,11 @@ import de.instinct.eqfleet.menu.module.shop.model.ShopItemElement;
 import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
-import de.instinct.eqlibgdxutils.rendering.ui.component.passive.image.Image;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.HorizontalAlignment;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.popup.PopupRenderer;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 
 public class ShopRenderer extends BaseModuleRenderer {
 
@@ -87,7 +85,6 @@ public class ShopRenderer extends BaseModuleRenderer {
 				.nameLabel(createItemNameLabel(item.getName()))
 				.descriptionLabel(createDescriptionLabel())
 				.priceLabel(createPriceLabel())
-				.creditsIcon(createCreditsIcon())
 				.buyButton(createBuyButton(item.getId()))
 				.active(true)
 				.build();
@@ -95,7 +92,7 @@ public class ShopRenderer extends BaseModuleRenderer {
 
 	private Label createItemNameLabel(String name) {
 		Label nameLabel = new Label(name);
-		nameLabel.setType(FontType.NORMAL);
+		nameLabel.setType(FontType.BOLD);
 		nameLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
 		nameLabel.setFixedWidth(FontUtil.getFontTextWidthPx(12, nameLabel.getType()));
 		nameLabel.setFixedHeight(itemHeight);
@@ -104,27 +101,21 @@ public class ShopRenderer extends BaseModuleRenderer {
 
 	private Label createDescriptionLabel() {
 		Label descriptionLabel = new Label("");
-		descriptionLabel.setType(FontType.SMALL);
+		descriptionLabel.setType(FontType.SMALL_BOLD);
 		descriptionLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
 		descriptionLabel.setFixedHeight(itemHeight);
+		descriptionLabel.setColor(Color.GRAY);
 		return descriptionLabel;
 	}
 
 	private Label createPriceLabel() {
 		Label priceLabel = new Label("");
-		priceLabel.setType(FontType.SMALL);
+		priceLabel.setType(FontType.SMALL_BOLD);
 		priceLabel.setColor(Color.GREEN);
 		priceLabel.setHorizontalAlignment(HorizontalAlignment.RIGHT);
 		priceLabel.setFixedWidth(FontUtil.getFontTextWidthPx(8, priceLabel.getType()));
 		priceLabel.setFixedHeight(itemHeight);
 		return priceLabel;
-	}
-
-	private Image createCreditsIcon() {
-		Image creditsIcon = new Image(TextureManager.getTexture("ui/image", "credits"));
-		creditsIcon.setFixedWidth(16f);
-		creditsIcon.setFixedHeight(16f);
-		return creditsIcon;
 	}
 
 	private ColorButton createBuyButton(int id) {
@@ -163,21 +154,20 @@ public class ShopRenderer extends BaseModuleRenderer {
 				} else {
 					item.setActive(true);
 					item.getDescriptionLabel().setText(currentStage.getDescription());
-					item.getPriceLabel().setText(StringUtils.formatBigNumber(currentStage.getPrice()));
+					item.getPriceLabel().setText(StringUtils.formatBigNumber(currentStage.getPrice()) + " €");
 					if (currentStage.getPrice() > ProfileModuleAPI.getResource(Resource.CREDITS)) {
+						item.getNameLabel().setColor(Color.RED);
 						item.getPriceLabel().setColor(Color.RED);
-						item.getCreditsIcon().setTexture(TextureManager.getTexture("ui/image", "credits_red"));
 					} else {
+						item.getNameLabel().setColor(Color.GREEN);
 						item.getPriceLabel().setColor(Color.GREEN);
-						item.getCreditsIcon().setTexture(TextureManager.getTexture("ui/image", "credits"));
 					}
 				}
 				itemCount++;
 				float elementYPos = getElementYPos();
 				item.getNameLabel().setPosition(MenuModel.moduleBounds.x + horizontalOffset, elementYPos);
 				item.getBuyButton().setPosition(MenuModel.moduleBounds.x + MenuModel.moduleBounds.width - horizontalOffset - item.getBuyButton().getFixedWidth(), elementYPos);
-				item.getCreditsIcon().setPosition(item.getBuyButton().getBounds().x - 18f, elementYPos + 2);
-				item.getPriceLabel().setPosition(item.getBuyButton().getBounds().x - item.getPriceLabel().getFixedWidth() - 20f, elementYPos);
+				item.getPriceLabel().setPosition(item.getBuyButton().getBounds().x - item.getPriceLabel().getFixedWidth() - 10, elementYPos);
 				item.getDescriptionLabel().setPosition(MenuModel.moduleBounds.x + horizontalOffset + item.getNameLabel().getFixedWidth(), elementYPos);
 				item.getDescriptionLabel().setFixedWidth(item.getPriceLabel().getBounds().x - item.getDescriptionLabel().getBounds().x);
 			}
@@ -224,7 +214,6 @@ public class ShopRenderer extends BaseModuleRenderer {
 				if (!item.isActive()) continue;
 				item.getNameLabel().render();
 				item.getBuyButton().render();
-				item.getCreditsIcon().render();
 				item.getPriceLabel().render();
 				item.getDescriptionLabel().render();
 			}

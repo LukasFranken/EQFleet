@@ -12,6 +12,7 @@ import de.instinct.engine.model.planet.Planet;
 import de.instinct.engine.util.EngineUtility;
 import de.instinct.eqfleet.game.GameConfig;
 import de.instinct.eqfleet.game.GameModel;
+import de.instinct.eqfleet.game.frontend.ui.elements.FullResourceBar;
 import de.instinct.eqfleet.game.frontend.ui.model.GameUIElement;
 import de.instinct.eqfleet.game.frontend.ui.model.PlayerData;
 import de.instinct.eqfleet.game.frontend.ui.model.UIBounds;
@@ -96,10 +97,10 @@ public class GameUILoader {
 	}
 
 	private void loadOwnCPBar(UIBounds bounds) {
-		GameUIElement<BoxedRectangularLoadingBar> ownCPElement = GameUIElement.<BoxedRectangularLoadingBar>builder()
+		GameUIElement<FullResourceBar> ownCPElement = GameUIElement.<FullResourceBar>builder()
 				.tag("ownCP")
 				.visible(true)
-				.element(createBar())
+				.element(new FullResourceBar())
 				.build();
 		ownCPElement.setInitAction(new Action() {
 			
@@ -113,11 +114,8 @@ public class GameUILoader {
 			
 			@Override
 			public void execute() {
-				PlayerData playerData = UIDataUtility.getPlayerData(ownCPElement.getCurrentGameState());
-				ownCPElement.setBounds(bounds.getOwnCPBar());
-				ownCPElement.getElement().setSegments((int)playerData.getSelf().maxCommandPoints);
-				ownCPElement.getElement().setMaxValue(playerData.getSelf().maxCommandPoints);
-				ownCPElement.getElement().setCurrentValue(playerData.getSelf().currentCommandPoints);
+				ownCPElement.getElement().setBounds(bounds.getOwnResBar());
+				ownCPElement.getElement().setGameState(ownCPElement.getCurrentGameState());
 			}
 			
 		});
@@ -125,13 +123,7 @@ public class GameUILoader {
 			
 			@Override
 			public void execute() {
-				PlayerData playerData = UIDataUtility.getPlayerData(ownCPElement.getCurrentGameState());
-				Label cpLabel = new Label("CP");
-				cpLabel.setColor(GameConfig.getPlayerColor(playerData.getSelf().id));
-				cpLabel.setBounds(bounds.getOwnCPBarLabel());
-				cpLabel.render();
-				drawRectangle(bounds.getOwnCPBar(), GameConfig.getPlayerColor(playerData.getSelf().id));
-				drawRectangle(bounds.getOwnCPBarLabel(), GameConfig.getPlayerColor(playerData.getSelf().id));
+				
 			}
 			
 		});
@@ -157,10 +149,10 @@ public class GameUILoader {
 			@Override
 			public void execute() {
 				PlayerData playerData = UIDataUtility.getPlayerData(teammate1CPElement.getCurrentGameState());
-				teammate1CPElement.setBounds(bounds.getTeammate1CPBar());
-				teammate1CPElement.getElement().setSegments((int)playerData.getTeammate1().maxCommandPoints);
-				teammate1CPElement.getElement().setMaxValue(playerData.getTeammate1().maxCommandPoints);
-				teammate1CPElement.getElement().setCurrentValue(playerData.getTeammate1().currentCommandPoints);
+				teammate1CPElement.setBounds(bounds.getTeammate1ResBar());
+				teammate1CPElement.getElement().setSegments((int)playerData.getTeammate1().maxResources);
+				teammate1CPElement.getElement().setMaxValue(playerData.getTeammate1().maxResources);
+				teammate1CPElement.getElement().setCurrentValue(playerData.getTeammate1().currentResources);
 			}
 			
 		});
@@ -171,10 +163,10 @@ public class GameUILoader {
 				PlayerData playerData = UIDataUtility.getPlayerData(teammate1CPElement.getCurrentGameState());
 				Label cpLabel = new Label("CP");
 				cpLabel.setColor(GameConfig.getPlayerColor(playerData.getTeammate1().id));
-				cpLabel.setBounds(bounds.getTeammate1CPBarLabel());
+				cpLabel.setBounds(bounds.getTeammate1ResBarLabel());
 				cpLabel.render();
-				drawRectangle(bounds.getTeammate1CPBar(), GameConfig.getPlayerColor(playerData.getTeammate1().id));
-				drawRectangle(bounds.getTeammate1CPBarLabel(), GameConfig.getPlayerColor(playerData.getTeammate1().id));
+				drawRectangle(bounds.getTeammate1ResBar(), GameConfig.getPlayerColor(playerData.getTeammate1().id));
+				drawRectangle(bounds.getTeammate1ResBarLabel(), GameConfig.getPlayerColor(playerData.getTeammate1().id));
 			}
 			
 		});
@@ -200,10 +192,10 @@ public class GameUILoader {
 			@Override
 			public void execute() {
 				PlayerData playerData = UIDataUtility.getPlayerData(teammate2CPElement.getCurrentGameState());
-				teammate2CPElement.setBounds(bounds.getTeammate2CPBar());
-				teammate2CPElement.getElement().setSegments((int)playerData.getTeammate2().maxCommandPoints);
-				teammate2CPElement.getElement().setMaxValue(playerData.getTeammate2().maxCommandPoints);
-				teammate2CPElement.getElement().setCurrentValue(playerData.getTeammate2().currentCommandPoints);
+				teammate2CPElement.setBounds(bounds.getTeammate2ResBar());
+				teammate2CPElement.getElement().setSegments((int)playerData.getTeammate2().maxResources);
+				teammate2CPElement.getElement().setMaxValue(playerData.getTeammate2().maxResources);
+				teammate2CPElement.getElement().setCurrentValue(playerData.getTeammate2().currentResources);
 			}
 			
 		});
@@ -214,10 +206,10 @@ public class GameUILoader {
 				PlayerData playerData = UIDataUtility.getPlayerData(teammate2CPElement.getCurrentGameState());
 				Label cpLabel = new Label("CP");
 				cpLabel.setColor(GameConfig.getPlayerColor(playerData.getTeammate2().id));
-				cpLabel.setBounds(bounds.getTeammate2CPBarLabel());
+				cpLabel.setBounds(bounds.getTeammate2ResBarLabel());
 				cpLabel.render();
-				drawRectangle(bounds.getTeammate2CPBar(), GameConfig.getPlayerColor(playerData.getTeammate2().id));
-				drawRectangle(bounds.getTeammate2CPBarLabel(), GameConfig.getPlayerColor(playerData.getTeammate2().id));
+				drawRectangle(bounds.getTeammate2ResBar(), GameConfig.getPlayerColor(playerData.getTeammate2().id));
+				drawRectangle(bounds.getTeammate2ResBarLabel(), GameConfig.getPlayerColor(playerData.getTeammate2().id));
 			}
 			
 		});
@@ -243,10 +235,10 @@ public class GameUILoader {
 			@Override
 			public void execute() {
 				PlayerData playerData = UIDataUtility.getPlayerData(enemy1CPElement.getCurrentGameState());
-				enemy1CPElement.setBounds(bounds.getEnemy1CPBar());
-				enemy1CPElement.getElement().setSegments((int)playerData.getEnemy1().maxCommandPoints);
-				enemy1CPElement.getElement().setMaxValue(playerData.getEnemy1().maxCommandPoints);
-				enemy1CPElement.getElement().setCurrentValue(playerData.getEnemy1().currentCommandPoints);
+				enemy1CPElement.setBounds(bounds.getEnemy1ResBar());
+				enemy1CPElement.getElement().setSegments((int)playerData.getEnemy1().maxResources);
+				enemy1CPElement.getElement().setMaxValue(playerData.getEnemy1().maxResources);
+				enemy1CPElement.getElement().setCurrentValue(playerData.getEnemy1().currentResources);
 			}
 			
 		});
@@ -257,10 +249,10 @@ public class GameUILoader {
 				PlayerData playerData = UIDataUtility.getPlayerData(enemy1CPElement.getCurrentGameState());
 				Label cpLabel = new Label("CP");
 				cpLabel.setColor(GameConfig.getPlayerColor(playerData.getEnemy1().id));
-				cpLabel.setBounds(bounds.getEnemy1CPBarLabel());
+				cpLabel.setBounds(bounds.getEnemy1ResBarLabel());
 				cpLabel.render();
-				drawRectangle(bounds.getEnemy1CPBar(), GameConfig.getPlayerColor(playerData.getEnemy1().id));
-				drawRectangle(bounds.getEnemy1CPBarLabel(), GameConfig.getPlayerColor(playerData.getEnemy1().id));
+				drawRectangle(bounds.getEnemy1ResBar(), GameConfig.getPlayerColor(playerData.getEnemy1().id));
+				drawRectangle(bounds.getEnemy1ResBarLabel(), GameConfig.getPlayerColor(playerData.getEnemy1().id));
 			}
 			
 		});
@@ -286,10 +278,10 @@ public class GameUILoader {
 			@Override
 			public void execute() {
 				PlayerData playerData = UIDataUtility.getPlayerData(enemy2CPElement.getCurrentGameState());
-				enemy2CPElement.setBounds(bounds.getEnemy2CPBar());
-				enemy2CPElement.getElement().setSegments((int)playerData.getEnemy2().maxCommandPoints);
-				enemy2CPElement.getElement().setMaxValue(playerData.getEnemy2().maxCommandPoints);
-				enemy2CPElement.getElement().setCurrentValue(playerData.getEnemy2().currentCommandPoints);
+				enemy2CPElement.setBounds(bounds.getEnemy2ResBar());
+				enemy2CPElement.getElement().setSegments((int)playerData.getEnemy2().maxResources);
+				enemy2CPElement.getElement().setMaxValue(playerData.getEnemy2().maxResources);
+				enemy2CPElement.getElement().setCurrentValue(playerData.getEnemy2().currentResources);
 			}
 			
 		});
@@ -298,7 +290,7 @@ public class GameUILoader {
 			@Override
 			public void execute() {
 				PlayerData playerData = UIDataUtility.getPlayerData(enemy2CPElement.getCurrentGameState());
-				drawRectangle(bounds.getEnemy2CPBar(), GameConfig.getPlayerColor(playerData.getEnemy2().id));
+				drawRectangle(bounds.getEnemy2ResBar(), GameConfig.getPlayerColor(playerData.getEnemy2().id));
 			}
 			
 		});
@@ -324,10 +316,10 @@ public class GameUILoader {
 			@Override
 			public void execute() {
 				PlayerData playerData = UIDataUtility.getPlayerData(enemy3CPElement.getCurrentGameState());
-				enemy3CPElement.setBounds(bounds.getEnemy3CPBar());
-				enemy3CPElement.getElement().setSegments((int)playerData.getEnemy3().maxCommandPoints);
-				enemy3CPElement.getElement().setMaxValue(playerData.getEnemy3().maxCommandPoints);
-				enemy3CPElement.getElement().setCurrentValue(playerData.getEnemy3().currentCommandPoints);
+				enemy3CPElement.setBounds(bounds.getEnemy3ResBar());
+				enemy3CPElement.getElement().setSegments((int)playerData.getEnemy3().maxResources);
+				enemy3CPElement.getElement().setMaxValue(playerData.getEnemy3().maxResources);
+				enemy3CPElement.getElement().setCurrentValue(playerData.getEnemy3().currentResources);
 			}
 			
 		});
@@ -336,7 +328,7 @@ public class GameUILoader {
 			@Override
 			public void execute() {
 				PlayerData playerData = UIDataUtility.getPlayerData(enemy3CPElement.getCurrentGameState());
-				drawRectangle(bounds.getEnemy3CPBar(), GameConfig.getPlayerColor(playerData.getEnemy3().id));
+				drawRectangle(bounds.getEnemy3ResBar(), GameConfig.getPlayerColor(playerData.getEnemy3().id));
 			}
 			
 		});
@@ -484,13 +476,11 @@ public class GameUILoader {
 		PlainRectangularLoadingBar apBar = new PlainRectangularLoadingBar();
 		apBar.setBar(TextureManager.createTexture(Color.GOLD));
 		apBar.setCustomDescriptor("");
-		apBar.setBackground(TextureManager.createTexture(new Color(0f, 0f, 0f, 0f)));
 		return apBar;
 	}
 
 	private BoxedRectangularLoadingBar createBar() {
 		BoxedRectangularLoadingBar bar = new BoxedRectangularLoadingBar();
-		bar.setBackground(TextureManager.createTexture(new Color(0f, 0f, 0f, 0f)));
 		return bar;
 	}
 

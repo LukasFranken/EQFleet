@@ -49,7 +49,6 @@ public class ExperienceSection extends Component {
 		
 		expBar = new PlainRectangularLoadingBar();
 		expBar.setBar(TextureManager.createTexture(Color.BLUE));
-		expBar.setBackground(TextureManager.createTexture(new Color(0f, 0f, 0f, 0f)));
 		expBar.setCustomDescriptor("");
 		Border expBarBorder = new Border();
 		expBarBorder.setColor(Color.BLUE);

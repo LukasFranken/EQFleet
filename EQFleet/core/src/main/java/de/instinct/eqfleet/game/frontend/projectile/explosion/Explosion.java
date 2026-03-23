@@ -10,7 +10,7 @@ import lombok.Data;
 public class Explosion {
 	
 	private Vector2 position;
-	private float radius;
+	private double radius;
 	private float elapsed;
 
 }

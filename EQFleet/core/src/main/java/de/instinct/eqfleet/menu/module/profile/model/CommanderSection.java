@@ -14,7 +14,6 @@ import de.instinct.eqlibgdxutils.rendering.ui.container.list.ElementStack;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
 import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.shapes.EQRectangle;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.utility.EQGlowConfig;
@@ -48,33 +47,32 @@ public class CommanderSection extends Component {
 		barBorder.setColor(GameConfig.teammate1Color);
 		barBorder.setSize(2f);
 		
-		cpBarLabel = new Label("CP");
+		cpBarLabel = new Label("RES");
 		cpBarLabel.setColor(GameConfig.teammate1Color);
 		cpBarLabel.setType(FontType.SMALL);
 		cpBarLabel.setBorder(barBorder);
 		cpBarLabel.setFixedHeight(20f);
 		
 		bar = new BoxedRectangularLoadingBar();
-		bar.setBackground(TextureManager.createTexture(new Color(0f, 0f, 0f, 0f)));
 		bar.setFixedHeight(20f);
 		bar.setBorder(barBorder);
 		
 		maxCPLabelStack = DefaultLabelFactory.createLabelStack(LabelStackConfiguration.builder()
-				.tag("Max CP")
+				.tag("Max RES")
 				.value("-")
 				.type(FontType.SMALL)
 				.build());
 		maxCPLabelStack.setFixedHeight(20f);
 		
 		startCPLabelStack = DefaultLabelFactory.createLabelStack(LabelStackConfiguration.builder()
-				.tag("Start CP")
+				.tag("Start RES")
 				.value("-")
 				.type(FontType.SMALL)
 				.build());
 		startCPLabelStack.setFixedHeight(20f);
 		
 		cpPerSecLabelStack = DefaultLabelFactory.createLabelStack(LabelStackConfiguration.builder()
-				.tag("CP / sec")
+				.tag("RES / sec")
 				.value("-")
 				.type(FontType.SMALL)
 				.build());
@@ -93,13 +91,13 @@ public class CommanderSection extends Component {
 	
 	@Override
 	protected void updateComponent() {
-		bar.setSegments((int)ProfileModel.commanderData.getMaxCommandPoints());
-		bar.setMaxValue(ProfileModel.commanderData.getMaxCommandPoints());
-		bar.setCurrentValue(ProfileModel.commanderData.getStartCommandPoints());
+		bar.setSegments((int)ProfileModel.commanderData.getMaxResources());
+		bar.setMaxValue(ProfileModel.commanderData.getMaxResources());
+		bar.setCurrentValue(ProfileModel.commanderData.getStartResources());
 		
-		((Label)maxCPLabelStack.getElements().get(1)).setText(StringUtils.format(ProfileModel.commanderData.getMaxCommandPoints(), 0));
-		((Label)startCPLabelStack.getElements().get(1)).setText(StringUtils.format(ProfileModel.commanderData.getStartCommandPoints(), 0));
-		((Label)cpPerSecLabelStack.getElements().get(1)).setText(StringUtils.format(ProfileModel.commanderData.getCommandPointsGenerationSpeed(), 2));
+		((Label)maxCPLabelStack.getElements().get(1)).setText(StringUtils.format(ProfileModel.commanderData.getMaxResources(), 0));
+		((Label)startCPLabelStack.getElements().get(1)).setText(StringUtils.format(ProfileModel.commanderData.getStartResources(), 0));
+		((Label)cpPerSecLabelStack.getElements().get(1)).setText(StringUtils.format(ProfileModel.commanderData.getResourceGenerationSpeed(), 2));
 		
 		cpBarLabel.setFixedWidth(20f);
 		bar.setFixedWidth(getBounds().width - (inModuleStackMargin * 2) - cpBarLabel.getBounds().width);

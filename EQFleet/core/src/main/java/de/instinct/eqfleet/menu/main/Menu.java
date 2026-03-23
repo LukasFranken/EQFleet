@@ -156,7 +156,7 @@ public class Menu extends Scene {
 			WebManager.enqueue(
 				    () -> API.meta().modules(API.authKey),
 				    modulesResult -> {
-				    	//modulesResult.getEnabledModules().add(MenuModule.SOCIAL);
+				    	modulesResult.getEnabledModules().add(MenuModule.PLAY);
 				    	processModulesResult(modulesResult);
 				    }
 			);

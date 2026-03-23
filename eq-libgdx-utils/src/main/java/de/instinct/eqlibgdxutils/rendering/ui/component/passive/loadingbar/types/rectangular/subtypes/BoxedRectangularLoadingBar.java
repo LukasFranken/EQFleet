@@ -1,15 +1,18 @@
 package de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.subtypes;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.model.ColorScale;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.model.ColorScaleLoader;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.RectangularLoadingBar;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.shapes.EQRectangle;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -20,6 +23,17 @@ public class BoxedRectangularLoadingBar extends RectangularLoadingBar {
 	private Color segmentOutlineColor;
 	private int segmentOutlineSize;
 	private ColorScaleLoader colorScaleLoader;
+	private boolean partialSegments;
+	
+	@Getter(AccessLevel.NONE)
+	@Setter(AccessLevel.NONE)
+	private EQRectangle workingShape;
+	@Getter(AccessLevel.NONE)
+	@Setter(AccessLevel.NONE)
+	private Rectangle workingBounds;
+	@Getter(AccessLevel.NONE)
+	@Setter(AccessLevel.NONE)
+	private Color workingColor;
 	
 	public BoxedRectangularLoadingBar() {
 		super();
@@ -28,6 +42,13 @@ public class BoxedRectangularLoadingBar extends RectangularLoadingBar {
 		setSegmentOutlineColor(Color.BLACK);
 		setSegmentOutlineSize(2);
 		colorScaleLoader = new ColorScaleLoader();
+		workingShape = EQRectangle.builder()
+				.bounds(new Rectangle())
+				.color(new Color())
+				.filled(true)
+				.build();
+		workingBounds = new Rectangle();
+		workingColor = new Color();
 	}
 
 	@Override
@@ -48,9 +69,12 @@ public class BoxedRectangularLoadingBar extends RectangularLoadingBar {
 	@Override
 	protected void renderContent() {
 		int segments = getSegments();
-		int filledSegments = (int) Math.floor(getCurrentValue());
-	    int segmentSpace = calculateSegmentSpace(getSegments());
+		double valuePerSegment = getMaxValue() / segments;
+		int filledSegments = (int) Math.floor(getCurrentValue() / valuePerSegment);
+		double valueRemainder = getCurrentValue() - (valuePerSegment * filledSegments);
+		double segmentWidthFraction = valueRemainder / valuePerSegment;
 
+		int segmentSpace = calculateSegmentSpace(getSegments());
 	    float totalSpacing = (segments - 1) * segmentSpace;
 	    float segmentWidth = (getBounds().width - (getBorder().getSize() * 2) - totalSpacing) / (float) segments;
 	    float xPos = getBounds().x + getBorder().getSize();
@@ -59,20 +83,29 @@ public class BoxedRectangularLoadingBar extends RectangularLoadingBar {
 
 	    for (int i = 0; i < segments; i++) {
 	        float segmentXPos = xPos + i * (segmentWidth + segmentSpace);
-	        Texture segmentTexture;
+	        workingColor.set(colorScaleLoader.load(getColorScale(), ((i + 1) / (double) segments)));
 	        if (i < filledSegments) {
-	        	if (getSegmentOutlineColor() != null) {
-	            	TextureManager.draw(TextureManager.createTexture(getSegmentOutlineColor()), new Rectangle(segmentXPos - getSegmentOutlineSize(), 
-	            			yPos - getSegmentOutlineSize(), segmentWidth + (getSegmentOutlineSize() * 2), height + (getSegmentOutlineSize() * 2)));
-	            }
-	            segmentTexture = getLoadingBarTexture((i + 1) / (double) segments);
-	            TextureManager.draw(segmentTexture, new Rectangle(segmentXPos, yPos, segmentWidth, height));
+	            workingBounds.set(segmentXPos, yPos, segmentWidth, height);
+	            drawSegment(workingColor, workingBounds);
+	        }
+	        if (partialSegments) {
+	        	if (i == filledSegments) {
+	        		workingBounds.set(segmentXPos, yPos, segmentWidth * (float)segmentWidthFraction, height);
+	        		drawSegment(workingColor, workingBounds);
+	        	}
 	        }
 	    }
 	}
 	
-	private Texture getLoadingBarTexture(double segmentValue) {
-	    return colorScaleLoader.load(getColorScale(), segmentValue);
+	private void drawSegment(Color color, Rectangle bounds) {
+		if (getSegmentOutlineColor() != null) {
+    		workingShape.getColor().set(getSegmentOutlineColor());
+    		workingShape.getBounds().set(bounds.x - getSegmentOutlineSize(), bounds.y - getSegmentOutlineSize(), bounds.width + (getSegmentOutlineSize() * 2), bounds.height + (getSegmentOutlineSize() * 2));
+    		Shapes.draw(workingShape);
+        }
+    	workingShape.getBounds().set(bounds);
+        workingShape.getColor().set(color);
+        Shapes.draw(workingShape);
 	}
 	
 	private int calculateSegmentSpace(int segments) {

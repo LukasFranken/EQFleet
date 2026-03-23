@@ -1,7 +1,5 @@
 package de.instinct.eqfleet.menu.module.ship.component.shippart;
 
-import com.badlogic.gdx.graphics.Color;
-
 import de.instinct.api.shipyard.dto.ship.component.ShipComponentType;
 import de.instinct.eqfleet.menu.module.ship.ShipyardModuleAPI;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
@@ -35,7 +33,6 @@ public class ShipComponentProgressBar extends Component {
 		
 		progressBar = new PlainRectangularLoadingBar();
 		progressBar.setBar(TextureManager.createTexture(ShipyardModuleAPI.getPartTypeColor(type)));
-		progressBar.setBackground(TextureManager.createTexture(new Color(0f, 0f, 0f, 0f)));
 		progressBar.setMaxValue(maxProgress);
 		progressBar.setCustomDescriptor("");
 		progressBar.setFixedHeight(6);

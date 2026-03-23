@@ -2,7 +2,6 @@ package de.instinct.eqfleet.menu.module.shop.model;
 
 import de.instinct.api.shop.dto.item.ShopItem;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
-import de.instinct.eqlibgdxutils.rendering.ui.component.passive.image.Image;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +14,6 @@ public class ShopItemElement {
 	private Label nameLabel;
 	private Label descriptionLabel;
 	private Label priceLabel;
-	private Image creditsIcon;
 	private ColorButton buyButton;
 	private boolean active;
 	
@@ -24,7 +22,6 @@ public class ShopItemElement {
 		if (descriptionLabel != null) descriptionLabel.dispose();
 		if (priceLabel != null) priceLabel.dispose();
 		if (buyButton != null) buyButton.dispose();
-		if (creditsIcon != null) creditsIcon.dispose();
 	}
 
 }

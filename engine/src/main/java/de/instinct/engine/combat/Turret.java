@@ -5,7 +5,5 @@ import lombok.ToString;
 
 @ToString(callSuper = true)
 public class Turret extends Unit {
-	
-	public float rotationSpeed;
 
 }

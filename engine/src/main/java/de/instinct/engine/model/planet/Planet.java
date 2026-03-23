@@ -7,10 +7,7 @@ import lombok.ToString;
 public class Planet extends Entity {
 	
 	public boolean ancient;
-	
 	public float resourceGenerationSpeed;
-	public float maxResourceCapacity;
-	public float currentResources;
 	
 	public Planet clone() {
 		Planet clone = (Planet) super.clone();

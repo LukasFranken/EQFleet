@@ -5,6 +5,6 @@ import lombok.ToString;
 @ToString
 public class AiBehaviorParameters {
 	
-	public float defensiveShipDistanceThreshold = 300f;
+	public double defensiveShipDistanceThreshold = 300f;
 
 }

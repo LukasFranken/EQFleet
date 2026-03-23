@@ -6,9 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-
-import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 
 public class ColorScaleLoader {
 	
@@ -19,8 +16,8 @@ public class ColorScaleLoader {
 		colorSchemes.put(ColorScale.GREEN_TO_RED, loadGreenToRed());
 	}
 	
-	public Texture load(ColorScale colorScheme, double value) {
-		return TextureManager.createTexture(getColor(colorSchemes.get(colorScheme), value));
+	public Color load(ColorScale colorScheme, double value) {
+		return getColor(colorSchemes.get(colorScheme), value);
 	}
 
 	private Color getColor(List<Color> list, double value) {
