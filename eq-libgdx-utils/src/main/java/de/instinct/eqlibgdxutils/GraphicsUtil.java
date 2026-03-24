@@ -24,6 +24,7 @@ public class GraphicsUtil {
     	Logger.log(LOGTAG, "Display scale factor: " + getScaleFactor(), ConsoleColor.YELLOW);
     	Logger.log(LOGTAG, "Horizontal display scale factor: " + getHorizontalDisplayScaleFactor(), ConsoleColor.YELLOW);
     	Logger.log(LOGTAG, "Vertical display scale factor: " + getVerticalDisplayScaleFactor(), ConsoleColor.YELLOW);
+    	Logger.log(LOGTAG, "Pixel density: " + Gdx.graphics.getDensity(), ConsoleColor.YELLOW);
 	}
 	
 	public static float getHorizontalDisplayScaleFactor() {

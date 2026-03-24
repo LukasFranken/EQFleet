@@ -68,7 +68,7 @@ public class ProfileHeaderComponent extends Component {
 		Border creditsBorder = new Border();
 		creditsBorder.setSize(1f);
 		creditsBorder.setColor(creditsColor);
-		creditsCurrencyLabel = new Label("€");
+		creditsCurrencyLabel = new Label("â‚¬");
 		creditsCurrencyLabel.setColor(creditsColor);
 		creditsCurrencyLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
 		creditsCurrencyLabel.setStartMargin(3);

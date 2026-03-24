@@ -68,12 +68,12 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 			activeLabel = new Label("Active: " + active + "/" + ShipyardModel.playerShipyard.getActiveShipSlots());
 			activeLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
 			activeLabel.setBounds(activeLabelBounds);
-			activeLabel.setType(FontType.SMALL);
+			activeLabel.setType(FontType.SMALL_BOLD);
 
 			spaceLabel = new Label("Space: " + ShipyardModel.playerShipyard.getUsedSlots() + "/" + ShipyardModel.playerShipyard.getSlots());
 			spaceLabel.setHorizontalAlignment(HorizontalAlignment.RIGHT);
 			spaceLabel.setBounds(activeLabelBounds);
-			spaceLabel.setType(FontType.SMALL);
+			spaceLabel.setType(FontType.SMALL_BOLD);
 
 			activeShipButtons = new ArrayList<>();
 			shipButtons = new ArrayList<>();

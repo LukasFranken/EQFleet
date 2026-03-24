@@ -154,7 +154,7 @@ public class ShopRenderer extends BaseModuleRenderer {
 				} else {
 					item.setActive(true);
 					item.getDescriptionLabel().setText(currentStage.getDescription());
-					item.getPriceLabel().setText(StringUtils.formatBigNumber(currentStage.getPrice()) + " €");
+					item.getPriceLabel().setText(StringUtils.formatBigNumber(currentStage.getPrice()) + " â‚¬");
 					if (currentStage.getPrice() > ProfileModuleAPI.getResource(Resource.CREDITS)) {
 						item.getNameLabel().setColor(Color.RED);
 						item.getPriceLabel().setColor(Color.RED);

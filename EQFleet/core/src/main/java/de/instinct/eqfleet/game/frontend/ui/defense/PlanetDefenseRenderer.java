@@ -113,24 +113,21 @@ public class PlanetDefenseRenderer {
 	        hullText = StringUtils.formatBigNumber(value, 1).replaceAll(" ", "");
 	    }
 
-	    float scaleFactor = GraphicsUtil.getScaleFactor();
-
 	    float labelHeight = FontUtil.getFontHeightPx(FontType.MICRO_BOLD);
-	    float vx = projectedPosition.x / scaleFactor;
+	    float vx = projectedPosition.x / GraphicsUtil.getHorizontalDisplayScaleFactor();
 	    float vy;
 	    if (top) {
-	        vy = projectedPosition.y / scaleFactor + 2;
+	        vy = projectedPosition.y / GraphicsUtil.getVerticalDisplayScaleFactor() + 2;
 	    } else {
-	        vy = (projectedPosition.y / scaleFactor) - labelHeight - 2;
+	        vy = (projectedPosition.y / GraphicsUtil.getVerticalDisplayScaleFactor()) - labelHeight - 2;
 	    }
 
-	    float labelWidth = (projectedRight.x - projectedPosition.x) / scaleFactor;
+	    float labelWidth = (projectedRight.x - projectedPosition.x) / GraphicsUtil.getHorizontalDisplayScaleFactor();
 
 	    workingLabel.setText(hullText);
 	    workingLabel.setBounds(vx, vy, labelWidth, labelHeight);
 	    workingLabel.render();
 	}
-
 
 	private void renderBar(PerspectiveCamera camera, Rectangle bounds, Color color, float current) {
 		workingShape.setProjectionMatrix(camera.combined);

@@ -88,28 +88,29 @@ public class Label extends Component {
 		GlyphLayout layout = FontUtil.getGlyphLayout();
 		float x = 0;
 		float y = 0;
-
+		float verticalMargin = startMargin * GraphicsUtil.getVerticalDisplayScaleFactor();
+		float horizontalMargin = startMargin * GraphicsUtil.getHorizontalDisplayScaleFactor();
 		switch (verticalAlignment) {
 		case TOP:
-			y = physicalTextBounds.y + physicalTextBounds.height - startMargin;
+			y = physicalTextBounds.y + physicalTextBounds.height - verticalMargin;
 			break;
 		case CENTER:
 			y = physicalTextBounds.y + (physicalTextBounds.height / 2f) + (layout.height / 2f);
 			break;
 		case BOTTOM:
-			y = physicalTextBounds.y;
+			y = physicalTextBounds.y + verticalMargin;
 			break;
 		}
 
 		switch (horizontalAlignment) {
 		case LEFT:
-			x = physicalTextBounds.x + startMargin;
+			x = physicalTextBounds.x + horizontalMargin;
 			break;
 		case CENTER:
 			x = physicalTextBounds.x + (physicalTextBounds.width / 2f) - (layout.width / 2f);
 			break;
 		case RIGHT:
-			x = physicalTextBounds.x + physicalTextBounds.width - layout.width - startMargin;
+			x = physicalTextBounds.x + physicalTextBounds.width - layout.width - horizontalMargin;
 			break;
 		}
 		
