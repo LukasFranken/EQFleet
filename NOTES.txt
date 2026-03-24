@@ -32,14 +32,13 @@ GENERAL:
   x game
 
 REDESIGN:
-- fix labels
- -> ingame planet defense ui labels
-
+- resource transfer % as core stat of ship
+- fix pause screen
+- creation of hawk auto-equips ship
 - shop buy popup with more information
 - start with flagship instead of planet
 - planets, when captured get some sort of base defense
  -> starts off with a base armor
-- show resourcebar numbers
 - make componentlevels buyable
  -> level through use only for QLink
 - enable shipmodule upgrading after few lvls

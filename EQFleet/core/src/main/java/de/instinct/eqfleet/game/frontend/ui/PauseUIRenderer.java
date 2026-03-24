@@ -98,6 +98,7 @@ public class PauseUIRenderer {
 		int i = 1;
 		float labelHeight = 30;
 		workingLabel.setText("NAME - CONNECTED - LOADED");
+		workingLabel.setType(FontType.NORMAL);
 		workingLabel.getBounds().set(0, 500, GraphicsUtil.screenBounds().getWidth(), labelHeight);
 		workingLabel.render();
 		for (Player player : state.staticData.playerData.players) {
