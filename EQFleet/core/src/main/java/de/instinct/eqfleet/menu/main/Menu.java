@@ -97,6 +97,7 @@ public class Menu extends Scene {
 	
 	@Override
 	public void open() {
+		menuRenderer.init();
 		AudioManager.startRadio();
 		load();
 	}
