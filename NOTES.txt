@@ -33,7 +33,6 @@ GENERAL:
 
 REDESIGN:
 - resource transfer % as core stat of ship
-- fix pause screen
 - creation of hawk auto-equips ship
 - shop buy popup with more information
 - start with flagship instead of planet
@@ -53,7 +52,7 @@ REDESIGN:
 
 - duo/trio conquest
 
-- make chat messages 10€ each (reducable with upgrades)
+- make chat messages 10â‚¬ each (reducable with upgrades)
  -> for spam protection
  
 - background stars that move with tilt of phone
