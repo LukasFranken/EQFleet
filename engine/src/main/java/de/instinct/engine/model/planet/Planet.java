@@ -8,6 +8,7 @@ public class Planet extends Entity {
 	
 	public boolean ancient;
 	public float resourceGenerationSpeed;
+	public int turretSlotsLeft;
 	
 	public Planet clone() {
 		Planet clone = (Planet) super.clone();

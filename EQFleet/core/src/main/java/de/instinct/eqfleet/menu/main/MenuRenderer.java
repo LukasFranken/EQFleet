@@ -7,6 +7,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.api.core.modules.MenuModule;
+import de.instinct.eqfleet.ApplicationMode;
+import de.instinct.eqfleet.GlobalStaticData;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
 import de.instinct.eqfleet.menu.main.header.MenuHeader;
@@ -106,6 +108,7 @@ public class MenuRenderer extends BaseModuleRenderer {
 			
 			int i = 0;
 			for (MenuModule module : tabButtons.keySet()) {
+				if (module == MenuModule.PLAY && GlobalStaticData.mode != ApplicationMode.DEV) return;
 				if (MenuModel.buttons.contains(module)) {
 					Button moduleButton = tabButtons.get(module);
 					int column = i % elementsPerRow;

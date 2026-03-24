@@ -10,6 +10,7 @@ import de.instinct.engine.model.Player;
 import de.instinct.engine.model.planet.Planet;
 import de.instinct.engine.model.ship.ShipData;
 import de.instinct.engine.order.types.ShipMovementOrder;
+import de.instinct.engine.planet.PlanetProcessor;
 import de.instinct.engine.player.PlayerProcessor;
 import de.instinct.engine.stats.StatCollector;
 import de.instinct.engine.stats.model.unit.ShipStatistic;
@@ -61,11 +62,10 @@ public class ShipProcessor {
 		shipStatistic.getEngineStatistic().setDistanceTraveled(shipStatistic.getEngineStatistic().getDistanceTraveled() + distance);
 		if (EntityManager.entityDistance(ship, targetPlanet) <= 0.01) {
 			if (targetPlanetOwner.teamId != shipOwner.teamId) {
-				targetPlanet.ownerId = shipOwner.id;
-				targetPlanet.resourceGenerationSpeed = shipOwner.planetData.baseResourceGenerationSpeed;
+				PlanetProcessor.transferPlanetControl(state, targetPlanet, shipOwner);
 				targetPlanetOwner = shipOwner;
 			}
-			PlayerProcessor.addResources(targetPlanetOwner, shipData.resourceCost);
+			PlayerProcessor.addResources(targetPlanetOwner, shipData.resourceCost * shipData.transferRate);
 			ship.flaggedForDestroy = true;
 		}
 	}

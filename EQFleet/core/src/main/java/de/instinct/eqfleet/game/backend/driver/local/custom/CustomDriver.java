@@ -48,6 +48,7 @@ public class CustomDriver extends LocalDriver {
 		GameModel.activeGameState = gameStateInitializer.initialize(initialGameState);
 		GameModel.lastUpdateTimestampMS = System.currentTimeMillis();
 		finished = false;
+		System.out.println(GameModel.activeGameState.staticData.playerData);
 	}
 	
 	@Override

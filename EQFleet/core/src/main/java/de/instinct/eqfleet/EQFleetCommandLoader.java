@@ -255,6 +255,30 @@ public class EQFleetCommandLoader implements CommandLoader {
 					
 				})
 				.build());
+		configCommands.add(Command.builder()
+				.method("mode=")
+				.logMethod("mode=<dev/prod>")
+				.description("set application mode")
+				.action(new CommandAction() {
+					
+					@Override
+					public void execute(String message) {
+						String value = message.replace("mode=", "").trim().toLowerCase();
+						if (value.contentEquals("dev")) {
+							GlobalStaticData.mode = ApplicationMode.DEV;
+							PreferenceManager.save("mode", "DEV");
+							log("Application mode set to DEV");
+						} else if (value.contentEquals("prod")) {
+							GlobalStaticData.mode = ApplicationMode.PRODUCTION;
+							PreferenceManager.save("mode", "PRODUCTION");
+							log("Application mode set to PRODUCTION");
+						} else {
+							log("Invalid mode, use 'dev' or 'prod'");
+						}
+					}
+					
+				})
+				.build());
 		return configCommands;
 	}
 	

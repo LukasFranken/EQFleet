@@ -34,6 +34,10 @@ public class LibraryManager {
         ModelRenderer.init();
         PopupRenderer.init();
         Console.build();
+        String mode = PreferenceManager.load("mode");
+        if (!mode.contentEquals("")) {
+        	GlobalStaticData.mode = ApplicationMode.valueOf(mode);
+        }
 	}
 	
 	private static void loadFonts() {

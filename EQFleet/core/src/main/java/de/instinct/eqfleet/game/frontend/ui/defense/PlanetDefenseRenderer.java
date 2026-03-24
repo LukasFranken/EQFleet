@@ -55,7 +55,7 @@ public class PlanetDefenseRenderer {
 				.build();
 		
 		workingLabel = new Label("");
-		workingLabel.setType(FontType.MICRO_BOLD);
+		workingLabel.setType(FontType.SMALL_BOLD);
 		workingLabel.setBounds(new Rectangle());
 		workingLabel.setColor(new Color());
 		
@@ -113,7 +113,7 @@ public class PlanetDefenseRenderer {
 	        hullText = StringUtils.formatBigNumber(value, 1).replaceAll(" ", "");
 	    }
 
-	    float labelHeight = FontUtil.getFontHeightPx(FontType.MICRO_BOLD);
+	    float labelHeight = FontUtil.getFontHeightPx(FontType.SMALL_BOLD);
 	    float vx = projectedPosition.x / GraphicsUtil.getHorizontalDisplayScaleFactor();
 	    float vy;
 	    if (top) {

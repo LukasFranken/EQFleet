@@ -32,25 +32,21 @@ GENERAL:
   x game
 
 REDESIGN:
-- resource transfer % as core stat of ship
-- creation of hawk auto-equips ship
 - shop buy popup with more information
 - start with flagship instead of planet
-- planets, when captured get some sort of base defense
- -> starts off with a base armor
 - make componentlevels buyable
  -> level through use only for QLink
-- enable shipmodule upgrading after few lvls
+- enable shipmodule upgrading first upgrade available (wpn)
  -> short tutorial where player buys weapon upgrade and feels it
- 
+- duo/trio conquest
+- starmap resource overview colored
+
 - construction mode
  -> screen blurs except for planets
  -> highlights planets
 
 - API delete service interfaces and use API interfaces
  -> they are the same and meant to be the same
-
-- duo/trio conquest
 
 - make chat messages 10€ each (reducable with upgrades)
  -> for spam protection
@@ -109,7 +105,6 @@ AUDIO:
  -> changes genre depnding on menu/game
 
 GAME:
-- make cp/ap bars borders as thick for ios as on pc
 - make beam actual beam
 - projectile impact calculation for high speed collision
 - dont show explode animation/sound when proj reaches eol
@@ -158,6 +153,8 @@ Jan 30 21:46:58 ip-172-30-0-159.eu-central-1.compute.internal bash[10704]: at ja
   - create linux command to see status of all fleet services
 ---------------------------------------------------------------------
 FUTURE RELEASES TODO:
+- decouple meta from whole loadout
+
 - refactor ui element rendering and modularity
 
 - players can form alliances

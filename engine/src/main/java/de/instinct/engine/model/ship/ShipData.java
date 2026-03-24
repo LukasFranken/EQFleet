@@ -12,5 +12,6 @@ public class ShipData extends UnitData {
 	public EngineType engineType;
 	public float speed;
 	public float acceleration;
+	public float transferRate;
 
 }

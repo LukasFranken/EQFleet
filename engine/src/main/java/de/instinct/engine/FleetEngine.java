@@ -15,6 +15,7 @@ public class FleetEngine {
 	public static void initialize(GameState state) {
 		PlayerProcessor.initialize(state);
 		CombatProcessor.initialize(state);
+		PlanetProcessor.initialize(state);
 	}
 
 	public static void update(GameState state, long progressionMS) {

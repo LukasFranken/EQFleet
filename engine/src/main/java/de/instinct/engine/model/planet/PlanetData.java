@@ -6,7 +6,6 @@ import lombok.ToString;
 public class PlanetData {
 	
 	public float baseResourceGenerationSpeed;
-	public float baseArmor;
-	public float baseShield;
+	public int turretSlots;
 
 }

@@ -9,7 +9,7 @@ import de.instinct.engine.order.types.ShipMovementOrder;
 public class CombatProcessor {
     
     public static void initialize(GameState state) {
-		TurretProcessor.initializeTurrets(state);
+    	
 	}
 
     public static void update(GameState state, long deltaTime) {
@@ -29,7 +29,7 @@ public class CombatProcessor {
         if (order instanceof BuildTurretOrder) {
         	BuildTurretOrder buildTurretOrder = (BuildTurretOrder) order;
         	if (CombatOrderValidator.isValid(buildTurretOrder, state)) {
-        		TurretProcessor.createTurretInstance(buildTurretOrder.planetId, buildTurretOrder.turretId, state, true);
+        		TurretProcessor.createTurret(buildTurretOrder.planetId, buildTurretOrder.turretId, state, true);
         		return true;
         	}
         }
