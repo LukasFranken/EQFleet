@@ -61,7 +61,7 @@ public class PostGame extends Scene {
 
 	@Override
 	public void init() {
-		if (PostGameModel.reward != null && PostGameModel.dataUpdated) {
+		if (PostGameModel.dataUpdated) {
 			halted = false;
 			skipped = false;
 			elements = new ArrayList<>();
@@ -70,39 +70,51 @@ public class PostGame extends Scene {
 					.duration(PER_ITEM_DURATION_MS)
 					.build());
 			
-			skipButton.setFixedWidth(100);
-			skipButton.setFixedHeight(30);
-			skipButton.setPosition((GraphicsUtil.screenBounds().width / 2) - (skipButton.getFixedWidth() / 2), 50);
-			elements.add(DynamicPostGameElement.builder()
-					.duration(1f)
-					.uiElement(skipButton)
-					.build());
-			
-			Label header = new Label(PostGameModel.reward.getVictoryType().toString().replace("_", " "));
-			header.setType(FontType.LARGE);
-			header.setFixedHeight(50);
-			header.setFixedWidth(GraphicsUtil.screenBounds().width);
-			header.setPosition(0, GraphicsUtil.screenBounds().getHeight() - 110);
-			elements.add(DynamicPostGameElement.builder()
-					.duration(PER_ITEM_DURATION_MS)
-					.uiElement(header)
-					.build());
-			
-			int offset = 200;
-			PostGameExperienceElement postGameExperienceElement = new PostGameExperienceElement(PER_ITEM_DURATION_MS, offset);
-			elements.add(postGameExperienceElement);
-			offset += postGameExperienceElement.getUiElement().calculateHeight();
-			
-			PostGameResourceElement postGameResourceElement = new PostGameResourceElement(PER_ITEM_DURATION_MS, offset);
-			elements.add(postGameResourceElement);
-			offset += postGameResourceElement.getHeight() + 20;
-			
-			for (ShipResult shipResult : PostGameModel.reward.getShipResults()) {
-				PostGameShipProgressOverview postGameShipProgressOverview = new PostGameShipProgressOverview(PER_ITEM_DURATION_MS, shipResult, offset);
-				elements.add(postGameShipProgressOverview);
-				offset += postGameShipProgressOverview.getHeight() + 20;
+			if (PostGameModel.reward != null) {
+				skipButton.setFixedWidth(100);
+				skipButton.setFixedHeight(30);
+				skipButton.setPosition((GraphicsUtil.screenBounds().width / 2) - (skipButton.getFixedWidth() / 2), 50);
+				elements.add(DynamicPostGameElement.builder()
+						.duration(1f)
+						.uiElement(skipButton)
+						.build());
+				
+				Label header = new Label(PostGameModel.reward.getVictoryType().toString().replace("_", " "));
+				header.setType(FontType.LARGE);
+				header.setFixedHeight(50);
+				header.setFixedWidth(GraphicsUtil.screenBounds().width);
+				header.setPosition(0, GraphicsUtil.screenBounds().getHeight() - 110);
+				elements.add(DynamicPostGameElement.builder()
+						.duration(PER_ITEM_DURATION_MS)
+						.uiElement(header)
+						.build());
+				
+				int offset = 200;
+				PostGameExperienceElement postGameExperienceElement = new PostGameExperienceElement(PER_ITEM_DURATION_MS, offset);
+				elements.add(postGameExperienceElement);
+				offset += postGameExperienceElement.getUiElement().calculateHeight();
+				
+				PostGameResourceElement postGameResourceElement = new PostGameResourceElement(PER_ITEM_DURATION_MS, offset);
+				elements.add(postGameResourceElement);
+				offset += postGameResourceElement.getHeight() + 20;
+				
+				for (ShipResult shipResult : PostGameModel.reward.getShipResults()) {
+					PostGameShipProgressOverview postGameShipProgressOverview = new PostGameShipProgressOverview(PER_ITEM_DURATION_MS, shipResult, offset);
+					elements.add(postGameShipProgressOverview);
+					offset += postGameShipProgressOverview.getHeight() + 20;
+				}
+				
+			} else {
+				Label loadingLabel = new Label("Failed loading post game data\nGame results are saved\nYou can skip this screen");
+				loadingLabel.setType(FontType.NORMAL);
+				loadingLabel.setFixedHeight(50);
+				loadingLabel.setFixedWidth(GraphicsUtil.screenBounds().width);
+				loadingLabel.setPosition(0, GraphicsUtil.screenBounds().getHeight() / 2);
+				elements.add(DynamicPostGameElement.builder()
+						.duration(PER_ITEM_DURATION_MS)
+						.uiElement(loadingLabel)
+						.build());
 			}
-			
 			claimButton.setFixedWidth(100);
 			claimButton.setFixedHeight(30);
 			claimButton.setPosition((GraphicsUtil.screenBounds().width / 2) - (claimButton.getFixedWidth() / 2), 50);
@@ -123,11 +135,12 @@ public class PostGame extends Scene {
 			    		Logger.log("Menu", "Failed to load post game data for UUID " + GameModel.lastGameUUID, ConsoleColor.RED);
 			    	} else {
 			    		PostGameModel.reward = result;
-			    		PostGameModel.dataUpdated = true;
 			    	}
+			    	PostGameModel.dataUpdated = true;
 			    },
 			    error -> {
 			    	Logger.log("Menu", "Failed to load post game data for UUID " + GameModel.lastGameUUID + " with error: " + error.getMessage(), ConsoleColor.RED);
+			    	PostGameModel.dataUpdated = true;
 			    }
 		);
 	}
@@ -135,7 +148,7 @@ public class PostGame extends Scene {
 	@Override
 	public void update() {
 		init();
-		if (PostGameModel.reward != null) {
+		if (elements != null) {
 			float thisFrameDelta = Gdx.graphics.getDeltaTime();
 			boolean anyHalted = false;
 			for (PostGameElement element : elements) {
@@ -172,7 +185,7 @@ public class PostGame extends Scene {
 	
 	@Override
 	public void render() {
-		if (PostGameModel.reward != null) {
+		if (elements != null) {
 			Profiler.startFrame("POSTGAME_RNDR");
 			for (PostGameElement element : elements) {
 				if (element.getElapsed() > 0) {

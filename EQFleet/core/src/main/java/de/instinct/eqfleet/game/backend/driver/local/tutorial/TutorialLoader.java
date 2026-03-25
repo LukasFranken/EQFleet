@@ -51,7 +51,6 @@ public class TutorialLoader {
 		GameStateInitialization initialGameState = new GameStateInitialization();
 		initialGameState.setGameUUID("tutorial");
 		initialGameState.setPlayers(loadPlayers());
-		initialGameState.setAncientPlanetResourceDegradationFactor(0.25f);;
 		initialGameState.setGameTimeLimitMS(240_000);
 		initialGameState.setAtpToWin(30);
 		initialGameState.setPauseTimeLimitMS(20_000);
@@ -163,6 +162,7 @@ public class TutorialLoader {
     	neutralPlanet2.setPosition(new Vector2(-150, -500));
     	planets.add(neutralPlanet2);
 		map.setPlanets(planets);
+		map.setAncientPlanetResourceDegradationFactor(0.1f);
 		return map;
 	}
 

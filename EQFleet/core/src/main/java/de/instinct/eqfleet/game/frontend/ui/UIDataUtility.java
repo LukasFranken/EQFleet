@@ -50,7 +50,11 @@ public class UIDataUtility {
 		double totalResourceGenerationSpeed = player.resourceGenerationSpeed;
 		for (Planet planet : state.entityData.planets) {
 			if (planet.ownerId == player.id) {
-				totalResourceGenerationSpeed += planet.resourceGenerationSpeed;
+				if (planet.ancient) {
+					totalResourceGenerationSpeed -= state.staticData.ancientPlanetResourceDegradationFactor;
+				} else {
+					totalResourceGenerationSpeed += planet.resourceGenerationSpeed;
+				}
 			}
 		}
 		return totalResourceGenerationSpeed;

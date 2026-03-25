@@ -39,7 +39,6 @@ public class CustomLoader {
 				.gameMode(GameMode.CONQUEST)
 				.versusMode(VersusMode.AI)
 				.build()));
-		initialization.setAncientPlanetResourceDegradationFactor(0.5f);;
 		initialization.setGameTimeLimitMS(180_000);
 		initialization.setAtpToWin(50);
 		initialization.setPauseTimeLimitMS(300_000);
@@ -77,6 +76,7 @@ public class CustomLoader {
 		generatePlayerPlanets(planets, gameType);
 		map.setPlanets(planets);
 		map.setZoomFactor(1f);
+		map.setAncientPlanetResourceDegradationFactor(0.1f);
 		return map;
 	}
 

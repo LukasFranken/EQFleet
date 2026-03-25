@@ -2,6 +2,7 @@ package de.instinct.engine.planet;
 
 import com.badlogic.gdx.math.Vector2;
 
+import de.instinct.engine.combat.Turret;
 import de.instinct.engine.combat.TurretProcessor;
 import de.instinct.engine.entity.EntityProcessor;
 import de.instinct.engine.model.GameState;
@@ -29,7 +30,8 @@ public class PlanetProcessor {
 	            	double available = owner.currentResources;
 	            	double desired = ((double) deltaMS / 1000D) * state.staticData.ancientPlanetResourceDegradationFactor;
 	            	double actualLoss = Math.min(available, desired);
-
+	            	PlayerProcessor.addResources(owner, -actualLoss);
+	            	
 	            	double atpGain = actualLoss / state.staticData.ancientPlanetResourceDegradationFactor;
 	            	double newATPValue = state.teamATPs.get(owner.teamId) + atpGain;
 	            	state.teamATPs.put(owner.teamId, newATPValue > state.staticData.atpToWin ? state.staticData.atpToWin : newATPValue);
@@ -37,6 +39,10 @@ public class PlanetProcessor {
 	            	if (available < desired) {
 	            	    planet.ownerId = 0;
 	            	    owner.currentResources = 0;
+	            	    Turret ancientTurret = EngineUtility.getPlanetTurret(state.entityData.turrets, planet.id);
+	            	    if (ancientTurret != null) {
+	            	    	ancientTurret.flaggedForDestroy = true;
+	            	    }
 	            	}
 	            	
 	            	PlayerStatistic playerStat = StatCollector.getPlayer(state.gameUUID, owner.id);

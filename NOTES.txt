@@ -39,6 +39,8 @@ REDESIGN:
 - enable shipmodule upgrading first upgrade available (wpn)
  -> short tutorial where player buys weapon upgrade and feels it
 - duo/trio conquest
+- trading between players
+ -> popup in social
 
 - construction mode
  -> screen blurs except for planets
@@ -49,7 +51,7 @@ REDESIGN:
 
 - make chat messages 10€ each (reducable with upgrades)
  -> for spam protection
- 
+
 - background stars that move with tilt of phone
 
 - full dual-language

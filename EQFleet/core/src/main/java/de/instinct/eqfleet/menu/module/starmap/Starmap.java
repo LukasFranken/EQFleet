@@ -5,12 +5,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import de.instinct.api.core.API;
 import de.instinct.api.core.modules.MenuModule;
 import de.instinct.api.matchmaking.model.FactionMode;
-import de.instinct.api.matchmaking.model.GameMode;
-import de.instinct.api.matchmaking.model.GameType;
-import de.instinct.api.matchmaking.model.VersusMode;
+import de.instinct.api.starmap.dto.StartConquestRequest;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
-import de.instinct.eqfleet.menu.module.play.Play;
-import de.instinct.eqfleet.menu.module.play.PlayModel;
+import de.instinct.eqfleet.menu.module.social.SocialModel;
 import de.instinct.eqfleet.menu.module.starmap.message.StarmapMessage;
 import de.instinct.eqfleet.menu.module.starmap.message.types.ReloadStarmapMessage;
 import de.instinct.eqfleet.menu.module.starmap.message.types.StartConquestMessage;
@@ -54,12 +51,26 @@ public class Starmap extends BaseModule {
 	
 	private void loadData() {
 		WebManager.enqueue(
-				() -> API.starmap().data(),
+				() -> API.starmap().data(API.authKey),
 			    result -> {
 			    	StarmapModel.starmapData = result;
+			    }
+		);
+		WebManager.enqueue(
+				() -> API.starmap().sector(getFactionMode()),
+			    result -> {
+			    	StarmapModel.sectorData = result;
 			    	StarmapModel.dataUpdated = true;
 			    }
 		);
+	}
+	
+	private FactionMode getFactionMode() {
+		if (SocialModel.groupData != null) {
+			if (SocialModel.groupData.getMembers().size() == 2) return FactionMode.TWO_VS_TWO;
+			if (SocialModel.groupData.getMembers().size() == 3) return FactionMode.THREE_VS_THREE;
+		}
+		return FactionMode.ONE_VS_ONE;
 	}
 
 	@Override
@@ -68,22 +79,15 @@ public class Starmap extends BaseModule {
 	}
 
 	private void startConquest(int galaxyId, int starsystemId) {
+		StartConquestRequest request = new StartConquestRequest();
+		request.setGroupToken(SocialModel.playerData.getGroupToken());
+		request.setUserToken(API.authKey);
+		request.setGalaxyId(galaxyId);
+		request.setSystemId(starsystemId);
 		WebManager.enqueue(
-			    () -> API.matchmaking().create(),
-			    resultCreateLobby -> {
-			    	PlayModel.lobbyUUID = resultCreateLobby.getLobbyUUID();
-			    	WebManager.enqueue(
-						    () -> API.matchmaking().settype(PlayModel.lobbyUUID, 
-						    		GameType.builder()
-						    		.map(galaxyId + "_" + starsystemId)
-						    		.factionMode(FactionMode.ONE_VS_ONE)
-						    		.gameMode(GameMode.CONQUEST)
-						    		.versusMode(VersusMode.AI)
-						    		.build()),
-						    result -> {
-						    	Play.startMatchmaking();
-						    }
-					);
+			    () -> API.starmap().start(request),
+			    resultStart -> {
+			    	
 			    }
 		);
 	}

@@ -10,13 +10,11 @@ public class VictoryCalculator {
 	public static void checkVictory(GameState state) {
 	    if (state.resultData.winner != 0) return;
 	    checkSurrenderVictory(state);
-	    checkMapATPVictory(state);
-	    checkEliminationVictory(state);
+	    if (state.resultData.winner == 0) checkMapATPVictory(state);
+	    if (state.resultData.winner == 0) checkEliminationVictory(state);
 	    if (state.gameTimeMS >= state.staticData.maxGameTimeMS) {
 	    	calculatePlanetCountVictory(state);
-	    	if (state.resultData.winner == 0) {
-	    		calculateATPVictory(state);
-	    	}
+	    	if (state.resultData.winner == 0) calculateATPVictory(state);
 	    }
 	}
 	

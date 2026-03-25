@@ -157,7 +157,7 @@ public class StarmapRenderer extends BaseModuleRenderer {
 	@Override
 	public void update() {
 		if (StarmapModel.starmapData != null && StarmapModel.dataUpdated) {
-			galaxySynchronizer.update(StarmapModel.starmapData.getSectorData().getGalaxies(), galaxies);
+			galaxySynchronizer.update(StarmapModel.sectorData.getGalaxies(), galaxies);
 			StarmapModel.dataUpdated = false;
 		}
 	}

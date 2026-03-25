@@ -45,12 +45,12 @@ public class Play extends BaseModule {
 			try {
 				updateLobby();
 				if (PlayModel.lobbyUUID == null || PlayModel.lobbyUUID.isEmpty()) {
-	        		WebManager.enqueue(
+	        		/*WebManager.enqueue(
 	            			() -> API.matchmaking().invites(),
 	    				    result -> {
 	    				    	PlayModel.inviteStatus = result;
 	    				    }
-	        		);
+	        		);*/
 	    		} else {
 	    			if (PlayModel.lobbyStatus != null && (PlayModel.lobbyStatus.getCode() == LobbyStatusCode.MATCHING || PlayModel.lobbyStatus.getCode() == LobbyStatusCode.IN_GAME)) {
 	    				WebManager.enqueue(
@@ -108,9 +108,7 @@ public class Play extends BaseModule {
 	public static void accept(String value) {
 		WebManager.enqueue(
 			    () -> API.matchmaking().accept(value),
-			    result -> {
-			    	
-			    }
+			    result -> {}
 		);
 	}
 	
