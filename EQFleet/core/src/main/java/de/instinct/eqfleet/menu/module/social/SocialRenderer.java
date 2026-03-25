@@ -94,6 +94,7 @@ public class SocialRenderer extends BaseModuleRenderer {
 			@Override
 			public void confirmed() {
 				SocialModel.messageQueue.add(FriendRequestMessage.builder().toName(addFriendField.getContent()).build());
+				addFriendField.setContent("");
 			}
 			
 		});

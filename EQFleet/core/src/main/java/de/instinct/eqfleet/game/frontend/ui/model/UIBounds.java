@@ -11,11 +11,8 @@ public class UIBounds {
 
 	private Rectangle time;
 	private Rectangle ownResBar;
-	private Rectangle ownResBarLabel;
 	private Rectangle teammate1ResBar;
-	private Rectangle teammate1ResBarLabel;
 	private Rectangle teammate2ResBar;
-	private Rectangle teammate2ResBarLabel;
 	private Rectangle enemy1ResBar;
 	private Rectangle enemy1ResBarLabel;
 	private Rectangle enemy2ResBar;

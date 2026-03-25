@@ -120,7 +120,7 @@ public class StarmapRenderer extends BaseModuleRenderer {
 		galaxies = new ArrayList<>();
 		galaxySynchronizer = ListSynchronizer.<GalaxyData, Galaxy>builder()
 				.synchronizationConfiguration(SynchronizationConfiguration.<GalaxyData, Galaxy>builder()
-						.comparator((galaxyData, galaxy) -> galaxyData.getId() == galaxy.getData().getId())
+						.comparator((galaxyData, galaxy) -> galaxyData.getId() == galaxy.getData().getId() && galaxy.getData().getStarsystems().get(0).getMapPreview().getPlanets().size() == galaxyData.getStarsystems().get(0).getMapPreview().getPlanets().size())
 						.generator(galaxyData -> createGalaxy(galaxyData))
 						.disposer(galaxy -> disposeGalaxy(galaxy))
 						.build())

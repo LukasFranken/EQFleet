@@ -161,12 +161,7 @@ public class GameUILoader {
 			@Override
 			public void execute() {
 				PlayerData playerData = UIDataUtility.getPlayerData(teammate1CPElement.getCurrentGameState());
-				Label cpLabel = new Label("CP");
-				cpLabel.setColor(GameConfig.getPlayerColor(playerData.getTeammate1().id));
-				cpLabel.setBounds(bounds.getTeammate1ResBarLabel());
-				cpLabel.render();
 				drawRectangle(bounds.getTeammate1ResBar(), GameConfig.getPlayerColor(playerData.getTeammate1().id));
-				drawRectangle(bounds.getTeammate1ResBarLabel(), GameConfig.getPlayerColor(playerData.getTeammate1().id));
 			}
 			
 		});
@@ -204,12 +199,7 @@ public class GameUILoader {
 			@Override
 			public void execute() {
 				PlayerData playerData = UIDataUtility.getPlayerData(teammate2CPElement.getCurrentGameState());
-				Label cpLabel = new Label("CP");
-				cpLabel.setColor(GameConfig.getPlayerColor(playerData.getTeammate2().id));
-				cpLabel.setBounds(bounds.getTeammate2ResBarLabel());
-				cpLabel.render();
 				drawRectangle(bounds.getTeammate2ResBar(), GameConfig.getPlayerColor(playerData.getTeammate2().id));
-				drawRectangle(bounds.getTeammate2ResBarLabel(), GameConfig.getPlayerColor(playerData.getTeammate2().id));
 			}
 			
 		});

@@ -74,7 +74,6 @@ public class TestEngineManager {
 		init.setGameUUID(UUID.randomUUID().toString());
 		init.setPlayers(initializePlayers(1));
 		init.setMap(initializeMap(1));
-		init.setAncientPlanetResourceDegradationFactor(0.5f);;
 		init.setGameTimeLimitMS(180_000);
 		init.setAtpToWin(50);
 		init.setPauseTimeLimitMS(30_000);

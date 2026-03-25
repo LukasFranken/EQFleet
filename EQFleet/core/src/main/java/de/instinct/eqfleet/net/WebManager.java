@@ -70,7 +70,7 @@ public class WebManager {
 			
 			@Override
 			public void log(String message) {
-				Logger.log("API", StringUtils.limitWithAppendix(message, 500), ConsoleColor.MAGENTA);
+				Logger.log("API", StringUtils.limitWithAppendix(message, 1000), ConsoleColor.MAGENTA);
 			}
 			
 		});

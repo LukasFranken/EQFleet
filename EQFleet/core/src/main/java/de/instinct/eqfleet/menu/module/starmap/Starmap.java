@@ -65,7 +65,7 @@ public class Starmap extends BaseModule {
 		);
 	}
 	
-	private FactionMode getFactionMode() {
+	public static FactionMode getFactionMode() {
 		if (SocialModel.groupData != null) {
 			if (SocialModel.groupData.getMembers().size() == 2) return FactionMode.TWO_VS_TWO;
 			if (SocialModel.groupData.getMembers().size() == 3) return FactionMode.THREE_VS_THREE;

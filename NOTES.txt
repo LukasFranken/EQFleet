@@ -41,6 +41,8 @@ REDESIGN:
 - duo/trio conquest
 - trading between players
  -> popup in social
+- postgamerenderer getexperience duration null bug
+- different enemy colors
 
 - construction mode
  -> screen blurs except for planets

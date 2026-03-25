@@ -6,7 +6,9 @@ import com.badlogic.gdx.math.Vector2;
 
 import de.instinct.api.game.dto.MapPreview;
 import de.instinct.api.game.dto.PreviewPlanet;
+import de.instinct.api.matchmaking.model.FactionMode;
 import de.instinct.eqfleet.game.GameConfig;
+import de.instinct.eqfleet.menu.module.starmap.Starmap;
 import de.instinct.eqlibgdxutils.MathUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
@@ -28,6 +30,7 @@ public class MapPreviewSection extends Component {
 		border.setColor(new Color(0.5f, 0.5f, 0.5f, 1f));
 		border.setSize(2f);
 		super.setBorder(border);
+		System.out.println(mapPreview);
 	}
 	
 	@Override
@@ -67,7 +70,21 @@ public class MapPreviewSection extends Component {
 	private Color getPlayerColor(int ownerId) {
 		if (ownerId == 0) return GameConfig.neutralColor;
 		if (ownerId == 1) return GameConfig.teammate1Color;
-		if (ownerId == 2) return GameConfig.enemyColor;
+		if (Starmap.getFactionMode() == FactionMode.ONE_VS_ONE) {
+			if (ownerId == 2) return GameConfig.enemyColor;
+		}
+		if (Starmap.getFactionMode() == FactionMode.TWO_VS_TWO) {
+			if (ownerId == 2) return GameConfig.teammate1Color;
+			if (ownerId == 3) return GameConfig.enemyColor;
+			if (ownerId == 4) return GameConfig.enemyColor;
+		}
+		if (Starmap.getFactionMode() == FactionMode.THREE_VS_THREE) {
+			if (ownerId == 2) return GameConfig.teammate1Color;
+			if (ownerId == 3) return GameConfig.teammate2Color;
+			if (ownerId == 4) return GameConfig.enemyColor;
+			if (ownerId == 5) return GameConfig.enemyColor;
+			if (ownerId == 6) return GameConfig.enemyColor;
+		}
 		return null;
 	}
 
