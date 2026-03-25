@@ -25,9 +25,11 @@ import de.instinct.api.starmap.dto.StarsystemData;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
 import de.instinct.eqfleet.menu.common.components.label.DefaultLabelFactory;
+import de.instinct.eqfleet.menu.common.components.label.LabelStackConfiguration;
 import de.instinct.eqfleet.menu.common.synchronizer.ListSynchronizer;
 import de.instinct.eqfleet.menu.common.synchronizer.SynchronizationConfiguration;
 import de.instinct.eqfleet.menu.main.MenuModel;
+import de.instinct.eqfleet.menu.module.profile.ProfileModuleAPI;
 import de.instinct.eqfleet.menu.module.ship.ShipyardModuleAPI;
 import de.instinct.eqfleet.menu.module.starmap.message.types.StartConquestMessage;
 import de.instinct.eqfleet.menu.module.starmap.model.Galaxy;
@@ -355,7 +357,14 @@ public class StarmapRenderer extends BaseModuleRenderer {
 		systemInfoElements.getElements().add(DefaultLabelFactory.createLabelStack("EXP", StringUtils.formatBigNumber(starsystem.getExperience()), popupWidth));
 		systemInfoElements.getElements().add(DefaultLabelFactory.createLabelStack("-------------", "-------------", popupWidth));
 		for (ResourceAmount resource : starsystem.getResourceRewards()) {
-			systemInfoElements.getElements().add(DefaultLabelFactory.createLabelStack(resource.getType().toString(), StringUtils.formatBigNumber(resource.getAmount()), popupWidth));
+			systemInfoElements.getElements().add(DefaultLabelFactory.createLabelStack(
+					LabelStackConfiguration.builder()
+					.tag(resource.getType().toString())
+					.value(StringUtils.formatBigNumber(resource.getAmount()))
+					.colorTag(ProfileModuleAPI.getColorForResource(resource.getType()))
+					.colorValue(ProfileModuleAPI.getColorForResource(resource.getType()))
+					.width(popupWidth)
+					.build()));
 		}
 		systemInfoElements.getElements().add(travelButton);
 		Popup systemInfoPopup = Popup.builder()

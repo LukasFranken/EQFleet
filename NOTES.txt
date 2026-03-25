@@ -39,7 +39,6 @@ REDESIGN:
 - enable shipmodule upgrading first upgrade available (wpn)
  -> short tutorial where player buys weapon upgrade and feels it
 - duo/trio conquest
-- starmap resource overview colored
 
 - construction mode
  -> screen blurs except for planets
