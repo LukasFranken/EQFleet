@@ -5,6 +5,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import de.instinct.api.core.API;
 import de.instinct.api.core.modules.MenuModule;
 import de.instinct.api.matchmaking.model.FactionMode;
+import de.instinct.api.starmap.dto.SectorDataRequest;
+import de.instinct.api.starmap.dto.SectorDataRequestType;
 import de.instinct.api.starmap.dto.StartConquestRequest;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
 import de.instinct.eqfleet.menu.module.social.SocialModel;
@@ -57,12 +59,21 @@ public class Starmap extends BaseModule {
 			    }
 		);
 		WebManager.enqueue(
-				() -> API.starmap().sector(getFactionMode()),
+				() -> API.starmap().sector(buildSectorDataRequest()),
 			    result -> {
 			    	StarmapModel.sectorData = result;
 			    	StarmapModel.dataUpdated = true;
 			    }
 		);
+	}
+	
+	private SectorDataRequest buildSectorDataRequest() {
+		SectorDataRequest request = new SectorDataRequest();
+		request.setType(getFactionMode() == FactionMode.ONE_VS_ONE ? SectorDataRequestType.SOLO : SectorDataRequestType.GROUP);
+		request.setMode(getFactionMode());
+		request.setToken(API.authKey);
+		if (SocialModel.playerData != null) request.setGroupToken(SocialModel.playerData.getGroupToken());
+		return request;
 	}
 	
 	public static FactionMode getFactionMode() {

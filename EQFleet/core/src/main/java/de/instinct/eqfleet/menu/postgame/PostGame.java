@@ -57,6 +57,7 @@ public class PostGame extends Scene {
 			}
 			
 		});
+		elements = new ArrayList<>();
 	}
 
 	@Override
@@ -64,7 +65,6 @@ public class PostGame extends Scene {
 		if (PostGameModel.dataUpdated) {
 			halted = false;
 			skipped = false;
-			elements = new ArrayList<>();
 			
 			elements.add(DynamicPostGameElement.builder()
 					.duration(PER_ITEM_DURATION_MS)
@@ -128,6 +128,7 @@ public class PostGame extends Scene {
 
 	@Override
 	public void open() {
+		elements.clear();
 		WebManager.enqueue(
 			    () -> API.matchmaking().result(GameModel.lastGameUUID),
 			    result -> {

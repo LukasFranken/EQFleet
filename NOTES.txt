@@ -32,17 +32,22 @@ GENERAL:
   x game
 
 REDESIGN:
+- main menu 3 tabs:
+ -> Flagship
+  -> Starmap, Shipyard, Buildings
+ -> Commander
+  -> Social, Settings, Profile
+ -> Station
+  -> Shop (Chips, Shards (drop from maps), Market)
 - shop buy popup with more information
 - start with flagship instead of planet
 - make componentlevels buyable
- -> level through use only for QLink
 - enable shipmodule upgrading first upgrade available (wpn)
  -> short tutorial where player buys weapon upgrade and feels it
 - duo/trio conquest
 - trading between players
  -> popup in social
-- postgamerenderer getexperience duration null bug
-- different enemy colors
+- 3v3: onlinedriver:49-null, check load order safety
 
 - construction mode
  -> screen blurs except for planets

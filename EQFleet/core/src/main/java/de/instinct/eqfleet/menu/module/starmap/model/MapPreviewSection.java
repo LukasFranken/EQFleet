@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Vector2;
 
 import de.instinct.api.game.dto.MapPreview;
 import de.instinct.api.game.dto.PreviewPlanet;
-import de.instinct.api.matchmaking.model.FactionMode;
 import de.instinct.eqfleet.game.GameConfig;
 import de.instinct.eqfleet.menu.module.starmap.Starmap;
 import de.instinct.eqlibgdxutils.MathUtil;
@@ -30,7 +29,6 @@ public class MapPreviewSection extends Component {
 		border.setColor(new Color(0.5f, 0.5f, 0.5f, 1f));
 		border.setSize(2f);
 		super.setBorder(border);
-		System.out.println(mapPreview);
 	}
 	
 	@Override
@@ -58,34 +56,13 @@ public class MapPreviewSection extends Component {
 		float planetRadius = 3f * mapPreview.getZoomFactor();
 		for (PreviewPlanet planet : mapPreview.getPlanets()) {
 			Vector2 planetScreenPos = getScreenPosition(planet.getXPos(), planet.getYPos());
-			Color planetColor = planet.isAncient() && planet.getOwnerId() == 0 ? GameConfig.ancientColor : getPlayerColor(planet.getOwnerId());
+			Color planetColor = planet.isAncient() && planet.getOwnerId() == 0 ? GameConfig.ancientColor : GameConfig.getPlayerColor(planet.getOwnerId(), (Starmap.getFactionMode().teamPlayerCount * 2) + 1, planet.getOwnerId() <= Starmap.getFactionMode().teamPlayerCount);
 			Shapes.draw(EQCircle.builder()
 					.position(planetScreenPos)
 					.radius(planetRadius)
 					.color(planetColor)
 					.build());
 		}
-	}
-
-	private Color getPlayerColor(int ownerId) {
-		if (ownerId == 0) return GameConfig.neutralColor;
-		if (ownerId == 1) return GameConfig.teammate1Color;
-		if (Starmap.getFactionMode() == FactionMode.ONE_VS_ONE) {
-			if (ownerId == 2) return GameConfig.enemyColor;
-		}
-		if (Starmap.getFactionMode() == FactionMode.TWO_VS_TWO) {
-			if (ownerId == 2) return GameConfig.teammate1Color;
-			if (ownerId == 3) return GameConfig.enemyColor;
-			if (ownerId == 4) return GameConfig.enemyColor;
-		}
-		if (Starmap.getFactionMode() == FactionMode.THREE_VS_THREE) {
-			if (ownerId == 2) return GameConfig.teammate1Color;
-			if (ownerId == 3) return GameConfig.teammate2Color;
-			if (ownerId == 4) return GameConfig.enemyColor;
-			if (ownerId == 5) return GameConfig.enemyColor;
-			if (ownerId == 6) return GameConfig.enemyColor;
-		}
-		return null;
 	}
 
 	private Vector2 getScreenPosition(float xPos, float yPos) {

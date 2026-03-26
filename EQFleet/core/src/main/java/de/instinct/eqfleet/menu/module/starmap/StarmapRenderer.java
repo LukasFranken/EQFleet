@@ -81,6 +81,9 @@ public class StarmapRenderer extends BaseModuleRenderer {
 	private boolean isLoading;
 	private Rectangle screenAdjustedModuleBounds;
 	
+	private Label loadingLabel;
+	private Label campaignLabel;
+	
 	@Override
 	public void init() {
 		screenAdjustedModuleBounds = new Rectangle(MenuModel.moduleBounds);
@@ -125,6 +128,19 @@ public class StarmapRenderer extends BaseModuleRenderer {
 						.disposer(galaxy -> disposeGalaxy(galaxy))
 						.build())
 				.build();
+		
+		loadingLabel = new Label("Loading...");
+		loadingLabel.setType(FontType.LARGE);
+		loadingLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
+		loadingLabel.setColor(Color.WHITE);
+		
+		campaignLabel = new Label("");
+        Border campaignBorder = new Border();
+        campaignBorder.setColor(new Color(SkinManager.skinColor));
+        campaignBorder.setSize(2f);
+        campaignLabel.setType(FontType.LARGE);
+        campaignLabel.setBorder(campaignBorder);
+        campaignLabel.setBackgroundColor(Color.BLACK);
 	}
 	
 	private Galaxy createGalaxy(GalaxyData galaxy) {
@@ -160,6 +176,27 @@ public class StarmapRenderer extends BaseModuleRenderer {
 			galaxySynchronizer.update(StarmapModel.sectorData.getGalaxies(), galaxies);
 			StarmapModel.dataUpdated = false;
 		}
+		loadingLabel.setBounds(MenuModel.moduleBounds.x, MenuModel.moduleBounds.y + (MenuModel.moduleBounds.height / 2) - (100 / 2), MenuModel.moduleBounds.width, 100f);
+		
+		campaignLabel.setAlpha(MenuModel.alpha);
+		campaignLabel.setText(getCampaignLabelString());
+		campaignLabel.setBounds(
+        		MenuModel.moduleBounds.x + (MenuModel.moduleBounds.width / 2) - (campaignLabel.getFixedWidth() / 2),
+        		MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - 70f,
+        		FontUtil.getFontTextWidthPx(campaignLabel.getText().length(), FontType.LARGE) + 20f,
+        		40f);
+	}
+
+	private String getCampaignLabelString() {
+		switch (Starmap.getFactionMode()) {
+		case ONE_VS_ONE:
+			return "SOLO CONQUEST";
+		case TWO_VS_TWO:
+			return "DUO CONQUEST";
+		case THREE_VS_THREE:
+			return "TRIO CONQUEST";
+		}
+		return "???";
 	}
 
 	@Override
@@ -182,13 +219,6 @@ public class StarmapRenderer extends BaseModuleRenderer {
 
 	private void renderLoadingLabel() {
 		if (isLoading) {
-			Label loadingLabel = new Label("Loading...");
-			loadingLabel.setType(FontType.LARGE);
-			loadingLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
-			loadingLabel.setFixedHeight(100f);
-			loadingLabel.setFixedWidth(MenuModel.moduleBounds.width);
-			loadingLabel.setPosition(MenuModel.moduleBounds.x, MenuModel.moduleBounds.y + (MenuModel.moduleBounds.height / 2) - (100 / 2));
-			loadingLabel.setColor(Color.WHITE);
 			loadingLabel.render();
 		}
 	}
@@ -274,21 +304,6 @@ public class StarmapRenderer extends BaseModuleRenderer {
 
     private void renderGalaxyUI() {
         if (galaxyZoomFactor < 0.05f) {
-            String campaignLabelString = "SOLO CONQUEST";
-            Label campaignLabel = new Label(campaignLabelString);
-            Border campaignBorder = new Border();
-            campaignBorder.setColor(new Color(SkinManager.skinColor));
-            campaignBorder.setSize(2f);
-            campaignLabel.setType(FontType.LARGE);
-            campaignLabel.setFixedWidth(FontUtil.getFontTextWidthPx(campaignLabelString.length(), FontType.LARGE) + 20f);
-            campaignLabel.setFixedHeight(40f);
-            campaignLabel.setPosition(
-                    MenuModel.moduleBounds.x + (MenuModel.moduleBounds.width / 2) - (campaignLabel.getFixedWidth() / 2),
-                    MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - 70f
-            );
-            campaignLabel.setBorder(campaignBorder);
-            campaignLabel.setBackgroundColor(Color.BLACK);
-            campaignLabel.setAlpha(MenuModel.alpha);
             campaignLabel.render();
 
             for (Galaxy galaxy : galaxies) {
