@@ -42,6 +42,8 @@ REDESIGN:
   -> add planetdefense
  -> short tutorial where player buys weapon upgrade
 - background stars that move with tilt of phone
+- if error in gameserver session: end it
+ -> otherwise perma log spam loop with nulls etc.
 
 - trading between players
  -> popup in social
