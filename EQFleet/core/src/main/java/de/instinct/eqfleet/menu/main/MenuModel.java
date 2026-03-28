@@ -1,6 +1,5 @@
 package de.instinct.eqfleet.menu.main;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
@@ -24,7 +23,6 @@ public class MenuModel {
 	public static volatile boolean loaded;
 	public static volatile Map<MenuModule, BaseModule> modules;
 	public static volatile Map<MenuModule, BaseModuleRenderer> renderers;
-	public static volatile List<MenuModule> buttons;
 	
 	public static volatile float openAnimationElapsed;
 	public static volatile float alpha;

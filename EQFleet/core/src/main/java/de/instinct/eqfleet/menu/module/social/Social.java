@@ -13,6 +13,8 @@ import de.instinct.eqfleet.menu.module.social.message.RemoveFriendMessage;
 import de.instinct.eqfleet.menu.module.social.message.RespondToFriendRequestMessage;
 import de.instinct.eqfleet.menu.module.social.message.RespondToInviteMessage;
 import de.instinct.eqfleet.menu.module.social.message.SocialMessage;
+import de.instinct.eqfleet.menu.module.starmap.StarmapModel;
+import de.instinct.eqfleet.menu.module.starmap.message.types.ReloadStarmapMessage;
 import de.instinct.eqfleet.net.WebManager;
 
 public class Social extends BaseModule {
@@ -45,6 +47,9 @@ public class Social extends BaseModule {
 						WebManager.enqueue(
 								() -> API.social().getGroup(SocialModel.playerData.getGroupToken()),
 							    result2 -> {
+							    	if (SocialModel.groupData == null || SocialModel.groupData.getMembers().size() != result2.getMembers().size()) {
+							    		StarmapModel.messageQueue.add(ReloadStarmapMessage.builder().build());
+							    	}
 							    	SocialModel.groupData = result2;
 							    }
 						);

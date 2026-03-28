@@ -179,14 +179,14 @@ public class Menu extends Scene {
     				lockedModules.add(module);
     			}
     		}
-    		loadButtons();
+    		//loadButtons();
     		loadLockedModuleInfo(lockedModules);
 		} else {
 			Logger.log("Menu", "ModuleData couldn't be loaded!", ConsoleColor.RED);
 		}
 	}
 
-	private void loadButtons() {
+	/*private void loadButtons() {
 		MenuModel.buttons = new ArrayList<>();
 		if (MenuModel.unlockedModules != null && MenuModel.unlockedModules.getEnabledModules() != null) {
 	        for (MenuModule module : MenuModel.renderers.keySet()) {
@@ -195,7 +195,7 @@ public class Menu extends Scene {
 	            }
 	        }
 	    }
-	}
+	}*/
 
 	private void loadLockedModuleInfo(List<MenuModule> lockedModules) {
 		ModuleInfoRequest moduleInfoRequest = new ModuleInfoRequest();

@@ -41,11 +41,6 @@ public class ModuleManager {
 				.opened(preferenceLoadedModules.contains(MenuModule.SHOP.toString()))
 				.build());
 		moduleOpenMessages.add(InitialModuleOpenMessage.builder()
-				.module(MenuModule.PLANET)
-				.message("View your buildings and select\nthem for use in battle")
-				.opened(preferenceLoadedModules.contains(MenuModule.PLANET.toString()))
-				.build());
-		moduleOpenMessages.add(InitialModuleOpenMessage.builder()
 				.module(MenuModule.CONSTRUCTION)
 				.message("Build and upgrade your\ninfrastructure\n\nConstruction mode unlocked!")
 				.opened(preferenceLoadedModules.contains(MenuModule.CONSTRUCTION.toString()))

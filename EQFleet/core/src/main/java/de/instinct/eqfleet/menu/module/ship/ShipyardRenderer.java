@@ -30,7 +30,7 @@ import de.instinct.eqlibgdxutils.rendering.grid.GridConfiguration;
 import de.instinct.eqlibgdxutils.rendering.model.ModelLoader;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.Button;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
-import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.LabeledModelButton;
+import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.labeled.types.LabeledModelButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.HorizontalAlignment;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.model.ModelPreview;
@@ -142,8 +142,11 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 		});
 		shipButton.setFixedWidth(50f);
 		shipButton.setFixedHeight(70f);
-		shipButton.getModelPreview().getBorder().setColor(SkinManager.skinColor);
-		shipButton.setNoteLabel("", Color.GRAY);
+		shipButton.getContentBorder().getColor().set(SkinManager.skinColor);
+		shipButton.setHoverColor(SkinManager.skinColor);
+		shipButton.setDownColor(SkinManager.skinColor);
+		shipButton.setNoteText("");
+		shipButton.setNoteColor(Color.GRAY);
 		return shipButton;
 	}
 
@@ -166,8 +169,9 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 		});
 		shipButton.setFixedWidth(50f);
 		shipButton.setFixedHeight(70f);
-		shipButton.getModelPreview().getBorder().getColor().set(blueprintColor);
-		shipButton.getHoverShape().getColor().set(blueprintColor);
+		shipButton.getContentBorder().getColor().set(blueprintColor);
+		shipButton.setHoverColor(blueprintColor);
+		shipButton.setDownColor(blueprintColor);
 		shipButton.getLabel().getColor().set(blueprintColor);
 		return shipButton;
 	}

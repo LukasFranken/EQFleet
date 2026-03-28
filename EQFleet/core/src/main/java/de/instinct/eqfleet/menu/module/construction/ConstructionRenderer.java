@@ -5,7 +5,7 @@ import java.util.List;
 
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.main.MenuModel;
-import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.LabeledModelButton;
+import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.labeled.types.LabeledModelButton;
 
 public class ConstructionRenderer extends BaseModuleRenderer {
 
