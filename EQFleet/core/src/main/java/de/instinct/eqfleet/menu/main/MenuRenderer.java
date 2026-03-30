@@ -99,7 +99,12 @@ public class MenuRenderer extends BaseModuleRenderer {
 	}
 	
 	private ModuleUnlockRequirement getRequirement(MenuModule module) {
-		return MenuModel.lockedModules.getUnlockRequirements().stream().filter(req -> req.getModule() == module).findFirst().orElse(null);
+		for (ModuleUnlockRequirement requirement : MenuModel.lockedModules.getUnlockRequirements()) {
+			if (requirement.getModule() == module) {
+				return requirement;
+			}
+		}
+		return null;
 	}
 
 	@Override

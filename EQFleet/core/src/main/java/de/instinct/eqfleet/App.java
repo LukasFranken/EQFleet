@@ -6,23 +6,22 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import de.instinct.eqfleet.audio.AudioManager;
+import de.instinct.eqfleet.background.BackgroundRenderer;
 import de.instinct.eqfleet.language.LanguageManager;
 import de.instinct.eqfleet.net.WebManager;
 import de.instinct.eqfleet.scene.SceneManager;
 import de.instinct.eqfleet.scene.SceneType;
-import de.instinct.eqlibgdxutils.InputUtil;
 import de.instinct.eqlibgdxutils.debug.console.Console;
 import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
 import de.instinct.eqlibgdxutils.debug.logging.service.LoggingTimeFormat;
 import de.instinct.eqlibgdxutils.debug.metrics.types.NumberMetric;
 import de.instinct.eqlibgdxutils.debug.profiler.Profiler;
-import de.instinct.eqlibgdxutils.rendering.particle.ParticleRenderer;
 import de.instinct.eqlibgdxutils.rendering.ui.popup.PopupRenderer;
 
 public class App extends ApplicationAdapter {
 
-    public static final String VERSION = "0.2.13";
+    public static final String VERSION = "0.2.14";
     private final String LOGTAG = "APP";
 
     private boolean halted;
@@ -41,8 +40,11 @@ public class App extends ApplicationAdapter {
         		.decimals(2)
         		.tag("this_frame_time_MS")
         		.build());
-        GlobalStaticData.backgroundParticles = !PreferenceManager.load("bgparticles").contentEquals("false");
+        GlobalStaticData.background = !PreferenceManager.load("background").contentEquals("false");
         GlobalStaticData.showDebugGrid = PreferenceManager.load("debuggrid").contentEquals("true");
+        BackgroundRenderer.init();
+        String parallax = PreferenceManager.load("parallax");
+        if (!parallax.contentEquals("")) BackgroundRenderer.PARALLAX_FACTOR = Float.parseFloat(parallax);
         SceneManager.changeTo(SceneType.INTRO);
         Logger.log(LOGTAG, "Initialization completed", ConsoleColor.YELLOW);
     }
@@ -50,17 +52,17 @@ public class App extends ApplicationAdapter {
 	@Override
     public void render() {
 		long startNanoTime = System.nanoTime();
-		InputUtil.update();
 		ScreenUtils.clear(0f, 0f, 0f, 1f);
 		try {
 			if (!halted) {
 				Profiler.startFrame("APP");
+				LibraryManager.update();
+				Profiler.checkpoint("APP", "LibraryManager");
 				AudioManager.update();
 				Profiler.checkpoint("APP", "AudioManager");
-				if (GlobalStaticData.backgroundParticles) {
-					ParticleRenderer.updateParticles();
-			        ParticleRenderer.renderParticles("stars");
-			        Profiler.checkpoint("APP", "Particles");
+				if (GlobalStaticData.background) {
+					BackgroundRenderer.render();
+					Profiler.checkpoint("APP", "BackgroundRenderer");
 				}
 				SceneManager.update();
 				Profiler.checkpoint("APP", "SceneUpdate");

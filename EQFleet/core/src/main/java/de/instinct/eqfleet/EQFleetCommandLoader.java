@@ -12,6 +12,7 @@ import de.instinct.api.meta.dto.ResourceAmount;
 import de.instinct.api.meta.dto.ResourceData;
 import de.instinct.api.meta.dto.ResourceUpdateResponseCode;
 import de.instinct.eqfleet.audio.AudioManager;
+import de.instinct.eqfleet.background.BackgroundRenderer;
 import de.instinct.eqfleet.game.backend.driver.local.tutorial.TutorialModel;
 import de.instinct.eqfleet.net.WebManager;
 import de.instinct.eqfleet.scene.SceneManager;
@@ -226,29 +227,51 @@ public class EQFleetCommandLoader implements CommandLoader {
 				})
 				.build());
 		configCommands.add(Command.builder()
-				.method("config.bgparticles=")
-				.logMethod("config.bgparticles=<true/false>")
-				.description("enable/disable background particles")
+				.method("config.bg=")
+				.logMethod("config.bg=<true/false>")
+				.description("enable/disable background")
 				.action(new CommandAction() {
 					
 					@Override
 					public void execute(String message) {
-						String value = message.replace("config.bgparticles=", "").trim().toLowerCase();
+						String value = message.replace("config.bg=", "").trim().toLowerCase();
 						try {
 							if (value.contentEquals("true") || value.contentEquals("false")) {
-								GlobalStaticData.backgroundParticles = Boolean.parseBoolean(value);
-								PreferenceManager.save("bgparticles", value);
+								GlobalStaticData.background = Boolean.parseBoolean(value);
+								PreferenceManager.save("background", value);
 								if (value.contentEquals("true")) {
-									log("background particles enabled");
+									log("background enabled");
 								} else {
-									log("background particles disabled");
+									log("background disabled");
 								}
 							} else {
 								throw new Exception("only values 'true' and 'false' are allowed");
 							}
 							
 						} catch (Exception e) {
-							log("Error setting bgparticles to: " + value);
+							log("Error setting bg to: " + value);
+							log(e.getMessage());
+						}
+					}
+					
+				})
+				.build());
+		configCommands.add(Command.builder()
+				.method("config.parallax=")
+				.logMethod("config.parallax=<value>")
+				.description("change background parallax value")
+				.action(new CommandAction() {
+					
+					@Override
+					public void execute(String message) {
+						String value = message.replace("config.parallax=", "").trim().toLowerCase();
+						try {
+							BackgroundRenderer.PARALLAX_FACTOR = Float.parseFloat(value);
+							PreferenceManager.save("parallax", value);
+							log("parallax set to: "+ value);
+							
+						} catch (Exception e) {
+							log("Error setting parallax to: " + value);
 							log(e.getMessage());
 						}
 					}

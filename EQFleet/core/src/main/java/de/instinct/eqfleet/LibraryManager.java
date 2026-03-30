@@ -5,8 +5,10 @@ import java.util.List;
 
 import com.badlogic.gdx.math.Vector2;
 
+import de.instinct.eqlibgdxutils.AccelerometerUtil;
 import de.instinct.eqlibgdxutils.CursorUtil;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
+import de.instinct.eqlibgdxutils.InputUtil;
 import de.instinct.eqlibgdxutils.debug.console.Console;
 import de.instinct.eqlibgdxutils.rendering.model.ModelRenderer;
 import de.instinct.eqlibgdxutils.rendering.particle.ParticleRenderer;
@@ -34,10 +36,16 @@ public class LibraryManager {
         ModelRenderer.init();
         PopupRenderer.init();
         Console.build();
+        AccelerometerUtil.init();
         String mode = PreferenceManager.load("mode");
         if (!mode.contentEquals("")) {
         	GlobalStaticData.mode = ApplicationMode.valueOf(mode);
         }
+	}
+	
+	public static void update() {
+		InputUtil.update();
+		AccelerometerUtil.update();
 	}
 	
 	private static void loadFonts() {

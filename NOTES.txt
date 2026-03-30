@@ -45,6 +45,11 @@ REDESIGN:
 - if error in gameserver session: end it
  -> otherwise perma log spam loop with nulls etc.
 
+- encapsulate all game related inits
+ -> core load console
+ -> this way the console is always available
+ -> prevents init crashes from requiring simulator
+
 - trading between players
  -> popup in social
 - construction mode
