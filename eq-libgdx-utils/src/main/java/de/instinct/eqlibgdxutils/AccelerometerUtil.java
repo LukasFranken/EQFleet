@@ -1,6 +1,7 @@
 package de.instinct.eqlibgdxutils;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.math.Vector3;
 
 import de.instinct.eqlibgdxutils.debug.console.Console;
@@ -16,18 +17,22 @@ public class AccelerometerUtil {
 	
 	
 	public static void init() {
-		Console.registerMetric(VectorMetric.builder()
-				.tag(ACCELEROMETER_METRIC_TAG)
-				.decimals(1)
-				.build());
+		if (!Gdx.app.getType().equals(ApplicationType.Desktop)) {
+			Console.registerMetric(VectorMetric.builder()
+					.tag(ACCELEROMETER_METRIC_TAG)
+					.decimals(1)
+					.build());
+		}
 		rawAcceleration = new Vector3();
 		smoothedAcceleration = new Vector3();
 	}
 	
 	public static void update() {
-		rawAcceleration.set(Gdx.input.getAccelerometerX(), Gdx.input.getAccelerometerY(), Gdx.input.getAccelerometerZ());
-		smoothedAcceleration.lerp(rawAcceleration, accelerationSmoothing);
-		Console.updateMetric(ACCELEROMETER_METRIC_TAG, rawAcceleration);
+		if (!Gdx.app.getType().equals(ApplicationType.Desktop)) {
+			rawAcceleration.set(Gdx.input.getAccelerometerX(), Gdx.input.getAccelerometerY(), Gdx.input.getAccelerometerZ());
+			smoothedAcceleration.lerp(rawAcceleration, accelerationSmoothing);
+			Console.updateMetric(ACCELEROMETER_METRIC_TAG, rawAcceleration);
+		}
 	}
 	
 	public static Vector3 getAcceleration() {

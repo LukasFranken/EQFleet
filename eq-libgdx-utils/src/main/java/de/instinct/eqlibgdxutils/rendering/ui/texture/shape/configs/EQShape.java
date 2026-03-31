@@ -14,5 +14,13 @@ public abstract class EQShape {
 	private Matrix4 projectionMatrix;
 	private EQGlowConfig glowConfig;
 	private Color color;
+	
+	public void setColor(Color color) {
+		this.color.set(color);
+	}
+	
+	public void setColor(float r, float g, float b, float a) {
+		this.color.set(r, g, b, a);
+	}
 
 }

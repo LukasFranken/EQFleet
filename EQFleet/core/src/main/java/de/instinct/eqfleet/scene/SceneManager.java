@@ -33,11 +33,11 @@ public class SceneManager {
 	}
 	
 	public static void update() {
-		scenes.get(currentScene).update();
+		if (currentScene != null) scenes.get(currentScene).update();
 	}
 	
 	public static void render() {
-		scenes.get(currentScene).render();
+		if (currentScene != null) scenes.get(currentScene).render();
 	}
 	
 	public static void changeTo(SceneType sceneType) {

@@ -3,6 +3,7 @@ package de.instinct.eqfleet.menu.main;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
+import de.instinct.eqfleet.holo.HoloRenderer;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.MathUtil;
@@ -52,10 +53,11 @@ public class MenuWindow extends Component {
 			
 		});
 		closeModuleButton.setBorder(null);
-		closeModuleButton.setColor(Color.CLEAR);
+		closeModuleButton.setColor(new Color(0, 0, 0, 0));
 		Color downColor = new Color(SkinManager.skinColor);
 		downColor.a = 0.4f;
 		closeModuleButton.getLabel().setType(FontType.LARGE);
+		closeModuleButton.getLabel().setColor(Color.GRAY);
 		closeModuleButton.setDownColor(downColor);
 		closeModuleButton.setHoverColor(downColor);
 		closeModuleButton.setContentMargin(0f);
@@ -67,7 +69,7 @@ public class MenuWindow extends Component {
 		title = new Label("");
 		title.setHorizontalAlignment(HorizontalAlignment.LEFT);
 		
-		Color titleColor = new Color(SkinManager.skinColor);
+		Color titleColor = new Color(Color.WHITE);
 		titleDividerShape = EQRectangle.builder()
 				.bounds(titleDividerBounds)
 				.color(titleColor)
@@ -94,7 +96,7 @@ public class MenuWindow extends Component {
 		closeModuleButton.setFixedHeight(titleHeight - smallXFontAdjustment);
 		closeModuleButton.setFixedWidth(titleHeight);
 		closeModuleButton.setPosition(titleBounds.x + titleBounds.width - titleHeight, titleBounds.y + smallXFontAdjustment);
-		closeModuleButton.getColor().a = MenuModel.alpha;
+		closeModuleButton.setAlpha(MenuModel.alpha);
 		
 		float ratio = MathUtil.easeInOut(0f, 1f, MenuModel.openAnimationElapsed);
 		menuBackground.getBounds().set(getBounds().x, getBounds().y, getBounds().width, (getBounds().height + titleHeight) * ratio);
@@ -102,10 +104,12 @@ public class MenuWindow extends Component {
 
 	@Override
 	protected void renderComponent() {
+		HoloRenderer.drawWindow(menuBackground.getBounds(), SkinManager.skinColor);
 		title.render();
 		if (MenuModel.activeModule != null) closeModuleButton.render();
-		Shapes.draw(titleDividerShape);
-		Shapes.draw(menuBackground);
+		//Shapes.draw(titleDividerShape);
+		//Shapes.draw(menuBackground);
+		
 	}
 
 	@Override

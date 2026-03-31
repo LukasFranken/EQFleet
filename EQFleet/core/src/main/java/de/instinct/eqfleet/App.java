@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 import de.instinct.eqfleet.audio.AudioManager;
 import de.instinct.eqfleet.background.BackgroundRenderer;
+import de.instinct.eqfleet.holo.HoloRenderer;
 import de.instinct.eqfleet.language.LanguageManager;
 import de.instinct.eqfleet.net.WebManager;
 import de.instinct.eqfleet.scene.SceneManager;
@@ -47,6 +48,7 @@ public class App extends ApplicationAdapter {
         if (!parallax.contentEquals("")) BackgroundRenderer.PARALLAX_FACTOR = Float.parseFloat(parallax);
         SceneManager.changeTo(SceneType.INTRO);
         Logger.log(LOGTAG, "Initialization completed", ConsoleColor.YELLOW);
+        HoloRenderer.init();
     }
 	
 	@Override
@@ -71,6 +73,7 @@ public class App extends ApplicationAdapter {
 		        PopupRenderer.render();
 		        Profiler.checkpoint("APP", "PopupRenderer");
 		        Profiler.endFrame("APP");
+		        HoloRenderer.render();
 			}
 		} catch (Exception e) {
 			Logger.log(LOGTAG, e);

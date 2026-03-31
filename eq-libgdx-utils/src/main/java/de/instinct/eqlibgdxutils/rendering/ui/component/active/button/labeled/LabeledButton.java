@@ -55,14 +55,17 @@ public abstract class LabeledButton extends Button {
 		
 		backgroundColor = new Color(Color.BLACK);
 		backgroundShape = EQRectangle.builder()
+				.bounds(new Rectangle())
 				.color(new Color())
 				.filled(true)
 				.build();
 		hoverShape = EQRectangle.builder()
+				.bounds(new Rectangle())
 				.color(new Color())
 				.filled(true)
 				.build();
 		downShape = EQRectangle.builder()
+				.bounds(new Rectangle())
 				.color(new Color())
 				.filled(true)
 				.build();

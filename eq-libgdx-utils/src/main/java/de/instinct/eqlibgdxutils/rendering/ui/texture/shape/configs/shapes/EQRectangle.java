@@ -19,5 +19,13 @@ public class EQRectangle extends EQShape {
 	private boolean round;
 	private boolean filled;
 	private float thickness;
+	
+	public void setBounds(Rectangle bounds) {
+		this.bounds.set(bounds);
+	}
+	
+	public void setBounds(float x, float y, float width, float height) {
+		this.bounds.set(x, y, width, height);
+	}
 
 }
