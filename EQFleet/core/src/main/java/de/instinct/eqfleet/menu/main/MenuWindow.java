@@ -3,7 +3,9 @@ package de.instinct.eqfleet.menu.main;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
+import de.instinct.eqfleet.holo.HoloPanel;
 import de.instinct.eqfleet.holo.HoloRenderer;
+import de.instinct.eqfleet.holo.style.HoloPanelStyle;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.MathUtil;
@@ -14,9 +16,6 @@ import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Horizontal
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
 import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.shapes.EQRectangle;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.utility.EQGlowConfig;
 
 public class MenuWindow extends Component {
 	
@@ -24,19 +23,18 @@ public class MenuWindow extends Component {
 	private float titleHeight = 40f;
 	
 	private ColorButton closeModuleButton;
-	
 	private Rectangle titleBounds;
-	private Rectangle titleDividerBounds;
 	
-	private EQRectangle titleDividerShape;
-	private EQRectangle menuBackground;
+	private HoloPanel menuBackgroundPanel;
+	private HoloPanel titleBackgroundPanel;
 	
 	public MenuWindow() {
-		menuBackground = EQRectangle.builder()
-				.bounds(new Rectangle())
-				.color(SkinManager.skinColor)
-				.glowConfig(EQGlowConfig.builder().build())
-				.thickness(2f)
+		menuBackgroundPanel = HoloPanel.builder()
+				.build();
+		titleBackgroundPanel = HoloPanel.builder()
+				.style(HoloPanelStyle.builder()
+						.reflectionStrength(0f)
+						.build())
 				.build();
 		
 		createCloseModuleButton();
@@ -65,17 +63,9 @@ public class MenuWindow extends Component {
 	
 	private void initTitle() {
 		titleBounds = new Rectangle();
-		titleDividerBounds = new Rectangle();
 		title = new Label("");
 		title.setHorizontalAlignment(HorizontalAlignment.LEFT);
-		
-		Color titleColor = new Color(Color.WHITE);
-		titleDividerShape = EQRectangle.builder()
-				.bounds(titleDividerBounds)
-				.color(titleColor)
-				.glowConfig(EQGlowConfig.builder().build())
-				.thickness(2f)
-				.build();
+		title.setColor(Color.WHITE);
 	}
 	
 	@Override
@@ -89,8 +79,9 @@ public class MenuWindow extends Component {
 		title.setFixedHeight(titleBounds.height);
 		title.setAlpha(MenuModel.alpha);
 		
-		titleDividerBounds.set(titleBounds.x, titleBounds.y, titleBounds.width, 2f);
-		titleDividerShape.getColor().a = MenuModel.alpha;
+		titleBackgroundPanel.getBounds().set(titleBounds.x, titleBounds.y, titleBounds.width, titleHeight);
+		titleBackgroundPanel.getColor().set(SkinManager.skinColor);
+		titleBackgroundPanel.getColor().a = MenuModel.alpha;
 		
 		float smallXFontAdjustment = 2f * GraphicsUtil.getVerticalDisplayScaleFactor();
 		closeModuleButton.setFixedHeight(titleHeight - smallXFontAdjustment);
@@ -99,17 +90,16 @@ public class MenuWindow extends Component {
 		closeModuleButton.setAlpha(MenuModel.alpha);
 		
 		float ratio = MathUtil.easeInOut(0f, 1f, MenuModel.openAnimationElapsed);
-		menuBackground.getBounds().set(getBounds().x, getBounds().y, getBounds().width, (getBounds().height + titleHeight) * ratio);
+		menuBackgroundPanel.getBounds().set(getBounds().x, getBounds().y, getBounds().width, (getBounds().height + titleHeight) * ratio);
+		menuBackgroundPanel.getColor().set(SkinManager.skinColor);
 	}
 
 	@Override
 	protected void renderComponent() {
-		HoloRenderer.drawWindow(menuBackground.getBounds(), SkinManager.skinColor);
+		HoloRenderer.drawPanel(menuBackgroundPanel);
+		HoloRenderer.drawPanel(titleBackgroundPanel);
 		title.render();
 		if (MenuModel.activeModule != null) closeModuleButton.render();
-		//Shapes.draw(titleDividerShape);
-		//Shapes.draw(menuBackground);
-		
 	}
 
 	@Override

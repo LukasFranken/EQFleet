@@ -37,6 +37,9 @@ public class Profiler {
 	private static IntroScreen introScreen;
 	private static MainActiveScreen activeScreen;
 	private static MainInactiveScreen inactiveScreen;
+	
+	private static EQRectangle profilerBoundsShape;
+	private static EQRectangle profilerScreenBoundsShape;
 
 	public static void init() {
 		ProfilerModel.captures = new ArrayList<>();
@@ -44,6 +47,18 @@ public class Profiler {
 	}
 	
 	public static void build() {
+		profilerBoundsShape = EQRectangle.builder()
+				.color(SkinManager.skinColor)
+				.thickness(1)
+				.round(true)
+				.build();
+		
+		profilerScreenBoundsShape = EQRectangle.builder()
+				.color(Color.DARK_GRAY)
+				.thickness(2)
+				.round(true)
+				.build();
+		
 		startButton = new ColorButton("start");
 		startButton.setConsoleBypass(true);
 		startButton.setAction(new Action() {
@@ -95,19 +110,8 @@ public class Profiler {
 	public static void render() {
 		update();
 		
-		Shapes.draw(EQRectangle.builder()
-				.bounds(ProfilerModel.bounds)
-				.color(SkinManager.skinColor)
-				.thickness(1)
-				.round(true)
-				.build());
-		
-		Shapes.draw(EQRectangle.builder()
-				.bounds(ProfilerModel.screenBounds)
-				.color(Color.DARK_GRAY)
-				.thickness(2)
-				.round(true)
-				.build());
+		Shapes.draw(profilerBoundsShape);
+		Shapes.draw(profilerScreenBoundsShape);
 		
 		if (ProfilerModel.currentCapture == null) {
 			startButton.render();
@@ -130,6 +134,9 @@ public class Profiler {
 		ProfilerModel.bounds = new Rectangle(horizontalPanelOffset, GraphicsUtil.screenBounds().height - fixedHeight - MetricUtil.getFixedHeight(), GraphicsUtil.screenBounds().width - (2 * horizontalPanelOffset), fixedHeight - 10f);
 		ProfilerModel.screenBounds = new Rectangle(ProfilerModel.bounds.x + 10f, ProfilerModel.bounds.y + 30f + 20f, ProfilerModel.bounds.width - 20f, ProfilerModel.bounds.height - 30f - 30f);
 		
+		profilerBoundsShape.setBounds(ProfilerModel.bounds);
+		profilerScreenBoundsShape.setBounds(ProfilerModel.screenBounds);
+		
 		startButton.setPosition(ProfilerModel.bounds.x + 10f, ProfilerModel.bounds.y + 10f);
 		startButton.setFixedWidth(60f);
 		startButton.setFixedHeight(ProfilerModel.buttonHeight);
@@ -141,6 +148,10 @@ public class Profiler {
 	
 	public static void setFixedHeight(int height) {
 		fixedHeight = height;
+	}
+	
+	public static int getFixedHeight() {
+		return fixedHeight;
 	}
 	
 	public static void toggle() {
@@ -252,6 +263,10 @@ public class Profiler {
 				}
 			}
 		}
+	}
+	
+	public static void dispose() {
+		
 	}
 
 }

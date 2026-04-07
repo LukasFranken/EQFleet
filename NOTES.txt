@@ -12,9 +12,9 @@ GENERAL:
   x 5
 - adjust all ships
  -> SHIP CHECKLIST
-  o hawk
-  o turtle
-  ? shark
+  x hawk
+  x turtle
+  x shark
   x eel (after beam rework)
   x shellshock
   x fallout
@@ -32,6 +32,7 @@ GENERAL:
   x game
 
 REDESIGN:
+- make new holo cards glass reflection move with acceleration/mouse
 - reload buttons after game/rankup
 - shop buy popup with more information
 - make componentlevels buyable

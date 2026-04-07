@@ -22,7 +22,7 @@ import de.instinct.eqlibgdxutils.rendering.ui.popup.PopupRenderer;
 
 public class App extends ApplicationAdapter {
 
-    public static final String VERSION = "0.2.14";
+    public static final String VERSION = "0.2.15";
     private final String LOGTAG = "APP";
 
     private boolean halted;
@@ -73,7 +73,6 @@ public class App extends ApplicationAdapter {
 		        PopupRenderer.render();
 		        Profiler.checkpoint("APP", "PopupRenderer");
 		        Profiler.endFrame("APP");
-		        HoloRenderer.render();
 			}
 		} catch (Exception e) {
 			Logger.log(LOGTAG, e);
@@ -91,6 +90,7 @@ public class App extends ApplicationAdapter {
 		WebManager.dispose();
         AudioManager.dispose();
         LibraryManager.dispose();
+        HoloRenderer.dispose();
         Logger.log(LOGTAG, "EQFLEET TERMINATED", ConsoleColor.YELLOW);
     }
 

@@ -18,6 +18,7 @@ import de.instinct.eqlibgdxutils.debug.logging.LogLine;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
 import de.instinct.eqlibgdxutils.debug.metrics.Metric;
 import de.instinct.eqlibgdxutils.debug.metrics.MetricUtil;
+import de.instinct.eqlibgdxutils.debug.modulator.Modulator;
 import de.instinct.eqlibgdxutils.debug.profiler.Profiler;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.LimitedInputField;
@@ -38,6 +39,7 @@ public class Console {
 	private static int tapSize = 100;
 	private static int metricsHeight = 200;
 	private static int profilerHeight = 200;
+	private static int modulatorHeight = 200;
 	private static int consoleInputHeight = 30;
 	private static int borderMargin = 30;
 	
@@ -72,18 +74,21 @@ public class Console {
 		inputList = new ArrayList<>();
 		MetricUtil.init();
 		Profiler.init();
+		Modulator.init();
 		logsBounds = new Rectangle();
 		
+		logLineLabel = new Label("");
+		logLineLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
+		logLineLabel.setType(FontType.MICRO);
+	}
+
+	public static void build() {
 		logsContainerShape = EQRectangle.builder()
 				.bounds(logsBounds)
 				.color(new Color(SkinManager.skinColor))
 				.thickness(1)
 				.round(true)
 				.build();
-		
-		logLineLabel = new Label("");
-		logLineLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
-		logLineLabel.setType(FontType.MICRO);
 		
 		commandUpButton = new ColorButton("^");
 		commandUpButton.setConsoleBypass(true);
@@ -108,11 +113,10 @@ public class Console {
 		commandSendButton.setAction(() -> {
 			sendCommand();
 		});
-	}
-
-	public static void build() {
+		
 		buildMetrics();
 		buildProfiler();
+		buildModulator();
 		activationScreenTaps = new ArrayList<>();
 		activationScreenTaps.add(ActivationScreenTap.builder()
 				.region(new Rectangle(0, GraphicsUtil.screenBounds().getHeight() - tapSize, tapSize, tapSize))
@@ -185,6 +189,11 @@ public class Console {
 		}
 	}
 	
+	private static void buildModulator() {
+    	Modulator.build();
+    	Modulator.setFixedHeight(modulatorHeight);
+	}
+	
 	public static void addCommands(List<Command> commands) {
 		commandProcessor.addCommands(commands);
 	}
@@ -207,6 +216,7 @@ public class Console {
 					.build());
 			MetricUtil.render();
 			Profiler.render();
+			Modulator.render();
 			renderLogs();
 			renderConsoleInput();
 		}
@@ -233,7 +243,7 @@ public class Console {
 		logsBounds.set(logPanelMargin, 
 					consoleInputHeight + logPanelMargin + borderMargin, 
 					GraphicsUtil.screenBounds().getWidth() - (logPanelMargin * 2), 
-					GraphicsUtil.screenBounds().getHeight() - consoleInputHeight - metricsHeight - profilerHeight - (logPanelMargin * 2) - borderMargin);
+					GraphicsUtil.screenBounds().getHeight() - consoleInputHeight - metricsHeight - profilerHeight - modulatorHeight - (logPanelMargin * 3) - borderMargin);
 		Shapes.draw(logsContainerShape);
 		
 		int logLineHorizontalMargin = 5;
@@ -348,6 +358,8 @@ public class Console {
 
 	public static void dispose() {
 		MetricUtil.dispose();
+		Profiler.dispose();
+		Modulator.dispose();
 		commandTextField.dispose();
 	}
 

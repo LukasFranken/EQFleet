@@ -75,7 +75,7 @@ public class Slider extends Component {
 				initialMouseDelta = InputUtil.getVirtualMousePosition().x - sliderButton.getBounds().x;
 			}
 		} else {
-			if (InputUtil.isPressed()) {
+			if (InputUtil.isPressed() || (sliderButton.isConsoleBypass() && InputUtil.isPressedConsole())) {
 				valueChanged();
 			} else {
 				dragEnded();

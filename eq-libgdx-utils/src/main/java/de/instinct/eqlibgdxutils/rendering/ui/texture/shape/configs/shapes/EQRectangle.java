@@ -3,6 +3,7 @@ package de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.shapes;
 import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.EQShape;
+import lombok.Builder.Default;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -14,7 +15,9 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = false)
 public class EQRectangle extends EQShape {
 	
-	private Rectangle bounds;
+	@Default
+	private Rectangle bounds = new Rectangle();
+	
 	private String label;
 	private boolean round;
 	private boolean filled;

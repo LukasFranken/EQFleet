@@ -17,7 +17,6 @@ public class LabeledSlider extends Component {
 	
 	private Slider slider;
 	private Label label;
-	private int labelChars;
 	private LabelUpdateAction labelUpdateAction;
 	private float labelSliderMargin;
 	private float labelInnerMargin;
@@ -25,7 +24,6 @@ public class LabeledSlider extends Component {
 	public LabeledSlider(ValueChangeAction valueChangeAction, float initialValue, LabelUpdateAction labelUpdateAction) {
 		this.labelUpdateAction = labelUpdateAction;
 		slider = new Slider(valueChangeAction, initialValue);
-		labelChars = 3;
 		label = new Label("0");
 		label.setType(FontType.SMALL);
 		Border labelBorder = new Border();
@@ -49,8 +47,8 @@ public class LabeledSlider extends Component {
 	@Override
 	protected void updateComponent() {
 		label.setFixedHeight(getBounds().height);
-		label.setFixedWidth(FontUtil.getFontTextWidthPx(labelChars, label.getType()) + labelInnerMargin);
 		label.setText(labelUpdateAction.getLabelText(slider.getCurrentValue()));
+		label.setFixedWidth(FontUtil.getFontTextWidthPx(4, label.getType()) + labelInnerMargin);
 		label.getBorder().setBounds(getBounds());
 		label.setAlpha(getAlpha());
 		label.setPosition(getBounds().x + getBounds().width - label.getFixedWidth(), getBounds().y);

@@ -1,44 +1,40 @@
 package de.instinct.eqfleet.holo;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Rectangle;
 
+import de.instinct.eqlibgdxutils.AccelerometerUtil;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
+import de.instinct.eqlibgdxutils.InputUtil;
 import de.instinct.eqlibgdxutils.MathUtil;
-import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.shapes.EQRectangle;
+import de.instinct.eqlibgdxutils.debug.modulator.Modulator;
+import de.instinct.eqlibgdxutils.debug.modulator.modulation.types.RangeModulation;
+import de.instinct.eqlibgdxutils.rendering.ui.component.active.slider.ValueChangeAction;
 
 public class HoloRenderer {
 	
-	private static final float UPSCALE_FACTOR = 2f;
-	private static final float K_FACTOR_ALPHA = 0.5f;
-	private static final float K_FACTOR_RGB = 0.1f;
-	private static Color color = new Color(0.455f, 0.804f, 0.91f, 1f);
-	
-	private static float elapsedTime;
-	private static HoloPanelStyle style;
-	
-	private static EQRectangle workingRectangle;
 	private static Rectangle workingBounds;
+	private static Color workingColor;
 	
 	private static Texture whitePixel;
-	private static SpriteBatch batch = new SpriteBatch();
+	private static SpriteBatch batch;
 	private static ShaderProgram panelShader;
 	
+	private static float reflectionPos = 0.82f;
+	private static float reflectionSlope = 0.22f;
+	private static float reflectionWidth = 0.08f;
+	
 	public static void init() {
-		style = new HoloPanelStyle();
 		workingBounds = new Rectangle();
-		
-		workingRectangle = EQRectangle.builder()
-				.bounds(new Rectangle())
-				.color(new Color())
-				.build();
+		workingColor = new Color();
+		batch = new SpriteBatch();
 		
 		ShaderProgram.pedantic = false;
 		panelShader = new ShaderProgram(
@@ -55,129 +51,126 @@ public class HoloRenderer {
 		pixmap.fill();
 		whitePixel = new Texture(pixmap);
 		pixmap.dispose();
+		
+		RangeModulation reflectionPosMod = new RangeModulation("pos", new ValueChangeAction() {
+			
+			@Override
+			public void execute(float value) {
+				reflectionPos = value;
+			}
+			
+		}, reflectionPos);
+		Modulator.add(reflectionPosMod);
+		
+		RangeModulation reflectionSlopeMod = new RangeModulation("slope", new ValueChangeAction() {
+			
+			@Override
+			public void execute(float value) {
+				reflectionSlope = value;
+			}
+			
+		}, reflectionSlope);
+		Modulator.add(reflectionSlopeMod);
+		
+		RangeModulation reflectionWidthMod = new RangeModulation("width", new ValueChangeAction() {
+			
+			@Override
+			public void execute(float value) {
+				reflectionWidth = value;
+			}
+			
+		}, reflectionWidth);
+		Modulator.add(reflectionWidthMod);
 	}
 	
-	public static void render() {
-		elapsedTime += Gdx.graphics.getDeltaTime();
+	public static void drawPanel(HoloPanel panel) {
+		workingBounds.set(panel.getBounds());
+		GraphicsUtil.translateToPhysical(workingBounds);
+		workingColor.set(panel.getColor());
+		
+		animatePanel(panel);
+		batch.setShader(panelShader);
+		batch.begin();
+		drawPanel(panel, HoloPanelRenderMode.BODY);
+		drawPanel(panel, HoloPanelRenderMode.GLOW);
+		batch.end();
+		batch.setShader(null);
+		
+		panel.setElapsed(panel.getElapsed() + Gdx.graphics.getDeltaTime());
 	}
 
-	public static void drawShader(Rectangle bounds, Color baseColor, boolean outerGlow) {
-		float panelX = bounds.x;
-		float panelY = bounds.y;
-		float panelW = bounds.width;
-		float panelH = bounds.height;
-		float glowPad = 24f;
+	private static void animatePanel(HoloPanel panel) {
+		float reflectionRatio = 0.5f;
+		if (Gdx.app.getType().equals(ApplicationType.Desktop)) {
+			reflectionRatio = InputUtil.getVirtualMousePosition().x / GraphicsUtil.screenBounds().width;
+        } else {
+        	reflectionRatio += AccelerometerUtil.getAcceleration().y / 20f;
+        }
+		reflectionPos = MathUtil.linear(-0.4f, 1.5f, reflectionRatio);
+	}
 
-		float quadX = panelX - glowPad;
-		float quadY = panelY - glowPad;
-		float quadW = panelW + glowPad * 2f;
-		float quadH = panelH + glowPad * 2f;
+	private static void drawPanel(HoloPanel panel, HoloPanelRenderMode mode) {
+		float scale = GraphicsUtil.getScaleFactor();
+		float glowPad = panel.getStyle().getGlowConfiguration().getGlowPad() * scale;
+		
+		float quadX = workingBounds.x - glowPad;
+		float quadY = workingBounds.y - glowPad;
+		float quadW = workingBounds.width + glowPad * 2f;
+		float quadH = workingBounds.height + glowPad * 2f;
 
 		float panelMinX = glowPad / quadW;
 		float panelMinY = glowPad / quadH;
-		float panelMaxX = (glowPad + panelW) / quadW;
-		float panelMaxY = (glowPad + panelH) / quadH;
-
-		batch.setShader(panelShader);
-		batch.begin();
-
+		float panelMaxX = (glowPad + workingBounds.width) / quadW;
+		float panelMaxY = (glowPad + workingBounds.height) / quadH;
+		
+		switch (mode) {
+			case BODY:
+				batch.setBlendFunctionSeparate(
+				    GL20.GL_SRC_ALPHA,
+				    GL20.GL_ONE_MINUS_SRC_ALPHA,
+				    GL20.GL_ONE,
+				    GL20.GL_ONE_MINUS_SRC_ALPHA
+				);
+				break;
+			case GLOW:
+				batch.setBlendFunctionSeparate(
+					GL20.GL_SRC_ALPHA,
+					GL20.GL_ONE,
+					GL20.GL_ZERO,
+					GL20.GL_ONE
+				);
+				break;
+		}
+		
+		panelShader.setUniformi("u_mode", mode.getShaderUniformValue());
 		panelShader.setUniformf("u_quadSize", quadW, quadH);
 		panelShader.setUniformf("u_panelMin", panelMinX, panelMinY);
 		panelShader.setUniformf("u_panelMax", panelMaxX, panelMaxY);
 
-		if (outerGlow) {
-			panelShader.setUniformf("u_fillColor", baseColor.r / 4, baseColor.g / 4, baseColor.b / 4, 0.1f);
-			panelShader.setUniformf("u_edgeColor", baseColor.r, baseColor.g, baseColor.b, 0.5f);
-		} else {
-			panelShader.setUniformf("u_fillColor", baseColor.r / 4, baseColor.g / 4, baseColor.b / 4, 0.2f);
-			panelShader.setUniformf("u_edgeColor", baseColor.r, baseColor.g, baseColor.b, 0.2f);
-		}
-		panelShader.setUniformf("u_glowColor", baseColor.r, baseColor.g, baseColor.b, 1f);
+		panelShader.setUniformf("u_fillColor", workingColor.r / 4, workingColor.g / 4, workingColor.b / 4, panel.getStyle().getFillAlpha());
+		panelShader.setUniformf("u_edgeColor", workingColor.r, workingColor.g, workingColor.b, 0.5f);
+		panelShader.setUniformf("u_glowColor", workingColor.r, workingColor.g, workingColor.b, 1f);
 
-		panelShader.setUniformf("u_glowKAlpha", 0.4f);
-		panelShader.setUniformf("u_glowKRgb", 0.3f);
-		panelShader.setUniformf("u_borderSize", 1f * GraphicsUtil.getScaleFactor());
+		panelShader.setUniformf("u_glowKAlpha", panel.getStyle().getGlowConfiguration().getGlowKAlpha());
+		panelShader.setUniformf("u_glowKRgb", panel.getStyle().getGlowConfiguration().getGlowKRgb());
+		panelShader.setUniformf("u_borderSize", 1f * scale);
 		
-		if (outerGlow) {
-			panelShader.setUniformf("u_bevelSize", 8f * GraphicsUtil.getScaleFactor());
-			panelShader.setUniformf("u_glowSize", 12f * GraphicsUtil.getScaleFactor());
-		} else {
-			panelShader.setUniformf("u_bevelSize", 0f * GraphicsUtil.getScaleFactor());
-			panelShader.setUniformf("u_glowSize", 3f * GraphicsUtil.getScaleFactor());
-		}
+		panelShader.setUniformf("u_bevelSize", panel.getStyle().getBevelSize() * scale);
+		panelShader.setUniformf("u_glowSize", panel.getStyle().getGlowConfiguration().getGlowSize() * scale);
 		
-		panelShader.setUniformf("u_softness", 1.0f);
-		panelShader.setUniformf("u_reflectionStrength", 0.1f);
-
+		panelShader.setUniformf("u_reflectionStrength", panel.getStyle().getReflectionStrength());
+		panelShader.setUniformf("u_reflectionY", reflectionPos);
+		panelShader.setUniformf("u_reflectionSlope", reflectionSlope);
+		panelShader.setUniformf("u_reflectionWidth", reflectionWidth);
+		
+		panelShader.setUniformf("u_softness", panel.getStyle().getSoftness() * scale);
 		batch.draw(whitePixel, quadX, quadY, quadW, quadH);
-
-		batch.end();
-		batch.setShader(null);
-	}
-
-	public static void drawWindow(Rectangle rectangle, Color baseColor) {
-		workingBounds.set(rectangle);
-		GraphicsUtil.translateToPhysical(workingBounds);
-		drawShader(workingBounds, baseColor, true);
-		workingBounds.set(rectangle);
-		workingBounds.y = workingBounds.y + workingBounds.height - 37;
-		workingBounds.height = 37;
-		GraphicsUtil.translateToPhysical(workingBounds);
-		drawShader(workingBounds, baseColor, false);
 	}
 	
-	private static void drawHeader(Rectangle rectangle, Color baseColor) {
-		Rectangle headerRect = new Rectangle(rectangle.x, rectangle.y + rectangle.height - 30, rectangle.width, 30);
-		drawPanel(headerRect, baseColor);
-	}
-
-	public static void drawPanel(Rectangle rectangle, Color baseColor) {
-		drawBaseFrame(rectangle, baseColor);
-		drawGlow(rectangle, baseColor);
-		drawInnerFill(rectangle, baseColor);
-	}
-
-	private static void drawBaseFrame(Rectangle rectangle, Color baseColor) {
-		workingRectangle.setFilled(false);
-		workingRectangle.setThickness(1f / UPSCALE_FACTOR);
-		workingRectangle.setBounds(rectangle);
-		workingRectangle.setColor(baseColor);
-		Shapes.draw(workingRectangle);
-	}
-
-	private static void drawGlow(Rectangle rectangle, Color baseColor) {
-		workingRectangle.setFilled(false);
-		workingRectangle.setThickness(1f / UPSCALE_FACTOR);
-		float finalSizeInner = style.glowSize * style.innerGlowSizeProportion;
-		for (float index = 0; index < finalSizeInner; index++) {
-			float upscaledIndex = index / UPSCALE_FACTOR;
-			workingRectangle.setBounds(rectangle.x + upscaledIndex, rectangle.y + upscaledIndex, rectangle.width - (upscaledIndex * 2), rectangle.height - (upscaledIndex * 2));
-			float t = index / finalSizeInner;
-			setGlowColor(t, baseColor);
-			Shapes.draw(workingRectangle);
-		}
-		
-		float finalSizeOuter = style.glowSize * style.outerGlowSizeProportion;
-		for (float index = 0; index < finalSizeOuter; index++) {
-			float upscaledIndex = index / UPSCALE_FACTOR;
-			workingRectangle.setBounds(rectangle.x - upscaledIndex, rectangle.y - upscaledIndex, rectangle.width + (upscaledIndex * 2), rectangle.height + (upscaledIndex * 2));
-			float t = index / finalSizeOuter;
-			setGlowColor(t, baseColor);
-			Shapes.draw(workingRectangle);
-		}
-	}
-
-	private static void setGlowColor(float t, Color baseColor) {
-		float fadeOutFactorAlpha = 1 - (K_FACTOR_ALPHA / (t + K_FACTOR_ALPHA));
-		float fadeOutFactorRGB = 1 - (K_FACTOR_RGB / (t + K_FACTOR_RGB));
-		workingRectangle.setColor(MathUtil.clamp(baseColor.r - fadeOutFactorRGB, 0, 1), MathUtil.clamp(baseColor.g - fadeOutFactorRGB, 0, 1), MathUtil.clamp(baseColor.b - fadeOutFactorRGB, 0, 1), baseColor.a - fadeOutFactorAlpha);
-	}
-	
-	private static void drawInnerFill(Rectangle rectangle, Color baseColor) {
-		workingRectangle.setBounds(rectangle);
-		workingRectangle.setColor(baseColor.r, baseColor.g, baseColor.b, style.innerFillAlpha);
-		workingRectangle.setFilled(true);
-		Shapes.draw(workingRectangle);
+	public static void dispose() {
+		batch.dispose();
+		panelShader.dispose();
+		whitePixel.dispose();
 	}
 
 }

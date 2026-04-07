@@ -19,6 +19,11 @@ uniform float u_softness;
 uniform float u_reflectionStrength;
 uniform float u_glowKAlpha;
 uniform float u_glowKRgb;
+uniform float u_reflectionY;
+uniform float u_reflectionSlope;
+uniform float u_reflectionWidth;
+
+uniform int u_mode;
 
 float boxSdf(vec2 p, vec2 halfSize) {
     vec2 d = abs(p) - halfSize;
@@ -60,9 +65,10 @@ void main() {
 
     vec2 local = (v_uv - u_panelMin) / max(u_panelMax - u_panelMin, vec2(0.0001));
 
-    float band = abs(local.y - 0.78 + (local.x - 0.5) * 0.22);
-    float reflectionMask = exp(-band * band * 90.0) * smoothstep(0.05, 0.45, local.y) * insideMask * u_reflectionStrength;
-    reflectionMask *= 1.0 - smoothstep(0.38, 0.52, abs(local.x - 0.5));
+    float band = local.y - u_reflectionY + (local.x - 0.5) * u_reflectionSlope;
+	float reflectionMask = exp(-(band * band) / max(u_reflectionWidth * u_reflectionWidth, 0.0001));
+	reflectionMask *= insideMask * u_reflectionStrength;
+	reflectionMask *= 1.0 - smoothstep(0.38, 0.52, abs(local.x - 0.5));
 
     float glowT = clamp(sdf / max(u_glowSize, 0.0001), 0.0, 1.0);
     float fadeOutFactorAlpha = 1.0 - (u_glowKAlpha / (glowT + u_glowKAlpha));
@@ -82,16 +88,19 @@ void main() {
     float coreA = 0.30 * coreMask * u_edgeColor.a;
     float reflA = 0.16 * reflectionMask;
 
-    vec3 accum =
-        fillCol * fillA +
-        bevelCol * bevelA +
-        rimCol * borderA +
-        vec3(1.0) * coreA +
-        vec3(1.0) * reflA +
-        glowCol * glowA;
+	vec3 panelAccum =
+    fillCol * fillA +
+    bevelCol * bevelA +
+    rimCol * borderA +
+    vec3(1.0) * coreA +
+    vec3(1.0) * reflA;
 
-    float alpha = clamp(fillA + bevelA + borderA + coreA + reflA + glowA, 0.0, 1.0);
-    vec3 rgb = accum / max(alpha, 0.0001);
+	float panelAlpha = clamp(fillA + bevelA + borderA + coreA + reflA, 0.0, 1.0);
 
-    gl_FragColor = vec4(rgb, alpha);
+	if (u_mode == 0) {
+   		vec3 panelRgb = panelAccum / max(panelAlpha, 0.0001);
+    	gl_FragColor = vec4(panelRgb, panelAlpha);
+	} else {
+    	gl_FragColor = vec4(glowCol, glowA);
+	}
 }

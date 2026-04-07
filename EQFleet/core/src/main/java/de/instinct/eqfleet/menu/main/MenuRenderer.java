@@ -142,7 +142,7 @@ public class MenuRenderer extends BaseModuleRenderer {
 	private void renderTabButtons() {
 		for (int i = 0; i < tabButtons.size(); i++) {
 			Button tabButton = tabButtons.get(i);
-			tabButton.setBounds(MenuModel.moduleBounds.x + ((MenuModel.moduleBounds.width / tabButtons.size()) * i), MenuModel.moduleBounds.y, MenuModel.moduleBounds.width / tabButtons.size(), 40f);
+			tabButton.setBounds(MenuModel.moduleBounds.x + 5 + (((MenuModel.moduleBounds.width - 10) / tabButtons.size()) * i), MenuModel.moduleBounds.y + 5, (MenuModel.moduleBounds.width - 10) / tabButtons.size(), 40f);
 			tabButton.setAlpha(MenuModel.alpha);
 			tabButton.render();
 		}
