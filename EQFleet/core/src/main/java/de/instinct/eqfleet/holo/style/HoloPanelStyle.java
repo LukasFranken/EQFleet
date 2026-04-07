@@ -18,7 +18,10 @@ public class HoloPanelStyle {
 	private float fillAlpha = 0.15f;
 	
 	@Default
-	private float reflectionStrength = 0.12f;
+	private float reflectionStrength = 0.09f;
+	
+	@Default
+	private float borderSize = 1f;
 	
 	@Default
 	private HoloPanelGlowConfiguration glowConfiguration = HoloPanelGlowConfiguration.builder().build();

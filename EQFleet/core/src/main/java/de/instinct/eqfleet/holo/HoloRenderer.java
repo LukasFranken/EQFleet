@@ -27,9 +27,11 @@ public class HoloRenderer {
 	private static SpriteBatch batch;
 	private static ShaderProgram panelShader;
 	
-	private static float reflectionPos = 0.82f;
-	private static float reflectionSlope = 0.22f;
-	private static float reflectionWidth = 0.08f;
+	private static float reflectionPos;
+	private static float reflectionSlope;
+	private static float reflectionWidth;
+	
+	private static float glowSize;
 	
 	public static void init() {
 		workingBounds = new Rectangle();
@@ -61,26 +63,6 @@ public class HoloRenderer {
 			
 		}, reflectionPos);
 		Modulator.add(reflectionPosMod);
-		
-		RangeModulation reflectionSlopeMod = new RangeModulation("slope", new ValueChangeAction() {
-			
-			@Override
-			public void execute(float value) {
-				reflectionSlope = value;
-			}
-			
-		}, reflectionSlope);
-		Modulator.add(reflectionSlopeMod);
-		
-		RangeModulation reflectionWidthMod = new RangeModulation("width", new ValueChangeAction() {
-			
-			@Override
-			public void execute(float value) {
-				reflectionWidth = value;
-			}
-			
-		}, reflectionWidth);
-		Modulator.add(reflectionWidthMod);
 	}
 	
 	public static void drawPanel(HoloPanel panel) {
@@ -107,6 +89,13 @@ public class HoloRenderer {
         	reflectionRatio += AccelerometerUtil.getAcceleration().x / 5f;
         }
 		reflectionPos = MathUtil.linear(-0.4f, 1.5f, reflectionRatio);
+		reflectionSlope = MathUtil.linear(0.4f, -0.1f, reflectionRatio);
+		reflectionWidth = MathUtil.linear(0.4f, 0.2f, reflectionRatio);
+		
+		float baseGlowSize = panel.getStyle().getGlowConfiguration().getGlowSize();
+		float sineValue = (float) Math.sin(panel.getElapsed() * panel.getStyle().getGlowConfiguration().getGlowAnimationSpeed());
+		float glowPulse = 1f + ((panel.getStyle().getGlowConfiguration().getGlowAnimationStrength() / 2) * sineValue);
+		glowSize = baseGlowSize * glowPulse;
 	}
 
 	private static void drawPanel(HoloPanel panel, HoloPanelRenderMode mode) {
@@ -153,10 +142,10 @@ public class HoloRenderer {
 
 		panelShader.setUniformf("u_glowKAlpha", panel.getStyle().getGlowConfiguration().getGlowKAlpha());
 		panelShader.setUniformf("u_glowKRgb", panel.getStyle().getGlowConfiguration().getGlowKRgb());
-		panelShader.setUniformf("u_borderSize", 1f * scale);
+		panelShader.setUniformf("u_borderSize", panel.getStyle().getBorderSize() * scale);
 		
 		panelShader.setUniformf("u_bevelSize", panel.getStyle().getBevelSize() * scale);
-		panelShader.setUniformf("u_glowSize", panel.getStyle().getGlowConfiguration().getGlowSize() * scale);
+		panelShader.setUniformf("u_glowSize", glowSize * scale);
 		
 		panelShader.setUniformf("u_reflectionStrength", panel.getStyle().getReflectionStrength());
 		panelShader.setUniformf("u_reflectionY", reflectionPos);
