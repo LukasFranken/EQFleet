@@ -104,7 +104,7 @@ public class HoloRenderer {
 		if (Gdx.app.getType().equals(ApplicationType.Desktop)) {
 			reflectionRatio = InputUtil.getVirtualMousePosition().x / GraphicsUtil.screenBounds().width;
         } else {
-        	reflectionRatio += AccelerometerUtil.getAcceleration().y / 20f;
+        	reflectionRatio += AccelerometerUtil.getAcceleration().x / 5f;
         }
 		reflectionPos = MathUtil.linear(-0.4f, 1.5f, reflectionRatio);
 	}
