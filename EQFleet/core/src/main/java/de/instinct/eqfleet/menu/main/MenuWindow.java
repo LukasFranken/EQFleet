@@ -9,9 +9,14 @@ import de.instinct.eqfleet.holo.style.HoloPanelStyle;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.MathUtil;
+import de.instinct.eqlibgdxutils.StringUtils;
+import de.instinct.eqlibgdxutils.debug.modulator.Modulator;
+import de.instinct.eqlibgdxutils.debug.modulator.modulation.types.RangeModulation;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
+import de.instinct.eqlibgdxutils.rendering.ui.component.active.slider.LabelUpdateAction;
+import de.instinct.eqlibgdxutils.rendering.ui.component.active.slider.ValueChangeAction;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.HorizontalAlignment;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
@@ -39,6 +44,43 @@ public class MenuWindow extends Component {
 		
 		createCloseModuleButton();
 		initTitle();
+		
+		RangeModulation glowSizeMod = new RangeModulation("glow", new ValueChangeAction() {
+			
+			@Override
+			public void execute(float value) {
+				menuBackgroundPanel.getStyle().getGlowConfiguration().setGlowSize(value * 100f);
+			}
+			
+		}, menuBackgroundPanel.getStyle().getGlowConfiguration().getGlowSize() / 100f, new LabelUpdateAction() {
+
+			@Override
+			public String getLabelText(float value) {
+				return StringUtils.format(value * 100f, 2);
+			}
+
+		});
+		Modulator.add(glowSizeMod);
+		
+		RangeModulation reflectionStrengthMod = new RangeModulation("refl", new ValueChangeAction() {
+			
+			@Override
+			public void execute(float value) {
+				menuBackgroundPanel.getStyle().setReflectionStrength(value);
+			}
+			
+		}, menuBackgroundPanel.getStyle().getReflectionStrength());
+		Modulator.add(reflectionStrengthMod);
+		
+		RangeModulation backgroundAlphaMod = new RangeModulation("bg-a", new ValueChangeAction() {
+			
+			@Override
+			public void execute(float value) {
+				menuBackgroundPanel.getStyle().setFillAlpha(value);
+			}
+			
+		}, menuBackgroundPanel.getStyle().getFillAlpha());
+		Modulator.add(backgroundAlphaMod);
 	}
 	
 	private void createCloseModuleButton() {

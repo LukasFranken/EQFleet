@@ -1,7 +1,7 @@
 package de.instinct.eqfleet.holo;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Application.ApplicationType;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -14,9 +14,6 @@ import de.instinct.eqlibgdxutils.AccelerometerUtil;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.InputUtil;
 import de.instinct.eqlibgdxutils.MathUtil;
-import de.instinct.eqlibgdxutils.debug.modulator.Modulator;
-import de.instinct.eqlibgdxutils.debug.modulator.modulation.types.RangeModulation;
-import de.instinct.eqlibgdxutils.rendering.ui.component.active.slider.ValueChangeAction;
 
 public class HoloRenderer {
 	
@@ -53,16 +50,6 @@ public class HoloRenderer {
 		pixmap.fill();
 		whitePixel = new Texture(pixmap);
 		pixmap.dispose();
-		
-		RangeModulation reflectionPosMod = new RangeModulation("pos", new ValueChangeAction() {
-			
-			@Override
-			public void execute(float value) {
-				reflectionPos = value;
-			}
-			
-		}, reflectionPos);
-		Modulator.add(reflectionPosMod);
 	}
 	
 	public static void drawPanel(HoloPanel panel) {
