@@ -3,7 +3,6 @@ package de.instinct.eqfleet.menu.module.ship;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import de.instinct.api.core.API;
-import de.instinct.api.core.modules.MenuModule;
 import de.instinct.api.shipyard.dto.ShipBuildResponse;
 import de.instinct.api.shipyard.dto.UnuseShipResponseCode;
 import de.instinct.api.shipyard.dto.UseShipResponseCode;
@@ -18,11 +17,6 @@ import de.instinct.eqfleet.menu.module.ship.message.types.UseShipMessage;
 import de.instinct.eqfleet.net.WebManager;
 
 public class Shipyard extends BaseModule {
-
-	@Override
-	public MenuModule getMenuModule() {
-		return MenuModule.SHIPYARD;
-	}
 
 	@Override
 	public void init() {

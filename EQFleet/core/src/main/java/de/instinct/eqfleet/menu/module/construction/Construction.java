@@ -1,14 +1,8 @@
 package de.instinct.eqfleet.menu.module.construction;
 
-import de.instinct.api.core.modules.MenuModule;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
 
 public class Construction extends BaseModule {
-	
-	@Override
-	public MenuModule getMenuModule() {
-		return MenuModule.CONSTRUCTION;
-	}
 
 	@Override
 	public void init() {

@@ -6,6 +6,7 @@ public enum SceneType {
 	COVER,
 	MENU,
 	GAME,
+	MINING,
 	POSTGAME;
 
 }

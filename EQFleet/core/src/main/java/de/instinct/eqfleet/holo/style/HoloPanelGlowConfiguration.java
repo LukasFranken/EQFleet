@@ -18,7 +18,7 @@ public class HoloPanelGlowConfiguration {
 	private float glowKRgb = 0.3f;
 	
 	@Default
-	private float glowSize = 13f;
+	private float glowSize = 20f;
 	
 	@Default
 	private float glowAnimationSpeed = 60f;

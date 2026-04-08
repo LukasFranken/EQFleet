@@ -3,7 +3,6 @@ package de.instinct.eqfleet.menu.module.shop;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import de.instinct.api.core.API;
-import de.instinct.api.core.modules.MenuModule;
 import de.instinct.api.shop.dto.BuyResponseCode;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
 import de.instinct.eqfleet.menu.module.profile.ProfileModel;
@@ -14,11 +13,6 @@ import de.instinct.eqfleet.menu.module.shop.message.types.ReloadShopMessage;
 import de.instinct.eqfleet.net.WebManager;
 
 public class Shop extends BaseModule {
-
-	@Override
-	public MenuModule getMenuModule() {
-		return MenuModule.SHOP;
-	}
 
 	@Override
 	public void init() {

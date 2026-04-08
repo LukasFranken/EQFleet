@@ -75,7 +75,7 @@ public class HoloRenderer {
         } else {
         	reflectionRatio += AccelerometerUtil.getAcceleration().x / 5f;
         }
-		reflectionPos = MathUtil.linear(-0.4f, 1.5f, reflectionRatio);
+		reflectionPos = MathUtil.linear(-0.3f, 1.4f, reflectionRatio);
 		reflectionSlope = MathUtil.linear(0.4f, -0.1f, reflectionRatio);
 		reflectionWidth = MathUtil.linear(0.4f, 0.2f, reflectionRatio);
 		
@@ -123,9 +123,9 @@ public class HoloRenderer {
 		panelShader.setUniformf("u_panelMin", panelMinX, panelMinY);
 		panelShader.setUniformf("u_panelMax", panelMaxX, panelMaxY);
 
-		panelShader.setUniformf("u_fillColor", workingColor.r / 4, workingColor.g / 4, workingColor.b / 4, panel.getStyle().getFillAlpha());
-		panelShader.setUniformf("u_edgeColor", workingColor.r, workingColor.g, workingColor.b, 0.5f);
-		panelShader.setUniformf("u_glowColor", workingColor.r, workingColor.g, workingColor.b, 1f);
+		panelShader.setUniformf("u_fillColor", workingColor.r / 4, workingColor.g / 4, workingColor.b / 4, workingColor.a * panel.getStyle().getFillAlpha());
+		panelShader.setUniformf("u_edgeColor", workingColor.r, workingColor.g, workingColor.b, workingColor.a * 0.5f);
+		panelShader.setUniformf("u_glowColor", workingColor.r, workingColor.g, workingColor.b, workingColor.a * 1f);
 
 		panelShader.setUniformf("u_glowKAlpha", panel.getStyle().getGlowConfiguration().getGlowKAlpha());
 		panelShader.setUniformf("u_glowKRgb", panel.getStyle().getGlowConfiguration().getGlowKRgb());

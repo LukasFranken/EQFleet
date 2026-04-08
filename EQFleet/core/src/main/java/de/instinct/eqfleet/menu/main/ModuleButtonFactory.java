@@ -59,8 +59,6 @@ public class ModuleButtonFactory {
 	}
 	
 	private static LabeledButton baseModuleButton(LabeledButton moduleButton) {
-		moduleButton.setFixedHeight(70f);
-		moduleButton.setFixedWidth(50f);
 		moduleButton.setHoverColor(SkinManager.darkerSkinColor);
 		moduleButton.setDownColor(SkinManager.darkerSkinColor);
 		return moduleButton;

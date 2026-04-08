@@ -3,7 +3,6 @@ package de.instinct.eqfleet.menu.module.social;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import de.instinct.api.core.API;
-import de.instinct.api.core.modules.MenuModule;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
 import de.instinct.eqfleet.menu.module.social.message.CreateGroupMessage;
 import de.instinct.eqfleet.menu.module.social.message.FriendRequestMessage;
@@ -21,11 +20,6 @@ public class Social extends BaseModule {
 	
 	private final int UPDATE_INTERVAL_MS = 1000;
 	private long lastUpdateTime = 0;
-
-	@Override
-	public MenuModule getMenuModule() {
-		return MenuModule.SOCIAL;
-	}
 
 	@Override
 	public void init() {

@@ -10,17 +10,15 @@ import de.instinct.eqlibgdxutils.debug.logging.Logger;
 public class GraphicsUtil {
 	
 	private static String LOGTAG = "GRAPHICS";
-	private static Vector2 baseWindowSize;
 	
 	private static Rectangle physicalBounds;
 	private static Rectangle screenBounds;
 	
 	public static void init(Vector2 windowSize) {
-		baseWindowSize = windowSize;
 		physicalBounds = new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		screenBounds = new Rectangle(0, 0, baseWindowSize.x, baseWindowSize.y);
+		screenBounds = new Rectangle(0, 0, windowSize.x, windowSize.y);
     	Logger.log(LOGTAG, "Running on display size: " + physicalBounds(), ConsoleColor.YELLOW);
-    	Logger.log(LOGTAG, "Base window size: " + baseWindowSize, ConsoleColor.YELLOW);
+    	Logger.log(LOGTAG, "Base window size: " + windowSize, ConsoleColor.YELLOW);
     	Logger.log(LOGTAG, "Display scale factor: " + getScaleFactor(), ConsoleColor.YELLOW);
     	Logger.log(LOGTAG, "Horizontal display scale factor: " + getHorizontalDisplayScaleFactor(), ConsoleColor.YELLOW);
     	Logger.log(LOGTAG, "Vertical display scale factor: " + getVerticalDisplayScaleFactor(), ConsoleColor.YELLOW);
@@ -28,11 +26,11 @@ public class GraphicsUtil {
 	}
 	
 	public static float getHorizontalDisplayScaleFactor() {
-		return (float) Gdx.graphics.getWidth() / (float) baseWindowSize.x;
+		return (float) Gdx.graphics.getWidth() / (float) screenBounds.x;
 	}
 	
 	public static float getVerticalDisplayScaleFactor() {
-		return (float) Gdx.graphics.getHeight() / (float) baseWindowSize.y;
+		return (float) Gdx.graphics.getHeight() / (float) screenBounds.y;
 	}
 	
 	public static Rectangle physicalBounds() {

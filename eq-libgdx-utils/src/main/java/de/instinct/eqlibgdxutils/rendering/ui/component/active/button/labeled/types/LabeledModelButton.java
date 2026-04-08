@@ -21,7 +21,6 @@ public class LabeledModelButton extends LabeledButton {
 		super.setAction(action);
 		super.getLabel().setText(labelText);
 		modelPreview = new ModelPreview(modelConfig);
-		
 	}
 	
 	@Override

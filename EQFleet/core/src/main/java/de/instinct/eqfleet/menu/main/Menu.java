@@ -20,6 +20,8 @@ import de.instinct.eqfleet.menu.main.message.types.OpenModuleMessage;
 import de.instinct.eqfleet.menu.module.construction.Construction;
 import de.instinct.eqfleet.menu.module.construction.ConstructionRenderer;
 import de.instinct.eqfleet.menu.module.core.ModuleManager;
+import de.instinct.eqfleet.menu.module.mining.MiningMenu;
+import de.instinct.eqfleet.menu.module.mining.MiningMenuRenderer;
 import de.instinct.eqfleet.menu.module.play.Play;
 import de.instinct.eqfleet.menu.module.play.PlayModel;
 import de.instinct.eqfleet.menu.module.play.PlayRenderer;
@@ -73,6 +75,7 @@ public class Menu extends Scene {
 		MenuModel.renderers.put(MenuModule.SHOP, new ShopRenderer());
 		MenuModel.renderers.put(MenuModule.PLAY, new PlayRenderer());
 		MenuModel.renderers.put(MenuModule.SOCIAL, new SocialRenderer());
+		MenuModel.renderers.put(MenuModule.MARKET, new MiningMenuRenderer());
 		
 		MenuModel.modules.put(MenuModule.PLAY, new Play());
 		MenuModel.modules.put(MenuModule.PROFILE, new Profile());
@@ -82,6 +85,7 @@ public class Menu extends Scene {
 		MenuModel.modules.put(MenuModule.SHOP, new Shop());
 		MenuModel.modules.put(MenuModule.STARMAP, new Starmap());
 		MenuModel.modules.put(MenuModule.SOCIAL, new Social());
+		MenuModel.modules.put(MenuModule.MARKET, new MiningMenu());
 		
 		for (BaseModuleRenderer renderer : MenuModel.renderers.values()) {
 			renderer.init();
@@ -158,6 +162,7 @@ public class Menu extends Scene {
 				    () -> API.meta().modules(API.authKey),
 				    modulesResult -> {
 				    	modulesResult.getEnabledModules().add(MenuModule.PLAY);
+				    	modulesResult.getEnabledModules().add(MenuModule.MARKET);
 				    	processModulesResult(modulesResult);
 				    }
 			);
@@ -179,23 +184,11 @@ public class Menu extends Scene {
     				lockedModules.add(module);
     			}
     		}
-    		//loadButtons();
     		loadLockedModuleInfo(lockedModules);
 		} else {
 			Logger.log("Menu", "ModuleData couldn't be loaded!", ConsoleColor.RED);
 		}
 	}
-
-	/*private void loadButtons() {
-		MenuModel.buttons = new ArrayList<>();
-		if (MenuModel.unlockedModules != null && MenuModel.unlockedModules.getEnabledModules() != null) {
-	        for (MenuModule module : MenuModel.renderers.keySet()) {
-	            if (MenuModel.unlockedModules.getEnabledModules().contains(module)) {
-	                MenuModel.buttons.add(module);
-	            }
-	        }
-	    }
-	}*/
 
 	private void loadLockedModuleInfo(List<MenuModule> lockedModules) {
 		ModuleInfoRequest moduleInfoRequest = new ModuleInfoRequest();
@@ -209,6 +202,7 @@ public class Menu extends Scene {
 						Logger.log("Menu", "Locked ModuleData couldn't be loaded!", ConsoleColor.RED);
 					}
 			    	MenuModel.loaded = true;
+			    	MenuModel.modulesUpdated = true;
 			    }
 		);
 	}

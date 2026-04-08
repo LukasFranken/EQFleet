@@ -3,7 +3,6 @@ package de.instinct.eqfleet.menu.module.profile;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import de.instinct.api.core.API;
-import de.instinct.api.core.modules.MenuModule;
 import de.instinct.api.meta.dto.NameRegisterResponseCode;
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
 import de.instinct.eqfleet.menu.module.profile.message.ProfileMessage;
@@ -12,11 +11,6 @@ import de.instinct.eqfleet.menu.module.profile.message.types.RegisterMessage;
 import de.instinct.eqfleet.net.WebManager;
 
 public class Profile extends BaseModule {
-
-	@Override
-	public MenuModule getMenuModule() {
-		return MenuModule.PROFILE;
-	}
 	
 	@Override
 	public void init() {

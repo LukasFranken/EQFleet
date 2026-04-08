@@ -109,8 +109,9 @@ public class MenuRenderer extends BaseModuleRenderer {
 
 	@Override
 	public void update() {
-		if (moduleButtons.isEmpty()) {
+		if (MenuModel.modulesUpdated) {
 			createModuleButtons();
+			MenuModel.modulesUpdated = false;
 		}
 		float margin = 20f;
 		MenuModel.moduleBounds.set(margin, margin + 20, GraphicsUtil.screenBounds().width - (margin * 2), GraphicsUtil.screenBounds().height - 150f - 40f);
@@ -207,7 +208,7 @@ public class MenuRenderer extends BaseModuleRenderer {
 		int column = index % elementsPerRow;
 		int row = 1 + ((int)index / elementsPerRow);
 		
-		moduleButton.setPosition(MenuModel.moduleBounds.x + margin + ((buttonWidth + margin) * column), MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - ((labeledModelButtonHeight + margin) * row));
+		moduleButton.setBounds(MenuModel.moduleBounds.x + margin + ((buttonWidth + margin) * column), MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - ((labeledModelButtonHeight + margin) * row), buttonWidth, labeledModelButtonHeight);
 		moduleButton.setAlpha(MenuModel.alpha);
 		moduleButton.render();
 	}

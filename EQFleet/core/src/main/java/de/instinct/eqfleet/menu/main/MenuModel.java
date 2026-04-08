@@ -27,4 +27,6 @@ public class MenuModel {
 	public static volatile float openAnimationElapsed;
 	public static volatile float alpha;
 
+	public static volatile boolean modulesUpdated;
+
 }

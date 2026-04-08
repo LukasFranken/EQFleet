@@ -97,12 +97,12 @@ public class MenuWindow extends Component {
 		Color downColor = new Color(SkinManager.skinColor);
 		downColor.a = 0.4f;
 		closeModuleButton.getLabel().setType(FontType.LARGE);
-		closeModuleButton.getLabel().setColor(Color.GRAY);
+		closeModuleButton.getLabel().setColor(Color.WHITE);
 		closeModuleButton.setDownColor(downColor);
-		closeModuleButton.setHoverColor(downColor);
+		closeModuleButton.setHoverColor(new Color(0.5f, 0f, 0f, 0.1f));
 		closeModuleButton.setContentMargin(0f);
 	}
-	
+	 
 	private void initTitle() {
 		titleBounds = new Rectangle();
 		title = new Label("");

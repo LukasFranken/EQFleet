@@ -3,7 +3,6 @@ package de.instinct.eqfleet.menu.module.play;
 import com.badlogic.gdx.Gdx;
 
 import de.instinct.api.core.API;
-import de.instinct.api.core.modules.MenuModule;
 import de.instinct.api.matchmaking.dto.LobbyStatusCode;
 import de.instinct.api.matchmaking.dto.MatchmakingStatusResponseCode;
 import de.instinct.api.matchmaking.model.GameType;
@@ -17,11 +16,6 @@ public class Play extends BaseModule {
 	
 	private static int QUEUE_UPDATE_CLOCK_MS = 1000;
 	private static long lastQueueUpdateTime = 0;
-
-	@Override
-	public MenuModule getMenuModule() {
-		return MenuModule.PLAY;
-	}
 
 	@Override
 	public void init() {

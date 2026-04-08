@@ -32,9 +32,9 @@ GENERAL:
   x game
 
 REDESIGN:
-- make new holo cards glass reflection move with acceleration/mouse
-- reload buttons after game/rankup
+- ships harder to unlock and progressively
 - shop buy popup with more information
+ -> proper shop with icons
 - make componentlevels buyable
 - 3v3: onlinedriver:49-null, check load order safety
 - fix desyncs (regular checks with hash or smth)
@@ -49,7 +49,7 @@ REDESIGN:
 - encapsulate all game related inits
  -> core load console
  -> this way the console is always available
- -> prevents init crashes from requiring simulator
+ -> prevents init crashes from requiring ios simulator
 
 - trading between players
  -> popup in social

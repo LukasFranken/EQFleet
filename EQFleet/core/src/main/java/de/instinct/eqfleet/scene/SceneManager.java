@@ -8,6 +8,7 @@ import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.intro.Intro;
 import de.instinct.eqfleet.menu.main.Menu;
 import de.instinct.eqfleet.menu.postgame.PostGame;
+import de.instinct.eqfleet.mining.Mining;
 import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
 
@@ -26,6 +27,7 @@ public class SceneManager {
 		scenes.put(SceneType.GAME, new Game());
 		scenes.put(SceneType.POSTGAME, new PostGame());
 		scenes.put(SceneType.COVER, new Cover());
+		scenes.put(SceneType.MINING, new Mining());
 		
 		for (SceneType sceneType : scenes.keySet()) {
 			scenes.get(sceneType).init();

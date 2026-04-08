@@ -1,10 +1,6 @@
 package de.instinct.eqfleet.menu.common.architecture;
 
-import de.instinct.api.core.modules.MenuModule;
-
 public abstract class BaseModule {
-	
-	public abstract MenuModule getMenuModule();
 	
 	public abstract void init();
 	

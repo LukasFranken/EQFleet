@@ -3,7 +3,6 @@ package de.instinct.eqfleet.menu.module.starmap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import de.instinct.api.core.API;
-import de.instinct.api.core.modules.MenuModule;
 import de.instinct.api.matchmaking.model.FactionMode;
 import de.instinct.api.starmap.dto.SectorDataRequest;
 import de.instinct.api.starmap.dto.SectorDataRequestType;
@@ -16,11 +15,6 @@ import de.instinct.eqfleet.menu.module.starmap.message.types.StartConquestMessag
 import de.instinct.eqfleet.net.WebManager;
 
 public class Starmap extends BaseModule {
-
-	@Override
-	public MenuModule getMenuModule() {
-		return MenuModule.STARMAP;
-	}
 
 	@Override
 	public void init() {

@@ -1,8 +1,8 @@
-package de.instinct.eqfleet.menu.module.settings;
+package de.instinct.eqfleet.menu.module.mining;
 
 import de.instinct.eqfleet.menu.common.architecture.BaseModule;
 
-public class Settings extends BaseModule {
+public class MiningMenu extends BaseModule {
 
 	@Override
 	public void init() {

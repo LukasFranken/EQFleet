@@ -40,7 +40,6 @@ public abstract class LabeledButton extends Button {
 		super();
 		contentBounds = new Rectangle();
 		label = new Label("");
-		label.setFixedHeight(20f);
 		label.setType(FontType.TINY);
 		label.setColor(new Color(SkinManager.skinColor));
 		noteLabel = new Label("");
@@ -84,13 +83,12 @@ public abstract class LabeledButton extends Button {
 	@Override
 	protected void updateButton() {
 		setContentBorder(contentBorder);
+		label.setBounds(getBounds().x, getBounds().y, getBounds().width, 20f);
+		label.setAlpha(getAlpha());
 		contentBounds.set(getBounds().x, getBounds().y + label.getBounds().height, getBounds().width, getBounds().height - label.getBounds().height);
 		updateContent(contentBounds);
 		if (noteText != null) noteLabel.setText(noteText);
 		if (noteColor != null) noteLabel.setColor(noteColor);
-		label.setFixedWidth(getBounds().width);
-		label.setPosition(getBounds().x, getBounds().y);
-		label.setAlpha(getAlpha());
 		if (noteLabel != null) {
 			noteLabel.setPosition(contentBounds.x + 4, contentBounds.y + 2);
 			noteLabel.setAlpha(getAlpha());
