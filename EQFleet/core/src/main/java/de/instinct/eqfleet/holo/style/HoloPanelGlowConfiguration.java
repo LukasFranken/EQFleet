@@ -1,8 +1,8 @@
 package de.instinct.eqfleet.holo.style;
 
 import lombok.Builder;
-import lombok.Data;
 import lombok.Builder.Default;
+import lombok.Data;
 
 @Data
 @Builder

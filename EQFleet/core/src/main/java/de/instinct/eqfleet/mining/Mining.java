@@ -1,61 +1,54 @@
 package de.instinct.eqfleet.mining;
 
-import de.instinct.eqfleet.game.GameConfig;
+import com.badlogic.gdx.Gdx;
+
+import de.instinct.engine.mining.data.MiningGameState;
+import de.instinct.eqfleet.mining.frontend.MiningInputManager;
+import de.instinct.eqfleet.mining.frontend.MiningRenderer;
 import de.instinct.eqfleet.scene.Scene;
-import de.instinct.eqlibgdxutils.GraphicsUtil;
-import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.subtypes.BoxedRectangularLoadingBar;
-import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
+import de.instinct.eqlibgdxutils.engine.cursor.CursorUtil;
+import de.instinct.eqlibgdxutils.engine.cursor.Hotspot;
 
 public class Mining extends Scene {
 	
-	private BoxedRectangularLoadingBar bar;
-	
-	private ShipRenderer shipRenderer;
+	private MiningRenderer renderer;
+	private MiningInputManager inputManager;
 
 	@Override
 	public void init() {
-		Border barBorder = new Border();
-		barBorder.setColor(GameConfig.teammate1Color);
-		barBorder.setSize(1f);
-		
-		bar = new BoxedRectangularLoadingBar();
-		bar.setFixedHeight(10f);
-		bar.setBorder(barBorder);
-		
-		shipRenderer = new ShipRenderer();
-		shipRenderer.init();
+		renderer = new MiningRenderer();
+		renderer.init();
+		inputManager = new MiningInputManager();
 	}
 
 	@Override
 	public void open() {
-		
+		MiningModel.state = new MiningGameState();
+		MiningEngineAPI.initialize(MiningModel.state);
+		CursorUtil.setCursor("crosshair", Hotspot.CENTER);
 	}
 
 	@Override
 	public void close() {
-		
+		CursorUtil.setCursor("cursor", Hotspot.TOPLEFT);
 	}
 
 	@Override
 	public void update() {
-		bar.setSegments(10);
-		bar.setMaxValue(10);
-		bar.setCurrentValue(10);
-		bar.setBounds(20, GraphicsUtil.screenBounds().height - 20, 160, 6);
-		
-		shipRenderer.update();
+		inputManager.update();
+		MiningEngineAPI.update(MiningModel.state, (long)(Gdx.graphics.getDeltaTime() * 1000L));
+		renderer.update();
 	}
 
 	@Override
 	public void render() {
-		shipRenderer.render();
-		bar.render();
+		renderer.render();
 	}
 
 	@Override
 	public void dispose() {
-		shipRenderer.dispose();
-		bar.dispose();
+		renderer.dispose();
 	}
 
 }
+ 

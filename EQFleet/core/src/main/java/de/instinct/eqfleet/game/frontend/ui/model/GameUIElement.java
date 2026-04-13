@@ -2,7 +2,7 @@ package de.instinct.eqfleet.game.frontend.ui.model;
 
 import com.badlogic.gdx.math.Rectangle;
 
-import de.instinct.engine.model.GameState;
+import de.instinct.engine.fleet.data.FleetGameState;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.core.UIElement;
 import lombok.Builder;
@@ -19,6 +19,6 @@ public class GameUIElement<T extends UIElement> {
 	private Action initAction;
 	private Action updateAction;
 	private Action postRenderAction;
-	private GameState currentGameState;
+	private FleetGameState currentGameState;
 
 }

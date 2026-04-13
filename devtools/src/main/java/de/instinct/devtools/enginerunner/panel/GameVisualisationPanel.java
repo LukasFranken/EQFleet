@@ -12,13 +12,13 @@ import com.badlogic.gdx.math.Vector2;
 
 import de.instinct.devtools.enginerunner.TestEngineManager;
 import de.instinct.devtools.util.EngineUtils;
-import de.instinct.engine.combat.Ship;
-import de.instinct.engine.combat.Turret;
-import de.instinct.engine.combat.projectile.Projectile;
-import de.instinct.engine.combat.unit.component.Shield;
-import de.instinct.engine.model.GameState;
-import de.instinct.engine.model.planet.Planet;
-import de.instinct.engine.util.EngineUtility;
+import de.instinct.engine.fleet.data.FleetGameState;
+import de.instinct.engine.fleet.entity.planet.Planet;
+import de.instinct.engine.fleet.entity.projectile.FleetProjectile;
+import de.instinct.engine.fleet.entity.unit.component.Shield;
+import de.instinct.engine.fleet.entity.unit.ship.Ship;
+import de.instinct.engine.fleet.entity.unit.turret.Turret;
+import de.instinct.engine.fleet.util.EngineUtility;
 
 public class GameVisualisationPanel extends JPanel {
 
@@ -46,7 +46,7 @@ public class GameVisualisationPanel extends JPanel {
         }
     }
 
-	private void renderTurrets(Graphics g, GameState state) {
+	private void renderTurrets(Graphics g, FleetGameState state) {
 		for (Turret turret : state.entityData.turrets) {
 			Vector2 screenPosition = convertToScreenPosition(turret.position);
 			g.setColor(Color.GRAY);
@@ -73,7 +73,7 @@ public class GameVisualisationPanel extends JPanel {
 		
 	}
 
-	private void renderUI(Graphics g, GameState state) {
+	private void renderUI(Graphics g, FleetGameState state) {
 		g.setColor(Color.LIGHT_GRAY);
 		g.drawString("Game Time: " + state.gameTimeMS + "ms", 8, 15);
 		g.drawString(state.started ? "running" : (state.gameTimeMS == 0 ? "not started" : "paused"), 8, 28);
@@ -91,7 +91,7 @@ public class GameVisualisationPanel extends JPanel {
 		g.drawString("Enemy ATP: " + format(state.teamATPs.get(2), 1), 8, 200);
 	}
 
-	private void renderPlanets(Graphics g, GameState state) {
+	private void renderPlanets(Graphics g, FleetGameState state) {
 		for (Planet planet : state.entityData.planets) {
 			renderPlanetCircle(g, planet);
 		}
@@ -110,7 +110,7 @@ public class GameVisualisationPanel extends JPanel {
 		           radius * 2);
 	}
 	
-	private void renderShips(Graphics g, GameState state) {
+	private void renderShips(Graphics g, FleetGameState state) {
 		for (Ship ship : state.entityData.ships) {
 			renderShip(g, ship);
 		}
@@ -129,13 +129,13 @@ public class GameVisualisationPanel extends JPanel {
 		}
 	}
 
-	private void renderProjectiles(Graphics g, GameState state) {
-		for (Projectile projectile : state.entityData.projectiles) {
+	private void renderProjectiles(Graphics g, FleetGameState state) {
+		for (FleetProjectile projectile : state.entityData.projectiles) {
 			renderProjectile(g, projectile);
 		}
 	}
 	
-	private void renderProjectile(Graphics g, Projectile projectile) {
+	private void renderProjectile(Graphics g, FleetProjectile projectile) {
 		Vector2 screenPosition = convertToScreenPosition(projectile.position);
 		switch (projectile.weaponType) {
 			case LASER:

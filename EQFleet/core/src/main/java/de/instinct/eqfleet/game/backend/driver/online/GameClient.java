@@ -8,8 +8,8 @@ import java.util.concurrent.TimeUnit;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
 
-import de.instinct.engine.net.KryoRegistrator;
-import de.instinct.engine.net.message.NetworkMessage;
+import de.instinct.engine.core.net.NetworkMessage;
+import de.instinct.engine.fleet.net.FleetKryoRegistrator;
 import de.instinct.eqlibgdxutils.debug.console.Console;
 import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
@@ -28,12 +28,15 @@ public class GameClient {
 	public Client client;
 	public boolean active;
 	
+	private FleetKryoRegistrator kryoRegistrator;
+	
 	public GameClient() {
 		//final LoggingKryoSerialization loggingSerialization = new LoggingKryoSerialization();
 		//client = new Client(65536, 65536, loggingSerialization);
 		client = new Client(65536, 65536);
         Kryo kryo = client.getKryo();
-        KryoRegistrator.registerAll(kryo);
+        kryoRegistrator = new FleetKryoRegistrator();
+        kryoRegistrator.registerClasses(kryo);
         connectionListener = new GameConnectionListener();
 	}
 	

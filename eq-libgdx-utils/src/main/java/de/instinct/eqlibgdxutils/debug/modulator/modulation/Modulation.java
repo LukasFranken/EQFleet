@@ -22,11 +22,11 @@ public abstract class Modulation {
 	public void render(Rectangle bounds) {
 		modulationBounds.set(bounds);
 		
-		tagLabel.setBounds(modulationBounds.x, modulationBounds.y, 50f, modulationBounds.height);
+		tagLabel.setBounds(modulationBounds.x, modulationBounds.y, 80f, modulationBounds.height);
 		tagLabel.render();
 		
-		modulationBounds.x += 50f;
-		modulationBounds.width -= 50f;
+		modulationBounds.x += 80f;
+		modulationBounds.width -= 80f;
 		renderModulation(modulationBounds);
 	}
 	

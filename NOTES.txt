@@ -30,6 +30,18 @@ GENERAL:
   x starmap
   x postgame
   x game
+  
+MINING GAME:
+- ship refill/repair cooldown
+ -> not fuel, but battery that needs to charge
+ -> can be improved
+ -> player can decide to embark early with low charge
+- needs to be coop game too eventually
+- extraction needed, otherwise all resources lost
+ -> in coop, give all resources to all players
+ -> probably max 2 players
+- unlock map/minimap etc. through upgrades
+- laser sight to the cursor unlockable
 
 REDESIGN:
 - ships harder to unlock and progressively

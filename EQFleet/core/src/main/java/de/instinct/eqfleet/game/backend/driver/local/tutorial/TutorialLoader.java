@@ -8,24 +8,25 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import de.instinct.engine.combat.Ship;
-import de.instinct.engine.model.AiPlayer;
-import de.instinct.engine.model.Player;
-import de.instinct.engine.model.planet.PlanetData;
-import de.instinct.engine.model.ship.ShipData;
-import de.instinct.engine.model.ship.components.ShieldData;
-import de.instinct.engine.model.ship.components.WeaponData;
-import de.instinct.engine.model.ship.components.types.CoreType;
-import de.instinct.engine.model.ship.components.types.EngineType;
-import de.instinct.engine.model.ship.components.types.HullType;
-import de.instinct.engine.model.ship.components.types.ShieldType;
-import de.instinct.engine.model.ship.components.types.WeaponType;
-import de.instinct.engine.net.message.types.FleetMovementMessage;
-import de.instinct.engine.util.EngineUtility;
+import de.instinct.engine.core.player.Player;
+import de.instinct.engine.fleet.ai.data.AiPlayer;
+import de.instinct.engine.fleet.entity.planet.data.PlanetData;
+import de.instinct.engine.fleet.entity.unit.component.data.ShieldData;
+import de.instinct.engine.fleet.entity.unit.component.data.WeaponData;
+import de.instinct.engine.fleet.entity.unit.component.data.types.HullType;
+import de.instinct.engine.fleet.entity.unit.component.data.types.ShieldType;
+import de.instinct.engine.fleet.entity.unit.component.data.types.WeaponType;
+import de.instinct.engine.fleet.entity.unit.ship.Ship;
+import de.instinct.engine.fleet.entity.unit.ship.component.types.CoreType;
+import de.instinct.engine.fleet.entity.unit.ship.component.types.EngineType;
+import de.instinct.engine.fleet.entity.unit.ship.data.ShipData;
+import de.instinct.engine.fleet.net.messages.FleetMovementMessage;
+import de.instinct.engine.fleet.player.FleetPlayer;
 import de.instinct.engine_api.ai.service.AIPlayerLoader;
 import de.instinct.engine_api.core.model.GameMap;
 import de.instinct.engine_api.core.model.GameStateInitialization;
 import de.instinct.engine_api.core.model.PlanetInitialization;
+import de.instinct.engine_api.core.service.EngineDataInterface;
 import de.instinct.eqfleet.audio.AudioManager;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.GameModel;
@@ -62,7 +63,7 @@ public class TutorialLoader {
 	private List<Player> loadPlayers() {
 		List<Player> players = new ArrayList<>();
 		
-		Player neutralPlayer = new Player();
+		FleetPlayer neutralPlayer = new FleetPlayer();
 		neutralPlayer.id = 0;
 		neutralPlayer.teamId = 0;
 		neutralPlayer.name = "Neutral Player";
@@ -72,7 +73,7 @@ public class TutorialLoader {
 		neutralPlayer.turrets = new ArrayList<>();
 		players.add(neutralPlayer);
 		
-		Player player = new Player();
+		FleetPlayer player = new FleetPlayer();
 		player.id = 1;
 		player.teamId = 1;
 		player.name = "Player 1";
@@ -138,12 +139,12 @@ public class TutorialLoader {
 		List<PlanetInitialization> planets = new ArrayList<>();
 		PlanetInitialization startPlanetPlayerOne = new PlanetInitialization();
 		startPlanetPlayerOne.setOwnerId(1);
-		startPlanetPlayerOne.setPosition(new Vector2(0, -(EngineUtility.MAP_BOUNDS.y / 2) + EngineUtility.PLANET_RADIUS + 150));
+		startPlanetPlayerOne.setPosition(new Vector2(0, -200));
     	planets.add(startPlanetPlayerOne);
     	
     	PlanetInitialization startPlanetPlayerTwo = new PlanetInitialization();
     	startPlanetPlayerTwo.setOwnerId(2);
-    	startPlanetPlayerTwo.setPosition(new Vector2(350, -(EngineUtility.MAP_BOUNDS.y / 2) + EngineUtility.PLANET_RADIUS + 150));
+    	startPlanetPlayerTwo.setPosition(new Vector2(350, -200));
     	planets.add(startPlanetPlayerTwo);
     	
     	PlanetInitialization ancientPlanet = new PlanetInitialization();
@@ -407,7 +408,7 @@ public class TutorialLoader {
 			
 			@Override
 			public boolean isMet() {
-				return EngineUtility.getPlanet(GameModel.activeGameState.entityData.planets, 3).ownerId == 1 || EngineUtility.getPlanet(GameModel.activeGameState.entityData.planets, 1).ownerId == 1;
+				return EngineDataInterface.getPlanet(GameModel.activeGameState.entityData.planets, 3).ownerId == 1 || EngineDataInterface.getPlanet(GameModel.activeGameState.entityData.planets, 1).ownerId == 1;
 			}
 			
 		}));
@@ -429,7 +430,7 @@ public class TutorialLoader {
 			
 			@Override
 			public boolean isMet() {
-				return EngineUtility.getPlanet(GameModel.activeGameState.entityData.planets, 2).ownerId == 1;
+				return EngineDataInterface.getPlanet(GameModel.activeGameState.entityData.planets, 2).ownerId == 1;
 			}
 			
 		}));

@@ -13,10 +13,10 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 
-import de.instinct.engine.combat.Ship;
-import de.instinct.engine.model.GameState;
-import de.instinct.engine.model.planet.Planet;
-import de.instinct.engine.util.EngineUtility;
+import de.instinct.engine.fleet.data.FleetGameState;
+import de.instinct.engine.fleet.entity.planet.Planet;
+import de.instinct.engine.fleet.entity.unit.ship.Ship;
+import de.instinct.engine_api.core.service.EngineDataInterface;
 import de.instinct.eqfleet.game.GameConfig;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.rendering.model.ModelLoader;
@@ -32,7 +32,7 @@ public class ShipRenderer {
 		shapeRenderer = new ShapeRenderer();
 	}
 	
-	public void render(GameState state, PerspectiveCamera camera) {
+	public void render(FleetGameState state, PerspectiveCamera camera) {
 		for (Ship ship : state.entityData.ships) {
     		ModelInstance shipModel = shipModels.get(ship);
             if (shipModel == null) {
@@ -41,7 +41,7 @@ public class ShipRenderer {
                 shipModels.put(ship, shipModel);
             }
 
-            Planet to = EngineUtility.getPlanet(state.entityData.planets, ship.targetPlanetId);
+            Planet to = EngineDataInterface.getPlanet(state.entityData.planets, ship.targetPlanetId);
             float dx = to.position.x - ship.position.x;
             float dy = to.position.y - ship.position.y;
             float angleDeg = (float) Math.toDegrees(Math.atan2(dy, dx));

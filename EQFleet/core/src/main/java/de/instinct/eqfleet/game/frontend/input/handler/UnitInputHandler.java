@@ -4,11 +4,11 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Vector3;
 
 import de.instinct.api.core.API;
-import de.instinct.engine.model.GameState;
-import de.instinct.engine.model.Player;
-import de.instinct.engine.model.planet.Planet;
-import de.instinct.engine.net.message.types.FleetMovementMessage;
-import de.instinct.engine.util.EngineUtility;
+import de.instinct.engine.fleet.data.FleetGameState;
+import de.instinct.engine.fleet.entity.planet.Planet;
+import de.instinct.engine.fleet.net.messages.FleetMovementMessage;
+import de.instinct.engine.fleet.player.FleetPlayer;
+import de.instinct.engine_api.core.service.EngineDataInterface;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.frontend.input.InputHandler;
 import de.instinct.eqfleet.game.frontend.input.model.GameInputModel;
@@ -26,7 +26,7 @@ public class UnitInputHandler extends InputHandler {
 	}
 
 	@Override
-	public void handleInput(PerspectiveCamera camera, GameState state) {
+	public void handleInput(PerspectiveCamera camera, FleetGameState state) {
 		if (InputUtil.isPressed()) {
 			if (GameInputModel.targetedPlanet != null && model.selectedOriginPlanetId == null) {
 				if (GameInputModel.targetedPlanet.ownerId == GameModel.playerId) {
@@ -39,12 +39,12 @@ public class UnitInputHandler extends InputHandler {
         }
         
         if (InputUtil.isPressed() && model.selectedOriginPlanetId != null && model.isDragging) {
-        	Planet originPlanet = EngineUtility.getPlanet(state.entityData.planets, model.selectedOriginPlanetId);
+        	Planet originPlanet = EngineDataInterface.getPlanet(state.entityData.planets, model.selectedOriginPlanetId);
         	if (originPlanet.ownerId != GameModel.playerId) {
         		resetSelection();
 				return;
         	}
-            Player player = getPlayerForSelectedPlanet(state);
+            FleetPlayer player = getPlayerForSelectedPlanet(state);
             if (model.selectedShipId == null) {
         		if (player.ships.size() > 1) {
             		updateShipSelectionFromDrag(state);
@@ -79,9 +79,9 @@ public class UnitInputHandler extends InputHandler {
 		model.dragStartPosition.set(0f, 0f, 0f);
 	}
 
-	private void updateShipSelectionFromDrag(GameState state) {
+	private void updateShipSelectionFromDrag(FleetGameState state) {
 		Vector3 currentPosition = GameInputModel.mouseWorldPos;
-        Planet sourcePlanet = EngineUtility.getPlanet(state.entityData.planets, model.selectedOriginPlanetId);
+        Planet sourcePlanet = EngineDataInterface.getPlanet(state.entityData.planets, model.selectedOriginPlanetId);
         if (sourcePlanet == null) return;
         
         float dx = currentPosition.x - sourcePlanet.position.x;
@@ -91,7 +91,7 @@ public class UnitInputHandler extends InputHandler {
         float angle = (float) Math.toDegrees(Math.atan2(dy, dx));
         if (angle < 0) angle += 360;
         
-        Player player = getPlayerForSelectedPlanet(state);
+        FleetPlayer player = getPlayerForSelectedPlanet(state);
         int shipCount = player.ships.size();
         if (shipCount == 3) {
         	angle = angle + 30f; 
@@ -104,9 +104,9 @@ public class UnitInputHandler extends InputHandler {
         float sectorSize = 360f / shipCount;
         int selectedShipIndex = (int)((angle + sectorSize/2) % 360 / sectorSize);
         
-        if (distance < EngineUtility.PLANET_RADIUS + GameInputModel.radialSelectionThreshold) {
+        if (distance < EngineDataInterface.PLANET_RADIUS + GameInputModel.radialSelectionThreshold) {
         	model.selectedShipId = null;
-            if (distance > EngineUtility.PLANET_RADIUS + GameInputModel.radialHoverThreshold) {
+            if (distance > EngineDataInterface.PLANET_RADIUS + GameInputModel.radialHoverThreshold) {
             	model.hoveredShipId = selectedShipIndex;
             } else {
             	model.hoveredShipId = null;
@@ -117,11 +117,11 @@ public class UnitInputHandler extends InputHandler {
         }
     }
 	
-	private Player getPlayerForSelectedPlanet(GameState state) {
+	private FleetPlayer getPlayerForSelectedPlanet(FleetGameState state) {
         if (model.selectedOriginPlanetId == null) return null;
-        Planet planet = EngineUtility.getPlanet(state.entityData.planets, model.selectedOriginPlanetId);
+        Planet planet = EngineDataInterface.getPlanet(state.entityData.planets, model.selectedOriginPlanetId);
         if (planet == null) return null;
-        return EngineUtility.getPlayer(state.staticData.playerData.players, planet.ownerId);
+        return EngineDataInterface.getPlayer(state.playerData.players, planet.ownerId);
     }
 	
 }

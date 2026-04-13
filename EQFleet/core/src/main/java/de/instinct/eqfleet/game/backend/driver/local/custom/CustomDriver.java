@@ -4,23 +4,23 @@ import java.util.List;
 
 import de.instinct.api.core.API;
 import de.instinct.api.meta.dto.LoadoutData;
-import de.instinct.engine.FleetEngine;
-import de.instinct.engine.ai.AiEngine;
-import de.instinct.engine.model.AiPlayer;
-import de.instinct.engine.model.Player;
-import de.instinct.engine.net.message.NetworkMessage;
-import de.instinct.engine.net.message.types.BuildTurretMessage;
-import de.instinct.engine.net.message.types.FleetMovementMessage;
-import de.instinct.engine.net.message.types.GamePauseMessage;
-import de.instinct.engine.net.message.types.LoadedMessage;
-import de.instinct.engine.net.message.types.SurrenderMessage;
-import de.instinct.engine.order.GameOrder;
-import de.instinct.engine.order.types.BuildTurretOrder;
-import de.instinct.engine.order.types.GamePauseOrder;
-import de.instinct.engine.order.types.ShipMovementOrder;
-import de.instinct.engine.order.types.SurrenderOrder;
-import de.instinct.engine.stats.StatCollector;
+import de.instinct.engine.core.net.NetworkMessage;
+import de.instinct.engine.core.order.GameOrder;
+import de.instinct.engine.core.order.types.GamePauseOrder;
+import de.instinct.engine.core.player.Player;
+import de.instinct.engine.fleet.ai.AiEngine;
+import de.instinct.engine.fleet.ai.data.AiPlayer;
+import de.instinct.engine.fleet.net.messages.BuildTurretMessage;
+import de.instinct.engine.fleet.net.messages.FleetMovementMessage;
+import de.instinct.engine.fleet.net.messages.GamePauseMessage;
+import de.instinct.engine.fleet.net.messages.LoadedMessage;
+import de.instinct.engine.fleet.net.messages.SurrenderMessage;
+import de.instinct.engine.fleet.order.types.BuildTurretOrder;
+import de.instinct.engine.fleet.order.types.ShipMovementOrder;
+import de.instinct.engine.fleet.order.types.SurrenderOrder;
+import de.instinct.engine.fleet.stats.StatCollector;
 import de.instinct.engine_api.core.model.GameStateInitialization;
+import de.instinct.engine_api.core.service.EngineDataInterface;
 import de.instinct.engine_api.core.service.GameStateInitializer;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.GameModel;
@@ -48,7 +48,7 @@ public class CustomDriver extends LocalDriver {
 		GameModel.activeGameState = gameStateInitializer.initialize(initialGameState);
 		GameModel.lastUpdateTimestampMS = System.currentTimeMillis();
 		finished = false;
-		System.out.println(GameModel.activeGameState.staticData.playerData);
+		System.out.println(GameModel.activeGameState.playerData);
 	}
 	
 	@Override
@@ -57,16 +57,16 @@ public class CustomDriver extends LocalDriver {
 			NetworkMessage newMessage = GameModel.outputMessageQueue.next();
 			if (newMessage != null) {
 				if (newMessage instanceof FleetMovementMessage) {
-					FleetEngine.queue(GameModel.activeGameState, getOrder((FleetMovementMessage)newMessage));
+					EngineDataInterface.queue(GameModel.activeGameState, getOrder((FleetMovementMessage)newMessage));
 				}
 				if (newMessage instanceof BuildTurretMessage) {
-					FleetEngine.queue(GameModel.activeGameState, getOrder((BuildTurretMessage)newMessage));
+					EngineDataInterface.queue(GameModel.activeGameState, getOrder((BuildTurretMessage)newMessage));
 				}
 				if (newMessage instanceof GamePauseMessage) {
-					FleetEngine.queue(GameModel.activeGameState, getOrder((GamePauseMessage)newMessage));
+					EngineDataInterface.queue(GameModel.activeGameState, getOrder((GamePauseMessage)newMessage));
 				}
 				if (newMessage instanceof SurrenderMessage) {
-					FleetEngine.queue(GameModel.activeGameState, getOrder((SurrenderMessage)newMessage));
+					EngineDataInterface.queue(GameModel.activeGameState, getOrder((SurrenderMessage)newMessage));
 				}
 				if (newMessage instanceof LoadedMessage) {
 					GameModel.activeGameState.started = true;
@@ -109,11 +109,11 @@ public class CustomDriver extends LocalDriver {
 	protected void postEngineUpdate() {
 		if (GameModel.activeGameState != null && GameModel.activeGameState.started && !finished) {
 			try {
-				for (Player player : GameModel.activeGameState.staticData.playerData.players) {
+				for (Player player : GameModel.activeGameState.playerData.players) {
 					if (player instanceof AiPlayer) {
 						List<GameOrder> aiOrders = aiEngine.act((AiPlayer)player, GameModel.activeGameState);
 						for (GameOrder order : aiOrders) {
-							FleetEngine.queue(GameModel.activeGameState, order);
+							EngineDataInterface.queue(GameModel.activeGameState, order);
 						}
 					}
 				}

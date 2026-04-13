@@ -4,9 +4,9 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import de.instinct.engine.model.Player;
-import de.instinct.engine.model.planet.Planet;
-import de.instinct.engine.util.EngineUtility;
+import de.instinct.engine.core.player.Player;
+import de.instinct.engine.fleet.entity.planet.Planet;
+import de.instinct.engine_api.core.service.EngineDataInterface;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.rendering.particle.ParticleRenderer;
@@ -14,15 +14,15 @@ import de.instinct.eqlibgdxutils.rendering.particle.ParticleRenderer;
 public class GameUIParticleRenderer {
 	
 	public void render(PerspectiveCamera camera) {
-		if (EngineUtility.mapHasAncient(GameModel.activeGameState)) {
+		if (EngineDataInterface.mapHasAncient(GameModel.activeGameState)) {
 			Planet activeAncientPlanet = null;
 			for (Planet planet : GameModel.activeGameState.entityData.planets) {
 				if (planet.ancient) {
 					activeAncientPlanet = planet;
 				}
 			}
-			Player owner = EngineUtility.getPlayer(GameModel.activeGameState.staticData.playerData.players, activeAncientPlanet.ownerId);
-			Player self = EngineUtility.getPlayer(GameModel.activeGameState.staticData.playerData.players, GameModel.playerId);
+			Player owner = EngineDataInterface.getPlayer(GameModel.activeGameState.playerData.players, activeAncientPlanet.ownerId);
+			Player self = EngineDataInterface.getPlayer(GameModel.activeGameState.playerData.players, GameModel.playerId);
 			if (activeAncientPlanet != null) {
 				if (activeAncientPlanet.ownerId != 0) {
 					if (!ParticleRenderer.isStarted("ancient")) ParticleRenderer.start("ancient");

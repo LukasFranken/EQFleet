@@ -10,9 +10,8 @@ import de.instinct.api.matchmaking.model.GameMode;
 import de.instinct.api.matchmaking.model.GameType;
 import de.instinct.api.matchmaking.model.VersusMode;
 import de.instinct.api.meta.dto.LoadoutData;
-import de.instinct.engine.model.AiPlayer;
-import de.instinct.engine.model.Player;
-import de.instinct.engine.util.EngineUtility;
+import de.instinct.engine.core.player.Player;
+import de.instinct.engine.fleet.ai.data.AiPlayer;
 import de.instinct.engine_api.ai.service.AIPlayerLoader;
 import de.instinct.engine_api.ai.service.NeutralPlayerLoader;
 import de.instinct.engine_api.core.model.GameMap;
@@ -83,35 +82,35 @@ public class CustomLoader {
 	private void generatePlayerPlanets(List<PlanetInitialization> planets, GameType gameType) {
 		PlanetInitialization startPlanetPlayerOne = new PlanetInitialization();
     	startPlanetPlayerOne.setOwnerId(1);
-    	startPlanetPlayerOne.setPosition(new Vector2(0, -(EngineUtility.MAP_BOUNDS.y / 2) + 300));
+    	startPlanetPlayerOne.setPosition(new Vector2(0, -600));
     	planets.add(startPlanetPlayerOne);
     	
     	PlanetInitialization startPlanetPlayerTwo = new PlanetInitialization();
     	startPlanetPlayerTwo.setOwnerId(4);
-    	startPlanetPlayerTwo.setPosition(new Vector2(0, (EngineUtility.MAP_BOUNDS.y / 2) - 300));
+    	startPlanetPlayerTwo.setPosition(new Vector2(0, 600));
     	planets.add(startPlanetPlayerTwo);
     	
     	if (gameType.getFactionMode().teamPlayerCount >= 2) {
     		PlanetInitialization startPlanetPlayerThree = new PlanetInitialization();
     		startPlanetPlayerThree.setOwnerId(2);
-    		startPlanetPlayerThree.setPosition(new Vector2(-200, (EngineUtility.MAP_BOUNDS.y / 2) + 300));
+    		startPlanetPlayerThree.setPosition(new Vector2(-200, -600));
         	planets.add(startPlanetPlayerThree);
         	
         	PlanetInitialization startPlanetPlayerFour = new PlanetInitialization();
         	startPlanetPlayerFour.setOwnerId(5);
-        	startPlanetPlayerFour.setPosition(new Vector2(200, (EngineUtility.MAP_BOUNDS.y / 2) - 300));
+        	startPlanetPlayerFour.setPosition(new Vector2(200, 600));
         	planets.add(startPlanetPlayerFour);
 		}
     	
     	if (gameType.getFactionMode().teamPlayerCount >= 3) {
     		PlanetInitialization startPlanetPlayerFive = new PlanetInitialization();
     		startPlanetPlayerFive.setOwnerId(3);
-    		startPlanetPlayerFive.setPosition(new Vector2(200, -(EngineUtility.MAP_BOUNDS.y / 2) + 300));
+    		startPlanetPlayerFive.setPosition(new Vector2(200, -600));
         	planets.add(startPlanetPlayerFive);
         	
         	PlanetInitialization startPlanetPlayerSix = new PlanetInitialization();
         	startPlanetPlayerSix.setOwnerId(6);
-        	startPlanetPlayerSix.setPosition(new Vector2(-200, (EngineUtility.MAP_BOUNDS.y / 2) - 300));
+        	startPlanetPlayerSix.setPosition(new Vector2(-200, 600));
         	planets.add(startPlanetPlayerSix);
 		}
 	}

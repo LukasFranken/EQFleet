@@ -10,8 +10,8 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.math.Vector3;
 
-import de.instinct.engine.model.GameState;
-import de.instinct.engine.model.planet.Planet;
+import de.instinct.engine.fleet.data.FleetGameState;
+import de.instinct.engine.fleet.entity.planet.Planet;
 import de.instinct.eqfleet.game.GameConfig;
 import de.instinct.eqlibgdxutils.rendering.model.ModelLoader;
 import de.instinct.eqlibgdxutils.rendering.model.ModelRenderer;
@@ -26,7 +26,7 @@ public class PlanetRenderer {
 		planetRotationAngle = 0f;
 	}
 	
-	public void render(GameState state, PerspectiveCamera camera) {
+	public void render(FleetGameState state, PerspectiveCamera camera) {
 		if (planetModels.isEmpty() && state != null) {
 		    for (Planet planet : state.entityData.planets) {
 		        ModelInstance planetInstance = ModelLoader.instanciate("planet");

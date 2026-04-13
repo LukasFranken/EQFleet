@@ -4,9 +4,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 
 import de.instinct.api.core.API;
-import de.instinct.engine.model.GameState;
-import de.instinct.engine.net.message.types.LoadedMessage;
-import de.instinct.engine.util.EngineUtility;
+import de.instinct.engine.fleet.data.FleetGameState;
+import de.instinct.engine.fleet.net.messages.LoadedMessage;
+import de.instinct.engine_api.core.service.EngineDataInterface;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.frontend.input.GameInputManager;
 import de.instinct.eqfleet.game.frontend.ui.defense.DefenseUIRenderer;
@@ -21,7 +21,7 @@ public class GameUIRenderer {
 	public boolean initialized;
 	
 	private PerspectiveCamera camera;
-	private GameState state;
+	private FleetGameState state;
 	
 	private GameInputManager inputManager;
 	
@@ -79,7 +79,7 @@ public class GameUIRenderer {
 		if (GameModel.activeGameState != null) {
 			int winner = GameModel.activeGameState.resultData.winner;
 			if (winner != 0 && !GameModel.activeGameState.gameUUID.equals("tutorial")) {
-				if (winner == EngineUtility.getPlayer(GameModel.activeGameState.staticData.playerData.players, GameModel.playerId).teamId) {
+				if (winner == EngineDataInterface.getPlayer(GameModel.activeGameState.playerData.players, GameModel.playerId).teamId) {
 					if (GameModel.activeGameState.resultData.wiped) {
 						message = "DOMINATION";
 					} else {
@@ -111,7 +111,7 @@ public class GameUIRenderer {
 		this.camera = camera;
 	}
 
-	public void setState(GameState state) {
+	public void setState(FleetGameState state) {
 		this.state = state;
 	}
 	

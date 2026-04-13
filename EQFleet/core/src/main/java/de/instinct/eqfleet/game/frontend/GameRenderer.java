@@ -4,9 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Vector3;
 
-import de.instinct.engine.model.GameState;
-import de.instinct.engine.model.Player;
-import de.instinct.engine.util.EngineUtility;
+import de.instinct.engine.core.player.Player;
+import de.instinct.engine.fleet.data.FleetGameState;
+import de.instinct.engine_api.core.service.EngineDataInterface;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.frontend.guide.GuideRenderer;
 import de.instinct.eqfleet.game.frontend.planet.PlanetRenderer;
@@ -62,7 +62,7 @@ public class GameRenderer {
 		uiRenderer = new GameUIRenderer();
 	}
 
-	public void render(GameState state) {
+	public void render(FleetGameState state) {
 		if (uiRenderer != null) {
 			Profiler.startFrame("GAME_RNDR");
 			if (!uiRenderer.initialized) {
@@ -102,13 +102,13 @@ public class GameRenderer {
 		}
 	}
 
-	private void calculateZoomInStart(GameState state) {
+	private void calculateZoomInStart(FleetGameState state) {
 		float currentZoomOutFactor = MathUtil.easeInOut(startZoomOutFactor, 1f, zoomInElapsed / zoomInTime);
 		camera.position.set(new Vector3(BASE_CAM_POS.x, BASE_CAM_POS.y, (BASE_CAM_POS.z / (state.staticData.zoomFactor == 0 ? 1 : state.staticData.zoomFactor)) * currentZoomOutFactor));
 	}
 
 	private void checkFlip() {
-		Player self = EngineUtility.getPlayer(GameModel.activeGameState.staticData.playerData.players, GameModel.playerId);
+		Player self = EngineDataInterface.getPlayer(GameModel.activeGameState.playerData.players, GameModel.playerId);
 		if (isFlipped && self.teamId == 1) {
 			flip();
 		}

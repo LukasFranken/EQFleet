@@ -3,10 +3,10 @@ package de.instinct.eqfleet.game;
 import java.util.Queue;
 import java.util.UUID;
 
-import de.instinct.engine.model.GameState;
-import de.instinct.engine.net.message.NetworkMessage;
-import de.instinct.engine.net.message.types.GameFinishUpdate;
-import de.instinct.engine.net.message.types.GameOrderUpdate;
+import de.instinct.engine.core.net.NetworkMessage;
+import de.instinct.engine.fleet.data.FleetGameState;
+import de.instinct.engine.fleet.net.messages.GameFinishUpdate;
+import de.instinct.engine.fleet.net.messages.GameOrderUpdate;
 import de.instinct.eqfleet.game.backend.driver.local.tutorial.guide.GuideEvent;
 import de.instinct.eqfleet.game.frontend.InteractionMode;
 import de.instinct.eqfleet.game.frontend.ui.model.UIBounds;
@@ -26,10 +26,10 @@ public class GameModel {
 	
 	public static volatile String playerUUID = UUID.randomUUID().toString();
     public static volatile int playerId;
-    public static volatile Queue<GameState> receivedGameState;
+    public static volatile Queue<FleetGameState> receivedGameState;
     public static volatile Queue<GameOrderUpdate> receivedOrders;
     public static volatile GameFinishUpdate receivedResults;
-    public static volatile GameState activeGameState;
+    public static volatile FleetGameState activeGameState;
     public static volatile long lastUpdateTimestampMS;
     
     public static volatile String lastGameUUID;

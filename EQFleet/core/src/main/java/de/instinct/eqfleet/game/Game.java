@@ -2,7 +2,7 @@ package de.instinct.eqfleet.game;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import de.instinct.engine.net.message.types.PlayerAssigned;
+import de.instinct.engine.fleet.net.messages.PlayerAssigned;
 import de.instinct.eqfleet.game.backend.driver.Driver;
 import de.instinct.eqfleet.game.backend.driver.local.custom.CustomDriver;
 import de.instinct.eqfleet.game.backend.driver.local.tutorial.TutorialDriver;

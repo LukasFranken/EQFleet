@@ -7,10 +7,10 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 
 import de.instinct.api.core.API;
-import de.instinct.engine.model.GameState;
-import de.instinct.engine.model.planet.Planet;
-import de.instinct.engine.net.message.types.GamePauseMessage;
-import de.instinct.engine.util.EngineUtility;
+import de.instinct.engine.fleet.data.FleetGameState;
+import de.instinct.engine.fleet.entity.planet.Planet;
+import de.instinct.engine.fleet.net.messages.GamePauseMessage;
+import de.instinct.engine_api.core.service.EngineDataInterface;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.frontend.input.InputHandler;
 import de.instinct.eqfleet.game.frontend.input.model.GameInputModel;
@@ -25,7 +25,7 @@ public class GeneralInputHandler extends InputHandler {
 	}
 
 	@Override
-	public void handleInput(PerspectiveCamera camera, GameState state) {
+	public void handleInput(PerspectiveCamera camera, FleetGameState state) {
         if (timerBounds.contains(InputUtil.getVirtualMousePosition()) && InputUtil.isClicked()) {
         	GamePauseMessage order = new GamePauseMessage();
         	order.gameUUID = state.gameUUID;
@@ -49,7 +49,7 @@ public class GeneralInputHandler extends InputHandler {
         );
     }
 	
-	private Planet getHoveredPlanet(PerspectiveCamera camera, GameState state) {
+	private Planet getHoveredPlanet(PerspectiveCamera camera, FleetGameState state) {
         for (Planet planet : state.entityData.planets) {
             if (isTouchInsidePlanet(GameInputModel.mouseWorldPos, planet)) {
                 return planet;
@@ -59,7 +59,7 @@ public class GeneralInputHandler extends InputHandler {
     }
 
     private boolean isTouchInsidePlanet(Vector3 worldClick, Planet planet) {
-        return Vector3.dst(planet.position.x, planet.position.y, 0f, worldClick.x, worldClick.y, 0f) < EngineUtility.PLANET_RADIUS + GameInputModel.HITBOX_INCREASE;
+        return Vector3.dst(planet.position.x, planet.position.y, 0f, worldClick.x, worldClick.y, 0f) < EngineDataInterface.PLANET_RADIUS + GameInputModel.HITBOX_INCREASE;
     }
 
 }

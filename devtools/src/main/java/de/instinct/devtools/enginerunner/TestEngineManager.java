@@ -6,26 +6,24 @@ import java.util.UUID;
 
 import com.badlogic.gdx.math.Vector2;
 
-import de.instinct.engine.FleetEngine;
-import de.instinct.engine.ai.AiEngine;
-import de.instinct.engine.model.AiPlayer;
-import de.instinct.engine.model.GameState;
-import de.instinct.engine.model.Player;
-import de.instinct.engine.model.planet.PlanetData;
-import de.instinct.engine.model.ship.ShipData;
-import de.instinct.engine.model.ship.components.ShieldData;
-import de.instinct.engine.model.ship.components.WeaponData;
-import de.instinct.engine.model.ship.components.types.CoreType;
-import de.instinct.engine.model.ship.components.types.EngineType;
-import de.instinct.engine.model.ship.components.types.HullType;
-import de.instinct.engine.model.ship.components.types.ShieldType;
-import de.instinct.engine.model.ship.components.types.WeaponType;
-import de.instinct.engine.model.turret.PlatformData;
-import de.instinct.engine.model.turret.PlatformType;
-import de.instinct.engine.model.turret.TurretData;
-import de.instinct.engine.order.GameOrder;
-import de.instinct.engine.stats.StatCollector;
-import de.instinct.engine.stats.model.GameStatistic;
+import de.instinct.engine.core.order.GameOrder;
+import de.instinct.engine.core.player.Player;
+import de.instinct.engine.fleet.FleetEngine;
+import de.instinct.engine.fleet.ai.AiEngine;
+import de.instinct.engine.fleet.ai.data.AiPlayer;
+import de.instinct.engine.fleet.data.FleetGameState;
+import de.instinct.engine.fleet.entity.planet.data.PlanetData;
+import de.instinct.engine.fleet.entity.unit.component.data.ShieldData;
+import de.instinct.engine.fleet.entity.unit.component.data.WeaponData;
+import de.instinct.engine.fleet.entity.unit.component.data.types.HullType;
+import de.instinct.engine.fleet.entity.unit.component.data.types.ShieldType;
+import de.instinct.engine.fleet.entity.unit.component.data.types.WeaponType;
+import de.instinct.engine.fleet.entity.unit.ship.component.types.CoreType;
+import de.instinct.engine.fleet.entity.unit.ship.component.types.EngineType;
+import de.instinct.engine.fleet.entity.unit.ship.data.ShipData;
+import de.instinct.engine.fleet.entity.unit.turret.data.TurretData;
+import de.instinct.engine.fleet.stats.StatCollector;
+import de.instinct.engine.fleet.stats.model.GameStatistic;
 import de.instinct.engine_api.ai.service.AIPlayerLoader;
 import de.instinct.engine_api.core.model.GameMap;
 import de.instinct.engine_api.core.model.GameStateInitialization;
@@ -34,7 +32,7 @@ import de.instinct.engine_api.core.service.GameStateInitializer;
 
 public class TestEngineManager {
 	
-	public static GameState state;
+	public static FleetGameState state;
 	
 	private static AiEngine aiEngine;
 	private static AIPlayerLoader aiPlayerLoader;
@@ -140,10 +138,6 @@ public class TestEngineManager {
 		TurretData neutralTurret = new TurretData();
 		neutralTurret.model = "projectile";
 		neutralTurret.resourceCost = 0;
-		
-		PlatformData neutralTurretPlatform = new PlatformData();
-		neutralTurretPlatform.type = PlatformType.SERVO;
-		neutralTurret.platform = neutralTurretPlatform;
 
 		neutralTurret.hullType = HullType.CARBON;
 		neutralTurret.hullStrength = 50;
@@ -188,10 +182,6 @@ public class TestEngineManager {
 		TurretData playerTurret = new TurretData();
 		playerTurret.model = "projectile";
 		playerTurret.resourceCost = 10;
-		
-		PlatformData playerTurretPlatform = new PlatformData();
-		playerTurretPlatform.type = PlatformType.SERVO;
-		playerTurret.platform = playerTurretPlatform;
 		
 		playerTurret.hullType = HullType.CARBON;
 		playerTurret.hullStrength = 30;

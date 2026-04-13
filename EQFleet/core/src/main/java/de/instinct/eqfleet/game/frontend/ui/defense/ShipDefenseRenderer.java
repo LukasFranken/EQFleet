@@ -8,8 +8,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Rectangle;
 
-import de.instinct.engine.combat.unit.Unit;
-import de.instinct.engine.combat.unit.component.Shield;
+import de.instinct.engine.fleet.entity.unit.Unit;
+import de.instinct.engine.fleet.entity.unit.component.Shield;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.shapes.EQRectangle;
 

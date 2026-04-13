@@ -1,13 +1,14 @@
 package de.instinct.eqfleet.game.backend.driver.online;
 
 import de.instinct.api.core.API;
-import de.instinct.engine.model.GameState;
-import de.instinct.engine.net.message.types.GameFinishUpdate;
-import de.instinct.engine.net.message.types.GameOrderUpdate;
-import de.instinct.engine.net.message.types.GameStartUpdate;
-import de.instinct.engine.net.message.types.JoinMessage;
-import de.instinct.engine.net.message.types.PlayerAssigned;
-import de.instinct.engine.stats.StatCollector;
+import de.instinct.engine.core.data.GameState;
+import de.instinct.engine.fleet.data.FleetGameState;
+import de.instinct.engine.fleet.net.messages.GameFinishUpdate;
+import de.instinct.engine.fleet.net.messages.GameOrderUpdate;
+import de.instinct.engine.fleet.net.messages.GameStartUpdate;
+import de.instinct.engine.fleet.net.messages.JoinMessage;
+import de.instinct.engine.fleet.net.messages.PlayerAssigned;
+import de.instinct.engine.fleet.stats.StatCollector;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.backend.driver.Driver;
@@ -40,7 +41,7 @@ public class OnlineDriver extends Driver {
 				Game.assignPlayer((PlayerAssigned) object);
 			}
 			if (object instanceof GameState) {
-				GameModel.receivedGameState.add((GameState) object);
+				GameModel.receivedGameState.add((FleetGameState) object);
 			}
 			if (object instanceof GameOrderUpdate) {
 				GameModel.receivedOrders.add((GameOrderUpdate) object);
@@ -62,9 +63,9 @@ public class OnlineDriver extends Driver {
 		}
 		if (!GameModel.receivedGameState.isEmpty()) {
         	GameModel.activeGameState = GameModel.receivedGameState.poll();
-        	GameModel.activeGameState.pauseData.resumeCountdownMS += SMOOTHNESS_DELAY_MS;
+        	GameModel.activeGameState.metaData.pauseData.resumeCountdownMS += SMOOTHNESS_DELAY_MS;
         	if (!StatCollector.isInitialized(GameModel.activeGameState.gameUUID)) {
-        		StatCollector.initialize(GameModel.activeGameState.gameUUID, GameModel.activeGameState.staticData.playerData.players);
+        		StatCollector.initialize(GameModel.activeGameState.gameUUID, GameModel.activeGameState.playerData.players);
         	}
             GameModel.lastUpdateTimestampMS = System.currentTimeMillis();
         }

@@ -6,9 +6,9 @@ import java.util.List;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Rectangle;
 
-import de.instinct.engine.combat.Ship;
-import de.instinct.engine.combat.Turret;
-import de.instinct.engine.model.GameState;
+import de.instinct.engine.fleet.data.FleetGameState;
+import de.instinct.engine.fleet.entity.unit.ship.Ship;
+import de.instinct.engine.fleet.entity.unit.turret.Turret;
 
 public class DefenseUIRenderer {
 	
@@ -20,7 +20,7 @@ public class DefenseUIRenderer {
 		shipDefenseRenderer = new ShipDefenseRenderer();
 	}
 	
-	public void render(GameState state, PerspectiveCamera camera) {
+	public void render(FleetGameState state, PerspectiveCamera camera) {
 		for (Turret turret : state.entityData.turrets) {
 			if (turret.currentHull > 0) {
 				planetDefenseRenderer.renderDefense(camera, turret);

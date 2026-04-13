@@ -2,7 +2,7 @@ package de.instinct.eqfleet.game.frontend.input.model;
 
 import com.badlogic.gdx.math.Vector3;
 
-import de.instinct.engine.model.planet.Planet;
+import de.instinct.engine.fleet.entity.planet.Planet;
 import lombok.ToString;
 
 @ToString

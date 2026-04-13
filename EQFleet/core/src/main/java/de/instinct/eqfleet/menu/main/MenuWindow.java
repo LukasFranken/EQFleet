@@ -60,7 +60,7 @@ public class MenuWindow extends Component {
 			}
 
 		});
-		Modulator.add(glowSizeMod);
+		Modulator.add("holo", glowSizeMod);
 		
 		RangeModulation reflectionStrengthMod = new RangeModulation("refl", new ValueChangeAction() {
 			
@@ -70,7 +70,7 @@ public class MenuWindow extends Component {
 			}
 			
 		}, menuBackgroundPanel.getStyle().getReflectionStrength());
-		Modulator.add(reflectionStrengthMod);
+		Modulator.add("holo", reflectionStrengthMod);
 		
 		RangeModulation backgroundAlphaMod = new RangeModulation("bg-a", new ValueChangeAction() {
 			
@@ -80,7 +80,7 @@ public class MenuWindow extends Component {
 			}
 			
 		}, menuBackgroundPanel.getStyle().getFillAlpha());
-		Modulator.add(backgroundAlphaMod);
+		Modulator.add("holo", backgroundAlphaMod);
 	}
 	
 	private void createCloseModuleButton() {

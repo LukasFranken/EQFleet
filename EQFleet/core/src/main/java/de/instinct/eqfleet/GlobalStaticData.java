@@ -4,7 +4,7 @@ import de.instinct.api.core.config.APIConfiguration;
 
 public class GlobalStaticData {
 	
-	public static ApplicationMode mode = ApplicationMode.PRODUCTION;
+	public static ApplicationMode mode = ApplicationMode.DEV;
 	public static APIConfiguration configuration = APIConfiguration.CLIENT;
 	public static boolean debugIntro = false;
 	public static boolean showDebugGrid = false;

@@ -2,7 +2,7 @@ package de.instinct.eqfleet.game.frontend.ui.elements;
 
 import com.badlogic.gdx.graphics.Color;
 
-import de.instinct.engine.model.GameState;
+import de.instinct.engine.fleet.data.FleetGameState;
 import de.instinct.eqfleet.game.GameConfig;
 import de.instinct.eqfleet.game.frontend.ui.UIDataUtility;
 import de.instinct.eqfleet.game.frontend.ui.model.PlayerData;
@@ -23,7 +23,7 @@ public class FullResourceBar extends Component {
 	private Border border;
 	private Label workingLabel;
 	
-	private GameState state;
+	private FleetGameState state;
 	
 	public FullResourceBar() {
 		super();
@@ -71,7 +71,7 @@ public class FullResourceBar extends Component {
 		workingLabel.render();
 	}
 
-	public void setGameState(GameState state) {
+	public void setGameState(FleetGameState state) {
 		this.state = state;
 	}
 

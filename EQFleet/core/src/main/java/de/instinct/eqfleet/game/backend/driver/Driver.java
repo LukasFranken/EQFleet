@@ -4,8 +4,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import de.instinct.engine.FleetEngine;
-import de.instinct.engine.util.EngineUtility;
+import de.instinct.engine_api.core.service.EngineDataInterface;
 import de.instinct.eqfleet.audio.AudioManager;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.GameModel;
@@ -35,7 +34,7 @@ public abstract class Driver {
 	protected void updateEngine() {
 		if (GameModel.activeGameState != null && GameModel.activeGameState.started && !GameModel.paused) {
     		long currentTime = System.currentTimeMillis();
-    		FleetEngine.update(GameModel.activeGameState, currentTime - GameModel.lastUpdateTimestampMS);
+    		EngineDataInterface.update(GameModel.activeGameState, currentTime - GameModel.lastUpdateTimestampMS);
         	GameModel.lastUpdateTimestampMS = currentTime;
     	}
 	}
@@ -46,7 +45,7 @@ public abstract class Driver {
 		AudioManager.stopAllSfx();
 		AudioManager.stopAllVoices();
 		if (!GameModel.activeGameState.gameUUID.equals("tutorial")) {
-			if (GameModel.activeGameState.resultData.winner == EngineUtility.getPlayer(GameModel.activeGameState.staticData.playerData.players, GameModel.playerId).teamId) {
+			if (GameModel.activeGameState.resultData.winner == EngineDataInterface.getPlayer(GameModel.activeGameState.playerData.players, GameModel.playerId).teamId) {
 				if (GameModel.activeGameState.resultData.wiped) {
 					AudioManager.playVoice("game", "domination");
 				} else {

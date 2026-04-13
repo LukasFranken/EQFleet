@@ -7,9 +7,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Rectangle;
 
-import de.instinct.engine.model.GameState;
-import de.instinct.engine.model.Player;
-import de.instinct.engine.util.EngineUtility;
+import de.instinct.engine.fleet.data.FleetGameState;
+import de.instinct.engine.fleet.player.FleetPlayer;
+import de.instinct.engine_api.core.service.EngineDataInterface;
 import de.instinct.eqfleet.audio.AudioManager;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.frontend.InteractionMode;
@@ -60,14 +60,14 @@ public class ModeUIRenderer {
 	}
 
 	public void render(PerspectiveCamera camera) {
-		if (GameModel.activeGameState.pauseData.teamPause == 0 && GameModel.activeGameState.pauseData.resumeCountdownMS <= 0) {
+		if (GameModel.activeGameState.metaData.pauseData.teamPause == 0 && GameModel.activeGameState.metaData.pauseData.resumeCountdownMS <= 0) {
 			renderModeButtons(GameModel.activeGameState);
 			modeRenderers.get(GameModel.mode).render(camera, GameModel.activeGameState);
 		}
 	}
 	
-	private void renderModeButtons(GameState state) {
-		Player self = EngineUtility.getPlayer(state.staticData.playerData.players, GameModel.playerId);
+	private void renderModeButtons(FleetGameState state) {
+		FleetPlayer self = EngineDataInterface.getPlayer(state.playerData.players, GameModel.playerId);
 		if (!self.turrets.isEmpty()) {
 			if (GameModel.mode == InteractionMode.UNIT_CONTROL) {
 				unitControlButton.getBorder().setColor(Color.GREEN);

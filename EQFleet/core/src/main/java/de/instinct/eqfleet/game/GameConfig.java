@@ -2,8 +2,8 @@ package de.instinct.eqfleet.game;
 
 import com.badlogic.gdx.graphics.Color;
 
-import de.instinct.engine.model.Player;
-import de.instinct.engine.util.EngineUtility;
+import de.instinct.engine.core.player.Player;
+import de.instinct.engine_api.core.service.EngineDataInterface;
 
 public class GameConfig {
 	
@@ -18,9 +18,9 @@ public class GameConfig {
 	
 	public static Color getPlayerColor(int playerId) {
 		if (playerId == 0) return GameConfig.neutralColor;
-		Player player = EngineUtility.getPlayer(GameModel.activeGameState.staticData.playerData.players, playerId);
-		Player self = EngineUtility.getPlayer(GameModel.activeGameState.staticData.playerData.players, GameModel.playerId);
-		int playerCount = GameModel.activeGameState.staticData.playerData.players.size();
+		Player player = EngineDataInterface.getPlayer(GameModel.activeGameState.playerData.players, playerId);
+		Player self = EngineDataInterface.getPlayer(GameModel.activeGameState.playerData.players, GameModel.playerId);
+		int playerCount = GameModel.activeGameState.playerData.players.size();
 		boolean ownTeam = player.teamId == self.teamId;
 		return getPlayerColor(playerId, playerCount, ownTeam);
 	}

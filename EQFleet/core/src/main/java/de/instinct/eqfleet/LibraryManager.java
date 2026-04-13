@@ -6,10 +6,11 @@ import java.util.List;
 import com.badlogic.gdx.math.Vector2;
 
 import de.instinct.eqlibgdxutils.AccelerometerUtil;
-import de.instinct.eqlibgdxutils.CursorUtil;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.InputUtil;
 import de.instinct.eqlibgdxutils.debug.console.Console;
+import de.instinct.eqlibgdxutils.engine.cursor.CursorUtil;
+import de.instinct.eqlibgdxutils.engine.cursor.Hotspot;
 import de.instinct.eqlibgdxutils.rendering.model.ModelRenderer;
 import de.instinct.eqlibgdxutils.rendering.particle.ParticleRenderer;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontConfiguration;
@@ -31,7 +32,7 @@ public class LibraryManager {
     	TextureManager.init();
     	SkinManager.init();
     	loadFonts();
-    	CursorUtil.createCursor();
+    	CursorUtil.setCursor("cursor", Hotspot.TOPLEFT);
     	ParticleRenderer.init();
         ModelRenderer.init();
         PopupRenderer.init();

@@ -1,6 +1,6 @@
 package de.instinct.eqfleet.game.frontend.ui.model;
 
-import de.instinct.engine.model.Player;
+import de.instinct.engine.fleet.player.FleetPlayer;
 import lombok.Builder;
 import lombok.Data;
 
@@ -8,11 +8,11 @@ import lombok.Data;
 @Builder
 public class PlayerData {
 	
-	private Player self;
-	private Player teammate1;
-	private Player teammate2;
-	private Player enemy1;
-	private Player enemy2;
-	private Player enemy3;
+	private FleetPlayer self;
+	private FleetPlayer teammate1;
+	private FleetPlayer teammate2;
+	private FleetPlayer enemy1;
+	private FleetPlayer enemy2;
+	private FleetPlayer enemy3;
 
 }

@@ -11,13 +11,13 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import de.instinct.engine.combat.projectile.DirectionalProjectile;
-import de.instinct.engine.combat.projectile.HomingProjectile;
-import de.instinct.engine.combat.projectile.Projectile;
-import de.instinct.engine.entity.Entity;
-import de.instinct.engine.entity.EntityManager;
-import de.instinct.engine.model.GameState;
-import de.instinct.engine.model.ship.components.types.WeaponType;
+import de.instinct.engine.core.data.GameState;
+import de.instinct.engine.core.entity.Entity;
+import de.instinct.engine.core.entity.projectile.Projectile;
+import de.instinct.engine.fleet.data.FleetGameState;
+import de.instinct.engine.fleet.entity.FleetEntityManager;
+import de.instinct.engine.fleet.entity.projectile.FleetProjectile;
+import de.instinct.engine.fleet.entity.unit.component.data.types.WeaponType;
 import de.instinct.eqfleet.audio.AudioManager;
 import de.instinct.eqfleet.game.frontend.projectile.explosion.ExplosionRenderer;
 import de.instinct.eqlibgdxutils.debug.profiler.Profiler;
@@ -35,7 +35,7 @@ public class ProjectileRenderer {
 		explosionRenderer = new ExplosionRenderer();
 	}
 
-	public void render(GameState state, PerspectiveCamera camera) {
+	public void render(FleetGameState state, PerspectiveCamera camera) {
 		Profiler.startFrame("GAME_PROJ_RENDER");
 		explosionRenderer.renderExplosions(camera);
 		Profiler.checkpoint("GAME_PROJ_RENDER", "explosion render");
@@ -43,7 +43,7 @@ public class ProjectileRenderer {
 			projectileInstance.setActive(false);
 		}
 		Profiler.checkpoint("GAME_PROJ_RENDER", "pre loop");
-		for (Projectile projectile : state.entityData.projectiles) {
+		for (FleetProjectile projectile : state.entityData.projectiles) {
             ProjectileInstance projectileInstance = getProjectileInstance(projectile);
             if (projectileInstance == null) {
             	projectileInstance = instanciateProjectileInstance(projectile, state);
@@ -51,20 +51,9 @@ public class ProjectileRenderer {
             	AudioManager.playSfx(projectile.weaponType.toString().toLowerCase());
             }
             projectileInstance.setLastPosition(projectile.position);
-            Entity from = EntityManager.getEntity(state, projectile.id);
+            Entity from = FleetEntityManager.getEntity(state, projectile.id);
     		if (from != null) {
-    			Vector2 to = new Vector2();
-        		if (projectile instanceof DirectionalProjectile) {
-        			to = new Vector2(projectile.position).add(((DirectionalProjectile) projectile).direction);
-        		}
-        		if (projectile instanceof HomingProjectile) {
-        			Entity target = EntityManager.getEntity(state, ((HomingProjectile) projectile).targetId);
-        			if (target != null) {
-        				to = new Vector2(target.position);
-        			} else {
-        				to = new Vector2(projectile.position).add(((HomingProjectile) projectile).lastDirection);
-        			}
-        		}
+    			Vector2 to = new Vector2(projectile.position).add(projectile.direction);
         		float dx = to.x - from.position.x;
                 float dy = to.y - from.position.y;
                 float angleDeg = (float) Math.toDegrees(Math.atan2(dy, dx));
@@ -132,7 +121,7 @@ public class ProjectileRenderer {
 		return null;
 	}
 	
-	private Projectile getProjectileData(ProjectileInstance projectileInstance, GameState state) {
+	private Projectile getProjectileData(ProjectileInstance projectileInstance, FleetGameState state) {
 		for (Projectile projectile : state.entityData.projectiles) {
 			if (projectile.id == projectileInstance.getProjectileId()) {
 				return projectile;
@@ -141,7 +130,7 @@ public class ProjectileRenderer {
 		return null;
 	}
 
-	private ProjectileInstance instanciateProjectileInstance(Projectile projectile, GameState state) {
+	private ProjectileInstance instanciateProjectileInstance(FleetProjectile projectile, GameState state) {
 		ModelInstance projectileModel = ModelLoader.instanciate("projectile");
     	String particleType = projectile.weaponType.toString().toLowerCase();
 		String particlesTag = particleType + "_" + projectile.id;

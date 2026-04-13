@@ -7,9 +7,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
-import de.instinct.engine.model.Player;
-import de.instinct.engine.model.planet.Planet;
-import de.instinct.engine.util.EngineUtility;
+import de.instinct.engine.core.player.Player;
+import de.instinct.engine.fleet.entity.planet.Planet;
+import de.instinct.engine_api.core.service.EngineDataInterface;
 import de.instinct.eqfleet.game.GameConfig;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.frontend.ui.elements.FullResourceBar;
@@ -50,7 +50,7 @@ public class GameUILoader {
 			loadTeammate2CPBar(bounds);
 			loadEnemy3CPBar(bounds);
 		}
-		if (EngineUtility.mapHasAncient(GameModel.activeGameState)) {
+		if (EngineDataInterface.mapHasAncient(GameModel.activeGameState)) {
 			loadTeamAPBar(bounds);
 			loadEnemyAPBar(bounds);
 		}
@@ -367,13 +367,13 @@ public class GameUILoader {
 						activeAncientPlanet = planet;
 					}
 				}
-				Player owner = EngineUtility.getPlayer(GameModel.activeGameState.staticData.playerData.players, activeAncientPlanet.ownerId);
+				Player owner = EngineDataInterface.getPlayer(GameModel.activeGameState.playerData.players, activeAncientPlanet.ownerId);
 				if (owner.teamId != playerData.getSelf().teamId && glowAlpha == 0f) {
 		        	elapsed = 0f;
 		        }
 				if (activeAncientPlanet != null) {
 			    	if (activeAncientPlanet.ownerId != 0) {
-					    Player self = EngineUtility.getPlayer(GameModel.activeGameState.staticData.playerData.players, GameModel.playerId);
+					    Player self = EngineDataInterface.getPlayer(GameModel.activeGameState.playerData.players, GameModel.playerId);
 			    		if (owner.teamId == self.teamId) {
 			    			alphaStore += Gdx.graphics.getDeltaTime();
 			    		}

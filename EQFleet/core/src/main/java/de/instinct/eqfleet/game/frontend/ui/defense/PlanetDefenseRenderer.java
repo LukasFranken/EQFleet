@@ -10,8 +10,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import de.instinct.engine.combat.unit.Unit;
-import de.instinct.engine.combat.unit.component.Shield;
+import de.instinct.engine.fleet.entity.unit.Unit;
+import de.instinct.engine.fleet.entity.unit.component.Shield;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;

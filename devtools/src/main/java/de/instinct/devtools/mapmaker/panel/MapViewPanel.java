@@ -10,7 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import de.instinct.devtools.mapmaker.MapModel;
 import de.instinct.devtools.util.EngineUtils;
-import de.instinct.engine.util.EngineUtility;
+import de.instinct.engine.fleet.util.EngineUtility;
 import de.instinct.engine_api.core.model.GameMap;
 import de.instinct.engine_api.core.model.PlanetInitialization;
 

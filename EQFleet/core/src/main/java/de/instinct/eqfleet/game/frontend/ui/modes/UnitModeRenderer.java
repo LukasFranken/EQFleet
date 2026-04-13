@@ -9,12 +9,12 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 
-import de.instinct.engine.combat.Turret;
-import de.instinct.engine.model.GameState;
-import de.instinct.engine.model.Player;
-import de.instinct.engine.model.planet.Planet;
-import de.instinct.engine.model.ship.ShipData;
-import de.instinct.engine.util.EngineUtility;
+import de.instinct.engine.fleet.data.FleetGameState;
+import de.instinct.engine.fleet.entity.planet.Planet;
+import de.instinct.engine.fleet.entity.unit.ship.data.ShipData;
+import de.instinct.engine.fleet.entity.unit.turret.Turret;
+import de.instinct.engine.fleet.player.FleetPlayer;
+import de.instinct.engine_api.core.service.EngineDataInterface;
 import de.instinct.eqfleet.game.GameConfig;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.frontend.input.model.GameInputModel;
@@ -31,14 +31,14 @@ public class UnitModeRenderer extends ModeRenderer {
 	private ShapeRenderer shapeRenderer;
 	
 	private PerspectiveCamera camera;
-	private GameState state;
+	private FleetGameState state;
 	
 	public UnitModeRenderer() {
 		shapeRenderer = new ShapeRenderer();
 	}
 
 	@Override
-	public void render(PerspectiveCamera camera, GameState state) {
+	public void render(PerspectiveCamera camera, FleetGameState state) {
 		this.camera = camera;
 		this.state = state;
 		renderSelectionShapes(camera);
@@ -61,8 +61,8 @@ public class UnitModeRenderer extends ModeRenderer {
 	
 	private void renderRadialSelectionCircle() {
 		if (GameInputModel.unitModeInputModel.selectedOriginPlanetId != null) {
-			Planet selectedPlanet = EngineUtility.getPlanet(state.entityData.planets, GameInputModel.unitModeInputModel.selectedOriginPlanetId);
-			Player owner = EngineUtility.getPlayer(state.staticData.playerData.players, selectedPlanet.ownerId);
+			Planet selectedPlanet = EngineDataInterface.getPlanet(state.entityData.planets, GameInputModel.unitModeInputModel.selectedOriginPlanetId);
+			FleetPlayer owner = EngineDataInterface.getPlayer(state.playerData.players, selectedPlanet.ownerId);
 			if (owner.ships.size() > 1 && GameInputModel.unitModeInputModel.selectedShipId == null && InputUtil.isPressed()) {
 				renderShipSelectionCircle(selectedPlanet, owner);
 			}
@@ -91,7 +91,7 @@ public class UnitModeRenderer extends ModeRenderer {
 	
 	private void renderArrow() {
 		Integer selectedId = GameInputModel.unitModeInputModel.selectedOriginPlanetId;
-		Planet selected = (selectedId != null) ? EngineUtility.getPlanet(state.entityData.planets, selectedId) : null;
+		Planet selected = (selectedId != null) ? EngineDataInterface.getPlanet(state.entityData.planets, selectedId) : null;
 		if (selected != null && Gdx.input.isTouched()) {
 			Vector3 cursorWorld = GameInputModel.mouseWorldPos;
 			Gdx.gl.glEnable(GL20.GL_BLEND);
@@ -111,17 +111,17 @@ public class UnitModeRenderer extends ModeRenderer {
 
 	private void renderSelected() {
 		Integer selectedId = GameInputModel.unitModeInputModel.selectedOriginPlanetId;
-		Planet selected = (selectedId != null) ? EngineUtility.getPlanet(state.entityData.planets, selectedId) : null;
+		Planet selected = (selectedId != null) ? EngineDataInterface.getPlanet(state.entityData.planets, selectedId) : null;
 		if (selected != null) {
-			shapeRenderer.circle(selected.position.x, selected.position.y, EngineUtility.PLANET_RADIUS);
+			shapeRenderer.circle(selected.position.x, selected.position.y, EngineDataInterface.PLANET_RADIUS);
 		}
 	}
 	
-	private void renderResourceCostRect(GameState state) {
+	private void renderResourceCostRect(FleetGameState state) {
 		if (GameInputModel.unitModeInputModel.selectedShipId != null && Gdx.input.isTouched()) {
 			double resCost = 0f;
-			Planet selected = EngineUtility.getPlanet(state.entityData.planets, GameInputModel.unitModeInputModel.selectedOriginPlanetId);
-			Player owner = EngineUtility.getPlayer(state.staticData.playerData.players, selected.ownerId);
+			Planet selected = EngineDataInterface.getPlanet(state.entityData.planets, GameInputModel.unitModeInputModel.selectedOriginPlanetId);
+			FleetPlayer owner = EngineDataInterface.getPlayer(state.playerData.players, selected.ownerId);
 			if (GameInputModel.unitModeInputModel.selectedShipId != null || GameInputModel.unitModeInputModel.hoveredShipId != null) {
 				resCost = owner.ships.get(GameInputModel.unitModeInputModel.selectedShipId == null ? GameInputModel.unitModeInputModel.hoveredShipId : GameInputModel.unitModeInputModel.selectedShipId).resourceCost;
 			}
@@ -145,8 +145,8 @@ public class UnitModeRenderer extends ModeRenderer {
 		if (GameInputModel.unitModeInputModel.selectedOriginPlanetId != null && GameInputModel.unitModeInputModel.selectedShipId != null && Gdx.input.isTouched()) {
 			float arrowLabelYOffset = Gdx.app.getType() == ApplicationType.Android || Gdx.app.getType() == ApplicationType.iOS ? 50f : 30f;
 			Integer selectedId = GameInputModel.unitModeInputModel.selectedOriginPlanetId;
-			Planet selected = (selectedId != null) ? EngineUtility.getPlanet(state.entityData.planets, selectedId) : null;
-			Player owner = EngineUtility.getPlayer(state.staticData.playerData.players, selected.ownerId);
+			Planet selected = (selectedId != null) ? EngineDataInterface.getPlanet(state.entityData.planets, selectedId) : null;
+			FleetPlayer owner = EngineDataInterface.getPlayer(state.playerData.players, selected.ownerId);
 			ShipData ship = owner.ships.get(GameInputModel.unitModeInputModel.selectedShipId);
 			String shipName = ship.model;
 	        float labelWidth = FontUtil.getFontTextWidthPx(shipName.length(), FontType.SMALL);
@@ -159,7 +159,7 @@ public class UnitModeRenderer extends ModeRenderer {
 		}
 	}
 
-	private void renderShipSelectionCircle(Planet planet, Player owner) {
+	private void renderShipSelectionCircle(Planet planet, FleetPlayer owner) {
 		float x = planet.position.x;
 		float y = planet.position.y;
 		Color unselectedColor = new Color(0.5f, 0.5f, 0.5f, 0.2f);
@@ -168,8 +168,8 @@ public class UnitModeRenderer extends ModeRenderer {
 		Color selectedAffordableColor = new Color(0f, 1f, 0f, 0.5f);
 		
 	    int shipCount = owner.ships.size();
-	    float outerRadius = EngineUtility.PLANET_RADIUS + GameInputModel.radialSelectionThreshold;
-	    float innerRadius = EngineUtility.PLANET_RADIUS + GameInputModel.radialHoverThreshold;
+	    float outerRadius = EngineDataInterface.PLANET_RADIUS + GameInputModel.radialSelectionThreshold;
+	    float innerRadius = EngineDataInterface.PLANET_RADIUS + GameInputModel.radialHoverThreshold;
 	    float sectionAngle = 360f / shipCount;
 	    float marginAngle = 30f / shipCount;
 	    
@@ -239,22 +239,22 @@ public class UnitModeRenderer extends ModeRenderer {
 	
 	private void renderHovered() {
 		Integer selectedId = GameInputModel.unitModeInputModel.selectedOriginPlanetId;
-		Planet selected = (selectedId != null) ? EngineUtility.getPlanet(state.entityData.planets, selectedId) : null;
+		Planet selected = (selectedId != null) ? EngineDataInterface.getPlanet(state.entityData.planets, selectedId) : null;
 		Planet targeted = GameInputModel.targetedPlanet;
 		
 		if (targeted != null) {
 			boolean isSelectingOrigin = (selected == null && targeted.ownerId == GameModel.playerId);
 			boolean isTargeting = (selected != null && targeted.id != selected.id);
 			if (isSelectingOrigin || isTargeting) {
-				shapeRenderer.circle(targeted.position.x, targeted.position.y, EngineUtility.PLANET_RADIUS);
+				shapeRenderer.circle(targeted.position.x, targeted.position.y, EngineDataInterface.PLANET_RADIUS);
 			}
-			Turret turret = EngineUtility.getPlanetTurret(state.entityData.turrets, targeted.id);
+			Turret turret = EngineDataInterface.getPlanetTurret(state.entityData.turrets, targeted.id);
 			if (turret != null && turret.data.weapons.size() > 0) {
 				shapeRenderer.end();
 				setDensityLineWidth();
 				shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 				shapeRenderer.setColor(GameConfig.getPlayerColor(targeted.ownerId));
-				shapeRenderer.circle(targeted.position.x, targeted.position.y, (float) (turret.data.weapons.get(0).range + EngineUtility.PLANET_RADIUS));
+				shapeRenderer.circle(targeted.position.x, targeted.position.y, (float) (turret.data.weapons.get(0).range + EngineDataInterface.PLANET_RADIUS));
 			}
 		}
 	}

@@ -14,12 +14,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import de.instinct.devtools.enginerunner.TestEngineManager;
-import de.instinct.engine.model.Player;
-import de.instinct.engine.model.planet.Planet;
-import de.instinct.engine.model.ship.ShipData;
-import de.instinct.engine.order.types.BuildTurretOrder;
-import de.instinct.engine.order.types.GamePauseOrder;
-import de.instinct.engine.order.types.ShipMovementOrder;
+import de.instinct.engine.core.order.types.GamePauseOrder;
+import de.instinct.engine.core.player.Player;
+import de.instinct.engine.fleet.entity.planet.Planet;
+import de.instinct.engine.fleet.entity.unit.ship.data.ShipData;
+import de.instinct.engine.fleet.order.types.BuildTurretOrder;
+import de.instinct.engine.fleet.order.types.ShipMovementOrder;
 
 public class ActionPanel extends JPanel {
 
@@ -109,7 +109,7 @@ public class ActionPanel extends JPanel {
 				GamePauseOrder order = new GamePauseOrder();
 				order.playerId = 1;
 				order.reason = "Manual pause";
-				if (TestEngineManager.state.pauseData.teamPause == 0) {
+				if (TestEngineManager.state.metaData.pauseData.teamPause == 0) {
 					order.pause = true;
 					pauseButton.setText("resume");
 				} else {

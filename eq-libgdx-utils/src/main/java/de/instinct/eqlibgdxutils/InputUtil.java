@@ -90,5 +90,9 @@ public class InputUtil {
 	public static boolean isJustPressed(int key) {
 		return Gdx.input.isKeyJustPressed(key);
 	}
+	
+	public static boolean isDown(int key) {
+		return Gdx.input.isKeyPressed(key);
+	}
 
 }

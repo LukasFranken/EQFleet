@@ -3,12 +3,13 @@ package de.instinct.eqfleet.game.frontend.ui;
 import com.badlogic.gdx.graphics.Color;
 
 import de.instinct.api.core.API;
-import de.instinct.engine.model.GameState;
-import de.instinct.engine.model.Player;
-import de.instinct.engine.model.PlayerConnectionStatus;
-import de.instinct.engine.net.message.types.GamePauseMessage;
-import de.instinct.engine.net.message.types.SurrenderMessage;
-import de.instinct.engine.util.EngineUtility;
+import de.instinct.engine.core.data.GameState;
+import de.instinct.engine.core.player.Player;
+import de.instinct.engine.fleet.data.FleetGameState;
+import de.instinct.engine.fleet.net.data.PlayerConnectionStatus;
+import de.instinct.engine.fleet.net.messages.GamePauseMessage;
+import de.instinct.engine.fleet.net.messages.SurrenderMessage;
+import de.instinct.engine_api.core.service.EngineDataInterface;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
@@ -49,7 +50,7 @@ public class PauseUIRenderer {
 	}
 	
 	public void render() {
-		GameState state = GameModel.activeGameState;
+		FleetGameState state = GameModel.activeGameState;
 		renderCountdownScreen(state);
 		renderPauseScreen(state);
 		if (!state.started) {
@@ -58,34 +59,34 @@ public class PauseUIRenderer {
 	}
 	
 	private void renderCountdownScreen(GameState state) {
-		if (state.pauseData.resumeCountdownMS > 0) {
+		if (state.metaData.pauseData.resumeCountdownMS > 0) {
 			Shapes.draw(bluroutShape);
-			workingLabel.setText(StringUtils.format(Math.min((state.pauseData.resumeCountdownMS / 1000) + 1, 3), 0));
+			workingLabel.setText(StringUtils.format(Math.min((state.metaData.pauseData.resumeCountdownMS / 1000) + 1, 3), 0));
 			workingLabel.setType(FontType.GIANT);
 			workingLabel.setBounds(100, (GraphicsUtil.screenBounds().getHeight() / 2), GraphicsUtil.screenBounds().getWidth() - 200, 60);
 			workingLabel.render();
 		}
 	}
 
-	private void renderPauseScreen(GameState state) {
-		if (state.pauseData.teamPause != 0) {
+	private void renderPauseScreen(FleetGameState state) {
+		if (state.metaData.pauseData.teamPause != 0) {
 			Shapes.draw(bluroutShape);
-			Player self = EngineUtility.getPlayer(state.staticData.playerData.players, GameModel.playerId);
-			String teamName = self.teamId == state.pauseData.teamPause ? "OWN" : "ENEMY";
+			Player self = EngineDataInterface.getPlayer(state.playerData.players, GameModel.playerId);
+			String teamName = self.teamId == state.metaData.pauseData.teamPause ? "OWN" : "ENEMY";
 			workingLabel.setText("PAUSED - " + teamName + " TEAM");
 			workingLabel.setType(FontType.LARGE);
 			workingLabel.setBounds(50, (GraphicsUtil.screenBounds().getHeight() / 2) + 200, GraphicsUtil.screenBounds().getWidth() - 100, 60);
 			workingLabel.setBackgroundColor(Color.BLACK);
 			workingLabel.render();
 			
-			long teamPauseMS = state.pauseData.teamPausesMS.get(state.pauseData.teamPause);
-			workingLabel.setText("Remaining Time: " + StringUtils.format(((float)(state.staticData.maxPauseMS - teamPauseMS) / 1000f), 0) + "s");
+			long teamPauseMS = state.metaData.pauseData.teamPausesMS.get(state.metaData.pauseData.teamPause);
+			workingLabel.setText("Remaining Time: " + StringUtils.format(((float)(state.metaData.pauseData.maxPauseMS - teamPauseMS) / 1000f), 0) + "s");
 			workingLabel.setType(FontType.NORMAL);
 			workingLabel.setBounds(100, (GraphicsUtil.screenBounds().getHeight() / 2) + 100, GraphicsUtil.screenBounds().getWidth() - 200, 30);
 			workingLabel.setBackgroundColor(Color.BLACK);
 			workingLabel.render();
 			
-			if (self.teamId == state.pauseData.teamPause && state.pauseData.currentPauseElapsedMS > state.staticData.minPauseMS) {
+			if (self.teamId == state.metaData.pauseData.teamPause && state.metaData.pauseData.currentPauseElapsedMS > state.metaData.pauseData.minPauseMS) {
 				surrenderButton.setBounds((GraphicsUtil.screenBounds().width / 2) - 60, 180, 120, 40);
 		        resumeButton.setBounds((GraphicsUtil.screenBounds().width / 2) - 60, 100, 120, 40);
 				surrenderButton.render();
@@ -101,9 +102,9 @@ public class PauseUIRenderer {
 		workingLabel.setType(FontType.NORMAL);
 		workingLabel.setBounds(0, 500, GraphicsUtil.screenBounds().getWidth(), labelHeight);
 		workingLabel.render();
-		for (Player player : state.staticData.playerData.players) {
+		for (Player player : state.playerData.players) {
 			if (player.teamId == 0) continue;
-			for (PlayerConnectionStatus status : state.staticData.playerData.connectionStati) {
+			for (PlayerConnectionStatus status : state.playerData.connectionStati) {
 				if (status.playerId == player.id) {
 					workingLabel.setText(player.name + " - " + status.connected + " - " + status.loaded);
 					workingLabel.setBounds(0, 500 - (i * labelHeight), GraphicsUtil.screenBounds().getWidth(), labelHeight);

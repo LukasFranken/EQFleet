@@ -2,7 +2,7 @@ package de.instinct.eqfleet.game.frontend.ui.defense;
 
 import com.badlogic.gdx.graphics.Color;
 
-import de.instinct.engine.model.ship.components.types.ShieldType;
+import de.instinct.engine.fleet.entity.unit.component.data.types.ShieldType;
 
 public class DefenseUIConfiguration {
 	
