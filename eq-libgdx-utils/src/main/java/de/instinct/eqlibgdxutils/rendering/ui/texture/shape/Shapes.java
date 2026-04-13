@@ -22,6 +22,8 @@ public class Shapes {
 	
 	private static Matrix4 defaultMatrix;
 	
+	private static Vector2 workingPosition;
+	
 	public static void init() {
 		extendedShapeRenderer = new ExtendedShapeRenderer();
 		glowRenderer = new GlowRenderer(extendedShapeRenderer);
@@ -29,6 +31,8 @@ public class Shapes {
 		
 		defaultMatrix = new Matrix4();
 		defaultMatrix.setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		
+		workingPosition = new Vector2();
 	}
 	
 	public static void draw(EQShape shape) {
@@ -41,9 +45,9 @@ public class Shapes {
 		}
 		if (shape instanceof EQCircle) {
 			EQCircle eqCircle = (EQCircle) shape;
-			Vector2 physicalPosition = shape.getProjectionMatrix() == null ? GraphicsUtil.translateToPhysical(eqCircle.getPosition()) : eqCircle.getPosition();
-			float radius = shape.getProjectionMatrix() == null ? eqCircle.getRadius() * GraphicsUtil.getVerticalDisplayScaleFactor() : eqCircle.getRadius();
-			circle(physicalPosition, radius);
+			workingPosition.set(shape.getProjectionMatrix() != null ? GraphicsUtil.translateToPhysical(eqCircle.getPosition()) : eqCircle.getPosition());
+			float radius = shape.getProjectionMatrix() != null ? eqCircle.getRadius() * GraphicsUtil.getVerticalDisplayScaleFactor() : eqCircle.getRadius();
+			circle(workingPosition, radius);
 		}
 		if (shape instanceof EQArc) {
 			EQArc eqArc = (EQArc) shape;
