@@ -8,6 +8,7 @@ import lombok.ToString;
 public class FleetProjectile extends Projectile {
 	
 	public int originId;
+	public int ownerId;
 	public int weaponId;
 	public String originModel;
 	public WeaponType weaponType;

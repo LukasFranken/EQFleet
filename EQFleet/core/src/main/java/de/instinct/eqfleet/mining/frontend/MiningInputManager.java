@@ -2,6 +2,7 @@
 package de.instinct.eqfleet.mining.frontend;
 
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 
 import de.instinct.engine.mining.net.message.InputChangedOrder;
@@ -12,19 +13,42 @@ import de.instinct.eqfleet.scene.SceneManager;
 import de.instinct.eqfleet.scene.SceneType;
 import de.instinct.eqlibgdxutils.InputUtil;
 import de.instinct.eqlibgdxutils.PlatformUtil;
+import de.instinct.eqlibgdxutils.generic.Action;
+import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 
 public class MiningInputManager {
 
     private MiningInput lastFrameInput;
     private MiningInput input;
     private CustomJoystick joystick;
+    private ColorButton shootButton;
 
     public MiningInputManager() {
         lastFrameInput = new MiningInput();
         input = new MiningInput();
-
         if (PlatformUtil.isMobile()) {
         	joystick = new CustomJoystick(250, 250, 250);
+        	shootButton = new ColorButton("FIRE");
+        	shootButton.setColor(Color.GRAY);
+        	shootButton.getColor().a = 0.5f;
+        	shootButton.getLabel().setColor(Color.RED);
+        	shootButton.setBounds(320, 50, 60, 40);
+        	shootButton.setDownAction(new Action() {
+    			
+    			@Override
+    			public void execute() {
+    				input.shoot = true;
+    			}
+    			
+    		});
+        	shootButton.setUpAction(new Action() {
+    			
+    			@Override
+    			public void execute() {
+    				input.shoot = false;
+    			}
+    			
+    		});
         }
     }
 
@@ -40,14 +64,15 @@ public class MiningInputManager {
         input.down = InputUtil.isDown(Keys.S);
         input.left = InputUtil.isDown(Keys.A);
         input.right = InputUtil.isDown(Keys.D);
-        input.shoot = InputUtil.isPressed();
+        input.shoot = InputUtil.isDown(Keys.SPACE);
 
         // Handle joystick input
         if (joystick != null) {
         	joystick.update();
         	joystick.render();
+        	shootButton.render();
         	Vector2 direction = joystick.getDirection();
-            if (direction.len() > 0) { // If joystick is being used
+            if (direction.len() > 0) {
                 input.up = direction.y > 0.5f;
                 input.down = direction.y < -0.5f;
                 input.left = direction.x < -0.5f;
@@ -75,5 +100,6 @@ public class MiningInputManager {
 
     public void dispose() {
         joystick.dispose();
+        shootButton.dispose();
     }
 }

@@ -14,20 +14,27 @@ import de.instinct.engine.core.order.GameOrder;
 import de.instinct.engine.core.player.data.PlayerData;
 import de.instinct.engine.fleet.order.data.OrderData;
 import de.instinct.engine.mining.data.MiningGameState;
-import de.instinct.engine.mining.entity.ship.PlayerShip;
-import de.instinct.engine.mining.entity.ship.PlayerShipProcessor;
+import de.instinct.engine.mining.entity.asteroid.AsteroidProcessor;
+import de.instinct.engine.mining.entity.asteroid.ResourceType;
+import de.instinct.engine.mining.entity.data.MiningEntityData;
+import de.instinct.engine.mining.entity.projectile.MiningProjectileProcessor;
+import de.instinct.engine.mining.entity.ship.MiningPlayerShipProcessor;
 import de.instinct.engine.mining.player.MiningPlayer;
 import de.instinct.engine.mining.player.MiningPlayerProcessor;
 
 public class MiningEngine extends Engine {
 	
-	private PlayerShipProcessor playerShipProcessor;
+	private MiningPlayerShipProcessor playerShipProcessor;
 	private MiningPlayerProcessor playerProcessor;
+	private MiningProjectileProcessor projectileProcessor;
+	private AsteroidProcessor asteroidProcessor;
 	
 	public MiningEngine() {
 		super();
-		playerShipProcessor = new PlayerShipProcessor();
+		playerShipProcessor = new MiningPlayerShipProcessor();
 		playerProcessor = new MiningPlayerProcessor();
+		projectileProcessor = new MiningProjectileProcessor();
+		asteroidProcessor = new AsteroidProcessor();
 	}
 
 	@Override
@@ -63,28 +70,21 @@ public class MiningEngine extends Engine {
 		player1.name = "Player 1";
 		state.playerData.players.add(player1);
 		
-		miningState.playerShips = new ArrayList<>();
-		PlayerShip player1Ship = new PlayerShip();
-		player1Ship.id = 0;
-		player1Ship.ownerId = player1.id;
-		player1Ship.radius = 20f;
-		player1Ship.direction = new Vector2(0, 1);
+		miningState.entityData = new MiningEntityData();
+		miningState.entityData.projectiles = new ArrayList<>();
+		miningState.entityData.playerShips = new ArrayList<>();
+		playerShipProcessor.createPlayerShip(miningState, 1);
 		
-		player1Ship.acceleration = 2f;
-		player1Ship.maxSpeed = 20f;
-		player1Ship.deceleration = 3f;
-		player1Ship.maxReverseSpeed = -5f;
-		player1Ship.rotationSpeed = 10f;
-		player1Ship.laserSpeed = 10f;
-		player1Ship.laserDamage = 10f;
-		player1Ship.laserCooldownMS = 500;
-		player1Ship.laserLifetimeMS = 2000;
-		miningState.playerShips.add(player1Ship);
+		miningState.entityData.asteroids = new ArrayList<>();
+		asteroidProcessor.createAsteroid(miningState, new Vector2(500, 500), ResourceType.IRON, 2);
+		asteroidProcessor.createAsteroid(miningState, new Vector2(0, 500), ResourceType.ALUMINUM, 5);
+		asteroidProcessor.createAsteroid(miningState, new Vector2(500, 0), ResourceType.CARBON, 3);
 	}
 
 	@Override
 	protected void advanceStateTime(GameState state, long deltaTime) {
 		MiningGameState miningState = (MiningGameState) state;
+		projectileProcessor.updateMiningProjectiles(miningState, deltaTime);
 		playerShipProcessor.update(miningState, deltaTime);
 		playerProcessor.update(miningState, deltaTime);
 	}

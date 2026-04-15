@@ -57,7 +57,7 @@ public class FleetEngine extends Engine {
 		if (fleetState.resultData.winner == 0) {
 			turretProcessor.updateTurrets(fleetState, deltaTime);
 			shipProcessor.updateShips(fleetState, deltaTime);
-			projectileProcessor.updateProjectiles(fleetState, deltaTime);
+			projectileProcessor.updateFleetProjectiles(fleetState, deltaTime);
 	        planetProcessor.update(fleetState, deltaTime);
 	        playerProcessor.update(fleetState, deltaTime);
 	        victoryCalculator.checkVictory(fleetState);

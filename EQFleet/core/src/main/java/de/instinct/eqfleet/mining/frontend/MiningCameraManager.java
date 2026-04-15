@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Vector3;
 
-import de.instinct.engine.mining.entity.ship.PlayerShip;
+import de.instinct.engine.mining.entity.ship.MiningPlayerShip;
 import de.instinct.eqfleet.mining.MiningModel;
 import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.debug.modulator.Modulator;
@@ -16,9 +16,9 @@ public class MiningCameraManager {
 
 	public static final Vector3 BASE_CAM_POS = new Vector3(0f, 0f, 4400f);
 
-	private static float BEHIND_DISTANCE = 1000f;
-	private static float HEIGHT_OFFSET = 1000f;
-	private static float LOOK_AHEAD = 200f;
+	private static float BEHIND_DISTANCE = 300f;
+	private static float HEIGHT_OFFSET = 125f;
+	private static float LOOK_AHEAD = 100f;
 
 	private PerspectiveCamera camera;
 
@@ -84,7 +84,7 @@ public class MiningCameraManager {
 	}
 
 	public void update() {
-		PlayerShip playerShip = MiningModel.state.playerShips.get(0);
+		MiningPlayerShip playerShip = MiningModel.state.entityData.playerShips.get(0);
 
 		float angleDeg = playerShip.direction.angleDeg();
 		float angleRad = angleDeg * (float) Math.PI / 180f;

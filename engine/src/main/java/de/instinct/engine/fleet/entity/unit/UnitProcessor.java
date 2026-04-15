@@ -3,7 +3,6 @@ package de.instinct.engine.fleet.entity.unit;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.instinct.engine.core.entity.Entity;
 import de.instinct.engine.core.entity.EntityProcessor;
 import de.instinct.engine.core.player.Player;
 import de.instinct.engine.fleet.data.FleetGameState;
@@ -67,13 +66,13 @@ public class UnitProcessor extends EntityProcessor {
 		return false;
 	}
 	
-	public Unit getClosestTarget(Entity origin, FleetGameState state) {
+	public Unit getClosestTarget(Unit origin, FleetGameState state) {
         Player originPlayer = playerProcessor.getPlayer(state.playerData.players, origin.ownerId);
         addPotentialTargets(state, originPlayer);
         Unit closestTarget = null;
-        float closestDistance = Float.MAX_VALUE;
+        double closestDistance = Float.MAX_VALUE;
         for (Unit candidate : potentialTargets) {
-            float distance = super.entityDistance(origin, candidate);
+        	double distance = super.entityDistance(origin, candidate);
             if (distance < closestDistance) {
                 closestDistance = distance;
                 closestTarget = candidate;
@@ -100,7 +99,7 @@ public class UnitProcessor extends EntityProcessor {
 	}
 	
 	public void initializeUnit(Unit unit, UnitData unitData, Planet planet, FleetGameState state, boolean payCost) {
-		super.initializeEntity(unit, state);
+		super.initializeEntity(unit, state.entityData);
 		unit.originPlanetId = planet.id;
 		unit.data = unitData;
 		unit.ownerId = planet.ownerId;

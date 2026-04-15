@@ -8,12 +8,11 @@ import lombok.ToString;
 public abstract class Entity implements Cloneable {
 	
 	public int id;
-	public int ownerId;
 	public Vector2 position;
 	public Vector2 direction;
 	public Entity target;
 	public double speed;
-	public float radius;
+	public double radius;
 	public boolean flaggedForDestroy;
 	
 	public Entity() {

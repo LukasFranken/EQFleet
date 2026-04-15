@@ -1,6 +1,8 @@
 package de.instinct.eqfleet.mining.frontend;
 
+import de.instinct.engine.mining.entity.ship.MiningPlayerShip;
 import de.instinct.eqfleet.game.GameConfig;
+import de.instinct.eqfleet.mining.MiningModel;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.subtypes.BoxedRectangularLoadingBar;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
@@ -20,10 +22,12 @@ public class MiningHudRenderer {
 	}
 	
 	public void update() {
+		MiningPlayerShip ship = MiningModel.state.entityData.playerShips.get(0);
 		bar.setSegments(10);
-		bar.setMaxValue(10);
-		bar.setCurrentValue(10);
-		bar.setBounds(20, GraphicsUtil.screenBounds().height - 20, 160, 6);
+		bar.setMaxValue(ship.core.maxCharge);
+		bar.setCurrentValue(ship.core.currentCharge);
+		bar.setPartialSegments(true);
+		bar.setBounds(20, GraphicsUtil.screenBounds().height - 80, 160, 6);
 	}
 	
 	public void render() {

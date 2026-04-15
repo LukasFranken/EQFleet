@@ -16,6 +16,8 @@ import lombok.EqualsAndHashCode;
 public abstract class Button extends Component {
 
 	private Action action;
+	private Action downAction;
+	private Action upAction;	
 	private boolean active;
 	private boolean enabled;
 	private boolean down;
@@ -54,6 +56,8 @@ public abstract class Button extends Component {
 	        	down = false;
 	        	hovered = false;
 	        }
+	        if (down && downAction != null) downAction.execute();
+	        if (!down && upAction != null) upAction.execute();
 		}
 		updateButton();
 	}

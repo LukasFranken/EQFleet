@@ -3,8 +3,8 @@ package de.instinct.engine.core.entity;
 import java.util.Iterator;
 
 import de.instinct.engine.core.data.GameState;
+import de.instinct.engine.core.entity.data.EntityData;
 import de.instinct.engine.core.util.VectorUtil;
-import de.instinct.engine.fleet.data.FleetGameState;
 
 public abstract class EntityProcessor {
 	
@@ -16,9 +16,9 @@ public abstract class EntityProcessor {
         entity.position = VectorUtil.getDirectionalTargetPosition(entity.position, entity.direction, (float) distanceTraveled);
 	}
 	
-	public void initializeEntity(Entity newEntity, FleetGameState state) {
-		newEntity.id = state.entityData.entityCounter;
-		state.entityData.entityCounter++;
+	public void initializeEntity(Entity newEntity, EntityData entityData) {
+		newEntity.id = entityData.entityCounter;
+		entityData.entityCounter++;
 	}
 	
 	public void removeDestroyed(Iterator<? extends Entity> entityIterator) {
@@ -30,7 +30,7 @@ public abstract class EntityProcessor {
         }
 	}
 	
-	public float entityDistance(Entity origin, Entity target) {
+	public double entityDistance(Entity origin, Entity target) {
 		return VectorUtil.dst(origin.position, target.position) - origin.radius - target.radius;
 	}
 

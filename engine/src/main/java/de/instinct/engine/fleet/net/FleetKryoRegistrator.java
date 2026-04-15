@@ -2,6 +2,7 @@ package de.instinct.engine.fleet.net;
 
 import com.esotericsoftware.kryo.Kryo;
 
+import de.instinct.engine.core.entity.data.EntityData;
 import de.instinct.engine.core.net.KryoRegistrator;
 import de.instinct.engine.core.net.NetworkMessage;
 import de.instinct.engine.core.player.Player;
@@ -11,7 +12,6 @@ import de.instinct.engine.fleet.ai.data.AiPlayer;
 import de.instinct.engine.fleet.data.FleetGameState;
 import de.instinct.engine.fleet.data.ResultData;
 import de.instinct.engine.fleet.data.StaticData;
-import de.instinct.engine.fleet.entity.data.EntityData;
 import de.instinct.engine.fleet.entity.planet.Planet;
 import de.instinct.engine.fleet.entity.planet.data.PlanetData;
 import de.instinct.engine.fleet.entity.projectile.FleetProjectile;

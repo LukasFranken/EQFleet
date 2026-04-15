@@ -1,4 +1,3 @@
-
 package de.instinct.eqfleet.mining.frontend;
 
 import com.badlogic.gdx.graphics.Color;
@@ -6,20 +5,20 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 
-import de.instinct.engine.mining.entity.ship.MiningPlayerShip;
+import de.instinct.engine.mining.entity.asteroid.Asteroid;
 import de.instinct.eqfleet.mining.MiningModel;
 import de.instinct.eqlibgdxutils.rendering.model.ModelLoader;
 import de.instinct.eqlibgdxutils.rendering.model.ModelRenderer;
 import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 
-public class MiningShipRenderer {
+public class AsteroidRenderer {
 	
-	private ModelInstance model;
+private ModelInstance model;
 	
 	public void init() {
-		model = ModelLoader.instanciate("miningship_0");
+		model = ModelLoader.instanciate("asteroid");
 		model.materials.get(1).set(ColorAttribute.createDiffuse(SkinManager.darkerSkinColor));
-		model.materials.get(0).set(ColorAttribute.createDiffuse(Color.BLACK));
+		model.materials.get(0).set(ColorAttribute.createDiffuse(Color.DARK_GRAY));
 	}
 	
 	public void update() {
@@ -27,11 +26,11 @@ public class MiningShipRenderer {
 	}
 	
 	public void render(PerspectiveCamera camera) {
-		for (MiningPlayerShip ship : MiningModel.state.entityData.playerShips) {
+		for (Asteroid asteroid : MiningModel.state.entityData.asteroids) {
 			model.transform.idt();
-		    model.transform.translate(ship.position.x, ship.position.y, 0);
-		    model.transform.rotate(0, 0, 1, ship.direction.angleDeg());
-		    model.transform.scale(2f, 2f, 2f);
+		    model.transform.translate(asteroid.position.x, asteroid.position.y, 0);
+		    model.transform.rotate(0, 0, 1, asteroid.direction.angleDeg());
+		    model.transform.scale(8f, 8f, 8f);
 			ModelRenderer.render(camera, model);
 		}
 	}

@@ -42,6 +42,14 @@ MINING GAME:
  -> probably max 2 players
 - unlock map/minimap etc. through upgrades
 - laser sight to the cursor unlockable
+- mining ship (darkstar) can be used in conquest
+ -> cost free
+ -> single instance, has to reach planet to be reused
+ -> unusable once destroyed
+- autosave upgrade
+ -> mining ship will autopilot home when last fuel required is reached
+- make mining start game
+ -> conquest is for later when you are a commander
 
 REDESIGN:
 - ships harder to unlock and progressively
@@ -57,6 +65,9 @@ REDESIGN:
 - background stars that move with tilt of phone
 - if error in gameserver session: end it
  -> otherwise perma log spam loop with nulls etc.
+ 
+- implement own mobile top info bar like on iphone menu 
+ -> with time, conntection and battery but own icons
 
 - encapsulate all game related inits
  -> core load console
@@ -72,7 +83,7 @@ REDESIGN:
 - API delete service interfaces and use API interfaces
  -> they are the same and meant to be the same
 
-- make chat messages 10€ each (reducable with upgrades)
+- make chat messages 10C each (reducable with upgrades)
  -> for spam protection
 
 - full dual-language
@@ -263,6 +274,7 @@ access via 1 month membership (credits or rl money)
 - MAKE ALL P2W COMMUNITY BENEFIT
 - e.g.: every time someone buys something, everyone gets 1 gem or something
  -> (permanent withdrawable community fund)
+ -> pixel tribes shop is a good example
  
 - planet resource upgrades part of construction
 - stats in profile like gametime, furthest in each campaign

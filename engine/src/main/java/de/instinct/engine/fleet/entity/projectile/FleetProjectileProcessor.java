@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.badlogic.gdx.math.Vector2;
 
-import de.instinct.engine.core.entity.Entity;
 import de.instinct.engine.core.entity.projectile.ProjectileProcessor;
 import de.instinct.engine.core.util.VectorUtil;
 import de.instinct.engine.fleet.data.FleetGameState;
@@ -23,7 +22,7 @@ import de.instinct.engine.fleet.stats.model.unit.UnitStatistic;
 import de.instinct.engine.fleet.stats.model.unit.component.types.ShieldStatistic;
 import de.instinct.engine.fleet.stats.model.unit.component.types.WeaponStatistic;
 
-public class FleetProjectileProcessor extends ProjectileProcessor {
+public class FleetProjectileProcessor extends ProjectileProcessor<FleetProjectile> {
 	
 	private FleetPlayerProcessor playerProcessor;
 	
@@ -35,20 +34,15 @@ public class FleetProjectileProcessor extends ProjectileProcessor {
 		shieldDamageInstances = new ArrayList<>();
 	}
 
-    public void updateProjectiles(FleetGameState state, long deltaTime) {
+    public void updateFleetProjectiles(FleetGameState state, long deltaTime) {
+    	super.updateProjectiles(state.entityData.projectiles, state, deltaTime);
         for (FleetProjectile projectile : state.entityData.projectiles) {
         	updateProjectile(projectile, state, deltaTime);
         }
-        super.removeDestroyed(state.entityData.projectiles.iterator());
     }
 
     private void updateProjectile(FleetProjectile projectile, FleetGameState state, long deltaTime) {
-    	super.updateEntity(projectile, state, deltaTime);
-    	updateLifetime(projectile, state, deltaTime);
         calculateHit(projectile, state);
-        if (projectile.elapsedMS >= projectile.lifetimeMS) {
-			projectile.flaggedForDestroy = true;
-		}
     }
 
 	private void calculateHit(FleetProjectile projectile, FleetGameState state) {
@@ -72,7 +66,7 @@ public class FleetProjectileProcessor extends ProjectileProcessor {
         
     }
 	
-	private boolean checkFleetHit(FleetProjectile projectile, FleetPlayer projectileOwner, Entity potencialTarget, FleetGameState state) {
+	private boolean checkFleetHit(FleetProjectile projectile, FleetPlayer projectileOwner, Unit potencialTarget, FleetGameState state) {
 		if (super.checkHit(projectile, projectileOwner, potencialTarget, state)) {
 			FleetPlayer targetOwner = playerProcessor.getFleetPlayer(state.playerData.players, potencialTarget.ownerId);
 	    	if (projectileOwner.teamId != targetOwner.teamId) {
@@ -86,7 +80,7 @@ public class FleetProjectileProcessor extends ProjectileProcessor {
         if (projectile.aoeRadius > 0) {
         	FleetPlayer projectileOwner = playerProcessor.getFleetPlayer(state.playerData.players, projectile.ownerId);
         	for (Ship pentencialTargetShip : state.entityData.ships) {
-        		float distanceToTarget = super.entityDistance(projectile, pentencialTargetShip);
+        		double distanceToTarget = super.entityDistance(projectile, pentencialTargetShip);
         		if (distanceToTarget < projectile.aoeRadius) {
         			if (projectileOwner.teamId != playerProcessor.getPlayer(state.playerData.players, pentencialTargetShip.ownerId).teamId) {
         				dealDamage(projectile, pentencialTargetShip, state);
@@ -94,7 +88,7 @@ public class FleetProjectileProcessor extends ProjectileProcessor {
         		}
         	}
         	for (Turret pentencialTargetTurret : state.entityData.turrets) {
-        		float distanceToTarget = super.entityDistance(projectile, pentencialTargetTurret);
+        		double distanceToTarget = super.entityDistance(projectile, pentencialTargetTurret);
         		if (distanceToTarget < projectile.aoeRadius) {
         			if (projectileOwner.teamId != playerProcessor.getPlayer(state.playerData.players, pentencialTargetTurret.ownerId).teamId) {
         				dealDamage(projectile, pentencialTargetTurret, state);
@@ -187,13 +181,13 @@ public class FleetProjectileProcessor extends ProjectileProcessor {
 				break;
 			}
 		}
-        super.initializeEntity(projectile, state);
+        super.initializeEntity(projectile, state.entityData);
         projectile.ownerId = origin.ownerId;
         projectile.weaponId = weapon.id;
         projectile.originModel = origin.data.model;
         projectile.originId = origin.id;
         projectile.weaponType = weapon.data.type;
-		projectile.speed = weapon.data.speed;
+		projectile.speed = (float) weapon.data.speed;
 		projectile.damage = weapon.data.damage;
 		projectile.aoeRadius = weapon.data.aoeRadius;
 		projectile.radius = 1f;
@@ -201,12 +195,12 @@ public class FleetProjectileProcessor extends ProjectileProcessor {
 		projectile.lifetimeMS = lifetime;
 		
         if (weapon.data.type == WeaponType.MISSILE) {
-        	Vector2 startPosition = VectorUtil.getTargetPosition(origin.position, target.position, origin.radius);
+        	Vector2 startPosition = VectorUtil.getTargetPosition(origin.position, target.position, (float) origin.radius);
         	projectile.position = startPosition;
         	projectile.target = target;
 			projectile.direction = VectorUtil.getDirection(projectile.position, target.position);
 		} else {
-        	projectile.position = VectorUtil.getDirectionalTargetPosition(origin.position, VectorUtil.getDirection(origin.position, target.position), origin.radius);
+        	projectile.position = VectorUtil.getDirectionalTargetPosition(origin.position, VectorUtil.getDirection(origin.position, target.position), (float) origin.radius);
         	projectile.direction = calculateInterceptionDirection(origin, projectile, target, state);
 		}
         

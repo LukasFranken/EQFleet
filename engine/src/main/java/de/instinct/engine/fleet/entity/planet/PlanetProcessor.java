@@ -74,7 +74,7 @@ public class PlanetProcessor {
 	
 	public Planet createPlanet(FleetGameState state, Player owner, Vector2 position, boolean ancient) {
 		Planet planet = new Planet();
-		unitProcessor.initializeEntity(planet, state);
+		unitProcessor.initializeEntity(planet, state.entityData);
 		planet.radius = PLANET_RADIUS;
 		planet.position = position;
 		planet.ancient = ancient;

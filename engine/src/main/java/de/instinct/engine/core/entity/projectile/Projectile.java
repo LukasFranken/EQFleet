@@ -6,8 +6,8 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public abstract class Projectile extends Entity {
 	
-	public int elapsedMS;
-	public int lifetimeMS;
+	public long elapsedMS;
+	public long lifetimeMS;
 
 	public Projectile clone() {
 		Projectile clone = (Projectile) super.clone();

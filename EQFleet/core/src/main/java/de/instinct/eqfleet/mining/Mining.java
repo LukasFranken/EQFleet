@@ -25,12 +25,12 @@ public class Mining extends Scene {
 	public void open() {
 		MiningModel.state = new MiningGameState();
 		MiningEngineAPI.initialize(MiningModel.state);
-		CursorUtil.setCursor("crosshair", Hotspot.CENTER);
+		//CursorUtil.setCursor("crosshair", Hotspot.CENTER);
 	}
 
 	@Override
 	public void close() {
-		CursorUtil.setCursor("cursor", Hotspot.TOPLEFT);
+		//CursorUtil.setCursor("cursor", Hotspot.TOPLEFT);
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import lombok.ToString;
 public class Planet extends Entity {
 	
 	public boolean ancient;
+	public int ownerId;
 	public float resourceGenerationSpeed;
 	public int turretSlotsLeft;
 	
