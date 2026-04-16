@@ -7,10 +7,10 @@ import lombok.ToString;
 public class WeaponData extends ComponentData {
 	
 	public WeaponType type;
-	public double damage;
-	public double aoeRadius;
-	public double range;
-	public double speed;
+	public float damage;
+	public float aoeRadius;
+	public float range;
+	public float speed;
 	public long cooldown;
 
 }

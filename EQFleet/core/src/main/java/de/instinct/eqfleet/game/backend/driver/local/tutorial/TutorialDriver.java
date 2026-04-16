@@ -5,9 +5,9 @@ import de.instinct.engine.core.order.GameOrder;
 import de.instinct.engine.fleet.net.messages.FleetMovementMessage;
 import de.instinct.engine.fleet.net.messages.LoadedMessage;
 import de.instinct.engine.fleet.order.types.ShipMovementOrder;
-import de.instinct.engine_api.core.model.GameStateInitialization;
 import de.instinct.engine_api.core.service.EngineDataInterface;
-import de.instinct.engine_api.core.service.GameStateInitializer;
+import de.instinct.engine_api.fleet.FleetGameStateInitializer;
+import de.instinct.engine_api.fleet.model.FleetGameStateInitialization;
 import de.instinct.eqfleet.audio.AudioManager;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.GameModel;
@@ -20,12 +20,12 @@ public class TutorialDriver extends LocalDriver {
 	private TutorialLoader tutorialLoader;
 	private boolean finished;
     private TutorialMode mode;
-    private GameStateInitializer gameStateInitializer;
+    private FleetGameStateInitializer gameStateInitializer;
     
     public TutorialDriver() {
     	super();
     	tutorialLoader = new TutorialLoader();
-    	gameStateInitializer = new GameStateInitializer();
+    	gameStateInitializer = new FleetGameStateInitializer();
     }
     
     public void setMode(TutorialMode mode) {
@@ -39,8 +39,8 @@ public class TutorialDriver extends LocalDriver {
 		}
 		GameModel.guidedEvents = tutorialLoader.load(mode);
 		GameModel.playerId = 1;
-		GameStateInitialization initialGameState = tutorialLoader.generateInitialGameState();
-		GameModel.activeGameState = gameStateInitializer.initialize(initialGameState);
+		FleetGameStateInitialization initialGameState = tutorialLoader.generateInitialGameState();
+		GameModel.activeGameState = gameStateInitializer.initializeFleet(initialGameState);
 		GameModel.activeGameState.metaData.pauseData.resumeCountdownMS = 0;
 		GameModel.lastUpdateTimestampMS = System.currentTimeMillis();
 	}

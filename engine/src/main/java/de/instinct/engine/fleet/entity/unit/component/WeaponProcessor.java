@@ -19,7 +19,7 @@ public class WeaponProcessor extends EntityProcessor {
     
     public void updateWeapons(FleetGameState state, Unit unit, long deltaTime) {
     	for (Weapon weapon : unit.weapons) {
-    		double cooledDownMS = deltaTime;
+    		float cooledDownMS = deltaTime;
     		if (weapon.currentCooldown <= deltaTime) {
     			cooledDownMS = weapon.currentCooldown;
     			weapon.currentCooldown = 0;

@@ -11,11 +11,11 @@ import lombok.ToString;
 public class UnitData {
 	
 	public String model;
-	public double resourceCost;
+	public float resourceCost;
 	
 	public HullType hullType;
-	public double hullStrength;
-	public double hullRepairSpeed;
+	public float hullStrength;
+	public float hullRepairSpeed;
 	
 	public List<WeaponData> weapons;
 	public List<ShieldData> shields;

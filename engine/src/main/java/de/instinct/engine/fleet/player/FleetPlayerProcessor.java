@@ -18,11 +18,11 @@ public class FleetPlayerProcessor extends PlayerProcessor {
 	public void update(FleetGameState state, long deltaMS) {
 		for (Player player : state.playerData.players) {
 			FleetPlayer fleetPlayer = (FleetPlayer) player;
-	        addResources(fleetPlayer, ((double)deltaMS / 1000D) * fleetPlayer.resourceGenerationSpeed);
+	        addResources(fleetPlayer, ((float)deltaMS / 1000f) * fleetPlayer.resourceGenerationSpeed);
 	    }
 	}
 	
-	public void addResources(FleetPlayer player, double amount) {
+	public void addResources(FleetPlayer player, float amount) {
 		player.currentResources += amount;
 		if (player.currentResources > player.maxResources) {
 			player.currentResources = player.maxResources;

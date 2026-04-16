@@ -40,9 +40,7 @@ public class RectangleRenderer {
 	public void render(EQRectangle rectangle) {
 		virtualWorkingBounds.set(rectangle.getBounds());
 		physicalWorkingBounds.set(rectangle.getBounds());
-		if (rectangle.getProjectionMatrix() != null) {
-			extendedShapeRenderer.setProjectionMatrix(rectangle.getProjectionMatrix());
-		} else {
+		if (rectangle.getProjectionMatrix() == null) {
 			GraphicsUtil.translateToPhysical(physicalWorkingBounds);
 		}
 		

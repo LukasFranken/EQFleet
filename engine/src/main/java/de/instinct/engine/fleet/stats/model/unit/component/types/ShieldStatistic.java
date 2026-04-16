@@ -10,8 +10,8 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = false)
 public class ShieldStatistic extends ComponentStatistic {
 
-	private double damageAbsorped;
+	private float damageAbsorped;
 	private int damageInstancesBlocked;
-	private double shieldRecharged;
+	private float shieldRecharged;
 
 }

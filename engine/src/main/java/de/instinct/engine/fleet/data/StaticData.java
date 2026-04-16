@@ -7,7 +7,7 @@ public class StaticData {
 
 	public long maxGameTimeMS;
 	public float zoomFactor;
-	public double atpToWin;
+	public float atpToWin;
 	public float ancientPlanetResourceDegradationFactor;
 	
 }

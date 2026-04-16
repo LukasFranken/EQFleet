@@ -11,8 +11,8 @@ public abstract class Entity implements Cloneable {
 	public Vector2 position;
 	public Vector2 direction;
 	public Entity target;
-	public double speed;
-	public double radius;
+	public float speed;
+	public float radius;
 	public boolean flaggedForDestroy;
 	
 	public Entity() {

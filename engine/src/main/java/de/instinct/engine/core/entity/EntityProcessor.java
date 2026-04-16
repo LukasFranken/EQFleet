@@ -9,7 +9,7 @@ import de.instinct.engine.core.util.VectorUtil;
 public abstract class EntityProcessor {
 	
 	public void updateEntity(Entity entity, GameState state, long deltaTime) {
-		double distanceTraveled = entity.speed * ((float) deltaTime / 1000f);
+		float distanceTraveled = entity.speed * ((float) deltaTime / 1000f);
         if (entity.target != null) {
         	entity.direction = VectorUtil.getDirection(entity.position, entity.target.position);
         }
@@ -30,7 +30,7 @@ public abstract class EntityProcessor {
         }
 	}
 	
-	public double entityDistance(Entity origin, Entity target) {
+	public float entityDistance(Entity origin, Entity target) {
 		return VectorUtil.dst(origin.position, target.position) - origin.radius - target.radius;
 	}
 

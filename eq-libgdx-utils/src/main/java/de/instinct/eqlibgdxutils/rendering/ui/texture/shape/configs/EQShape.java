@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Matrix4;
 
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.utility.EQGlowConfig;
 import lombok.Data;
+import lombok.Builder.Default;
 import lombok.experimental.SuperBuilder;
 
 @Data
@@ -13,7 +14,9 @@ public abstract class EQShape {
 	
 	private Matrix4 projectionMatrix;
 	private EQGlowConfig glowConfig;
-	private Color color;
+	
+	@Default
+	private Color color = new Color();
 	
 	public void setColor(Color color) {
 		this.color.set(color);

@@ -11,10 +11,10 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class FleetPlayer extends Player {
 	
-	public double currentResources;
-	public double resourceGenerationSpeed;
-	public double startResources;
-	public double maxResources;
+	public float currentResources;
+	public float resourceGenerationSpeed;
+	public float startResources;
+	public float maxResources;
 	public PlanetData planetData;
 	public List<ShipData> ships;
 	public List<TurretData> turrets;

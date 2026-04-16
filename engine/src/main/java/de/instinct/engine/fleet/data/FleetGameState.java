@@ -8,7 +8,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class FleetGameState extends GameState {
 	
-	public Map<Integer, Double> teamATPs;
+	public Map<Integer, Float> teamATPs;
 	public ResultData resultData;
 	public FleetEntityData entityData;
 	public StaticData staticData;

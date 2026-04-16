@@ -34,7 +34,7 @@ public class VictoryCalculator {
 
 	private void calculateATPVictory(FleetGameState state) {
 		int highestTeamId = 0;
-	    double highestValue = 0;
+	    float highestValue = 0;
         for (int teamid : state.teamATPs.keySet()) {
 			if (state.teamATPs.get(teamid) > highestValue) {
 				highestValue = state.teamATPs.get(teamid);

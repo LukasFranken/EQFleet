@@ -12,8 +12,8 @@ public class PlayerStatistic {
 	
 	private int playerId;
 	private int cpUsed;
-	private double resourcesUsed;
-	private double atpGained;
+	private float resourcesUsed;
+	private float atpGained;
 	private List<ShipStatistic> shipStatistics;
 	private List<TurretStatistic> turretStatistics;
 	

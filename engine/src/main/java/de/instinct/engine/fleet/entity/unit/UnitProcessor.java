@@ -70,9 +70,9 @@ public class UnitProcessor extends EntityProcessor {
         Player originPlayer = playerProcessor.getPlayer(state.playerData.players, origin.ownerId);
         addPotentialTargets(state, originPlayer);
         Unit closestTarget = null;
-        double closestDistance = Float.MAX_VALUE;
+        float closestDistance = Float.MAX_VALUE;
         for (Unit candidate : potentialTargets) {
-        	double distance = super.entityDistance(origin, candidate);
+        	float distance = super.entityDistance(origin, candidate);
             if (distance < closestDistance) {
                 closestDistance = distance;
                 closestTarget = candidate;

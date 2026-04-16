@@ -13,7 +13,7 @@ public class Unit extends Entity {
 
 	public int originPlanetId;
 	public int ownerId;
-	public double currentHull;
+	public float currentHull;
 	public List<Weapon> weapons;
 	public List<Shield> shields;
 	public UnitData data;

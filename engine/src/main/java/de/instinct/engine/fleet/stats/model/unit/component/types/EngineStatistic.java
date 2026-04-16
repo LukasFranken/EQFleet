@@ -10,6 +10,6 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = false)
 public class EngineStatistic extends ComponentStatistic {
 
-	private double distanceTraveled;
+	private float distanceTraveled;
 
 }

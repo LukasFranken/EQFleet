@@ -24,9 +24,9 @@ import de.instinct.engine.fleet.net.messages.FleetMovementMessage;
 import de.instinct.engine.fleet.player.FleetPlayer;
 import de.instinct.engine_api.ai.service.AIPlayerLoader;
 import de.instinct.engine_api.core.model.GameMap;
-import de.instinct.engine_api.core.model.GameStateInitialization;
 import de.instinct.engine_api.core.model.PlanetInitialization;
 import de.instinct.engine_api.core.service.EngineDataInterface;
+import de.instinct.engine_api.fleet.model.FleetGameStateInitialization;
 import de.instinct.eqfleet.audio.AudioManager;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.GameModel;
@@ -48,8 +48,8 @@ public class TutorialLoader {
 		eventLoader = new DefaultGuideEventLoader();
 	}
 
-	public GameStateInitialization generateInitialGameState() {
-		GameStateInitialization initialGameState = new GameStateInitialization();
+	public FleetGameStateInitialization generateInitialGameState() {
+		FleetGameStateInitialization initialGameState = new FleetGameStateInitialization();
 		initialGameState.setGameUUID("tutorial");
 		initialGameState.setPlayers(loadPlayers());
 		initialGameState.setGameTimeLimitMS(240_000);
@@ -79,7 +79,7 @@ public class TutorialLoader {
 		player.name = "Player 1";
 		player.maxResources = 10;
 		player.startResources = 1;
-		player.resourceGenerationSpeed = 0.2;
+		player.resourceGenerationSpeed = 0.2f;
 		player.currentResources = player.startResources;
 		
 		PlanetData tutorialPlanetData = new PlanetData();

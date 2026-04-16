@@ -12,6 +12,6 @@ public class CoreStatistic extends ComponentStatistic {
 
 	private int timesBuilt;
 	private int timesDestroyed;
-	private double resourcesUsed;
+	private float resourcesUsed;
 
 }

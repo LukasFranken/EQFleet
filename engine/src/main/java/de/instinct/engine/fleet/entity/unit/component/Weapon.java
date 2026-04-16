@@ -7,7 +7,7 @@ import lombok.ToString;
 public class Weapon {
 	
 	public int id;
-	public double currentCooldown;
+	public float currentCooldown;
 	public WeaponData data;
 
 }

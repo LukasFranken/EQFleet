@@ -6,6 +6,6 @@ import lombok.Data;
 public class ShieldDamageInstance {
 
 	private int shieldId;
-	private double damage;
+	private float damage;
 	
 }

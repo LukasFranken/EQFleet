@@ -11,7 +11,7 @@ public class MiningCoreProcessor {
 		
 	}
 
-	public boolean useChargeFull(MiningPlayerShip ship, double chargeCost) {
+	public boolean useChargeFull(MiningPlayerShip ship, float chargeCost) {
 		if (ship.core.currentCharge >= chargeCost) {
 			ship.core.currentCharge = Math.max(0, ship.core.currentCharge - chargeCost);
 			return true;
@@ -19,7 +19,7 @@ public class MiningCoreProcessor {
 		return false;
 	}
 	
-	public double useChargePartial(MiningPlayerShip ship, double chargeCost) {
+	public float useChargePartial(MiningPlayerShip ship, float chargeCost) {
 		ship.core.currentCharge = Math.max(0f, ship.core.currentCharge - chargeCost);
 		return MathUtils.clamp(ship.core.currentCharge / chargeCost, 0f, 1f);
 	}

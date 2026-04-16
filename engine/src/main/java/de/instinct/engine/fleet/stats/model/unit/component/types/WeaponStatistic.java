@@ -10,9 +10,9 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = false)
 public class WeaponStatistic extends ComponentStatistic {
 	
-	private double damageDealt;
+	private float damageDealt;
 	private int shotsFired;
 	private int kills;
-	private double cooledDownSec;
+	private float cooledDownSec;
 
 }

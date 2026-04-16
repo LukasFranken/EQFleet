@@ -10,7 +10,7 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = false)
 public class HullStatistic extends ComponentStatistic {
 
-	private double damageTaken;
-	private double hullRepaired;
+	private float damageTaken;
+	private float hullRepaired;
 
 }

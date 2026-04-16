@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 
+import de.instinct.eqlibgdxutils.InputUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.shapes.EQCircle;
 
@@ -21,7 +22,7 @@ public class CustomJoystick {
 
     public CustomJoystick(float x, float y, float size) {
     	backgroundShape = EQCircle.builder()
-    			.color(new Color(Color.GRAY))
+    			.color(new Color(0.7f, 0.7f, 0.7f, 0.5f))
     			.build();
 		knobShape = EQCircle.builder()
 				.color(new Color(Color.DARK_GRAY))
@@ -35,8 +36,8 @@ public class CustomJoystick {
 
     public void update() {
         if (Gdx.input.isTouched()) {
-            float touchX = Gdx.input.getX();
-            float touchY = Gdx.graphics.getHeight() - Gdx.input.getY();
+            float touchX = InputUtil.getVirtualMousePosition().x;
+            float touchY = InputUtil.getVirtualMousePosition().y;
 
             if (!isTouched) {
                 if (backgroundPosition.dst(touchX, touchY) <= radius) {
@@ -69,7 +70,6 @@ public class CustomJoystick {
     	backgroundShape.setPosition(backgroundPosition);
     	backgroundShape.setRadius(radius);
     	Shapes.draw(backgroundShape);
-    	System.out.println("BG Position: " + backgroundShape.getPosition());
     	knobShape.setPosition(knobPosition);
     	knobShape.setRadius(radius / 2);
     	Shapes.draw(knobShape);

@@ -1,25 +1,15 @@
 package de.instinct.engine.mining;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 import com.badlogic.gdx.math.Vector2;
 
 import de.instinct.engine.core.Engine;
 import de.instinct.engine.core.data.GameState;
-import de.instinct.engine.core.meta.data.MetaData;
-import de.instinct.engine.core.meta.data.PauseData;
 import de.instinct.engine.core.order.GameOrder;
-import de.instinct.engine.core.player.data.PlayerData;
-import de.instinct.engine.fleet.order.data.OrderData;
 import de.instinct.engine.mining.data.MiningGameState;
 import de.instinct.engine.mining.entity.asteroid.AsteroidProcessor;
 import de.instinct.engine.mining.entity.asteroid.ResourceType;
-import de.instinct.engine.mining.entity.data.MiningEntityData;
 import de.instinct.engine.mining.entity.projectile.MiningProjectileProcessor;
 import de.instinct.engine.mining.entity.ship.MiningPlayerShipProcessor;
-import de.instinct.engine.mining.player.MiningPlayer;
 import de.instinct.engine.mining.player.MiningPlayerProcessor;
 
 public class MiningEngine extends Engine {
@@ -40,45 +30,21 @@ public class MiningEngine extends Engine {
 	@Override
 	public void initialize(GameState state) {
 		MiningGameState miningState = (MiningGameState) state;
-		state.gameUUID = "test";
 		state.started = true;
 		
-		state.metaData = new MetaData();
-		state.metaData.pauseData = new PauseData();
-		state.metaData.pauseData.resumeCountdownMS = 3000L;
-		state.metaData.pauseData.teamPausesMS = new HashMap<>();
-		state.metaData.pauseData.teamPausesMS.put(0, 0L);
-		state.metaData.pauseData.teamPausesMS.put(1, 0L);
-		state.metaData.pauseData.teamPausesMS.put(2, 0L);
-		state.metaData.pauseData.teamPausesCount = new HashMap<>();
-		state.metaData.pauseData.teamPausesCount.put(0, 0);
-		state.metaData.pauseData.teamPausesCount.put(1, 3);
-		state.metaData.pauseData.teamPausesCount.put(2, 3);
-		state.metaData.pauseData.maxPauseMS = 60_000L;
-		
-		state.orderData = new OrderData();
-		state.orderData.unprocessedOrders = new ConcurrentLinkedQueue<>();
-		state.orderData.processedOrders = new ArrayList<>();
-		
-		state.playerData = new PlayerData();
-		state.playerData.connectionStati = new ArrayList<>();
-		state.playerData.players = new ArrayList<>();
-		
-		MiningPlayer player1 = new MiningPlayer();
-		player1.id = 1;
-		player1.teamId = 1;
-		player1.name = "Player 1";
-		state.playerData.players.add(player1);
-		
-		miningState.entityData = new MiningEntityData();
-		miningState.entityData.projectiles = new ArrayList<>();
-		miningState.entityData.playerShips = new ArrayList<>();
 		playerShipProcessor.createPlayerShip(miningState, 1);
+		playerShipProcessor.createPlayerShip(miningState, 2);
 		
-		miningState.entityData.asteroids = new ArrayList<>();
 		asteroidProcessor.createAsteroid(miningState, new Vector2(500, 500), ResourceType.IRON, 2);
-		asteroidProcessor.createAsteroid(miningState, new Vector2(0, 500), ResourceType.ALUMINUM, 5);
-		asteroidProcessor.createAsteroid(miningState, new Vector2(500, 0), ResourceType.CARBON, 3);
+		asteroidProcessor.createAsteroid(miningState, new Vector2(0, 500), ResourceType.CARBON, 5);
+		asteroidProcessor.createAsteroid(miningState, new Vector2(500, 0), ResourceType.SILICON, 3);
+		asteroidProcessor.createAsteroid(miningState, new Vector2(-500, 0), ResourceType.GOLD, 3);
+		asteroidProcessor.createAsteroid(miningState, new Vector2(-500, -500), ResourceType.URANIUM, 1);
+		asteroidProcessor.createAsteroid(miningState, new Vector2(-500, 500), ResourceType.ALUMINUM, 1);
+		asteroidProcessor.createAsteroid(miningState, new Vector2(-1000, 0), ResourceType.THORIUM, 1);
+		asteroidProcessor.createAsteroid(miningState, new Vector2(0, -1000), ResourceType.XENON, 1);
+		asteroidProcessor.createAsteroid(miningState, new Vector2(-1000, -1000), ResourceType.SELENIUM, 1);
+		asteroidProcessor.createAsteroid(miningState, new Vector2(-1000, -500), ResourceType.EQUILIBRIUM, 1);
 	}
 
 	@Override
@@ -87,6 +53,7 @@ public class MiningEngine extends Engine {
 		projectileProcessor.updateMiningProjectiles(miningState, deltaTime);
 		playerShipProcessor.update(miningState, deltaTime);
 		playerProcessor.update(miningState, deltaTime);
+		asteroidProcessor.updateAsteroids(miningState, deltaTime);
 	}
 
 	@Override

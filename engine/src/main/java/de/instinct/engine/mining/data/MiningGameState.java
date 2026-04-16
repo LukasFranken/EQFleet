@@ -5,6 +5,7 @@ import de.instinct.engine.mining.entity.data.MiningEntityData;
 
 public class MiningGameState extends GameState {
 	
+	public float recallRadius;
 	public MiningEntityData entityData;
 
 }

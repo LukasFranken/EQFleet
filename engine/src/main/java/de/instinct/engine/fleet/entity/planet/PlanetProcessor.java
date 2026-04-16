@@ -41,13 +41,13 @@ public class PlanetProcessor {
 	        if (planet.ownerId != 0) {
 	            FleetPlayer owner = playerProcessor.getFleetPlayer(state.playerData.players, planet.ownerId);
 	            if (planet.ancient) {
-	            	double available = owner.currentResources;
-	            	double desired = ((double) deltaMS / 1000D) * state.staticData.ancientPlanetResourceDegradationFactor;
-	            	double actualLoss = Math.min(available, desired);
+	            	float available = owner.currentResources;
+	            	float desired = ((float) deltaMS / 1000f) * state.staticData.ancientPlanetResourceDegradationFactor;
+	            	float actualLoss = Math.min(available, desired);
 	            	playerProcessor.addResources(owner, -actualLoss);
 	            	
-	            	double atpGain = actualLoss / state.staticData.ancientPlanetResourceDegradationFactor;
-	            	double newATPValue = state.teamATPs.get(owner.teamId) + atpGain;
+	            	float atpGain = actualLoss / state.staticData.ancientPlanetResourceDegradationFactor;
+	            	float newATPValue = state.teamATPs.get(owner.teamId) + atpGain;
 	            	state.teamATPs.put(owner.teamId, newATPValue > state.staticData.atpToWin ? state.staticData.atpToWin : newATPValue);
 
 	            	if (available < desired) {
@@ -68,8 +68,8 @@ public class PlanetProcessor {
 	    }
 	}
 	
-	private double calculateResourceGeneration(Planet planet, long deltaMS) {
-		return ((double)deltaMS / 1000D) * planet.resourceGenerationSpeed;
+	private float calculateResourceGeneration(Planet planet, long deltaMS) {
+		return ((float)deltaMS / 1000f) * planet.resourceGenerationSpeed;
 	}
 	
 	public Planet createPlanet(FleetGameState state, Player owner, Vector2 position, boolean ancient) {

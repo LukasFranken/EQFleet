@@ -12,8 +12,8 @@ public class FleetProjectile extends Projectile {
 	public int weaponId;
 	public String originModel;
 	public WeaponType weaponType;
-	public double damage;
-	public double aoeRadius;
+	public float damage;
+	public float aoeRadius;
 
 	public FleetProjectile clone() {
 		FleetProjectile clone = (FleetProjectile) super.clone();

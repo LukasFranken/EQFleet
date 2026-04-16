@@ -15,9 +15,9 @@ import de.instinct.engine.fleet.ai.data.AiPlayer;
 import de.instinct.engine_api.ai.service.AIPlayerLoader;
 import de.instinct.engine_api.ai.service.NeutralPlayerLoader;
 import de.instinct.engine_api.core.model.GameMap;
-import de.instinct.engine_api.core.model.GameStateInitialization;
 import de.instinct.engine_api.core.model.PlanetInitialization;
 import de.instinct.engine_api.core.service.EngineDataInterface;
+import de.instinct.engine_api.fleet.model.FleetGameStateInitialization;
 
 public class CustomLoader {
 
@@ -29,8 +29,8 @@ public class CustomLoader {
 		neutralPlayerLoader = new NeutralPlayerLoader();
 	}
 	
-	public GameStateInitialization generateInitialGameState(LoadoutData loadout, int threatLevel) {
-		GameStateInitialization initialization = new GameStateInitialization();
+	public FleetGameStateInitialization generateInitialGameState(LoadoutData loadout, int threatLevel) {
+		FleetGameStateInitialization initialization = new FleetGameStateInitialization();
 		initialization.setGameUUID("custom");
 		initialization.setPlayers(loadPlayers(loadout, threatLevel));
 		initialization.setMap(generateMap(GameType.builder()

@@ -67,7 +67,7 @@ public class FleetProjectileProcessor extends ProjectileProcessor<FleetProjectil
     }
 	
 	private boolean checkFleetHit(FleetProjectile projectile, FleetPlayer projectileOwner, Unit potencialTarget, FleetGameState state) {
-		if (super.checkHit(projectile, projectileOwner, potencialTarget, state)) {
+		if (super.checkHit(projectile, potencialTarget)) {
 			FleetPlayer targetOwner = playerProcessor.getFleetPlayer(state.playerData.players, potencialTarget.ownerId);
 	    	if (projectileOwner.teamId != targetOwner.teamId) {
 	    		return true;
@@ -80,7 +80,7 @@ public class FleetProjectileProcessor extends ProjectileProcessor<FleetProjectil
         if (projectile.aoeRadius > 0) {
         	FleetPlayer projectileOwner = playerProcessor.getFleetPlayer(state.playerData.players, projectile.ownerId);
         	for (Ship pentencialTargetShip : state.entityData.ships) {
-        		double distanceToTarget = super.entityDistance(projectile, pentencialTargetShip);
+        		float distanceToTarget = super.entityDistance(projectile, pentencialTargetShip);
         		if (distanceToTarget < projectile.aoeRadius) {
         			if (projectileOwner.teamId != playerProcessor.getPlayer(state.playerData.players, pentencialTargetShip.ownerId).teamId) {
         				dealDamage(projectile, pentencialTargetShip, state);
@@ -88,7 +88,7 @@ public class FleetProjectileProcessor extends ProjectileProcessor<FleetProjectil
         		}
         	}
         	for (Turret pentencialTargetTurret : state.entityData.turrets) {
-        		double distanceToTarget = super.entityDistance(projectile, pentencialTargetTurret);
+        		float distanceToTarget = super.entityDistance(projectile, pentencialTargetTurret);
         		if (distanceToTarget < projectile.aoeRadius) {
         			if (projectileOwner.teamId != playerProcessor.getPlayer(state.playerData.players, pentencialTargetTurret.ownerId).teamId) {
         				dealDamage(projectile, pentencialTargetTurret, state);
@@ -101,13 +101,13 @@ public class FleetProjectileProcessor extends ProjectileProcessor<FleetProjectil
     }
 
     private void dealDamage(FleetProjectile projectile, Unit target, FleetGameState state) {
-    	double remainingDamage = projectile.damage;
-    	double finalHullDamage = 0f;
+    	float remainingDamage = projectile.damage;
+    	float finalHullDamage = 0f;
 		for (Shield shield : target.shields) {
 			if (remainingDamage <= 0) break;
 			switch (shield.data.type) {
 			case PLASMA:
-				double shieldDamage = Math.min(shield.currentStrength, remainingDamage);
+				float shieldDamage = Math.min(shield.currentStrength, remainingDamage);
 				shield.currentStrength -= shieldDamage;
 				remainingDamage -= shieldDamage;
 				ShieldDamageInstance plasmaDamageInstance = new ShieldDamageInstance();

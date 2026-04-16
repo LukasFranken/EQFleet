@@ -8,11 +8,11 @@ import de.instinct.engine.fleet.stats.model.unit.UnitStatistic;
 
 public class DefenseProcessor {
 	
-	public void updateDefense(FleetGameState state, Unit unit, double delta) {
+	public void updateDefense(FleetGameState state, Unit unit, float delta) {
 		PlayerStatistic originUnitOwnerStatistic = StatCollector.getPlayer(state.gameUUID, unit.ownerId);
 		UnitStatistic unitStat = originUnitOwnerStatistic.getUnit(unit.data.model);
 		if (unit.currentHull < unit.data.hullStrength) {
-			double hullRepaired = unit.data.hullRepairSpeed * (delta / 1000D);
+			float hullRepaired = unit.data.hullRepairSpeed * (delta / 1000f);
 			unit.currentHull += hullRepaired;
 			if (unit.currentHull > unit.data.hullStrength) {
 				hullRepaired = unit.data.hullStrength - (unit.currentHull - hullRepaired);

@@ -45,8 +45,8 @@ public class Shapes {
 		}
 		if (shape instanceof EQCircle) {
 			EQCircle eqCircle = (EQCircle) shape;
-			workingPosition.set(shape.getProjectionMatrix() != null ? GraphicsUtil.translateToPhysical(eqCircle.getPosition()) : eqCircle.getPosition());
-			float radius = shape.getProjectionMatrix() != null ? eqCircle.getRadius() * GraphicsUtil.getVerticalDisplayScaleFactor() : eqCircle.getRadius();
+			workingPosition.set(shape.getProjectionMatrix() == null ? GraphicsUtil.translateToPhysical(eqCircle.getPosition()) : eqCircle.getPosition());
+			float radius = shape.getProjectionMatrix() == null ? eqCircle.getRadius() * GraphicsUtil.getVerticalDisplayScaleFactor() : eqCircle.getRadius();
 			circle(workingPosition, radius);
 		}
 		if (shape instanceof EQArc) {

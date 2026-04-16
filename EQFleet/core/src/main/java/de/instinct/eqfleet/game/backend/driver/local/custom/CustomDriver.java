@@ -19,9 +19,9 @@ import de.instinct.engine.fleet.order.types.BuildTurretOrder;
 import de.instinct.engine.fleet.order.types.ShipMovementOrder;
 import de.instinct.engine.fleet.order.types.SurrenderOrder;
 import de.instinct.engine.fleet.stats.StatCollector;
-import de.instinct.engine_api.core.model.GameStateInitialization;
 import de.instinct.engine_api.core.service.EngineDataInterface;
-import de.instinct.engine_api.core.service.GameStateInitializer;
+import de.instinct.engine_api.fleet.FleetGameStateInitializer;
+import de.instinct.engine_api.fleet.model.FleetGameStateInitialization;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.GameModel;
 import de.instinct.eqfleet.game.backend.driver.local.LocalDriver;
@@ -31,21 +31,21 @@ public class CustomDriver extends LocalDriver {
 	private CustomLoader customLoader;
 	private AiEngine aiEngine;
 	private boolean finished;
-	private GameStateInitializer gameStateInitializer;
+	private FleetGameStateInitializer gameStateInitializer;
 	
 	public CustomDriver() {
 		super();
 		customLoader = new CustomLoader();
 		aiEngine = new AiEngine();
-		gameStateInitializer = new GameStateInitializer();
+		gameStateInitializer = new FleetGameStateInitializer();
 	}
 
 	@Override
 	public void setup() {
 		LoadoutData loadout = API.meta().loadout(API.authKey);
 		GameModel.playerId = 1;
-		GameStateInitialization initialGameState = customLoader.generateInitialGameState(loadout, 10);
-		GameModel.activeGameState = gameStateInitializer.initialize(initialGameState);
+		FleetGameStateInitialization initialGameState = customLoader.generateInitialGameState(loadout, 10);
+		GameModel.activeGameState = gameStateInitializer.initializeFleet(initialGameState);
 		GameModel.lastUpdateTimestampMS = System.currentTimeMillis();
 		finished = false;
 		System.out.println(GameModel.activeGameState.playerData);

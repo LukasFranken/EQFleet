@@ -40,16 +40,18 @@ MINING GAME:
 - extraction needed, otherwise all resources lost
  -> in coop, give all resources to all players
  -> probably max 2 players
-- unlock map/minimap etc. through upgrades
-- laser sight to the cursor unlockable
-- mining ship (darkstar) can be used in conquest
- -> cost free
- -> single instance, has to reach planet to be reused
- -> unusable once destroyed
 - autosave upgrade
  -> mining ship will autopilot home when last fuel required is reached
 - make mining start game
  -> conquest is for later when you are a commander
+- very minimal ui at start, unlock all with upgrades
+ -> hp bars
+ -> click to show asteroid info
+ -> minimap
+ -> map
+ -> shooting laser
+ -> range indicator
+- ship towing ability for stranded mates
 
 REDESIGN:
 - ships harder to unlock and progressively
