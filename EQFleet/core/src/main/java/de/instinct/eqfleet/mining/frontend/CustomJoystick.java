@@ -21,10 +21,10 @@ public class CustomJoystick {
 
     public CustomJoystick(float x, float y, float size) {
     	backgroundShape = EQCircle.builder()
-    			.color(Color.GRAY)
+    			.color(new Color(Color.GRAY))
     			.build();
 		knobShape = EQCircle.builder()
-				.color(Color.DARK_GRAY)
+				.color(new Color(Color.DARK_GRAY))
 				.build();
         backgroundPosition = new Vector2(x, y);
         knobPosition = new Vector2(x, y);

@@ -29,7 +29,7 @@ public class MiningInputManager {
         if (PlatformUtil.isMobile()) {
         	joystick = new CustomJoystick(250, 250, 250);
         	shootButton = new ColorButton("FIRE");
-        	shootButton.setColor(Color.GRAY);
+        	shootButton.setColor(new Color(Color.GRAY));
         	shootButton.getColor().a = 0.5f;
         	shootButton.getLabel().setColor(Color.RED);
         	shootButton.setBounds(320, 50, 60, 40);
@@ -73,10 +73,10 @@ public class MiningInputManager {
         	shootButton.render();
         	Vector2 direction = joystick.getDirection();
             if (direction.len() > 0) {
-                input.up = direction.y > 0.5f;
-                input.down = direction.y < -0.5f;
-                input.left = direction.x < -0.5f;
-                input.right = direction.x > 0.5f;
+                input.up = direction.y > 0.3f;
+                input.down = direction.y < -0.3f;
+                input.left = direction.x < -0.3f;
+                input.right = direction.x > 0.3f;
             }
         }
 
