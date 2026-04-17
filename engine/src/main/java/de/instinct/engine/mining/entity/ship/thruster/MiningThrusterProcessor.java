@@ -35,17 +35,17 @@ public class MiningThrusterProcessor {
 	}
 
 	private float updateAxis(MiningPlayerShip ship, int input, float currentSpeed, float accelRate, float minSpeed, float maxSpeed, float deltaSeconds) {
+		float chargeCost = ship.thruster.chargePerSecond * deltaSeconds;
 		float dampening = ship.thruster.inertiaDampening * deltaSeconds;
-
-		if (input == 0) {
+		float chargeFactor = coreProcessor.calculateChargePartial(ship, chargeCost);
+		float thrust = input * accelRate * deltaSeconds * chargeFactor;
+		
+		if (thrust == 0) {
 			if (currentSpeed > 0) return Math.max(currentSpeed - dampening, 0);
 			if (currentSpeed < 0) return Math.min(currentSpeed + dampening, 0);
 			return 0;
 		}
-
-		float chargeFactor = coreProcessor.useChargePartial(ship, ship.thruster.chargePerSecond * deltaSeconds);
-		float thrust = input * accelRate * deltaSeconds * chargeFactor;
-
+		coreProcessor.useChargePartial(ship, chargeCost);
 		boolean opposing = (input > 0 && currentSpeed < 0) || (input < 0 && currentSpeed > 0);
 		if (opposing) {
 			float aided = thrust + Math.signum(thrust) * dampening;

@@ -19,9 +19,12 @@ public class MiningCoreProcessor {
 		return false;
 	}
 	
-	public float useChargePartial(MiningPlayerShip ship, float chargeCost) {
-		ship.core.currentCharge = Math.max(0f, ship.core.currentCharge - chargeCost);
+	public float calculateChargePartial(MiningPlayerShip ship, float chargeCost) {
 		return MathUtils.clamp(ship.core.currentCharge / chargeCost, 0f, 1f);
+	}
+	
+	public void useChargePartial(MiningPlayerShip ship, float chargeCost) {
+		ship.core.currentCharge = Math.max(0f, ship.core.currentCharge - chargeCost);
 	}
 
 }
