@@ -116,13 +116,10 @@ public class MiningHudRenderer {
 		if (joystick != null) {
         	joystick.update();
         	Vector2 direction = joystick.getDirection();
-        	System.out.println("Direction: " + direction);
-            if (direction.len() > 0) {
-                MiningModel.mobileInput.up = direction.y > 0.5f;
-                MiningModel.mobileInput.down = direction.y < -0.5f;
-                MiningModel.mobileInput.left = direction.x < -0.5f;
-                MiningModel.mobileInput.right = direction.x > 0.5f;
-            }
+        	MiningModel.mobileInput.up = direction.y > 0.5f;
+            MiningModel.mobileInput.down = direction.y < -0.5f;
+            MiningModel.mobileInput.left = direction.x < -0.5f;
+            MiningModel.mobileInput.right = direction.x > 0.5f;
         }
 		
 		recallButton.setBounds(160, 20, 80, 40);
