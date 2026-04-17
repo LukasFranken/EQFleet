@@ -57,7 +57,9 @@ public class MiningEngineAPI {
 	
 	public static boolean shipIsRecallable(int playerId) {
 		MiningPlayerShip ship = getShip(playerId);
-		return MiningPlayerShipProcessor.shipIsInRecallArea(MiningModel.state, ship) && ship.speed <= 0.1f && MiningModel.state.metaData.pauseData.resumeCountdownMS <= 0;
+		return MiningPlayerShipProcessor.shipIsInRecallArea(MiningModel.state, ship) 
+				&& ship.speed <= 0.1f && ship.speed >= -0.1f 
+				&& MiningModel.state.metaData.pauseData.resumeCountdownMS <= 0;
 	}
 
 }

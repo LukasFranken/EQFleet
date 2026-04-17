@@ -123,7 +123,7 @@ public class MiningPlayerShipProcessor extends EntityProcessor {
 		MiningPlayerShip ship = getPlayerShip(state, recallOrder.playerId);
 		if (ship == null) return false;
 		if (!shipIsInRecallArea(state, ship)) return false;
-		if (ship.speed > 0.1f) return false;
+		if (ship.speed > 0.1f && ship.speed < -0.1) return false;
 		return true;
 	}
 	

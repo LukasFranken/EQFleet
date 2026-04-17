@@ -1,11 +1,10 @@
 
 package de.instinct.eqfleet.mining.frontend;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 
-import de.instinct.eqlibgdxutils.InputUtil;
+import de.instinct.eqlibgdxutils.MultitouchInputUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.shapes.EQCircle;
 
@@ -15,10 +14,9 @@ public class CustomJoystick {
     private final EQCircle knobShape;
     private final Vector2 backgroundPosition;
     private final Vector2 knobPosition;
-    private final Vector2 touchStart;
     private final float radius;
 
-    private boolean isTouched;
+    private int activePointer = -1;
 
     public CustomJoystick(float x, float y, float size) {
     	backgroundShape = EQCircle.builder()
@@ -29,50 +27,52 @@ public class CustomJoystick {
 				.build();
         backgroundPosition = new Vector2(x, y);
         knobPosition = new Vector2(x, y);
-        touchStart = new Vector2();
         radius = size / 2;
-        isTouched = false;
     }
 
     public void update() {
-        if (Gdx.input.isTouched()) {
-            float touchX = InputUtil.getVirtualMousePosition().x;
-            float touchY = InputUtil.getVirtualMousePosition().y;
-
-            if (!isTouched) {
-                if (backgroundPosition.dst(touchX, touchY) <= radius) {
-                    isTouched = true;
-                    touchStart.set(touchX, touchY);
+        if (activePointer == -1) {
+            for (int i = 0; i < 10; i++) {
+                if (MultitouchInputUtil.isTouched(i)) {
+                    Vector2 touchPos = MultitouchInputUtil.getVirtualTouchPosition(i);
+                    if (backgroundPosition.dst(touchPos) <= radius) {
+                        activePointer = i;
+                        break;
+                    }
                 }
             }
+        }
 
-            if (isTouched) {
-                Vector2 direction = new Vector2(touchX - backgroundPosition.x, touchY - backgroundPosition.y);
+        if (activePointer != -1) {
+            if (MultitouchInputUtil.isTouched(activePointer)) {
+                Vector2 touchPos = MultitouchInputUtil.getVirtualTouchPosition(activePointer);
+                Vector2 direction = new Vector2(touchPos.x - backgroundPosition.x, touchPos.y - backgroundPosition.y);
                 if (direction.len() > radius) {
                     direction.setLength(radius);
                 }
                 knobPosition.set(backgroundPosition.x + direction.x, backgroundPosition.y + direction.y);
+            } else {
+                activePointer = -1;
+                knobPosition.set(backgroundPosition);
             }
-        } else {
-            isTouched = false;
-            knobPosition.set(backgroundPosition);
         }
     }
 
     public Vector2 getDirection() {
-        if (isTouched) {
+        if (activePointer != -1) {
             return new Vector2(knobPosition.x - backgroundPosition.x, knobPosition.y - backgroundPosition.y).nor();
         }
         return Vector2.Zero;
     }
 
     public void render() {
-    	backgroundShape.setPosition(backgroundPosition);
-    	backgroundShape.setRadius(radius);
-    	Shapes.draw(backgroundShape);
-    	knobShape.setPosition(knobPosition);
-    	knobShape.setRadius(radius / 2);
-    	Shapes.draw(knobShape);
+        backgroundShape.setPosition(backgroundPosition);
+        backgroundShape.setRadius(radius);
+        Shapes.draw(backgroundShape);
+
+        knobShape.setPosition(knobPosition);
+        knobShape.setRadius(radius / 2);
+        Shapes.draw(knobShape);
     }
 
     public void dispose() {

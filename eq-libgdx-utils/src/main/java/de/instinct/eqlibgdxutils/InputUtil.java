@@ -38,6 +38,7 @@ public class InputUtil {
 				touched = false;
 			}
 		}
+		MultitouchInputUtil.update();
 	}
 	
 	public static boolean mouseIsOver(Rectangle rectangle) {

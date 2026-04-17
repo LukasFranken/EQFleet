@@ -29,7 +29,7 @@ public class MiningInputManager {
         lastFrameInput.right = MiningModel.input.right;
         lastFrameInput.shoot = MiningModel.input.shoot;
 
-        if (!PlatformUtil.isMobile()) {
+        if (PlatformUtil.isMobile()) {
         	MiningModel.input.up = MiningModel.mobileInput.up;
 			MiningModel.input.down = MiningModel.mobileInput.down;
 			MiningModel.input.left = MiningModel.mobileInput.left;

@@ -74,13 +74,13 @@ public class MiningHudRenderer {
 			
 		});
 		
-		if (!PlatformUtil.isMobile()) {
-        	joystick = new CustomJoystick(80, 80, 80);
+		if (PlatformUtil.isMobile()) {
+        	joystick = new CustomJoystick(80, 150, 80);
         	shootButton = new ColorButton("FIRE");
         	shootButton.setColor(new Color(Color.GRAY));
         	shootButton.getColor().a = 0.5f;
         	shootButton.getLabel().setColor(Color.RED);
-        	shootButton.setBounds(320, 50, 60, 40);
+        	shootButton.setBounds(320, 120, 60, 40);
         	shootButton.setDownAction(new Action() {
     			
     			@Override
@@ -116,13 +116,13 @@ public class MiningHudRenderer {
 		if (joystick != null) {
         	joystick.update();
         	Vector2 direction = joystick.getDirection();
-        	MiningModel.mobileInput.up = direction.y > 0.5f;
-            MiningModel.mobileInput.down = direction.y < -0.5f;
-            MiningModel.mobileInput.left = direction.x < -0.5f;
-            MiningModel.mobileInput.right = direction.x > 0.5f;
+        	MiningModel.mobileInput.up = direction.y > 0.3f;
+            MiningModel.mobileInput.down = direction.y < -0.3f;
+            MiningModel.mobileInput.left = direction.x < -0.3f;
+            MiningModel.mobileInput.right = direction.x > 0.3f;
         }
 		
-		recallButton.setBounds(160, 20, 80, 40);
+		recallButton.setBounds(160, 50, 80, 40);
 		recallButton.setGlowAnimation(!ship.recalled);
 		if (ship.recalled) {
 			recallButton.getHoverColor().set(0.3f, 0f, 0f, 0.5f);
@@ -157,7 +157,7 @@ public class MiningHudRenderer {
 		workingLabel.setText("TURN: " + StringUtils.format(ship.thruster.rotationSpeed, 1));
 		workingLabel.render();
 		
-		if (!ship.recalled) {
+		if (!ship.recalled && MiningModel.state.metaData.pauseData.resumeCountdownMS <= 0) {
 			if (joystick != null) {
 				joystick.render();
 				shootButton.render();
