@@ -50,7 +50,7 @@ public class ProfileHeaderComponent extends Component {
 		expBounds = new Rectangle();
 		
 		expBar = new PlainRectangularLoadingBar();
-		expBar.setBar(TextureManager.createTexture(Color.BLUE));
+		expBar.setColor(Color.BLUE);
 		expBar.setCustomDescriptor("");
 		Border barBorder = new Border();
 		barBorder.setSize(1f);

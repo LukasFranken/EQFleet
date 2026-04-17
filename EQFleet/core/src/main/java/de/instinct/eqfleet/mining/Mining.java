@@ -2,8 +2,8 @@ package de.instinct.eqfleet.mining;
 
 import com.badlogic.gdx.Gdx;
 
-import de.instinct.eqfleet.mining.frontend.MiningInputManager;
 import de.instinct.eqfleet.mining.frontend.MiningRenderer;
+import de.instinct.eqfleet.mining.input.MiningInputManager;
 import de.instinct.eqfleet.scene.Scene;
 
 public class Mining extends Scene {

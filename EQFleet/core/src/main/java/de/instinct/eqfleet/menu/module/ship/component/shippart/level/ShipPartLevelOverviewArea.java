@@ -14,7 +14,6 @@ import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.subtypes.PlainRectangularLoadingBar;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.shapes.EQRectangle;
 import lombok.Data;
@@ -77,7 +76,7 @@ public class ShipPartLevelOverviewArea extends Component {
 		maxLabel.setColor(config.getPartColor());
 		
 		partProgressBar = new PlainRectangularLoadingBar();
-		partProgressBar.setBar(TextureManager.createTexture(config.getPartColor()));
+		partProgressBar.setColor(config.getPartColor());
 		partProgressBar.setCurrentValue(config.getCurrentValue());
 		partProgressBar.setMaxValue(config.getMaxValue() == -1 ? config.getCurrentValue() : config.getMaxValue());
 		partProgressBar.setBorder(border);

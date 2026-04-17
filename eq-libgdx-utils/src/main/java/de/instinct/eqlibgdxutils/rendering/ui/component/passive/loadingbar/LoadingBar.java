@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public abstract class LoadingBar extends Component {
 	
-	private double maxValue;
-	private double currentValue;
+	private float maxValue;
+	private float currentValue;
 
 }

@@ -1,4 +1,4 @@
-package de.instinct.eqfleet.mining.frontend;
+package de.instinct.eqfleet.mining.frontend.hud;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;

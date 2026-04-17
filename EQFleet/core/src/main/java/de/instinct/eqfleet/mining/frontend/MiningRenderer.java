@@ -1,5 +1,7 @@
 package de.instinct.eqfleet.mining.frontend;
 
+import de.instinct.eqfleet.mining.frontend.hud.MiningHudRenderer;
+import de.instinct.eqfleet.mining.frontend.hud.MiningWorldHudRenderer;
 import de.instinct.eqlibgdxutils.rendering.grid.GridConfiguration;
 import de.instinct.eqlibgdxutils.rendering.grid.GridRenderer;
 

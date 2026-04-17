@@ -8,7 +8,6 @@ import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButto
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.subtypes.PlainRectangularLoadingBar;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -35,7 +34,7 @@ public class ShipPartLevelArea extends Component {
 		colorButton.setDownColor(downColor);
 		
 		partProgressBar = new PlainRectangularLoadingBar();
-		partProgressBar.setBar(TextureManager.createTexture(partColor));
+		partProgressBar.setColor(partColor);
 		partProgressBar.setCurrentValue(currentValue);
 		partProgressBar.setMaxValue(maxValue);
 		Border barBorder = new Border();

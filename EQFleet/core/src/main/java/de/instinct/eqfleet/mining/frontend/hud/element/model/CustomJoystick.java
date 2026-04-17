@@ -1,5 +1,5 @@
 
-package de.instinct.eqfleet.mining.frontend;
+package de.instinct.eqfleet.mining.frontend.hud.element.model;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;

@@ -464,7 +464,7 @@ public class GameUILoader {
 	
 	private PlainRectangularLoadingBar createAPBar() {
 		PlainRectangularLoadingBar apBar = new PlainRectangularLoadingBar();
-		apBar.setBar(TextureManager.createTexture(Color.GOLD));
+		apBar.setColor(Color.GOLD);
 		apBar.setCustomDescriptor("");
 		return apBar;
 	}

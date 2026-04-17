@@ -1,12 +1,11 @@
 
-package de.instinct.eqfleet.mining.frontend;
+package de.instinct.eqfleet.mining.input;
 
 import com.badlogic.gdx.Input.Keys;
 
 import de.instinct.engine.mining.net.message.InputChangedOrder;
 import de.instinct.eqfleet.mining.MiningEngineAPI;
 import de.instinct.eqfleet.mining.MiningModel;
-import de.instinct.eqfleet.mining.input.MiningInput;
 import de.instinct.eqfleet.scene.SceneManager;
 import de.instinct.eqfleet.scene.SceneType;
 import de.instinct.eqlibgdxutils.InputUtil;

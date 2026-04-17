@@ -8,7 +8,6 @@ import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.subtypes.PlainRectangularLoadingBar;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -32,7 +31,7 @@ public class ShipComponentProgressBar extends Component {
 		partLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
 		
 		progressBar = new PlainRectangularLoadingBar();
-		progressBar.setBar(TextureManager.createTexture(ShipyardModuleAPI.getPartTypeColor(type)));
+		progressBar.setColor(ShipyardModuleAPI.getPartTypeColor(type));
 		progressBar.setMaxValue(maxProgress);
 		progressBar.setCustomDescriptor("");
 		progressBar.setFixedHeight(6);

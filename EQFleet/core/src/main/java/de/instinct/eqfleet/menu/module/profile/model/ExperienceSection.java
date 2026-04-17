@@ -11,7 +11,6 @@ import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.subtypes.PlainRectangularLoadingBar;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
-import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -48,7 +47,7 @@ public class ExperienceSection extends Component {
 		nextRankNameLabel.setHorizontalAlignment(HorizontalAlignment.RIGHT);
 		
 		expBar = new PlainRectangularLoadingBar();
-		expBar.setBar(TextureManager.createTexture(Color.BLUE));
+		expBar.setBarColor(Color.BLUE);
 		expBar.setCustomDescriptor("");
 		Border expBarBorder = new Border();
 		expBarBorder.setColor(Color.BLUE);
