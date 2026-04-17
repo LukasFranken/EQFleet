@@ -74,7 +74,7 @@ public class MiningHudRenderer {
 			
 		});
 		
-		if (PlatformUtil.isMobile()) {
+		if (!PlatformUtil.isMobile()) {
         	joystick = new CustomJoystick(80, 80, 80);
         	shootButton = new ColorButton("FIRE");
         	shootButton.setColor(new Color(Color.GRAY));
@@ -85,7 +85,7 @@ public class MiningHudRenderer {
     			
     			@Override
     			public void execute() {
-    				MiningModel.input.shoot = true;
+    				MiningModel.mobileInput.shoot = true;
     			}
     			
     		});
@@ -93,7 +93,7 @@ public class MiningHudRenderer {
     			
     			@Override
     			public void execute() {
-    				MiningModel.input.shoot = false;
+    				MiningModel.mobileInput.shoot = false;
     			}
     			
     		});
@@ -101,7 +101,7 @@ public class MiningHudRenderer {
 	}
 	
 	public void update() {
-		MiningPlayerShip ship = MiningModel.state.entityData.playerShips.get(0);
+		MiningPlayerShip ship = MiningEngineAPI.getShip(MiningModel.playerId);
 		chargeBar.setSegments(10);
 		chargeBar.setMaxValue(ship.core.maxCharge);
 		chargeBar.setCurrentValue(ship.core.currentCharge);
@@ -116,11 +116,12 @@ public class MiningHudRenderer {
 		if (joystick != null) {
         	joystick.update();
         	Vector2 direction = joystick.getDirection();
+        	System.out.println("Direction: " + direction);
             if (direction.len() > 0) {
-                MiningModel.input.up = direction.y > 0.3f;
-                MiningModel.input.down = direction.y < -0.3f;
-                MiningModel.input.left = direction.x < -0.3f;
-                MiningModel.input.right = direction.x > 0.3f;
+                MiningModel.mobileInput.up = direction.y > 0.5f;
+                MiningModel.mobileInput.down = direction.y < -0.5f;
+                MiningModel.mobileInput.left = direction.x < -0.5f;
+                MiningModel.mobileInput.right = direction.x > 0.5f;
             }
         }
 		
@@ -151,7 +152,7 @@ public class MiningHudRenderer {
 		chargeBar.render();
 		cargoBar.render();
 		
-		MiningPlayerShip ship = MiningModel.state.entityData.playerShips.get(0);
+		MiningPlayerShip ship = MiningEngineAPI.getShip(MiningModel.playerId);
 		workingLabel.setBounds(20, GraphicsUtil.screenBounds().height - 96, 160, 10);
 		workingLabel.setText("SPEED: " + StringUtils.format(ship.speed, 1));
 		workingLabel.render();
@@ -159,11 +160,16 @@ public class MiningHudRenderer {
 		workingLabel.setText("TURN: " + StringUtils.format(ship.thruster.rotationSpeed, 1));
 		workingLabel.render();
 		
-		if (joystick != null) {
-			joystick.render();
-			shootButton.render();
+		if (!ship.recalled) {
+			if (joystick != null) {
+				joystick.render();
+				shootButton.render();
+			}
 		}
-		if (MiningEngineAPI.shipIsRecallable(MiningModel.playerId)) recallButton.render();
+		
+		if (MiningEngineAPI.shipIsRecallable(MiningModel.playerId)) {
+			recallButton.render();
+		}
 	}
 	
 	public void dispose() {

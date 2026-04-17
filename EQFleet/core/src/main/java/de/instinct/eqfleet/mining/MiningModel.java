@@ -8,5 +8,6 @@ public class MiningModel {
 	public static volatile int playerId;
 	public static volatile MiningGameState state;
 	public static volatile MiningInput input;
+	public static volatile MiningInput mobileInput;
 
 }

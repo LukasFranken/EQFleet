@@ -19,6 +19,7 @@ public class MiningInputManager {
     public MiningInputManager() {
         lastFrameInput = new MiningInput();
         MiningModel.input = new MiningInput();
+        MiningModel.mobileInput = new MiningInput();
     }
 
     public void update() {
@@ -29,6 +30,12 @@ public class MiningInputManager {
         lastFrameInput.shoot = MiningModel.input.shoot;
 
         if (!PlatformUtil.isMobile()) {
+        	MiningModel.input.up = MiningModel.mobileInput.up;
+			MiningModel.input.down = MiningModel.mobileInput.down;
+			MiningModel.input.left = MiningModel.mobileInput.left;
+			MiningModel.input.right = MiningModel.mobileInput.right;
+			MiningModel.input.shoot = MiningModel.mobileInput.shoot;
+        } else {
         	MiningModel.input.up = InputUtil.isDown(Keys.W);
             MiningModel.input.down = InputUtil.isDown(Keys.S);
             MiningModel.input.left = InputUtil.isDown(Keys.A);

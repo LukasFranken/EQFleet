@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Vector3;
 
 import de.instinct.engine.mining.entity.ship.MiningPlayerShip;
+import de.instinct.eqfleet.mining.MiningEngineAPI;
 import de.instinct.eqfleet.mining.MiningModel;
 import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.debug.modulator.Modulator;
@@ -84,20 +85,20 @@ public class MiningCameraManager {
 	}
 
 	public void update() {
-		MiningPlayerShip playerShip = MiningModel.state.entityData.playerShips.get(0);
+		MiningPlayerShip ship = MiningEngineAPI.getShip(MiningModel.playerId);
 
-		float angleDeg = playerShip.direction.angleDeg();
+		float angleDeg = ship.direction.angleDeg();
 		float angleRad = angleDeg * (float) Math.PI / 180f;
 
 		float forwardX = (float) Math.cos(angleRad);
 		float forwardY = (float) Math.sin(angleRad);
 
-		camera.position.x = playerShip.position.x - forwardX * BEHIND_DISTANCE;
-		camera.position.y = playerShip.position.y - forwardY * BEHIND_DISTANCE;
+		camera.position.x = ship.position.x - forwardX * BEHIND_DISTANCE;
+		camera.position.y = ship.position.y - forwardY * BEHIND_DISTANCE;
 		camera.position.z = HEIGHT_OFFSET;
 
-		float lookAtX = playerShip.position.x + forwardX * LOOK_AHEAD;
-		float lookAtY = playerShip.position.y + forwardY * LOOK_AHEAD;
+		float lookAtX = ship.position.x + forwardX * LOOK_AHEAD;
+		float lookAtY = ship.position.y + forwardY * LOOK_AHEAD;
 
 		camera.up.set(0f, 0f, 1f);
 		camera.lookAt(lookAtX, lookAtY, 0f);
