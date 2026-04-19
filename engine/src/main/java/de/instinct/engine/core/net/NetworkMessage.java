@@ -5,6 +5,7 @@ import lombok.ToString;
 @ToString
 public abstract class NetworkMessage {
 	
-	public String uuid;
+	public String gameUUID;
+	public String playerUUID;
 
 }

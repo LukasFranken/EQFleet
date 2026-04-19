@@ -47,40 +47,48 @@ public class MiningPlayerShipProcessor extends EntityProcessor {
 		weaponProcessor.updateWeapons(state, shipOwner, ship, progressionMS);
 		coreProcessor.updateCore(shipOwner, ship, progressionMS);
 	}
+	
+	public void createPlayerShips(MiningGameState state) {
+		for (Player player : state.playerData.players) {
+			MiningPlayer miningPlayer = (MiningPlayer) player;
+			MiningPlayerShip ship = createPlayerShip(miningPlayer);
+			super.initializeEntity(ship, state.entityData);
+			state.entityData.playerShips.add(ship);
+		}
+	}
 
-	public void createPlayerShip(MiningGameState state, int ownerId) {
+	public MiningPlayerShip createPlayerShip(MiningPlayer player) {
 		MiningPlayerShip ship = new MiningPlayerShip();
-		super.initializeEntity(ship, state.entityData);
-		ship.ownerId = ownerId;
+		ship.ownerId = player.id;
 		ship.position.set(0, 0);
 		ship.radius = 10f;
 		ship.direction = new Vector2(0, 1);
 		
 		ship.core = new MiningCore();
-		ship.core.maxCharge = 20f;
+		ship.core.maxCharge = player.shipData.coreCharge;
 		ship.core.currentCharge = ship.core.maxCharge;
 		
+		ship.cargo = new MiningCargo();
+		ship.cargo.capacity = player.shipData.cargoCapacity;
+		ship.cargo.items = new ArrayList<>();
+		
 		ship.thruster = new MiningThruster();
-		ship.thruster.acceleration = 20f;
-		ship.thruster.maxSpeed = 200f;
-		ship.thruster.deceleration = 15f;
-		ship.thruster.maxReverseSpeed = -30f;
-		ship.thruster.rotationAcceleration = 20f;
-		ship.thruster.maxRotationSpeed = 50f;
-		ship.thruster.chargePerSecond = 0.2f;
-		ship.thruster.inertiaDampening = 50f;
+		ship.thruster.acceleration = player.shipData.acceleration;
+		ship.thruster.maxSpeed = player.shipData.maxSpeed;
+		ship.thruster.deceleration = player.shipData.deceleration;
+		ship.thruster.maxReverseSpeed = player.shipData.maxSpeedReverse;
+		ship.thruster.rotationAcceleration = player.shipData.rotationAcceleration;
+		ship.thruster.maxRotationSpeed = player.shipData.maxRotationSpeed;
+		ship.thruster.chargePerSecond = player.shipData.chargePerSecond;
+		ship.thruster.inertiaDampening = player.shipData.inertiaDampening;
 		
 		ship.weapon = new MiningWeapon();
-		ship.weapon.cooldownMS = 500;
-		ship.weapon.lifetimeMS = 2000;
-		ship.weapon.damage = 5f;
-		ship.weapon.speed = 10f;
-		ship.weapon.chargePerShot = 0.5f;
-		
-		ship.cargo = new MiningCargo();
-		ship.cargo.capacity = 20f;
-		ship.cargo.items = new ArrayList<>();
-		state.entityData.playerShips.add(ship);
+		ship.weapon.cooldownMS = player.shipData.cooldownMS;
+		ship.weapon.lifetimeMS = player.shipData.lifetimeMS;
+		ship.weapon.damage = player.shipData.damage;
+		ship.weapon.speed = player.shipData.projectileSpeed;
+		ship.weapon.chargePerShot = player.shipData.chargePerShot;
+		return ship;
 	}
 
 	public boolean integrateNewOrder(MiningGameState state, GameOrder order) {

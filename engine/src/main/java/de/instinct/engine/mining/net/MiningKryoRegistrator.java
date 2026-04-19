@@ -11,6 +11,7 @@ import de.instinct.engine.mining.entity.projectile.MiningProjectile;
 import de.instinct.engine.mining.entity.ship.MiningPlayerShip;
 import de.instinct.engine.mining.entity.ship.cargo.MiningCargo;
 import de.instinct.engine.mining.entity.ship.core.MiningCore;
+import de.instinct.engine.mining.entity.ship.data.MiningShipData;
 import de.instinct.engine.mining.entity.ship.thruster.MiningThruster;
 import de.instinct.engine.mining.entity.ship.weapon.MiningWeapon;
 import de.instinct.engine.mining.net.message.ConnectMessage;
@@ -38,6 +39,7 @@ public class MiningKryoRegistrator extends KryoRegistrator {
 		kryo.register(RecallOrder.class);
 		kryo.register(ConnectMessage.class);
 		kryo.register(PlayerIDAssignMessage.class);
+		kryo.register(MiningShipData.class);
 	}
 
 }

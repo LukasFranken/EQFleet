@@ -30,10 +30,7 @@ public class MiningEngine extends Engine {
 	@Override
 	public void initialize(GameState state) {
 		MiningGameState miningState = (MiningGameState) state;
-		state.started = true;
-		
-		playerShipProcessor.createPlayerShip(miningState, 1);
-		playerShipProcessor.createPlayerShip(miningState, 2);
+		playerShipProcessor.createPlayerShips(miningState);
 		
 		asteroidProcessor.createAsteroid(miningState, new Vector2(500, 500), ResourceType.IRON, 2);
 		asteroidProcessor.createAsteroid(miningState, new Vector2(0, 500), ResourceType.CARBON, 5);
