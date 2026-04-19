@@ -3,7 +3,7 @@ package de.instinct.eqfleet.mining.frontend.hud;
 import com.badlogic.gdx.graphics.Color;
 
 import de.instinct.engine.mining.entity.ship.MiningPlayerShip;
-import de.instinct.engine.mining.net.message.RecallOrder;
+import de.instinct.engine.mining.order.RecallOrder;
 import de.instinct.eqfleet.mining.MiningEngineAPI;
 import de.instinct.eqfleet.mining.MiningModel;
 import de.instinct.eqfleet.mining.frontend.hud.element.CargoHudElement;

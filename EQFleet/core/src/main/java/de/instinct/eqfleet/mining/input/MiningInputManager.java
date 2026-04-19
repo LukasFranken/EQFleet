@@ -3,7 +3,7 @@ package de.instinct.eqfleet.mining.input;
 
 import com.badlogic.gdx.Input.Keys;
 
-import de.instinct.engine.mining.net.message.InputChangedOrder;
+import de.instinct.engine.mining.order.InputChangedOrder;
 import de.instinct.eqfleet.mining.MiningEngineAPI;
 import de.instinct.eqfleet.mining.MiningModel;
 import de.instinct.eqfleet.scene.SceneManager;

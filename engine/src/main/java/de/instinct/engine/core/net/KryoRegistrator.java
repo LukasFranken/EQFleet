@@ -41,6 +41,7 @@ public abstract class KryoRegistrator {
 		kryo.register(PauseData.class);
 		kryo.register(PlayerData.class);
 		kryo.register(OrderData.class);
+		kryo.register(GameOrderMessage.class);
 	}
 
 	protected abstract void registerEngineClasses(Kryo kryo);

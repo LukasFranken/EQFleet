@@ -22,11 +22,12 @@ import de.instinct.engine.fleet.entity.unit.ship.component.types.EngineType;
 import de.instinct.engine.fleet.entity.unit.ship.data.ShipData;
 import de.instinct.engine.fleet.net.messages.FleetMovementMessage;
 import de.instinct.engine.fleet.player.FleetPlayer;
-import de.instinct.engine_api.ai.service.AIPlayerLoader;
 import de.instinct.engine_api.core.model.GameMap;
-import de.instinct.engine_api.core.model.PlanetInitialization;
 import de.instinct.engine_api.core.service.EngineDataInterface;
+import de.instinct.engine_api.fleet.ai.service.AIPlayerLoader;
+import de.instinct.engine_api.fleet.model.FleetGameMap;
 import de.instinct.engine_api.fleet.model.FleetGameStateInitialization;
+import de.instinct.engine_api.fleet.model.PlanetInitialization;
 import de.instinct.eqfleet.audio.AudioManager;
 import de.instinct.eqfleet.game.Game;
 import de.instinct.eqfleet.game.GameModel;
@@ -134,7 +135,7 @@ public class TutorialLoader {
 	}
 
 	private GameMap generateMap() {
-		GameMap map = new GameMap();
+		FleetGameMap map = new FleetGameMap();
 		map.setZoomFactor(1f);
 		List<PlanetInitialization> planets = new ArrayList<>();
 		PlanetInitialization startPlanetPlayerOne = new PlanetInitialization();

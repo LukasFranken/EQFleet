@@ -15,8 +15,8 @@ import de.instinct.engine.mining.entity.ship.thruster.MiningThruster;
 import de.instinct.engine.mining.entity.ship.thruster.MiningThrusterProcessor;
 import de.instinct.engine.mining.entity.ship.weapon.MiningWeapon;
 import de.instinct.engine.mining.entity.ship.weapon.MiningWeaponProcessor;
-import de.instinct.engine.mining.net.message.InputChangedOrder;
-import de.instinct.engine.mining.net.message.RecallOrder;
+import de.instinct.engine.mining.order.InputChangedOrder;
+import de.instinct.engine.mining.order.RecallOrder;
 import de.instinct.engine.mining.player.MiningPlayer;
 import de.instinct.engine.mining.player.MiningPlayerProcessor;
 

@@ -1,4 +1,4 @@
-package de.instinct.engine.mining.net.message;
+package de.instinct.engine.mining.order;
 
 import de.instinct.engine.core.order.GameOrder;
 
