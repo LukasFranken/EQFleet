@@ -142,7 +142,7 @@ public class FleetProjectileProcessor extends ProjectileProcessor<FleetProjectil
 			target.currentHull = 0;
 		}
 		
-		PlayerStatistic originUnitOwnerStatistic = StatCollector.getPlayer(state.gameUUID, projectile.ownerId);
+		PlayerStatistic originUnitOwnerStatistic = StatCollector.getPlayer(state.metaData.gameUUID, projectile.ownerId);
 		UnitStatistic unitStat = originUnitOwnerStatistic.getUnit(projectile.originModel);
 		if (unitStat.getWeaponStatistics() != null) {
 			for (WeaponStatistic weaponStat : unitStat.getWeaponStatistics()) {
@@ -156,7 +156,7 @@ public class FleetProjectileProcessor extends ProjectileProcessor<FleetProjectil
 			}
 		}
 		
-		PlayerStatistic targetUnitOwnerStatistic = StatCollector.getPlayer(state.gameUUID, target.ownerId);
+		PlayerStatistic targetUnitOwnerStatistic = StatCollector.getPlayer(state.metaData.gameUUID, target.ownerId);
 		UnitStatistic targetUnitStat = targetUnitOwnerStatistic.getUnit(target.data.model);
 		if (targetUnitStat.getHullStatistic() != null) targetUnitStat.getHullStatistic().setDamageTaken(targetUnitStat.getHullStatistic().getDamageTaken() + finalHullDamage);
 		if (targetUnitStat.getShieldStatistics() != null) {
@@ -204,7 +204,7 @@ public class FleetProjectileProcessor extends ProjectileProcessor<FleetProjectil
         	projectile.direction = calculateInterceptionDirection(origin, projectile, target, state);
 		}
         
-        PlayerStatistic originUnitOwnerStatistic = StatCollector.getPlayer(state.gameUUID, origin.ownerId);
+        PlayerStatistic originUnitOwnerStatistic = StatCollector.getPlayer(state.metaData.gameUUID, origin.ownerId);
 		UnitStatistic unitStat = originUnitOwnerStatistic.getUnit(origin.data.model);
 		if (unitStat.getWeaponStatistics() != null) {
 			for (WeaponStatistic weaponStat : unitStat.getWeaponStatistics()) {

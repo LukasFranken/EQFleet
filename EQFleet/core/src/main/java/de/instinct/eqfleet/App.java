@@ -12,6 +12,7 @@ import de.instinct.eqfleet.language.LanguageManager;
 import de.instinct.eqfleet.net.WebManager;
 import de.instinct.eqfleet.scene.SceneManager;
 import de.instinct.eqfleet.scene.SceneType;
+import de.instinct.eqfleet.status.StatusRenderer;
 import de.instinct.eqlibgdxutils.debug.console.Console;
 import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
@@ -22,7 +23,7 @@ import de.instinct.eqlibgdxutils.rendering.ui.popup.PopupRenderer;
 
 public class App extends ApplicationAdapter {
 
-    public static final String VERSION = "0.2.18";
+    public static final String VERSION = "0.2.19";
     private final String LOGTAG = "APP";
 
     private boolean halted;
@@ -49,6 +50,7 @@ public class App extends ApplicationAdapter {
         SceneManager.changeTo(SceneType.INTRO);
         Logger.log(LOGTAG, "Initialization completed", ConsoleColor.YELLOW);
         HoloRenderer.init();
+        StatusRenderer.init();
     }
 	
 	@Override
@@ -82,6 +84,7 @@ public class App extends ApplicationAdapter {
         double deltaTime = (endNanoTime - startNanoTime) / 1_000_000.0;
         Console.updateMetric("this_frame_time_MS", deltaTime);
         Console.render();
+        StatusRenderer.render();
     }
 
 	@Override

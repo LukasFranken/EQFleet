@@ -1,7 +1,8 @@
 package de.instinct.eqfleet.mining;
 
-import com.badlogic.gdx.Gdx;
-
+import de.instinct.eqfleet.mining.driver.MiningDriver;
+import de.instinct.eqfleet.mining.driver.offline.MiningOfflineDriver;
+import de.instinct.eqfleet.mining.driver.online.MiningOnlineDriver;
 import de.instinct.eqfleet.mining.frontend.MiningRenderer;
 import de.instinct.eqfleet.mining.input.MiningInputManager;
 import de.instinct.eqfleet.scene.Scene;
@@ -10,6 +11,7 @@ public class Mining extends Scene {
 	
 	private MiningRenderer renderer;
 	private MiningInputManager inputManager;
+	private MiningDriver driver;
 
 	@Override
 	public void init() {
@@ -20,19 +22,26 @@ public class Mining extends Scene {
 
 	@Override
 	public void open() {
-		MiningEngineAPI.initialize();
+		switch (MiningModel.mode) {
+		case ONLINE:
+			driver = new MiningOnlineDriver();
+			break;
+		case OFFLINE:
+			driver = new MiningOfflineDriver();
+			break;
+		}
 	}
 
 	@Override
 	public void close() {
-		
+		driver.dispose();
 	}
 
 	@Override
 	public void update() {
-		inputManager.update();
-		MiningEngineAPI.update(MiningModel.state, (long)(Gdx.graphics.getDeltaTime() * 1000L));
 		renderer.update();
+		inputManager.update();
+		driver.update();
 	}
 
 	@Override
@@ -43,6 +52,7 @@ public class Mining extends Scene {
 	@Override
 	public void dispose() {
 		renderer.dispose();
+		driver.dispose();
 	}
 
 }

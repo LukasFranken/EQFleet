@@ -32,7 +32,7 @@ public abstract class Driver {
 	protected abstract void preEngineUpdate();
 	
 	protected void updateEngine() {
-		if (GameModel.activeGameState != null && GameModel.activeGameState.started && !GameModel.paused) {
+		if (GameModel.activeGameState != null && GameModel.activeGameState.metaData.started && !GameModel.paused) {
     		long currentTime = System.currentTimeMillis();
     		EngineDataInterface.update(GameModel.activeGameState, currentTime - GameModel.lastUpdateTimestampMS);
         	GameModel.lastUpdateTimestampMS = currentTime;
@@ -44,7 +44,7 @@ public abstract class Driver {
 	public void stop() {
 		AudioManager.stopAllSfx();
 		AudioManager.stopAllVoices();
-		if (!GameModel.activeGameState.gameUUID.equals("tutorial")) {
+		if (!GameModel.activeGameState.metaData.gameUUID.equals("tutorial")) {
 			if (GameModel.activeGameState.resultData.winner == EngineDataInterface.getPlayer(GameModel.activeGameState.playerData.players, GameModel.playerId).teamId) {
 				if (GameModel.activeGameState.resultData.wiped) {
 					AudioManager.playVoice("game", "domination");
@@ -80,7 +80,7 @@ public abstract class Driver {
 	public abstract long finish();
 	
 	public void dispose() {
-		GameModel.lastGameUUID = GameModel.activeGameState != null ? GameModel.activeGameState.gameUUID : null;
+		GameModel.lastGameUUID = GameModel.activeGameState != null ? GameModel.activeGameState.metaData.gameUUID : null;
 		GameModel.activeGameState = null;
 		if (scheduler != null) {
 			scheduler.shutdownNow();

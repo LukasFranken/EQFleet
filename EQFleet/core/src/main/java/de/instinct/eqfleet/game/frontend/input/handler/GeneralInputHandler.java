@@ -28,7 +28,7 @@ public class GeneralInputHandler extends InputHandler {
 	public void handleInput(PerspectiveCamera camera, FleetGameState state) {
         if (timerBounds.contains(InputUtil.getVirtualMousePosition()) && InputUtil.isClicked()) {
         	GamePauseMessage order = new GamePauseMessage();
-        	order.gameUUID = state.gameUUID;
+        	order.gameUUID = state.metaData.gameUUID;
         	order.userUUID = API.authKey;
         	order.reason = "Manual Pause";
         	order.pause = true;

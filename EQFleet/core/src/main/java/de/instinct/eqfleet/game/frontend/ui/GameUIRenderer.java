@@ -78,7 +78,7 @@ public class GameUIRenderer {
 		String message = "Connecting...";
 		if (GameModel.activeGameState != null) {
 			int winner = GameModel.activeGameState.resultData.winner;
-			if (winner != 0 && !GameModel.activeGameState.gameUUID.equals("tutorial")) {
+			if (winner != 0 && !GameModel.activeGameState.metaData.gameUUID.equals("tutorial")) {
 				if (winner == EngineDataInterface.getPlayer(GameModel.activeGameState.playerData.players, GameModel.playerId).teamId) {
 					if (GameModel.activeGameState.resultData.wiped) {
 						message = "DOMINATION";

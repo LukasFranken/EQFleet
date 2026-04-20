@@ -59,7 +59,7 @@ public class PlanetProcessor {
 	            	    }
 	            	}
 	            	
-	            	PlayerStatistic playerStat = StatCollector.getPlayer(state.gameUUID, owner.id);
+	            	PlayerStatistic playerStat = StatCollector.getPlayer(state.metaData.gameUUID, owner.id);
 	            	playerStat.setAtpGained(playerStat.getAtpGained() + atpGain);
 	            } else {
 	            	playerProcessor.addResources(owner, calculateResourceGeneration(planet, deltaMS));

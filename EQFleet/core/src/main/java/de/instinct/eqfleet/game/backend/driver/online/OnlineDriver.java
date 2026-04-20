@@ -47,7 +47,7 @@ public class OnlineDriver extends Driver {
 				GameModel.receivedOrders.add((GameOrderUpdate) object);
 			}
 			if (object instanceof GameStartUpdate) {
-				GameModel.activeGameState.started = true;
+				GameModel.activeGameState.metaData.started = true;
 			}
 			if (object instanceof GameFinishUpdate) {
 				GameModel.receivedResults = ((GameFinishUpdate) object);
@@ -64,8 +64,8 @@ public class OnlineDriver extends Driver {
 		if (!GameModel.receivedGameState.isEmpty()) {
         	GameModel.activeGameState = GameModel.receivedGameState.poll();
         	GameModel.activeGameState.metaData.pauseData.resumeCountdownMS += SMOOTHNESS_DELAY_MS;
-        	if (!StatCollector.isInitialized(GameModel.activeGameState.gameUUID)) {
-        		StatCollector.initialize(GameModel.activeGameState.gameUUID, GameModel.activeGameState.playerData.players);
+        	if (!StatCollector.isInitialized(GameModel.activeGameState.metaData.gameUUID)) {
+        		StatCollector.initialize(GameModel.activeGameState.metaData.gameUUID, GameModel.activeGameState.playerData.players);
         	}
             GameModel.lastUpdateTimestampMS = System.currentTimeMillis();
         }

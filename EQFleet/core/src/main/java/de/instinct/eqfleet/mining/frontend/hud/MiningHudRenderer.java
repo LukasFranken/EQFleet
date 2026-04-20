@@ -40,7 +40,7 @@ public class MiningHudRenderer {
 			public void execute() {
 				RecallOrder recallOrder = new RecallOrder();
 				recallOrder.playerId = MiningModel.playerId;
-				MiningEngineAPI.addOrder(MiningModel.state, recallOrder);
+				MiningModel.inputOrders.add(recallOrder);
 			}
 			
 		});

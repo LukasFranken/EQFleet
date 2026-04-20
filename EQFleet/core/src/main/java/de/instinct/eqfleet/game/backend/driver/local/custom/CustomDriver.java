@@ -69,7 +69,7 @@ public class CustomDriver extends LocalDriver {
 					EngineDataInterface.queue(GameModel.activeGameState, getOrder((SurrenderMessage)newMessage));
 				}
 				if (newMessage instanceof LoadedMessage) {
-					GameModel.activeGameState.started = true;
+					GameModel.activeGameState.metaData.started = true;
 				}
 			}
 		}
@@ -107,7 +107,7 @@ public class CustomDriver extends LocalDriver {
 
 	@Override
 	protected void postEngineUpdate() {
-		if (GameModel.activeGameState != null && GameModel.activeGameState.started && !finished) {
+		if (GameModel.activeGameState != null && GameModel.activeGameState.metaData.started && !finished) {
 			try {
 				for (Player player : GameModel.activeGameState.playerData.players) {
 					if (player instanceof AiPlayer) {
@@ -129,7 +129,7 @@ public class CustomDriver extends LocalDriver {
 
 	@Override
 	public long finish() {
-		System.out.println(StatCollector.grab(GameModel.activeGameState.gameUUID));
+		System.out.println(StatCollector.grab(GameModel.activeGameState.metaData.gameUUID));
 		finished = true;
 		return 2000;
 	}

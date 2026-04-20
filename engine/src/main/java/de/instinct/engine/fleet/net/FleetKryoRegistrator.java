@@ -29,7 +29,6 @@ import de.instinct.engine.fleet.entity.unit.ship.component.types.EngineType;
 import de.instinct.engine.fleet.entity.unit.ship.data.ShipData;
 import de.instinct.engine.fleet.entity.unit.turret.Turret;
 import de.instinct.engine.fleet.entity.unit.turret.data.TurretData;
-import de.instinct.engine.fleet.net.data.PlayerConnectionStatus;
 import de.instinct.engine.fleet.net.messages.BuildTurretMessage;
 import de.instinct.engine.fleet.net.messages.FleetMovementMessage;
 import de.instinct.engine.fleet.net.messages.GameFinishUpdate;
@@ -67,7 +66,6 @@ public class FleetKryoRegistrator extends KryoRegistrator {
 		kryo.register(ShieldData.class);
 		kryo.register(Ship.class);
 		kryo.register(FleetProjectile.class);
-		kryo.register(PlayerConnectionStatus.class);
 		kryo.register(PlanetData.class);
 		kryo.register(ShipMovementOrder.class);
 		kryo.register(AiBehaviorParameters.class);

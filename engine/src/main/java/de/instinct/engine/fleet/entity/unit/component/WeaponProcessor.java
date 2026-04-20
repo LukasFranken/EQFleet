@@ -26,7 +26,7 @@ public class WeaponProcessor extends EntityProcessor {
     		} else {
     			weapon.currentCooldown -= deltaTime;
     		}
-    		PlayerStatistic originUnitOwnerStatistic = StatCollector.getPlayer(state.gameUUID, unit.ownerId);
+    		PlayerStatistic originUnitOwnerStatistic = StatCollector.getPlayer(state.metaData.gameUUID, unit.ownerId);
 			UnitStatistic unitStat = originUnitOwnerStatistic.getUnit(unit.data.model);
 			if (unitStat.getWeaponStatistics() != null) {
 				for (WeaponStatistic weaponStat : unitStat.getWeaponStatistics()) {

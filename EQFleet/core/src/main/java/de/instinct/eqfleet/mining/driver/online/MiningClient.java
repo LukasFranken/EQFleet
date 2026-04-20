@@ -1,4 +1,4 @@
-package de.instinct.eqfleet.game.backend.driver.online;
+package de.instinct.eqfleet.mining.driver.online;
 
 import java.io.IOException;
 import java.util.concurrent.Executors;
@@ -9,35 +9,32 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
 
 import de.instinct.engine.core.net.NetworkMessage;
-import de.instinct.engine.fleet.net.FleetKryoRegistrator;
+import de.instinct.engine.mining.net.MiningKryoRegistrator;
 import de.instinct.eqlibgdxutils.debug.console.Console;
 import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
 
-public class GameClient {
+public class MiningClient {
 	
-	private final int PORT_TCP = 9006;
-    private final int PORT_UDP = 9011;
+	private final int PORT_TCP = 8998;
+    private final int PORT_UDP = 9012;
     private final String ADDRESS = "eqgame.dev";
-    //private final String ADDRESS = "localhost";
     
     private final int PING_UPDATE_CLOCK_MS = 1000;
     private ScheduledExecutorService scheduler;
 	public Client client;
 	public boolean active;
 	
-	public GameClient() {
-		//final LoggingKryoSerialization loggingSerialization = new LoggingKryoSerialization();
-		//client = new Client(65536, 65536, loggingSerialization);
-		client = new Client(65536, 65536);
+	public MiningClient() {
+		client = new Client(8096, 8096);
         Kryo kryo = client.getKryo();
-        new FleetKryoRegistrator().registerClasses(kryo);
+        new MiningKryoRegistrator().registerClasses(kryo);
 	}
 	
 	public void start() {
 		try {
     		client.start();
-    		client.addListener(new GameConnectionListener());
+    		client.addListener(new MiningConnectionListener());
             client.connect(5000, ADDRESS, PORT_TCP, PORT_UDP);
             
             scheduler = Executors.newSingleThreadScheduledExecutor();
@@ -45,29 +42,29 @@ public class GameClient {
     			try {
     				if (client.isConnected()) {
         				client.updateReturnTripTime();
-        				Console.updateMetric("gameserver_ping_MS", client.getReturnTripTime());
+        				Console.updateMetric("miningserver_ping_MS", client.getReturnTripTime());
         			}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
     		}, 0, PING_UPDATE_CLOCK_MS, TimeUnit.MILLISECONDS);
         } catch (IOException e) {
-            Logger.log("GameClient", "Failed to connect to server + " + e.getMessage(), ConsoleColor.RED);
+            Logger.log("MiningClient", "Failed to connect to server + " + e.getMessage(), ConsoleColor.RED);
             e.printStackTrace();
         }
 		active = true;
 	}
 	
-	public void send(NetworkMessage message) {
+	public void stop() {
+    	client.stop();
+    	active = false;
+	}
+	
+	public void sendMessage(NetworkMessage message) {
 		if (client.isConnected()) {
 			client.sendTCP(message);
 			Logger.log("GameClient", "Message sent: " + message, ConsoleColor.PINK);
 		}
-	}
-	
-	public void stop() {
-    	client.stop();
-    	active = false;
 	}
 
 	public void dispose() {

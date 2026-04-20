@@ -19,7 +19,7 @@ public class VictoryCalculator {
 	    checkSurrenderVictory(state);
 	    if (state.resultData.winner == 0) checkMapATPVictory(state);
 	    if (state.resultData.winner == 0) checkEliminationVictory(state);
-	    if (state.gameTimeMS >= state.staticData.maxGameTimeMS) {
+	    if (state.metaData.gameTimeMS >= state.staticData.maxGameTimeMS) {
 	    	calculatePlanetCountVictory(state);
 	    	if (state.resultData.winner == 0) calculateATPVictory(state);
 	    }

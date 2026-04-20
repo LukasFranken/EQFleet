@@ -1,13 +1,16 @@
 package de.instinct.eqfleet.mining;
 
+import java.util.Queue;
+
+import de.instinct.engine.core.order.GameOrder;
 import de.instinct.engine.mining.data.MiningGameState;
-import de.instinct.eqfleet.mining.input.MiningInput;
 
 public class MiningModel {
 	
+	public static volatile MiningMode mode;
+	
 	public static volatile int playerId;
 	public static volatile MiningGameState state;
-	public static volatile MiningInput input;
-	public static volatile MiningInput mobileInput;
+	public static volatile Queue<GameOrder> inputOrders;
 
 }

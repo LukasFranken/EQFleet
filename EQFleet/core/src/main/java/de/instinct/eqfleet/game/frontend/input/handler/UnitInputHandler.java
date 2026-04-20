@@ -58,7 +58,7 @@ public class UnitInputHandler extends InputHandler {
         	if (GameInputModel.targetedPlanet != null) {
         		if (GameInputModel.targetedPlanet.id != model.selectedOriginPlanetId) {
             		FleetMovementMessage order = new FleetMovementMessage();
-                    order.gameUUID = state.gameUUID;
+                    order.gameUUID = state.metaData.gameUUID;
                     order.userUUID = API.authKey;
                     order.fromPlanetId = model.selectedOriginPlanetId;
                     order.toPlanetId = GameInputModel.targetedPlanet.id;

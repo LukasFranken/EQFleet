@@ -455,7 +455,7 @@ public class TutorialLoader {
 			@Override
 			public void execute() {
 				GameModel.inputEnabled = true;
-				GameModel.activeGameState.staticData.maxGameTimeMS = GameModel.activeGameState.gameTimeMS + 30_000;
+				GameModel.activeGameState.staticData.maxGameTimeMS = GameModel.activeGameState.metaData.gameTimeMS + 30_000;
 			}
 			
 		}));

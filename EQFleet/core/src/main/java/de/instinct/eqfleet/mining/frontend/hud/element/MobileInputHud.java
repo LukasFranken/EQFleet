@@ -3,8 +3,8 @@ package de.instinct.eqfleet.mining.frontend.hud.element;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 
-import de.instinct.eqfleet.mining.MiningModel;
 import de.instinct.eqfleet.mining.frontend.hud.element.model.CustomJoystick;
+import de.instinct.eqfleet.mining.input.MiningInputModel;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
@@ -26,7 +26,7 @@ public class MobileInputHud extends Component {
 			
 			@Override
 			public void execute() {
-				MiningModel.mobileInput.shoot = true;
+				MiningInputModel.mobileInput.shoot = true;
 			}
 			
 		});
@@ -34,7 +34,7 @@ public class MobileInputHud extends Component {
 			
 			@Override
 			public void execute() {
-				MiningModel.mobileInput.shoot = false;
+				MiningInputModel.mobileInput.shoot = false;
 			}
 			
 		});
@@ -44,10 +44,10 @@ public class MobileInputHud extends Component {
 	protected void updateComponent() {
 		joystick.update();
     	Vector2 direction = joystick.getDirection();
-    	MiningModel.mobileInput.up = direction.y > 0.3f;
-        MiningModel.mobileInput.down = direction.y < -0.3f;
-        MiningModel.mobileInput.left = direction.x < -0.3f;
-        MiningModel.mobileInput.right = direction.x > 0.3f;
+    	MiningInputModel.mobileInput.up = direction.y > 0.3f;
+    	MiningInputModel.mobileInput.down = direction.y < -0.3f;
+    	MiningInputModel.mobileInput.left = direction.x < -0.3f;
+    	MiningInputModel.mobileInput.right = direction.x > 0.3f;
 	}
 
 	@Override

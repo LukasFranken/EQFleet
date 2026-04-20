@@ -61,7 +61,7 @@ public class TutorialDriver extends LocalDriver {
 				EngineDataInterface.queue(GameModel.activeGameState, getOrder((FleetMovementMessage)newMessage));
 			}
 			if (newMessage instanceof LoadedMessage) {
-				GameModel.activeGameState.started = true;
+				GameModel.activeGameState.metaData.started = true;
 			}
 		}
 	}
@@ -77,7 +77,7 @@ public class TutorialDriver extends LocalDriver {
 			GameModel.guidedEvents.add(lastElement);
 			TutorialModel.skipped = false;
 		}
-		if (GameModel.activeGameState != null && GameModel.activeGameState.started && !finished) {
+		if (GameModel.activeGameState != null && GameModel.activeGameState.metaData.started && !finished) {
         	if (GameModel.activeGameState.resultData.winner != 0) {
     			Game.stop();
     		}

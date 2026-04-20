@@ -15,6 +15,7 @@ import de.instinct.engine.core.meta.data.PauseData;
 import de.instinct.engine.core.order.GameOrder;
 import de.instinct.engine.core.order.types.GamePauseOrder;
 import de.instinct.engine.core.player.data.PlayerData;
+import de.instinct.engine.fleet.net.data.PlayerConnectionStatus;
 import de.instinct.engine.fleet.net.messages.GamePauseMessage;
 import de.instinct.engine.fleet.order.data.OrderData;
 
@@ -42,6 +43,7 @@ public abstract class KryoRegistrator {
 		kryo.register(PlayerData.class);
 		kryo.register(OrderData.class);
 		kryo.register(GameOrderMessage.class);
+		kryo.register(PlayerConnectionStatus.class);
 	}
 
 	protected abstract void registerEngineClasses(Kryo kryo);

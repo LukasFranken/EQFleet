@@ -36,13 +36,13 @@ public class PauseUIRenderer {
 				.build();
 		surrenderButton = DefaultButtonFactory.colorButton("Surrender", () -> {
     		SurrenderMessage order = new SurrenderMessage();
-    		order.gameUUID = GameModel.activeGameState.gameUUID;
+    		order.gameUUID = GameModel.activeGameState.metaData.gameUUID;
     		order.userUUID = API.authKey;
     		GameModel.outputMessageQueue.add(order);
 		});
     	resumeButton = DefaultButtonFactory.colorButton("Resume", () -> {
     		GamePauseMessage order = new GamePauseMessage();
-        	order.gameUUID = GameModel.activeGameState.gameUUID;
+        	order.gameUUID = GameModel.activeGameState.metaData.gameUUID;
         	order.userUUID = API.authKey;
         	order.pause = false;
         	GameModel.outputMessageQueue.add(order);
@@ -53,7 +53,7 @@ public class PauseUIRenderer {
 		FleetGameState state = GameModel.activeGameState;
 		renderCountdownScreen(state);
 		renderPauseScreen(state);
-		if (!state.started) {
+		if (!state.metaData.started) {
 			renderLoadingScreen(state);
 		}
 	}

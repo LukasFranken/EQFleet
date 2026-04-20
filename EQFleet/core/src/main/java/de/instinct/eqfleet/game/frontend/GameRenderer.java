@@ -80,7 +80,7 @@ public class GameRenderer {
 				uiRenderer.setCamera(camera);
 				uiRenderer.setState(state);
 				if (state != null && state.resultData.winner == 0) {
-					if (state.started) {
+					if (state.metaData.started) {
 						Profiler.checkpoint("GAME_RNDR", "pre-render");
 						checkFlip();
 						gridRenderer.drawGrid(camera);

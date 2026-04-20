@@ -52,7 +52,7 @@ public class ShipProcessor {
 		newShip.radius = 3;
 		state.entityData.ships.add(newShip);
 		
-		ShipStatistic shipStatistic = StatCollector.getPlayer(state.gameUUID, newShip.ownerId).getShip(newShip.data.model);
+		ShipStatistic shipStatistic = StatCollector.getPlayer(state.metaData.gameUUID, newShip.ownerId).getShip(newShip.data.model);
 		shipStatistic.getCoreStatistic().setTimesBuilt(shipStatistic.getCoreStatistic().getTimesBuilt() + 1);
 		shipStatistic.getCoreStatistic().setResourcesUsed(shipStatistic.getCoreStatistic().getResourcesUsed() + shipData.resourceCost);
 	}
@@ -65,7 +65,7 @@ public class ShipProcessor {
 		float distance = Math.min(((float)deltaTime / 1000f) * shipData.speed, VectorUtil.dst(ship.position, targetPlanet.position));
 		Vector2 targetPosition = VectorUtil.getTargetPosition(ship.position, targetPlanet.position, distance);
 		ship.position = targetPosition;
-		ShipStatistic shipStatistic = StatCollector.getPlayer(state.gameUUID, shipOwner.id).getShip(ship.data.model);
+		ShipStatistic shipStatistic = StatCollector.getPlayer(state.metaData.gameUUID, shipOwner.id).getShip(ship.data.model);
 		shipStatistic.getEngineStatistic().setDistanceTraveled(shipStatistic.getEngineStatistic().getDistanceTraveled() + distance);
 		if (unitProcessor.entityDistance(ship, targetPlanet) <= 0.01) {
 			if (targetPlanetOwner.teamId != shipOwner.teamId) {

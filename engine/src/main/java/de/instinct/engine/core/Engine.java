@@ -18,7 +18,7 @@ public abstract class Engine {
 	
 	public void update(GameState state, long progressionMS) {
 		try {
-			if (state.started) {
+			if (state.metaData.started) {
 				advanceTime(state, progressionMS);
 			    integrateNewOrders(state);
 			}
@@ -35,7 +35,7 @@ public abstract class Engine {
 			metaProcessor.update(state, deltaTime);
 			if (state.metaData.pauseData.teamPause == 0 && state.metaData.pauseData.resumeCountdownMS <= 0) {
 				advanceStateTime(state, deltaTime);
-				state.gameTimeMS += deltaTime;
+				state.metaData.gameTimeMS += deltaTime;
 			}
 		}
 	}
@@ -43,10 +43,10 @@ public abstract class Engine {
 	protected abstract void advanceStateTime(GameState state, long deltaTime);
 
 	private void integrateNewOrders(GameState state) {
-		while (!state.orderData.unprocessedOrders.isEmpty() && state.orderData.unprocessedOrders.peek().processGameTimeStamp <= state.gameTimeMS) {
+		while (!state.orderData.unprocessedOrders.isEmpty() && state.orderData.unprocessedOrders.peek().processGameTimeStamp <= state.metaData.gameTimeMS) {
 			GameOrder order = state.orderData.unprocessedOrders.poll();
 			if (integrateOrder(state, order)) {
-				order.processGameTimeStamp = state.gameTimeMS;
+				order.processGameTimeStamp = state.metaData.gameTimeMS;
 				state.orderData.processedOrders.add(order);
 			}
 		}

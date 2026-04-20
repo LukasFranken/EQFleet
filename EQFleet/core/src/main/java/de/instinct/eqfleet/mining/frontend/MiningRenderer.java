@@ -1,5 +1,6 @@
 package de.instinct.eqfleet.mining.frontend;
 
+import de.instinct.eqfleet.mining.MiningModel;
 import de.instinct.eqfleet.mining.frontend.hud.MiningHudRenderer;
 import de.instinct.eqfleet.mining.frontend.hud.MiningWorldHudRenderer;
 import de.instinct.eqlibgdxutils.rendering.grid.GridConfiguration;
@@ -34,21 +35,25 @@ public class MiningRenderer {
 	}
 	
 	public void update() {
-	    cameraManager.update();
-	    worldHudRenderer.update();
-	    shipRenderer.update();
-	    asteroidRenderer.update();
-	    projectileRenderer.update();
-	    hudRenderer.update();
+	    if (MiningModel.state != null) {
+	    	cameraManager.update();
+		    worldHudRenderer.update();
+		    shipRenderer.update();
+		    asteroidRenderer.update();
+		    projectileRenderer.update();
+		    hudRenderer.update();
+	    }
 	}
 	
 	public void render() {
-		gridRenderer.drawGrid(cameraManager.getCamera());
-		worldHudRenderer.render(cameraManager.getCamera());
-		asteroidRenderer.render(cameraManager.getCamera());
-		projectileRenderer.render(cameraManager.getCamera());
-		shipRenderer.render(cameraManager.getCamera());
-		hudRenderer.render();
+		if (MiningModel.state != null) {
+			gridRenderer.drawGrid(cameraManager.getCamera());
+			worldHudRenderer.render(cameraManager.getCamera());
+			asteroidRenderer.render(cameraManager.getCamera());
+			projectileRenderer.render(cameraManager.getCamera());
+			shipRenderer.render(cameraManager.getCamera());
+			hudRenderer.render();
+		}
 	}
 	
 	public void dispose() {

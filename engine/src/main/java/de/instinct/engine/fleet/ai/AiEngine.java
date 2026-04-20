@@ -80,7 +80,7 @@ public class AiEngine {
 			}
 		}
 		if (closestNeutralPlanet != null && closestOwnPlanet != null) {
-			if (aiPlayer.currentResources >= aiPlayer.ships.get(0).resourceCost * 3 || state.staticData.maxGameTimeMS - state.gameTimeMS < 15000 && aiPlayer.currentResources >= aiPlayer.ships.get(0).resourceCost * 2) {
+			if (aiPlayer.currentResources >= aiPlayer.ships.get(0).resourceCost * 3 || state.staticData.maxGameTimeMS - state.metaData.gameTimeMS < 15000 && aiPlayer.currentResources >= aiPlayer.ships.get(0).resourceCost * 2) {
 				ShipMovementOrder newShipMovementOrder = new ShipMovementOrder();
 				newShipMovementOrder.fromPlanetId = closestOwnPlanet.id;
 				newShipMovementOrder.toPlanetId = closestNeutralPlanet.id;
@@ -89,7 +89,7 @@ public class AiEngine {
 				return newShipMovementOrder;
 			}
 		}
-		if (state.staticData.maxGameTimeMS - state.gameTimeMS < 10000 && state.teamATPs.get(aiPlayer.teamId == 2 ? 1 : 2) == 0) {
+		if (state.staticData.maxGameTimeMS - state.metaData.gameTimeMS < 10000 && state.teamATPs.get(aiPlayer.teamId == 2 ? 1 : 2) == 0) {
 			for (Planet planet : state.entityData.planets) {
 				if (planet.ancient && closestOwnPlanet != null && aiPlayer.currentResources >= aiPlayer.ships.get(0).resourceCost) {
 					ShipMovementOrder newShipMovementOrder = new ShipMovementOrder();

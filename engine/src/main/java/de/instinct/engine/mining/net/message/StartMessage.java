@@ -4,6 +4,6 @@ import de.instinct.engine.core.net.NetworkMessage;
 import lombok.ToString;
 
 @ToString
-public class PlayerIDAssignMessage extends NetworkMessage {
+public class StartMessage extends NetworkMessage {
 
 }

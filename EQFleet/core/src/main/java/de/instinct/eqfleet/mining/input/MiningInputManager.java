@@ -4,7 +4,6 @@ package de.instinct.eqfleet.mining.input;
 import com.badlogic.gdx.Input.Keys;
 
 import de.instinct.engine.mining.order.InputChangedOrder;
-import de.instinct.eqfleet.mining.MiningEngineAPI;
 import de.instinct.eqfleet.mining.MiningModel;
 import de.instinct.eqfleet.scene.SceneManager;
 import de.instinct.eqfleet.scene.SceneType;
@@ -17,40 +16,40 @@ public class MiningInputManager {
 
     public MiningInputManager() {
         lastFrameInput = new MiningInput();
-        MiningModel.input = new MiningInput();
-        MiningModel.mobileInput = new MiningInput();
+        MiningInputModel.input = new MiningInput();
+        MiningInputModel.mobileInput = new MiningInput();
     }
 
     public void update() {
-        lastFrameInput.up = MiningModel.input.up;
-        lastFrameInput.down = MiningModel.input.down;
-        lastFrameInput.left = MiningModel.input.left;
-        lastFrameInput.right = MiningModel.input.right;
-        lastFrameInput.shoot = MiningModel.input.shoot;
+        lastFrameInput.up = MiningInputModel.input.up;
+        lastFrameInput.down = MiningInputModel.input.down;
+        lastFrameInput.left = MiningInputModel.input.left;
+        lastFrameInput.right = MiningInputModel.input.right;
+        lastFrameInput.shoot = MiningInputModel.input.shoot;
 
         if (PlatformUtil.isMobile()) {
-        	MiningModel.input.up = MiningModel.mobileInput.up;
-			MiningModel.input.down = MiningModel.mobileInput.down;
-			MiningModel.input.left = MiningModel.mobileInput.left;
-			MiningModel.input.right = MiningModel.mobileInput.right;
-			MiningModel.input.shoot = MiningModel.mobileInput.shoot;
+        	MiningInputModel.input.up = MiningInputModel.mobileInput.up;
+        	MiningInputModel.input.down = MiningInputModel.mobileInput.down;
+        	MiningInputModel.input.left = MiningInputModel.mobileInput.left;
+        	MiningInputModel.input.right = MiningInputModel.mobileInput.right;
+        	MiningInputModel.input.shoot = MiningInputModel.mobileInput.shoot;
         } else {
-        	MiningModel.input.up = InputUtil.isDown(Keys.W);
-            MiningModel.input.down = InputUtil.isDown(Keys.S);
-            MiningModel.input.left = InputUtil.isDown(Keys.A);
-            MiningModel.input.right = InputUtil.isDown(Keys.D);
-            MiningModel.input.shoot = InputUtil.isDown(Keys.SPACE);
+        	MiningInputModel.input.up = InputUtil.isDown(Keys.W);
+        	MiningInputModel.input.down = InputUtil.isDown(Keys.S);
+        	MiningInputModel.input.left = InputUtil.isDown(Keys.A);
+            MiningInputModel.input.right = InputUtil.isDown(Keys.D);
+            MiningInputModel.input.shoot = InputUtil.isDown(Keys.SPACE);
         }
         
-        if (!MiningModel.input.isIdenticalTo(lastFrameInput)) {
+        if (!MiningInputModel.input.isIdenticalTo(lastFrameInput)) {
             InputChangedOrder inputChangedOrder = new InputChangedOrder();
             inputChangedOrder.playerId = MiningModel.playerId;
-            inputChangedOrder.forward = MiningModel.input.up;
-            inputChangedOrder.backward = MiningModel.input.down;
-            inputChangedOrder.left = MiningModel.input.left;
-            inputChangedOrder.right = MiningModel.input.right;
-            inputChangedOrder.shoot = MiningModel.input.shoot;
-            MiningEngineAPI.addOrder(MiningModel.state, inputChangedOrder);
+            inputChangedOrder.forward = MiningInputModel.input.up;
+            inputChangedOrder.backward = MiningInputModel.input.down;
+            inputChangedOrder.left = MiningInputModel.input.left;
+            inputChangedOrder.right = MiningInputModel.input.right;
+            inputChangedOrder.shoot = MiningInputModel.input.shoot;
+            MiningModel.inputOrders.add(inputChangedOrder);
         }
 
         if (InputUtil.isDown(Keys.ESCAPE)) {

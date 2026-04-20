@@ -44,7 +44,7 @@ public class UnitProcessor extends EntityProcessor {
 		super.updateEntity(unit, state, deltaTime);
 		if (unit.currentHull <= 0) {
 			unit.flaggedForDestroy = true;
-			PlayerStatistic originUnitOwnerStatistic = StatCollector.getPlayer(state.gameUUID, unit.ownerId);
+			PlayerStatistic originUnitOwnerStatistic = StatCollector.getPlayer(state.metaData.gameUUID, unit.ownerId);
 			UnitStatistic unitStat = originUnitOwnerStatistic.getUnit(unit.data.model);
 			if (unitStat instanceof ShipStatistic) ((ShipStatistic)unitStat).getCoreStatistic().setTimesDestroyed(((ShipStatistic)unitStat).getCoreStatistic().getTimesDestroyed() + 1);
 			return;
@@ -105,7 +105,7 @@ public class UnitProcessor extends EntityProcessor {
 		unit.ownerId = planet.ownerId;
 		
 		FleetPlayer player = playerProcessor.getFleetPlayer(state.playerData.players, unit.ownerId);
-        PlayerStatistic playerStat = StatCollector.getPlayer(state.gameUUID, player.id);
+        PlayerStatistic playerStat = StatCollector.getPlayer(state.metaData.gameUUID, player.id);
 		
 		if (payCost) { 
 			player.currentResources -= unit.data.resourceCost;

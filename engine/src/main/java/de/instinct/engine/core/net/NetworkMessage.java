@@ -6,6 +6,6 @@ import lombok.ToString;
 public abstract class NetworkMessage {
 	
 	public String gameUUID;
-	public String playerUUID;
+	public String senderUUID;
 
 }

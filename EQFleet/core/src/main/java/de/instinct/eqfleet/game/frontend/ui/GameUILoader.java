@@ -83,7 +83,7 @@ public class GameUILoader {
 			
 			@Override
 			public void execute() {
-				long remainingMS = timeElement.getCurrentGameState().staticData.maxGameTimeMS - timeElement.getCurrentGameState().gameTimeMS;
+				long remainingMS = timeElement.getCurrentGameState().staticData.maxGameTimeMS - timeElement.getCurrentGameState().metaData.gameTimeMS;
 				String remainingTimeLabel = StringUtils.generateCountdownLabel(remainingMS, false);
 				Label timeLabel = new Label(remainingTimeLabel);
 				timeLabel.setColor(remainingMS < 60_000 ? Color.RED : Color.WHITE);
