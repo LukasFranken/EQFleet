@@ -12,6 +12,7 @@ import de.instinct.engine.fleet.ai.data.AiPlayer;
 import de.instinct.engine.fleet.data.FleetGameState;
 import de.instinct.engine.fleet.data.ResultData;
 import de.instinct.engine.fleet.data.StaticData;
+import de.instinct.engine.fleet.entity.data.FleetEntityData;
 import de.instinct.engine.fleet.entity.planet.Planet;
 import de.instinct.engine.fleet.entity.planet.data.PlanetData;
 import de.instinct.engine.fleet.entity.projectile.FleetProjectile;
@@ -86,6 +87,7 @@ public class FleetKryoRegistrator extends KryoRegistrator {
 		kryo.register(ResultData.class);
 		kryo.register(FleetGameState.class);
 		kryo.register(FleetPlayer.class);
+		kryo.register(FleetEntityData.class);
 	}
 
 }

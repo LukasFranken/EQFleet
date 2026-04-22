@@ -52,7 +52,7 @@ public class Mining extends Scene {
 	@Override
 	public void dispose() {
 		renderer.dispose();
-		driver.dispose();
+		if (driver != null) driver.dispose();
 	}
 
 }
