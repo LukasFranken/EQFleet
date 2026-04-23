@@ -12,6 +12,8 @@ import de.instinct.eqfleet.language.LanguageManager;
 import de.instinct.eqfleet.net.WebManager;
 import de.instinct.eqfleet.scene.SceneManager;
 import de.instinct.eqfleet.scene.SceneType;
+import de.instinct.eqfleet.status.BatteryStatus;
+import de.instinct.eqfleet.status.StatusModel;
 import de.instinct.eqfleet.status.StatusRenderer;
 import de.instinct.eqlibgdxutils.debug.console.Console;
 import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
@@ -27,6 +29,10 @@ public class App extends ApplicationAdapter {
     private final String LOGTAG = "APP";
 
     private boolean halted;
+    
+    public App(BatteryStatus batteryStatus) {
+    	StatusModel.batteryStatus = batteryStatus;
+    }
 
     @Override
     public void create() {

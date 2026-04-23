@@ -49,9 +49,20 @@ MINING GAME:
  -> click to show asteroid info
  -> minimap
  -> map
- -> shooting laser
+ -> shooting direction ray
  -> range indicator
 - ship towing ability for stranded mates
+- particles for thruster
+- mining ship components
+ -> weapon
+ -> thrusters
+ -> core
+ -> battery
+- resource categories 
+ -> t1, t2 etc.
+ -> t1 being basic elements
+ -> tiers represent production chain
+ -> special tier for stuff like equilibrium
 
 REDESIGN:
 - ships harder to unlock and progressively

@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.glutils.HdpiMode;
 import com.badlogic.gdx.math.Vector2;
 
 import de.instinct.eqfleet.App;
+import de.instinct.eqfleet.status.BatteryStatus;
 import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
 
@@ -26,7 +27,18 @@ public class Lwjgl3Launcher {
     }
 
     private static Lwjgl3Application createApplication() {
-        return new Lwjgl3Application(new App(), getDefaultConfiguration());
+        return new Lwjgl3Application(new App(new BatteryStatus() {
+			
+			@Override
+			public float percentage() {
+				UIDevice device = UIDevice.getCurrentDevice();
+		        device.setBatteryMonitoringEnabled(true);
+		        float level = device.getBatteryLevel();
+		        if (level < 0) return -1;
+		        return level;
+			}
+			
+		}), getDefaultConfiguration());
     }
 
     private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {
