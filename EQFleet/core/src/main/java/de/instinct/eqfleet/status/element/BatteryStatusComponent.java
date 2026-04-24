@@ -2,6 +2,10 @@ package de.instinct.eqfleet.status.element;
 
 import com.badlogic.gdx.graphics.Color;
 
+import de.instinct.eqfleet.holo.HoloPanel;
+import de.instinct.eqfleet.holo.HoloRenderer;
+import de.instinct.eqfleet.holo.style.HoloPanelGlowConfiguration;
+import de.instinct.eqfleet.holo.style.HoloPanelStyle;
 import de.instinct.eqfleet.status.StatusModel;
 import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
@@ -13,14 +17,24 @@ import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 
 public class BatteryStatusComponent extends Component {
 	
+	private HoloPanel batteryBackgroundHoloPanel;
 	private PlainRectangularLoadingBar batteryBar;
 	private ColorScaleLoader colorScaleLoader;
 	
 	public BatteryStatusComponent() {
 		super();
+		batteryBackgroundHoloPanel = HoloPanel.builder()
+				.color(new Color(SkinManager.skinColor))
+				.style(HoloPanelStyle.builder()
+						.reflectionStrength(0f)
+						.borderSize(1f)
+						.glowConfiguration(HoloPanelGlowConfiguration.builder()
+								.glowAnimationSpeed(0.5f)
+								.build())
+						.build())
+				.build();
 		colorScaleLoader = new ColorScaleLoader();
 		batteryBar = new PlainRectangularLoadingBar();
-		batteryBar.getBorder().setSize(1f);
 		batteryBar.setMaxValue(1f);
 		batteryBar.getDescriptorLabel().setColor(Color.WHITE);
 		batteryBar.getDescriptorLabel().setType(FontType.TINY);
@@ -31,16 +45,20 @@ public class BatteryStatusComponent extends Component {
 	protected void updateComponent() {
 		batteryBar.setBounds(getBounds());
 		float batteryPercentage = StatusModel.batteryStatus.percentage() * 100f;
-		boolean isCharging = StatusModel.batteryStatus.isCharging();
-		String descriptor = StringUtils.format(batteryPercentage, 0) + (isCharging ? " \u26A1" : "");
-		batteryBar.setCustomDescriptor(descriptor);
-		batteryBar.getBorder().setColor(SkinManager.skinColor);
+		batteryBackgroundHoloPanel.setBounds(getBounds());
+		if (StatusModel.batteryStatus.isCharging()) {
+			batteryBackgroundHoloPanel.getStyle().getGlowConfiguration().setGlowSize(10f);
+		} else {
+			batteryBackgroundHoloPanel.getStyle().getGlowConfiguration().setGlowSize(0f);
+		}
+		batteryBar.setCustomDescriptor(StringUtils.format(batteryPercentage, 0));
 		batteryBar.setCurrentValue(StatusModel.batteryStatus.percentage());
 		batteryBar.setColor(colorScaleLoader.load(ColorScale.GREEN_TO_RED, StatusModel.batteryStatus.percentage()));
 	}
 
 	@Override
 	protected void renderComponent() {
+		HoloRenderer.drawPanel(batteryBackgroundHoloPanel);
 		batteryBar.render();
 	}
 
