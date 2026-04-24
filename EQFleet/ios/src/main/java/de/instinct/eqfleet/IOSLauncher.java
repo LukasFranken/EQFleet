@@ -20,7 +20,6 @@ public class IOSLauncher extends IOSApplication.Delegate {
 		configuration.hdpiMode = HdpiMode.Pixels;
 		configuration.audioDeviceBufferSize = 8192;
 		configuration.audioDeviceBufferCount = 15;
-		configuration.preferredFramesPerSecond = 120;
 		UIDevice device = UIDevice.getCurrentDevice();
         device.setBatteryMonitoringEnabled(true);
 		return new IOSApplication(new App(new BatteryStatus() {

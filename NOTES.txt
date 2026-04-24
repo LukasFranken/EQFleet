@@ -65,6 +65,7 @@ MINING GAME:
  -> special tier for stuff like equilibrium
 
 REDESIGN:
+- switching network on mobile doesnt work
 - ships harder to unlock and progressively
 - shop buy popup with more information
  -> proper shop with icons

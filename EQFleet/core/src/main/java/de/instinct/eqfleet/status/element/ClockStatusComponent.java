@@ -6,7 +6,6 @@ import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
-import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 
 public class ClockStatusComponent extends Component {
 	
@@ -15,7 +14,7 @@ public class ClockStatusComponent extends Component {
 	public ClockStatusComponent() {
 		super();
 		timeLabel = new Label("");
-		timeLabel.setColor(new Color(SkinManager.skinColor));
+		timeLabel.setColor(new Color(Color.LIGHT_GRAY));
 		timeLabel.setType(FontType.SMALL_BOLD);
 	}
 	

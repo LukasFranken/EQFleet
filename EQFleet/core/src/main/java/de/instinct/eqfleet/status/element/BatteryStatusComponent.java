@@ -13,7 +13,6 @@ import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.model
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.model.ColorScaleLoader;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.subtypes.PlainRectangularLoadingBar;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
-import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 
 public class BatteryStatusComponent extends Component {
 	
@@ -24,18 +23,21 @@ public class BatteryStatusComponent extends Component {
 	public BatteryStatusComponent() {
 		super();
 		batteryBackgroundHoloPanel = HoloPanel.builder()
-				.color(new Color(SkinManager.skinColor))
+				.color(new Color(0f, 0.5f, 0f, 1f))
 				.style(HoloPanelStyle.builder()
 						.reflectionStrength(0f)
 						.borderSize(1f)
 						.glowConfiguration(HoloPanelGlowConfiguration.builder()
-								.glowAnimationSpeed(0.5f)
+								.glowAnimationSpeed(2f)
+								.glowAnimationStrength(1f)
 								.build())
 						.build())
 				.build();
 		colorScaleLoader = new ColorScaleLoader();
 		batteryBar = new PlainRectangularLoadingBar();
 		batteryBar.setMaxValue(1f);
+		batteryBar.getBorder().setColor(new Color());
+		batteryBar.getBorder().setSize(1f);
 		batteryBar.getDescriptorLabel().setColor(Color.WHITE);
 		batteryBar.getDescriptorLabel().setType(FontType.TINY);
 		batteryBar.getBackgroundShape().setColor(Color.BLACK);
@@ -47,9 +49,9 @@ public class BatteryStatusComponent extends Component {
 		float batteryPercentage = StatusModel.batteryStatus.percentage() * 100f;
 		batteryBackgroundHoloPanel.setBounds(getBounds());
 		if (StatusModel.batteryStatus.isCharging()) {
-			batteryBackgroundHoloPanel.getStyle().getGlowConfiguration().setGlowSize(10f);
+			batteryBackgroundHoloPanel.getStyle().getGlowConfiguration().setGlowSize(15f);
 		} else {
-			batteryBackgroundHoloPanel.getStyle().getGlowConfiguration().setGlowSize(0f);
+			batteryBackgroundHoloPanel.getStyle().getGlowConfiguration().setGlowSize(1f);
 		}
 		batteryBar.setCustomDescriptor(StringUtils.format(batteryPercentage, 0));
 		batteryBar.setCurrentValue(StatusModel.batteryStatus.percentage());

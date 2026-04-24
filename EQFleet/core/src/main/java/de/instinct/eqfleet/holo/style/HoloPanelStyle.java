@@ -15,10 +15,10 @@ public class HoloPanelStyle {
 	private float softness = 1f;
 	
 	@Default
-	private float fillAlpha = 0.2f;
+	private float fillAlpha = 0.45f;
 	
 	@Default
-	private float reflectionStrength = 0.15f;
+	private float reflectionStrength = 0.12f;
 	
 	@Default
 	private float borderSize = 0.5f;

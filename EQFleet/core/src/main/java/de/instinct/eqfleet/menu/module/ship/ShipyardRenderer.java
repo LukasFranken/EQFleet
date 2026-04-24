@@ -69,11 +69,13 @@ public class ShipyardRenderer extends BaseModuleRenderer {
 			activeLabel.setHorizontalAlignment(HorizontalAlignment.LEFT);
 			activeLabel.setBounds(activeLabelBounds);
 			activeLabel.setType(FontType.SMALL_BOLD);
+			activeLabel.setColor(new Color(Color.LIGHT_GRAY));
 
 			spaceLabel = new Label("Space: " + ShipyardModel.playerShipyard.getUsedSlots() + "/" + ShipyardModel.playerShipyard.getSlots());
 			spaceLabel.setHorizontalAlignment(HorizontalAlignment.RIGHT);
 			spaceLabel.setBounds(activeLabelBounds);
 			spaceLabel.setType(FontType.SMALL_BOLD);
+			spaceLabel.setColor(new Color(Color.LIGHT_GRAY));
 
 			activeShipButtons = new ArrayList<>();
 			shipButtons = new ArrayList<>();
