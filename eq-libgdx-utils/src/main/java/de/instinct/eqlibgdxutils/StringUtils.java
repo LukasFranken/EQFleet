@@ -19,11 +19,19 @@ public class StringUtils {
 
 	private static DecimalFormat decimalFormat = new DecimalFormat();
 	private static SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+	private static SimpleDateFormat timeFormatNoSeconds = new SimpleDateFormat("HH:mm");
+	private static Date date = new Date();
 	
 	private static StringBuilder spacer = new StringBuilder();
 
 	public static String getTime(long timeMillis) {
-	    return timeFormat.format(new Date(timeMillis));
+		date.setTime(timeMillis);
+	    return timeFormat.format(date);
+	}
+	
+	public static String getMinuteTime(long timeMillis) {
+		date.setTime(timeMillis);
+	    return timeFormatNoSeconds.format(date);
 	}
 
 	public static String format(double value, int decimals) {

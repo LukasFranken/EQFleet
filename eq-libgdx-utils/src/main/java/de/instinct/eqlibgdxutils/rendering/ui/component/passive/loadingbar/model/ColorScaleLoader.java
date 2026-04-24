@@ -28,28 +28,28 @@ public class ColorScaleLoader {
 	    List<Color> colors = new ArrayList<>();
 	    
 	    // Extended Green region
-	    colors.add(new Color(0.0f, 1.0f, 0.0f, 1f));  // Green
-	    colors.add(new Color(0.1f, 0.95f, 0.0f, 1f)); // Slightly lighter green
-	    colors.add(new Color(0.2f, 0.9f, 0.0f, 1f));  // Lighter green
-	    colors.add(new Color(0.22f, 0.9f, 0.0f, 1f));  // Yellowish lighter green
-	    colors.add(new Color(0.3f, 0.85f, 0.0f, 1f)); // Yellowish green
-	    colors.add(new Color(0.35f, 0.8f, 0.0f, 1f)); // Transition to yellow-green
-	    colors.add(new Color(0.4f, 0.75f, 0.0f, 1f)); // Greenish yellow
-	    colors.add(new Color(0.45f, 0.7f, 0.0f, 1f)); // Yellow-green
+	    colors.add(new Color(0.0f, 0.8f, 0.0f, 1f));  // Green
+	    colors.add(new Color(0.1f, 0.75f, 0.0f, 1f)); // Slightly lighter green
+	    colors.add(new Color(0.2f, 0.7f, 0.0f, 1f));  // Lighter green
+	    colors.add(new Color(0.22f, 0.65f, 0.0f, 1f));  // Yellowish lighter green
+	    colors.add(new Color(0.3f, 0.6f, 0.0f, 1f)); // Yellowish green
+	    colors.add(new Color(0.35f, 0.55f, 0.0f, 1f)); // Transition to yellow-green
+	    colors.add(new Color(0.4f, 0.5f, 0.0f, 1f)); // Greenish yellow
+	    colors.add(new Color(0.45f, 0.45f, 0.0f, 1f)); // Yellow-green
 
 	    // Yellow transition
-	    colors.add(new Color(0.45f, 0.65f, 0.0f, 1f)); // Yellowish-green
-	    colors.add(new Color(0.5f, 0.6f, 0.0f, 1f));  // Yellowish
-	    colors.add(new Color(0.6f, 0.5f, 0.0f, 1f));  // Yellow-orange
+	    colors.add(new Color(0.45f, 0.4f, 0.0f, 1f)); // Yellowish-green
+	    colors.add(new Color(0.5f, 0.35f, 0.0f, 1f));  // Yellowish
+	    colors.add(new Color(0.6f, 0.3f, 0.0f, 1f));  // Yellow-orange
 
 	    // Compressed Red region
-	    colors.add(new Color(0.7f, 0.4f, 0.0f, 1f));  // Orange
-	    colors.add(new Color(0.8f, 0.3f, 0.0f, 1f));  // Orange-red
-	    colors.add(new Color(0.9f, 0.2f, 0.0f, 1f));  // Dark Orange
-	    colors.add(new Color(1.0f, 0.1f, 0.0f, 1f));  // Red
+	    colors.add(new Color(0.65f, 0.25f, 0.0f, 1f));  // Orange
+	    colors.add(new Color(0.7f, 0.2f, 0.0f, 1f));  // Orange-red
+	    colors.add(new Color(0.75f, 0.15f, 0.0f, 1f));  // Dark Orange
+	    colors.add(new Color(0.8f, 0.1f, 0.0f, 1f));  // Red
 	    colors.add(new Color(0.8f, 0.0f, 0.0f, 1f));  // Dark Red
-	    colors.add(new Color(0.6f, 0.0f, 0.0f, 1f));  // Darker Red
-	    colors.add(new Color(0.4f, 0.0f, 0.0f, 1f));  // Darkest Red
+	    colors.add(new Color(0.7f, 0.0f, 0.0f, 1f));  // Darker Red
+	    colors.add(new Color(0.6f, 0.0f, 0.0f, 1f));  // Darkest Red
 	    
 	    return colors;
 	}

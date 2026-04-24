@@ -21,6 +21,10 @@ public abstract class RectangularLoadingBar extends LoadingBar {
 		defaultBorder.setColor(new Color(Color.GRAY));
 		defaultBorder.setSize(2f);
 		setBorder(defaultBorder);
+		
+		backgroundShape = EQRectangle.builder()
+				.filled(true)
+				.build();
 	}
 	
 	@Override

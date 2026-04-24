@@ -18,11 +18,16 @@ public class Border {
 	private EQRectangle borderShape;
 	
 	public Border() {
+		color = new Color();
 		borderShape = EQRectangle.builder()
 				.color(new Color(0, 0, 0, 1))
 				.bounds(new Rectangle())
 				.thickness(1f)
 				.build();
+	}
+	
+	public void setColor(Color color) {
+		this.color.set(color);
 	}
 	
 	public void render() {

@@ -14,11 +14,11 @@ import de.instinct.eqlibgdxutils.debug.logging.Logger;
 public class Lwjgl3Launcher {
 	
 	//private static Vector2 windowSize = new Vector2(200, 450);
-	//private static Vector2 windowSize = new Vector2(400, 900);
+	private static Vector2 windowSize = new Vector2(400, 900);
 	//private static Vector2 windowSize = new Vector2(900, 400);
 	//private static Vector2 windowSize = new Vector2(500, 1125);
 	//private static Vector2 windowSize = new Vector2(600, 1350);
-	private static Vector2 windowSize = new Vector2(800, 1800);
+	//private static Vector2 windowSize = new Vector2(800, 1800);
 	
     public static void main(String[] args) {
         if (StartupHelper.startNewJvmIfRequired()) return;
@@ -31,11 +31,12 @@ public class Lwjgl3Launcher {
 			
 			@Override
 			public float percentage() {
-				UIDevice device = UIDevice.getCurrentDevice();
-		        device.setBatteryMonitoringEnabled(true);
-		        float level = device.getBatteryLevel();
-		        if (level < 0) return -1;
-		        return level;
+				return -1;
+			}
+
+			@Override
+			public boolean isCharging() {
+				return false;
 			}
 			
 		}), getDefaultConfiguration());
