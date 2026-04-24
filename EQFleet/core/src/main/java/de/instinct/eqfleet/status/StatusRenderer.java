@@ -38,6 +38,10 @@ public class StatusRenderer {
 		}
 		clock.setBounds(statusBarBounds.x, statusBarBounds.y, 30, statusBarBounds.height);
 		clock.render();
+		ping.setBounds(statusBarBounds.x + 50, statusBarBounds.y, 20, statusBarBounds.height);
+		ping.render();
+		fps.setBounds(statusBarBounds.x + statusBarBounds.width - 70, statusBarBounds.y, 20, statusBarBounds.height);
+		fps.render();
 		if (StatusModel.batteryStatus.percentage() != -1) {
 			battery.setBounds(statusBarBounds.x + statusBarBounds.width - 30, statusBarBounds.y, 30, statusBarBounds.height);
 			battery.render();

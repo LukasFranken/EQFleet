@@ -25,7 +25,7 @@ import de.instinct.eqlibgdxutils.debug.metrics.types.StringMetric;
 public class WebManager {
 
 	private static final String LOGTAG = "WebManager";
-	private static final String PING_METRIC_TAG = "server_ping_MS";
+	public static final String PING_METRIC_TAG = "server_ping_MS";
 	private static final String CONNECTION_STATUS_TAG = "online";
 	
     public static ConcurrentLinkedQueue<Request<?>> requestQueue;

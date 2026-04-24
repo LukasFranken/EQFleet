@@ -208,6 +208,7 @@ public class Console {
 	
 	public static void render() {
 		pollForConsoleActivation();
+		MetricUtil.update();
 		if (active) {
 			Shapes.draw(EQRectangle.builder()
 					.bounds(GraphicsUtil.screenBounds())

@@ -27,26 +27,17 @@ public class BatteryStatusComponent extends Component {
 		batteryBar.getBackgroundShape().setColor(Color.BLACK);
 	}
 
-
 	@Override
 	protected void updateComponent() {
 		batteryBar.setBounds(getBounds());
-		
-		// Get the battery percentage
 		float batteryPercentage = StatusModel.batteryStatus.percentage() * 100f;
-		
-		// Check if the device is charging
 		boolean isCharging = StatusModel.batteryStatus.isCharging();
-		
-		// Format the descriptor with or without the lightning symbol
 		String descriptor = StringUtils.format(batteryPercentage, 0) + (isCharging ? " \u26A1" : "");
-		
 		batteryBar.setCustomDescriptor(descriptor);
 		batteryBar.getBorder().setColor(SkinManager.skinColor);
 		batteryBar.setCurrentValue(StatusModel.batteryStatus.percentage());
 		batteryBar.setColor(colorScaleLoader.load(ColorScale.GREEN_TO_RED, StatusModel.batteryStatus.percentage()));
-}
-
+	}
 
 	@Override
 	protected void renderComponent() {

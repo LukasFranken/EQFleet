@@ -88,8 +88,11 @@ public class MetricUtil {
 		return fixedHeight;
 	}
 
-	public static void render() {
+	public static void update() {
 		updateMetrics();
+	}
+	
+	public static void render() {
 		if (active) {
 			float panelWidth = calculatePanelWidth();
 			float panelHeight = fixedHeight == 0
@@ -213,6 +216,15 @@ public class MetricUtil {
 
 	public static void update(String tag, Object value) {
 		metricsUpdateQueue.add(MetricUpdate.builder().tag(tag).value(value).build());
+	}
+	
+	public static String getValue(String tag) {
+		for (Metric metric : metrics) {
+			if (metric.getTag().contentEquals(tag)) {
+				return metric.getValueString();
+			}
+		}
+		return "null";
 	}
 
 	public static void remove(String tag) {
