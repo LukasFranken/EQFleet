@@ -7,6 +7,7 @@ import de.instinct.engine.mining.order.RecallOrder;
 import de.instinct.eqfleet.mining.MiningEngineAPI;
 import de.instinct.eqfleet.mining.MiningModel;
 import de.instinct.eqfleet.mining.frontend.hud.element.CargoHudElement;
+import de.instinct.eqfleet.mining.frontend.hud.element.EnergyHudElement;
 import de.instinct.eqfleet.mining.frontend.hud.element.EngineHudElement;
 import de.instinct.eqfleet.mining.frontend.hud.element.MobileInputHud;
 import de.instinct.eqlibgdxutils.PlatformUtil;
@@ -19,11 +20,13 @@ public class MiningHudRenderer {
     private ColorButton recallButton;
     
     private EngineHudElement engineHud;
+    private EnergyHudElement energyHud;
     private CargoHudElement cargoHud;
     private MobileInputHud mobileInputHud;
 	
 	public void init() {
 		engineHud = new EngineHudElement();
+		energyHud = new EnergyHudElement();
 		cargoHud = new CargoHudElement();
 		
 		recallButton = new ColorButton("RECALL");
@@ -53,6 +56,7 @@ public class MiningHudRenderer {
 	public void update() {
 		engineHud.update();
 		cargoHud.update();
+		energyHud.update();
 		
 		if (mobileInputHud != null) mobileInputHud.update();
 		
@@ -73,6 +77,7 @@ public class MiningHudRenderer {
 	public void render() {
 		engineHud.render();
 		cargoHud.render();
+		energyHud.render();
 		
 		MiningPlayerShip ship = MiningEngineAPI.getShip(MiningModel.playerId);
 		if (mobileInputHud != null) {
@@ -89,6 +94,7 @@ public class MiningHudRenderer {
 	public void dispose() {
 		engineHud.dispose();
 		cargoHud.dispose();
+		energyHud.dispose();
 		
 		recallButton.dispose();
 		if (mobileInputHud != null) {

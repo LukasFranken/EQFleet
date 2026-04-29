@@ -145,12 +145,12 @@ public class Menu extends Scene {
 		if (MenuModel.loaded) {
 			if (GlobalStaticData.showDebugGrid) gridRenderer.drawGrid();
 			Profiler.checkpoint("MENU", "grid render");
+			menuRenderer.render();
+			Profiler.checkpoint("MENU", "menu render");
 			if (MenuModel.activeModule != null) {
 				MenuModel.renderers.get(MenuModel.activeModule).render();
 				Profiler.checkpoint("MENU", "module render");
 			}
-			menuRenderer.render();
-			Profiler.checkpoint("MENU", "menu render");
 		}
 		Profiler.endFrame("MENU");
 	}

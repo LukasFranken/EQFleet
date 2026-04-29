@@ -36,7 +36,7 @@ MINING GAME:
  -> not fuel, but battery that needs to charge
  -> can be improved
  -> player can decide to embark early with low charge
-- needs to be coop game too eventually
+ -> base/flagship battery can provide several minign ship charges
 - extraction needed, otherwise all resources lost
  -> in coop, give all resources to all players
  -> probably max 2 players
@@ -63,6 +63,13 @@ MINING GAME:
  -> t1 being basic elements
  -> tiers represent production chain
  -> special tier for stuff like equilibrium
+- later stages with combat
+- different ship weapon types
+ -> maybe even multiple weapons to switch
+ -> homing missiles
+ -> charge up stuff
+ -> beam laser
+ -> gauss cannon with kickback
 
 REDESIGN:
 - switching network on mobile doesnt work

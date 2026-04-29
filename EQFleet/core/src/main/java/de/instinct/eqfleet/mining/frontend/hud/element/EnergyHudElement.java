@@ -1,51 +1,47 @@
 package de.instinct.eqfleet.mining.frontend.hud.element;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.badlogic.gdx.graphics.Color;
 
 import de.instinct.engine.mining.entity.ship.MiningPlayerShip;
-import de.instinct.engine.mining.entity.ship.cargo.CargoItem;
 import de.instinct.eqfleet.holo.HoloPanel;
 import de.instinct.eqfleet.holo.HoloRenderer;
 import de.instinct.eqfleet.holo.style.HoloPanelGlowConfiguration;
 import de.instinct.eqfleet.holo.style.HoloPanelStyle;
 import de.instinct.eqfleet.mining.MiningEngineAPI;
 import de.instinct.eqfleet.mining.MiningModel;
-import de.instinct.eqfleet.mining.frontend.OreManager;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.image.Image;
-import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.model.BarFragment;
-import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.subtypes.FragmentRectangularLoadingBar;
+import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.Direction;
+import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.subtypes.BoxedRectangularLoadingBar;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 
-public class CargoHudElement extends Component {
+public class EnergyHudElement extends Component {
 	
-	private Image cargoIcon;
+	private Image energyIcon;
 	private HoloPanel iconHoloPanel;
 	private HoloPanel barHoloPanel;
-	private FragmentRectangularLoadingBar cargoBar;
-	private List<BarFragment> cargoFragments;
+	private BoxedRectangularLoadingBar energyBar;
 	
-	public CargoHudElement() {
+	public EnergyHudElement() {
 		super();
-		cargoIcon = new Image(TextureManager.getTexture("ui/image", "cargo"));
-		cargoBar = new FragmentRectangularLoadingBar();
-		cargoBar.getBorder().setSize(0f);
-		cargoBar.getBackgroundShape().setColor(new Color(0f, 0f, 0f, 1f));
-		cargoFragments = new ArrayList<>();
+		energyIcon = new Image(TextureManager.getTexture("ui/image", "energy"));
+		energyBar = new BoxedRectangularLoadingBar();
+		energyBar.getBorder().setSize(0f);
+		energyBar.getBackgroundShape().setColor(new Color(0f, 0f, 0f, 1f));
+		energyBar.setSegments(10);
+		energyBar.setPartialSegments(true);
+		energyBar.setDirection(Direction.WEST);
+		energyBar.getBackgroundShape().setColor(new Color(0f, 0f, 0f, 1f));
 		
 		iconHoloPanel = HoloPanel.builder()
-				//.color(new Color(0f, 0.6f, 0.18f, 1f))
-				.color(new Color(0.7f, 0.5f, 0.2f, 1f))
+				.color(new Color(0f, 0.6f, 0.18f, 1f))
 				.style(HoloPanelStyle.builder()
 						.fillAlpha(0.05f)
 						.reflectionStrength(0f)
 						.borderSize(1f)
 						.glowConfiguration(HoloPanelGlowConfiguration.builder()
-								.glowSize(10f)
+								.glowSize(15f)
 								.glowAnimationSpeed(2f)
 								.glowAnimationStrength(0f)
 								.build())
@@ -53,14 +49,13 @@ public class CargoHudElement extends Component {
 				.build();
 		
 		barHoloPanel = HoloPanel.builder()
-				//.color(new Color(0f, 0.6f, 0.18f, 1f))
-				.color(new Color(0.7f, 0.5f, 0.2f, 1f))
+				.color(new Color(0f, 0.6f, 0.18f, 1f))
 				.style(HoloPanelStyle.builder()
 						.fillAlpha(0.05f)
 						.reflectionStrength(0f)
 						.borderSize(1f)
 						.glowConfiguration(HoloPanelGlowConfiguration.builder()
-								.glowSize(10f)
+								.glowSize(15f)
 								.glowAnimationSpeed(2f)
 								.glowAnimationStrength(0f)
 								.build())
@@ -71,29 +66,18 @@ public class CargoHudElement extends Component {
 	@Override
 	protected void updateComponent() {
 		MiningPlayerShip ship = MiningEngineAPI.getShip(MiningModel.playerId);
-		updateFragmentsForCargo(ship);
-		cargoBar.setMaxValue(ship.cargo.capacity);
-		cargoBar.setFragments(cargoFragments);
-		cargoBar.setBounds(37, GraphicsUtil.screenBounds().height - 80, 80, 6);
-		barHoloPanel.setBounds(37, GraphicsUtil.screenBounds().height - 80, 80, 6);
-		cargoIcon.setBounds(20, GraphicsUtil.screenBounds().height - 90, 16, 16);
-		iconHoloPanel.setBounds(20, GraphicsUtil.screenBounds().height - 90, 16, 16);
-	}
-	
-	private void updateFragmentsForCargo(MiningPlayerShip ship) {
-		cargoFragments.clear();
-		for (CargoItem item : ship.cargo.items) {
-			cargoFragments.add(BarFragment.builder()
-					.value(item.amount)
-					.color(OreManager.getColorForResourceType(item.resourceType))
-					.build());
-		}
+		energyBar.setMaxValue(ship.core.maxCharge);
+		energyBar.setCurrentValue(ship.core.currentCharge);
+		energyBar.setBounds(41, GraphicsUtil.screenBounds().height - 90, 80, 6);
+		barHoloPanel.setBounds(41, GraphicsUtil.screenBounds().height - 90, 80, 6);
+		energyIcon.setBounds(122, GraphicsUtil.screenBounds().height - 90, 16, 16);
+		iconHoloPanel.setBounds(122, GraphicsUtil.screenBounds().height - 90, 16, 16);
 	}
 
 	@Override
 	protected void renderComponent() {
-		cargoIcon.render();
-		cargoBar.render();
+		energyBar.render();
+		energyIcon.render();
 		HoloRenderer.drawPanel(iconHoloPanel);
 		HoloRenderer.drawPanel(barHoloPanel);
 	}
@@ -110,7 +94,8 @@ public class CargoHudElement extends Component {
 
 	@Override
 	public void dispose() {
-		cargoBar.dispose();
+		energyIcon.dispose();
+		energyBar.dispose();
 	}
 	
 }

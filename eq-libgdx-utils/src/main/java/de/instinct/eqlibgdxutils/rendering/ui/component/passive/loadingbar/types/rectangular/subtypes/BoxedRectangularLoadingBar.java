@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.model.ColorScale;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.model.ColorScaleLoader;
+import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.Direction;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.RectangularLoadingBar;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.shapes.EQRectangle;
@@ -24,6 +25,7 @@ public class BoxedRectangularLoadingBar extends RectangularLoadingBar {
 	private int segmentOutlineSize;
 	private ColorScaleLoader colorScaleLoader;
 	private boolean partialSegments;
+	private Direction direction;
 	
 	@Getter(AccessLevel.NONE)
 	@Setter(AccessLevel.NONE)
@@ -49,6 +51,7 @@ public class BoxedRectangularLoadingBar extends RectangularLoadingBar {
 				.build();
 		workingBounds = new Rectangle();
 		workingColor = new Color();
+		direction = Direction.EAST;
 	}
 
 	@Override
@@ -68,35 +71,67 @@ public class BoxedRectangularLoadingBar extends RectangularLoadingBar {
 
 	@Override
 	protected void renderContent() {
-		int segments = getSegments();
-		double valuePerSegment = getMaxValue() / segments;
-		int filledSegments = (int) Math.floor(getCurrentValue() / valuePerSegment);
-		double valueRemainder = getCurrentValue() - (valuePerSegment * filledSegments);
-		double segmentWidthFraction = valueRemainder / valuePerSegment;
+	    switch (direction) {
+	        case EAST:
+	            renderDirectional(true, false);
+	            break;
+	        case WEST:
+	            renderDirectional(true, true);
+	            break;
+	        case NORTH:
+	            renderDirectional(false, false);
+	            break;
+	        case SOUTH:
+	            renderDirectional(false, true);
+	            break;
+	    }
+	}
 
-		int segmentSpace = calculateSegmentSpace(getSegments());
+	private void renderDirectional(boolean horizontal, boolean reversed) {
+	    int segments = getSegments();
+	    double valuePerSegment = getMaxValue() / segments;
+	    int filledSegments = (int) Math.floor(getCurrentValue() / valuePerSegment);
+	    double valueRemainder = getCurrentValue() - (valuePerSegment * filledSegments);
+	    double segmentFraction = valueRemainder / valuePerSegment;
+
+	    float border = getBorder().getSize();
+	    int segmentSpace = calculateSegmentSpace(segments);
 	    float totalSpacing = (segments - 1) * segmentSpace;
-	    float segmentWidth = (getBounds().width - (getBorder().getSize() * 2) - totalSpacing) / (float) segments;
-	    float xPos = getBounds().x + getBorder().getSize();
-	    float yPos = getBounds().y + getBorder().getSize();
-	    float height = getBounds().height - (getBorder().getSize() * 2);
+
+	    float primaryTotal  = horizontal ? getBounds().width  : getBounds().height;
+	    float secondaryTotal = horizontal ? getBounds().height : getBounds().width;
+	    float segmentPrimary   = (primaryTotal - (border * 2) - totalSpacing) / segments;
+	    float segmentSecondary = secondaryTotal - (border * 2);
+
+	    float primaryOrigin   = horizontal ? getBounds().x + border : getBounds().y + border;
+	    float secondaryOrigin = horizontal ? getBounds().y + border : getBounds().x + border;
 
 	    for (int i = 0; i < segments; i++) {
-	        float segmentXPos = xPos + i * (segmentWidth + segmentSpace);
-	        workingColor.set(colorScaleLoader.load(getColorScale(), ((i + 1) / (double) segments)));
+	        int visualIndex = reversed ? (segments - 1 - i) : i;
+	        float segmentPos = primaryOrigin + visualIndex * (segmentPrimary + segmentSpace);
+
+	        workingColor.set(colorScaleLoader.load(getColorScale(), (i + 1.0) / segments));
+
 	        if (i < filledSegments) {
-	            workingBounds.set(segmentXPos, yPos, segmentWidth, height);
+	            setWorkingBounds(horizontal, segmentPos, secondaryOrigin, segmentPrimary, segmentSecondary);
 	            drawSegment(workingColor, workingBounds);
-	        }
-	        if (partialSegments) {
-	        	if (i == filledSegments) {
-	        		workingBounds.set(segmentXPos, yPos, segmentWidth * (float)segmentWidthFraction, height);
-	        		drawSegment(workingColor, workingBounds);
-	        	}
+	        } else if (partialSegments && i == filledSegments) {
+	            float partialSize = segmentPrimary * (float) segmentFraction;
+	            float partialPos = reversed ? segmentPos + segmentPrimary - partialSize : segmentPos;
+	            setWorkingBounds(horizontal, partialPos, secondaryOrigin, partialSize, segmentSecondary);
+	            drawSegment(workingColor, workingBounds);
 	        }
 	    }
 	}
-	
+
+	private void setWorkingBounds(boolean horizontal, float primary, float secondary, float primarySize, float secondarySize) {
+	    if (horizontal) {
+	        workingBounds.set(primary, secondary, primarySize, secondarySize);
+	    } else {
+	        workingBounds.set(secondary, primary, secondarySize, primarySize);
+	    }
+	}
+
 	private void drawSegment(Color color, Rectangle bounds) {
 		if (getSegmentOutlineColor() != null) {
     		workingShape.getColor().set(getSegmentOutlineColor());

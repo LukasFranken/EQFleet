@@ -29,6 +29,7 @@ public abstract class RectangularLoadingBar extends LoadingBar {
 	
 	@Override
 	protected void renderComponent() {
+		backgroundShape.setBounds(getBounds());
 		renderBackground();
 		renderContent();
 		renderLabel();

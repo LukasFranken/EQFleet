@@ -23,5 +23,9 @@ public class HoloPanel {
 	
 	@Default
 	private HoloPanelStyle style = HoloPanelStyle.builder().build();
+	
+	public void setBounds(float x, float y, float width, float height) {
+		bounds.set(x, y, width, height);
+	}
 
 }

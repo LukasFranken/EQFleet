@@ -10,15 +10,12 @@ import de.instinct.eqfleet.mining.MiningModel;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.Direction;
-import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.subtypes.BoxedRectangularLoadingBar;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.subtypes.PlainRectangularLoadingBar;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.shapes.EQRectangle;
 
 public class EngineHudElement extends Component {
-	
-	private BoxedRectangularLoadingBar chargeBar;
 	
 	private PlainRectangularLoadingBar positiveSpeedBar;
 	private PlainRectangularLoadingBar negativeSpeedBar;
@@ -35,10 +32,6 @@ public class EngineHudElement extends Component {
 		Border barBorder = new Border();
 		barBorder.setColor(new Color(GameConfig.teammate1Color));
 		barBorder.setSize(1f);
-		chargeBar = new BoxedRectangularLoadingBar();
-		chargeBar.setBorder(barBorder);
-		chargeBar.setPartialSegments(true);
-		chargeBar.setSegments(10);
 		
 		speedBarBounds = new Rectangle();
 		speedBarBorder = EQRectangle.builder()
@@ -96,10 +89,6 @@ public class EngineHudElement extends Component {
 		}
 		negativeSpeedBar.setBounds(speedBarBounds.x, speedBarBounds.y + speedBarBorder.getThickness(), (speedBarBounds.width / 2f) - speedBarBorder.getThickness(), speedBarBounds.height - (speedBarBorder.getThickness() * 2));
 		
-		chargeBar.setMaxValue(ship.core.maxCharge);
-		chargeBar.setCurrentValue(ship.core.currentCharge);
-		chargeBar.setBounds(speedBarBounds.x, speedBarBounds.y + speedBarBounds.height - speedBarBorder.getThickness(), speedBarBounds.width, 6);
-		
 		turnBarBounds.set(speedBarBounds.x, speedBarBounds.y + speedBarBorder.getThickness() - 6, speedBarBounds.width, 6);
 		turnBarBorder.setBounds(turnBarBounds);
 		leftTurnBar.setMaxValue(ship.thruster.maxRotationSpeed);
@@ -120,7 +109,6 @@ public class EngineHudElement extends Component {
 
 	@Override
 	protected void renderComponent() {
-		chargeBar.render();
 		positiveSpeedBar.render();
 		negativeSpeedBar.render();
 		Shapes.draw(speedBarBorder);
@@ -141,7 +129,6 @@ public class EngineHudElement extends Component {
 
 	@Override
 	public void dispose() {
-		chargeBar.dispose();
 		positiveSpeedBar.dispose();
 		negativeSpeedBar.dispose();
 		rightTurnBar.dispose();
