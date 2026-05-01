@@ -4,19 +4,19 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import de.instinct.engine.core.order.GameOrder;
 import de.instinct.engine.mining.MiningEngine;
-import de.instinct.engine_api.mining.MiningEngineInterface;
+import de.instinct.engine_api.mining.MiningStateManager;
 import de.instinct.eqfleet.mining.MiningModel;
 
 public abstract class MiningDriver {
 	
 	protected MiningEngine engine;
-	protected MiningEngineInterface engineInterface;
+	protected MiningStateManager stateManager;
 	
 	private long lastUpdateTime;
 	
 	public MiningDriver() {
 		engine = new MiningEngine();
-		engineInterface = new MiningEngineInterface();
+		stateManager = new MiningStateManager();
 		MiningModel.inputOrders = new ConcurrentLinkedQueue<>();
 		initialize();
 		lastUpdateTime = System.currentTimeMillis();

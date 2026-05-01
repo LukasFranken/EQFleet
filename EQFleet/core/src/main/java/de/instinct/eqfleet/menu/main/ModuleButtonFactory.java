@@ -38,6 +38,7 @@ public class ModuleButtonFactory {
 			@Override
 			public void execute() {
 				MenuModel.messageQueue.add(OpenModuleMessage.builder().module(module).build());
+				Breadcrumbs.add(module.toString());
 			}
 			
 		});

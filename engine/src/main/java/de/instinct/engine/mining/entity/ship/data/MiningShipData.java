@@ -5,6 +5,8 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class MiningShipData {
 	
+	public float radius;
+	
 	public float coreCharge;
 	
 	public float cargoCapacity;

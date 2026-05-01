@@ -55,7 +55,6 @@ public class Menu extends Scene {
 	@Override
 	public void init() {
 		MenuModel.messageQueue = new ConcurrentLinkedQueue<>();
-		
 		moduleManager = new ModuleManager();
 		menuRenderer = new MenuRenderer();
 		menuRenderer.init();
@@ -75,7 +74,7 @@ public class Menu extends Scene {
 		MenuModel.renderers.put(MenuModule.SHOP, new ShopRenderer());
 		MenuModel.renderers.put(MenuModule.PLAY, new PlayRenderer());
 		MenuModel.renderers.put(MenuModule.SOCIAL, new SocialRenderer());
-		MenuModel.renderers.put(MenuModule.MARKET, new MiningMenuRenderer());
+		MenuModel.renderers.put(MenuModule.MINING, new MiningMenuRenderer());
 		
 		MenuModel.modules.put(MenuModule.PLAY, new Play());
 		MenuModel.modules.put(MenuModule.PROFILE, new Profile());
@@ -85,7 +84,7 @@ public class Menu extends Scene {
 		MenuModel.modules.put(MenuModule.SHOP, new Shop());
 		MenuModel.modules.put(MenuModule.STARMAP, new Starmap());
 		MenuModel.modules.put(MenuModule.SOCIAL, new Social());
-		MenuModel.modules.put(MenuModule.MARKET, new MiningMenu());
+		MenuModel.modules.put(MenuModule.MINING, new MiningMenu());
 		
 		for (BaseModuleRenderer renderer : MenuModel.renderers.values()) {
 			renderer.init();
@@ -103,6 +102,8 @@ public class Menu extends Scene {
 	public void open() {
 		menuRenderer.init();
 		AudioManager.startRadio();
+		Breadcrumbs.init();
+		Breadcrumbs.add(MenuModel.currentTab.toString());
 		load();
 	}
 	
@@ -162,7 +163,6 @@ public class Menu extends Scene {
 				    () -> API.meta().modules(API.authKey),
 				    modulesResult -> {
 				    	modulesResult.getEnabledModules().add(MenuModule.PLAY);
-				    	modulesResult.getEnabledModules().add(MenuModule.MARKET);
 				    	processModulesResult(modulesResult);
 				    }
 			);
@@ -170,6 +170,7 @@ public class Menu extends Scene {
 			ModuleData offlineModulesResult = new ModuleData();
 			offlineModulesResult.setEnabledModules(new ArrayList<>());
 			offlineModulesResult.getEnabledModules().add(MenuModule.SETTINGS);
+			offlineModulesResult.getEnabledModules().add(MenuModule.MINING);
 			offlineModulesResult.getEnabledModules().add(MenuModule.PLAY);
 			processModulesResult(offlineModulesResult);
 		}

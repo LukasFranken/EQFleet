@@ -6,6 +6,7 @@ public enum SkinColor {
 	
 	RED(new Color(0.7f, 0f, 0f, 1.0f)),
 	BLUE(new Color(0f, 0f, 0.7f, 1.0f)),
+	CYAN(new Color(0f, 0.7f, 0.7f, 1.0f)),
 	PURPLE(new Color(0.4f, 0f, 0.7f, 1.0f)),
 	PINK(new Color(0.7f, 0f, 0.4f, 1.0f)),
 	ORANGE(new Color(0.7f, 0.4f, 0f, 1.0f)),

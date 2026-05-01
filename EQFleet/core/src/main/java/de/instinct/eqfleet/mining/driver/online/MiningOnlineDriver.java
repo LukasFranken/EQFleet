@@ -42,7 +42,7 @@ public class MiningOnlineDriver extends MiningDriver {
 			}
 			if (message instanceof GameOrderMessage) {
 				GameOrderMessage orderMessage = (GameOrderMessage) message;
-				engineInterface.integrateOrder(MiningModel.state, orderMessage.order);
+				stateManager.integrateOrder(MiningModel.state, orderMessage.order);
 			}
 		}
 	}

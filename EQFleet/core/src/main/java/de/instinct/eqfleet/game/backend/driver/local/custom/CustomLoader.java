@@ -12,7 +12,6 @@ import de.instinct.api.matchmaking.model.VersusMode;
 import de.instinct.api.meta.dto.LoadoutData;
 import de.instinct.engine.core.player.Player;
 import de.instinct.engine.fleet.ai.data.AiPlayer;
-import de.instinct.engine_api.core.model.GameMap;
 import de.instinct.engine_api.core.service.EngineDataInterface;
 import de.instinct.engine_api.fleet.ai.service.AIPlayerLoader;
 import de.instinct.engine_api.fleet.ai.service.NeutralPlayerLoader;
@@ -68,7 +67,7 @@ public class CustomLoader {
 		return players;
 	}
 
-	private GameMap generateMap(GameType gameType) {
+	private FleetGameMap generateMap(GameType gameType) {
 		FleetGameMap map = new FleetGameMap();
 		List<PlanetInitialization> planets = new ArrayList<>();
 		generateAncientPlanet(planets);

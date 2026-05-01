@@ -41,7 +41,7 @@ public class Mining extends Scene {
 	public void update() {
 		renderer.update();
 		inputManager.update();
-		driver.update();
+		if (driver != null) driver.update();
 	}
 
 	@Override

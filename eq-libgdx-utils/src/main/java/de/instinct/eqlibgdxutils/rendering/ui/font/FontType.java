@@ -6,6 +6,8 @@ public enum FontType {
 	LARGE,
 	NORMAL,
 	BOLD,
+	MEDIUM,
+	MEDIUM_BOLD,
 	SMALL,
 	SMALL_BOLD,
 	TINY,

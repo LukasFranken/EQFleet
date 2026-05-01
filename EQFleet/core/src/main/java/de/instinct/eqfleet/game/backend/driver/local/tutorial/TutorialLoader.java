@@ -22,7 +22,6 @@ import de.instinct.engine.fleet.entity.unit.ship.component.types.EngineType;
 import de.instinct.engine.fleet.entity.unit.ship.data.ShipData;
 import de.instinct.engine.fleet.net.messages.FleetMovementMessage;
 import de.instinct.engine.fleet.player.FleetPlayer;
-import de.instinct.engine_api.core.model.GameMap;
 import de.instinct.engine_api.core.service.EngineDataInterface;
 import de.instinct.engine_api.fleet.ai.service.AIPlayerLoader;
 import de.instinct.engine_api.fleet.model.FleetGameMap;
@@ -134,7 +133,7 @@ public class TutorialLoader {
 		return players;
 	}
 
-	private GameMap generateMap() {
+	private FleetGameMap generateMap() {
 		FleetGameMap map = new FleetGameMap();
 		map.setZoomFactor(1f);
 		List<PlanetInitialization> planets = new ArrayList<>();

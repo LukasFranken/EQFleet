@@ -7,7 +7,6 @@ import de.instinct.eqfleet.holo.HoloPanel;
 import de.instinct.eqfleet.holo.HoloRenderer;
 import de.instinct.eqfleet.holo.style.HoloPanelStyle;
 import de.instinct.eqfleet.menu.common.components.DefaultButtonFactory;
-import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.MathUtil;
 import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.debug.modulator.Modulator;
@@ -84,23 +83,19 @@ public class MenuWindow extends Component {
 	}
 	
 	private void createCloseModuleButton() {
-		closeModuleButton = DefaultButtonFactory.colorButton("x", new Action() {
+		closeModuleButton = DefaultButtonFactory.colorButton("<<", new Action() {
 			
 			@Override
 			public void execute() {
 				MenuModel.activeModule = null;
+				Breadcrumbs.remove();
 			}
 			
 		});
-		closeModuleButton.setBorder(null);
 		closeModuleButton.setColor(new Color(0, 0, 0, 0));
-		Color downColor = new Color(SkinManager.skinColor);
-		downColor.a = 0.4f;
-		closeModuleButton.getLabel().setType(FontType.LARGE);
 		closeModuleButton.getLabel().setColor(Color.WHITE);
-		closeModuleButton.setDownColor(downColor);
-		closeModuleButton.setHoverColor(new Color(0.5f, 0f, 0f, 0.1f));
-		closeModuleButton.setContentMargin(0f);
+		closeModuleButton.getLabel().setType(FontType.LARGE);
+		closeModuleButton.setBorder(null);
 	}
 	 
 	private void initTitle() {
@@ -108,6 +103,7 @@ public class MenuWindow extends Component {
 		title = new Label("");
 		title.setHorizontalAlignment(HorizontalAlignment.LEFT);
 		title.setColor(Color.WHITE);
+		title.setType(FontType.MEDIUM);
 	}
 	
 	@Override
@@ -115,7 +111,15 @@ public class MenuWindow extends Component {
 		float titleHorizontalMargin = 20f;
 		titleBounds.set(getBounds().x, getBounds().y + getBounds().height, getBounds().width, titleHeight);
 		
-		title.setText(MenuModel.activeModule == null ? "MENU" : MenuModel.activeModule.toString());
+		String titleText = "";
+		for (String breadcrumb : Breadcrumbs.getBreadcrumbs()) {
+			if (titleText.isEmpty()) {
+				titleText = breadcrumb;
+			} else {
+				titleText += " > " + breadcrumb;
+			}
+		}
+		title.setText(titleText);
 		title.setPosition(titleBounds.x + titleHorizontalMargin, titleBounds.y);
 		title.setFixedWidth(titleBounds.width - (titleHorizontalMargin * 2));
 		title.setFixedHeight(titleBounds.height);
@@ -125,10 +129,11 @@ public class MenuWindow extends Component {
 		titleBackgroundPanel.getColor().set(SkinManager.skinColor);
 		titleBackgroundPanel.getColor().a = MenuModel.alpha;
 		
-		float smallXFontAdjustment = 2f * GraphicsUtil.getVerticalDisplayScaleFactor();
-		closeModuleButton.setFixedHeight(titleHeight - smallXFontAdjustment);
-		closeModuleButton.setFixedWidth(titleHeight);
-		closeModuleButton.setPosition(titleBounds.x + titleBounds.width - titleHeight, titleBounds.y + smallXFontAdjustment);
+		closeModuleButton.getHoverColor().set(SkinManager.skinColor);
+		closeModuleButton.getHoverColor().a = 0.3f * MenuModel.alpha;
+		closeModuleButton.getDownColor().set(SkinManager.skinColor);
+		closeModuleButton.getDownColor().a = 0.5f * MenuModel.alpha;
+		closeModuleButton.setBounds(titleBounds.x + titleBounds.width - 50f, titleBounds.y, 50f, titleBounds.height);
 		closeModuleButton.setAlpha(MenuModel.alpha);
 		
 		float ratio = MathUtil.easeInOut(0f, 1f, MenuModel.openAnimationElapsed);

@@ -72,6 +72,16 @@ public class LibraryManager {
 				.size(16)
 				.build());
 		fontTypes.add(FontTypeConfiguration.builder()
+				.type(FontType.MEDIUM)
+				.name("larabie")
+				.size(14)
+				.build());
+		fontTypes.add(FontTypeConfiguration.builder()
+				.type(FontType.MEDIUM_BOLD)
+				.name("source_bold")
+				.size(14)
+				.build());
+		fontTypes.add(FontTypeConfiguration.builder()
 				.type(FontType.SMALL)
 				.name("larabie")
 				.size(11)

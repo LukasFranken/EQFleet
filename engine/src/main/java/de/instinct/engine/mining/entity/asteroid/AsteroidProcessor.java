@@ -1,9 +1,9 @@
 package de.instinct.engine.mining.entity.asteroid;
 
-import com.badlogic.gdx.math.Vector2;
-
 import de.instinct.engine.core.entity.EntityProcessor;
 import de.instinct.engine.mining.data.MiningGameState;
+import de.instinct.engine.mining.data.map.node.MiningMapNode;
+import de.instinct.engine.mining.data.map.node.types.AsteroidMapNode;
 import de.instinct.engine.mining.entity.ship.MiningPlayerShip;
 import de.instinct.engine.mining.entity.ship.cargo.MiningCargoProcessor;
 
@@ -23,15 +23,15 @@ public class AsteroidProcessor extends EntityProcessor {
 		super.removeDestroyed(state.entityData.asteroids.iterator());
 	}
 	
-	public void createAsteroid(MiningGameState state, Vector2 position, ResourceType resourceType, float resourceAmount) {
+	public void createAsteroid(MiningGameState state, AsteroidMapNode asteroidNode) {
 		Asteroid asteroid = new Asteroid();
 		super.initializeEntity(asteroid, state.entityData);
-		asteroid.position = position;
-		asteroid.radius = 10f;
-		asteroid.maxHealth = 10f;
+		asteroid.position = asteroidNode.position;
+		asteroid.radius = asteroidNode.radius;
+		asteroid.maxHealth = asteroidNode.health;
 		asteroid.currentHealth = asteroid.maxHealth;
-		asteroid.resourceType = resourceType;
-		asteroid.resourceAmount = resourceAmount;
+		asteroid.resourceType = asteroidNode.resourceType;
+		asteroid.resourceAmount = asteroidNode.value;
 		state.entityData.asteroids.add(asteroid);
 	}
 
@@ -40,6 +40,14 @@ public class AsteroidProcessor extends EntityProcessor {
 		if (asteroid.currentHealth <= 0) {
 			cargoProcessor.addCargo(ship, asteroid.resourceType, asteroid.resourceAmount);
 			asteroid.flaggedForDestroy = true;
+		}
+	}
+
+	public void createAsteroids(MiningGameState miningState) {
+		for (MiningMapNode node : miningState.map.nodes) {
+			if (node instanceof AsteroidMapNode) {
+				createAsteroid(miningState, (AsteroidMapNode) node);
+			}
 		}
 	}
 

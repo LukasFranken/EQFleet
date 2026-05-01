@@ -39,7 +39,9 @@ public class MiningProjectileProcessor extends ProjectileProcessor<MiningProject
 		projectile.lifetimeMS = ship.weapon.lifetimeMS;
 		projectile.position = ship.position.cpy();
 		projectile.direction = ship.direction.cpy();
-		projectile.speed = 300;
+		System.out.println(ship.radius);
+		projectile.position.add(projectile.direction.cpy().scl(ship.radius));
+		projectile.speed = ship.weapon.speed;
 		state.entityData.projectiles.add(projectile);
 	}
 

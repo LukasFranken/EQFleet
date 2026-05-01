@@ -4,6 +4,10 @@ import com.esotericsoftware.kryo.Kryo;
 
 import de.instinct.engine.core.net.KryoRegistrator;
 import de.instinct.engine.mining.data.MiningGameState;
+import de.instinct.engine.mining.data.map.MiningMap;
+import de.instinct.engine.mining.data.map.node.MiningMapNode;
+import de.instinct.engine.mining.data.map.node.types.AsteroidMapNode;
+import de.instinct.engine.mining.data.map.node.types.RecallAreaNode;
 import de.instinct.engine.mining.entity.asteroid.Asteroid;
 import de.instinct.engine.mining.entity.asteroid.ResourceType;
 import de.instinct.engine.mining.entity.data.MiningEntityData;
@@ -44,6 +48,10 @@ public class MiningKryoRegistrator extends KryoRegistrator {
 		kryo.register(StartMessage.class);
 		kryo.register(MiningShipData.class);
 		kryo.register(CargoItem.class);
+		kryo.register(MiningMap.class);
+		kryo.register(MiningMapNode.class);
+		kryo.register(AsteroidMapNode.class);
+		kryo.register(RecallAreaNode.class);
 	}
 
 }

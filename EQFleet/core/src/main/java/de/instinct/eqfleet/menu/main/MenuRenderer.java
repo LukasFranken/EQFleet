@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g3d.Material;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.api.core.modules.MenuModule;
@@ -13,12 +15,16 @@ import de.instinct.api.core.modules.ModuleUnlockRequirement;
 import de.instinct.eqfleet.ApplicationMode;
 import de.instinct.eqfleet.GlobalStaticData;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
+import de.instinct.eqfleet.menu.common.components.tab.TabBar;
+import de.instinct.eqfleet.menu.common.components.tab.TabButton;
 import de.instinct.eqfleet.menu.main.header.MenuHeader;
 import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.debug.profiler.Profiler;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.Button;
-import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
+import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.labeled.LabeledButton;
+import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.labeled.types.LabeledModelButton;
+import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 
 public class MenuRenderer extends BaseModuleRenderer {
 	
@@ -29,8 +35,7 @@ public class MenuRenderer extends BaseModuleRenderer {
 	private MenuHeader header;
 	private Map<MenuModule, Button> moduleButtons;
 	private Map<MenuModule, MenuTab> moduleTabAssociations;
-	private MenuTab currentTab;
-	private List<Button> tabButtons;
+	private TabBar tabBar;
 
 	public MenuRenderer() {
 		MenuModel.moduleBounds = new Rectangle();
@@ -39,18 +44,22 @@ public class MenuRenderer extends BaseModuleRenderer {
 		window = new MenuWindow();
 		header = new MenuHeader();
 		
-		createTabs();
-		currentTab = MenuTab.FLAGSHIP;
+		createTabBar();
+		MenuModel.currentTab = MenuTab.FLAGSHIP;
 		moduleButtons = new LinkedHashMap<>();
 	}
 	
-	private void createTabs() {
+	private void createTabBar() {
+		tabBar = new TabBar();
+		
 		moduleTabAssociations = new LinkedHashMap<>();
+		moduleTabAssociations.put(MenuModule.MINING, MenuTab.FLAGSHIP);
 		moduleTabAssociations.put(MenuModule.CONSTRUCTION, MenuTab.FLAGSHIP);
 		moduleTabAssociations.put(MenuModule.SHIPYARD, MenuTab.FLAGSHIP);
 		moduleTabAssociations.put(MenuModule.STARMAP, MenuTab.FLAGSHIP);
 		moduleTabAssociations.put(MenuModule.PLAY, MenuTab.FLAGSHIP);
 		
+		moduleTabAssociations.put(MenuModule.FORGE, MenuTab.STATION);
 		moduleTabAssociations.put(MenuModule.MARKET, MenuTab.STATION);
 		moduleTabAssociations.put(MenuModule.SHOP, MenuTab.STATION);
 		
@@ -58,18 +67,19 @@ public class MenuRenderer extends BaseModuleRenderer {
 		moduleTabAssociations.put(MenuModule.PROFILE, MenuTab.COMMANDER);
 		moduleTabAssociations.put(MenuModule.SOCIAL, MenuTab.COMMANDER);
 		
-		tabButtons = new ArrayList<>();
 		for (MenuTab tab : MenuTab.values()) {
-			Button tabButton = new ColorButton(tab.toString());
+			TabButton tabButton = new TabButton(tab.getColor(), tab.toString());
 			tabButton.setAction(new Action() {
 				
 				@Override
 				public void execute() {
-					currentTab = tab;
+					MenuModel.currentTab = tab;
+					SkinManager.setSkinColor(tab.getColor());
+					Breadcrumbs.change(tab.toString());
 				}
 				
 			});
-			tabButtons.add(tabButton);
+			tabBar.addTabButton(tabButton);
 		}
 	}
 
@@ -114,11 +124,15 @@ public class MenuRenderer extends BaseModuleRenderer {
 			MenuModel.modulesUpdated = false;
 		}
 		float margin = 20f;
-		MenuModel.moduleBounds.set(margin, margin + 20, GraphicsUtil.screenBounds().width - (margin * 2), GraphicsUtil.screenBounds().height - 150f - 40f);
+		MenuModel.moduleBounds.set(margin, margin + 60, GraphicsUtil.screenBounds().width - (margin * 2), GraphicsUtil.screenBounds().height - 150f - 80f);
 		updateWindowAnimation();
 		header.getBounds().set(MenuModel.moduleBounds.x, MenuModel.moduleBounds.y + MenuModel.moduleBounds.height + 50, MenuModel.moduleBounds.width, 45);
 		window.getBounds().set(MenuModel.moduleBounds);
 		header.setAlpha(MenuModel.alpha);
+		
+		tabBar.setBounds(MenuModel.moduleBounds.x, MenuModel.moduleBounds.y - 45f, MenuModel.moduleBounds.width, 40f);
+		tabBar.setActiveButton(MenuModel.currentTab.toString());
+		tabBar.setAlpha(MenuModel.alpha);
 	}
 
 	@Override
@@ -130,22 +144,13 @@ public class MenuRenderer extends BaseModuleRenderer {
 			window.render();
 			Profiler.checkpoint("MENU_RNDR", "window");
 			if (MenuModel.activeModule == null) {
-				renderTabButtons();
-				Profiler.checkpoint("MENU_RNDR", "tab btns");
+				tabBar.render();
+				Profiler.checkpoint("MENU_RNDR", "tab bar");
 				renderModuleButtons();
 				Profiler.checkpoint("MENU_RNDR", "mod btns");
 			}
 			elapsed += Gdx.graphics.getDeltaTime();
 			Profiler.endFrame("MENU_RNDR");
-		}
-	}
-
-	private void renderTabButtons() {
-		for (int i = 0; i < tabButtons.size(); i++) {
-			Button tabButton = tabButtons.get(i);
-			tabButton.setBounds(MenuModel.moduleBounds.x + 5 + (((MenuModel.moduleBounds.width - 10) / tabButtons.size()) * i), MenuModel.moduleBounds.y + 5, (MenuModel.moduleBounds.width - 10) / tabButtons.size(), 40f);
-			tabButton.setAlpha(MenuModel.alpha);
-			tabButton.render();
 		}
 	}
 
@@ -167,7 +172,7 @@ public class MenuRenderer extends BaseModuleRenderer {
 			int i = 0;
 			for (MenuModule module : moduleButtons.keySet()) {
 				if (module == MenuModule.PLAY && GlobalStaticData.mode != ApplicationMode.DEV) continue;
-				if (moduleTabAssociations.get(module) != currentTab) continue;
+				if (moduleTabAssociations.get(module) != MenuModel.currentTab) continue;
 				if (MenuModel.unlockedModules.getEnabledModules().contains(module)) {
 					renderModuleButton(module, i);
 					i++;
@@ -176,7 +181,7 @@ public class MenuRenderer extends BaseModuleRenderer {
 			if (MenuModel.lockedModules != null) {
 				List<ModuleUnlockRequirement> lockedModuleRequirementsInTab = new ArrayList<>();
 				for (ModuleUnlockRequirement unlockRequirement : MenuModel.lockedModules.getUnlockRequirements()) {
-					if (moduleTabAssociations.get(unlockRequirement.getModule()) == currentTab) {
+					if (moduleTabAssociations.get(unlockRequirement.getModule()) == MenuModel.currentTab) {
 						lockedModuleRequirementsInTab.add(unlockRequirement);
 					}
 				}
@@ -199,7 +204,7 @@ public class MenuRenderer extends BaseModuleRenderer {
 	}
 	
 	private void renderModuleButton(MenuModule module, int index) {
-		Button moduleButton = moduleButtons.get(module);
+		LabeledButton moduleButton = (LabeledButton) moduleButtons.get(module);
 		if (moduleButton == null) return;
 		float labeledModelButtonHeight = 70f;
 		float buttonWidth = 50f;
@@ -208,6 +213,18 @@ public class MenuRenderer extends BaseModuleRenderer {
 		int column = index % elementsPerRow;
 		int row = 1 + ((int)index / elementsPerRow);
 		
+		moduleButton.getContentBorder().getColor().set(SkinManager.skinColor);
+		moduleButton.getLabel().getColor().set(SkinManager.skinColor);
+		moduleButton.getHoverColor().set(SkinManager.skinColor);
+		moduleButton.getHoverColor().a = 0.5f;
+		moduleButton.getDownColor().set(SkinManager.skinColor);
+		moduleButton.getDownColor().a = 0.7f;
+		if (moduleButton instanceof LabeledModelButton) {
+			LabeledModelButton modelButton = (LabeledModelButton) moduleButton;
+			for (Material material : modelButton.getModelPreview().getConfig().getModel().materials) {
+	            material.set(ColorAttribute.createDiffuse(SkinManager.darkestSkinColor));
+	        }
+		}
 		moduleButton.setBounds(MenuModel.moduleBounds.x + margin + ((buttonWidth + margin) * column), MenuModel.moduleBounds.y + MenuModel.moduleBounds.height - ((labeledModelButtonHeight + margin) * row), buttonWidth, labeledModelButtonHeight);
 		moduleButton.setAlpha(MenuModel.alpha);
 		moduleButton.render();

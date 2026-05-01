@@ -72,11 +72,16 @@ MINING GAME:
  -> gauss cannon with kickback
 
 REDESIGN:
+- unlock new modules with download animation
+ -> give the sense of having the software updated
+ -> VO "Command Interface expansion completed"
 - switching network on mobile doesnt work
 - ships harder to unlock and progressively
 - shop buy popup with more information
  -> proper shop with icons
 - make componentlevels buyable
+ -> remove comp level up from postgame
+ -> replace that section with game stats
 - 3v3: onlinedriver:49-null, check load order safety
 - fix desyncs (regular checks with hash or smth)
 - tutorial

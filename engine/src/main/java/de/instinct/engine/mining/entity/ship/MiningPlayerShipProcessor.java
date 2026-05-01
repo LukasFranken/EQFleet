@@ -61,7 +61,7 @@ public class MiningPlayerShipProcessor extends EntityProcessor {
 		MiningPlayerShip ship = new MiningPlayerShip();
 		ship.ownerId = player.id;
 		ship.position.set(0, 0);
-		ship.radius = 10f;
+		ship.radius = player.shipData.radius;
 		ship.direction = new Vector2(0, 1);
 		
 		ship.core = new MiningCore();
@@ -147,7 +147,7 @@ public class MiningPlayerShipProcessor extends EntityProcessor {
 	}
 	
 	public static boolean shipIsInRecallArea(MiningGameState state, MiningPlayerShip ship) {
-		return ship.position.dst(0, 0) <= state.recallRadius;
+		return ship.position.dst(state.recallPosition) <= state.recallRadius;
 	}
 
 }
