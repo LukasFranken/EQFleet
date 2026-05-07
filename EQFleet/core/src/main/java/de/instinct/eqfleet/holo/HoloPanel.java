@@ -27,5 +27,17 @@ public class HoloPanel {
 	public void setBounds(float x, float y, float width, float height) {
 		bounds.set(x, y, width, height);
 	}
+	
+	public void setBounds(Rectangle bounds) {
+		this.bounds.set(bounds);
+	}
+	
+	public void setColor(Color color) {
+		this.color.set(color);
+	}
+	
+	public void setColor(float r, float g, float b, float a) {
+		this.color.set(r, g, b, a);
+	}
 
 }

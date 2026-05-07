@@ -32,6 +32,14 @@ GENERAL:
   x game
   
 MINING GAME:
+- buy all upgrades to enable next stage ship
+ -> unlocks more upgrade options
+- fix first open intro locked bug
+- create mining profile in meta
+- shift to boost
+- make mining maps random (seeded)
+- for solo: make game network free
+ - submit game at end to engine for verification
 - ship refill/repair cooldown
  -> not fuel, but battery that needs to charge
  -> can be improved

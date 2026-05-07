@@ -31,7 +31,7 @@ public class MiningShipRenderer {
 			model.transform.idt();
 		    model.transform.translate(ship.position.x, ship.position.y, 0);
 		    model.transform.rotate(0, 0, 1, ship.direction.angleDeg());
-		    model.transform.scale(2f, 2f, 2f);
+		    model.transform.scale(1f, 1f, 1f);
 			ModelRenderer.render(camera, model);
 		}
 	}

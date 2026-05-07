@@ -14,5 +14,7 @@ public class MiningGameState extends GameState {
 	public float recallRadius;
 	public MiningEntityData entityData;
 	public MiningMap map;
+	
+	public int minedAsteroids;
 
 }

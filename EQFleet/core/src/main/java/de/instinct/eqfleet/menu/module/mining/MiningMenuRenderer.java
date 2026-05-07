@@ -7,10 +7,10 @@ import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.common.components.tab.TabBar;
 import de.instinct.eqfleet.menu.common.components.tab.TabButton;
 import de.instinct.eqfleet.menu.main.MenuModel;
-import de.instinct.eqfleet.menu.module.mining.tab.MissionTab;
-import de.instinct.eqfleet.menu.module.mining.tab.ResourcesTab;
-import de.instinct.eqfleet.menu.module.mining.tab.ShipTab;
-import de.instinct.eqfleet.menu.module.mining.tab.ShopTab;
+import de.instinct.eqfleet.menu.module.mining.tab.mission.MissionTab;
+import de.instinct.eqfleet.menu.module.mining.tab.resources.ResourcesTab;
+import de.instinct.eqfleet.menu.module.mining.tab.ship.ShipTab;
+import de.instinct.eqfleet.menu.module.mining.tab.shop.ShopTab;
 import de.instinct.eqlibgdxutils.generic.Action;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
 
@@ -66,11 +66,11 @@ public class MiningMenuRenderer extends BaseModuleRenderer {
 		case MISSION:
 			return true;
 		case RESOURCES:
-			return true;
+			return MiningMenuModel.inventory != null && !MiningMenuModel.inventory.getResources().isEmpty();
 		case SHIP:
-			return true;
+			return false;
 		case SHOP:
-			return true;
+			return false;
 		}
 		return false;
 	}

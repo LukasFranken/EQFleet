@@ -16,22 +16,25 @@ public class MiningRenderer {
 	private GridRenderer gridRenderer;
 	private AsteroidRenderer asteroidRenderer;
 	
-	public void init() {
+	public MiningRenderer() {
 		cameraManager = new MiningCameraManager();
-		cameraManager.init();
 		shipRenderer = new MiningShipRenderer();
-		shipRenderer.init();
 		projectileRenderer = new MiningProjectileRenderer();
-		projectileRenderer.init();
 		hudRenderer = new MiningHudRenderer();
-		hudRenderer.init();
 		asteroidRenderer = new AsteroidRenderer();
-		asteroidRenderer.init();
 		worldHudRenderer = new MiningWorldHudRenderer();
-		worldHudRenderer.init();
 		gridRenderer = new GridRenderer(GridConfiguration.builder()
 				.step(25f)
 				.build());
+	}
+	
+	public void init() {
+		cameraManager.init();
+		shipRenderer.init();
+		projectileRenderer.init();
+		hudRenderer.init();
+		asteroidRenderer.init();
+		worldHudRenderer.init();
 	}
 	
 	public void update() {

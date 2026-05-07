@@ -25,7 +25,7 @@ import de.instinct.eqlibgdxutils.rendering.ui.popup.PopupRenderer;
 
 public class App extends ApplicationAdapter {
 
-    public static final String VERSION = "0.2.22";
+    public static final String VERSION = "0.2.23";
     private final String LOGTAG = "APP";
 
     private boolean halted;
@@ -36,27 +36,32 @@ public class App extends ApplicationAdapter {
 
     @Override
     public void create() {
-    	Logger.config.setTimeFormat(LoggingTimeFormat.TIME_ONLY);
-    	Logger.log(LOGTAG, "Welcome to EQFLEET v" + VERSION, ConsoleColor.YELLOW);
-    	LibraryManager.init();
-    	AudioManager.init();
-    	LanguageManager.init();
-    	Gdx.input.setInputProcessor(new InputMultiplexer());
-    	WebManager.init();
-    	SceneManager.init();
-        Console.registerMetric(NumberMetric.builder()
-        		.decimals(2)
-        		.tag("this_frame_time_MS")
-        		.build());
-        GlobalStaticData.background = !PreferenceManager.load("background").contentEquals("false");
-        GlobalStaticData.showDebugGrid = PreferenceManager.load("debuggrid").contentEquals("true");
-        BackgroundRenderer.init();
-        String parallax = PreferenceManager.load("parallax");
-        if (!parallax.contentEquals("")) BackgroundRenderer.PARALLAX_FACTOR = Float.parseFloat(parallax);
-        SceneManager.changeTo(SceneType.INTRO);
-        Logger.log(LOGTAG, "Initialization completed", ConsoleColor.YELLOW);
-        HoloRenderer.init();
-        StatusRenderer.init();
+    	try {
+    		Logger.config.setTimeFormat(LoggingTimeFormat.TIME_ONLY);
+        	Logger.log(LOGTAG, "Welcome to EQFLEET v" + VERSION, ConsoleColor.YELLOW);
+    		LibraryManager.init();
+        	AudioManager.init();
+        	LanguageManager.init();
+        	Gdx.input.setInputProcessor(new InputMultiplexer());
+        	WebManager.init();
+        	SceneManager.init();
+            Console.registerMetric(NumberMetric.builder()
+            		.decimals(2)
+            		.tag("this_frame_time_MS")
+            		.build());
+            GlobalStaticData.background = !PreferenceManager.load("background").contentEquals("false");
+            GlobalStaticData.showDebugGrid = PreferenceManager.load("debuggrid").contentEquals("true");
+            BackgroundRenderer.init();
+            String parallax = PreferenceManager.load("parallax");
+            if (!parallax.contentEquals("")) BackgroundRenderer.PARALLAX_FACTOR = Float.parseFloat(parallax);
+            SceneManager.changeTo(SceneType.INTRO);
+            Logger.log(LOGTAG, "Initialization completed", ConsoleColor.YELLOW);
+            HoloRenderer.init();
+            StatusRenderer.init();
+		} catch (Exception e) {
+			Logger.log(LOGTAG, e);
+			halted = true;
+		}
     }
 	
 	@Override
@@ -95,12 +100,17 @@ public class App extends ApplicationAdapter {
 
 	@Override
     public void dispose() {
-		SceneManager.dispose();
-		WebManager.dispose();
-        AudioManager.dispose();
-        LibraryManager.dispose();
-        HoloRenderer.dispose();
-        Logger.log(LOGTAG, "EQFLEET TERMINATED", ConsoleColor.YELLOW);
+		try {
+			SceneManager.dispose();
+			WebManager.dispose();
+	        AudioManager.dispose();
+	        LibraryManager.dispose();
+	        HoloRenderer.dispose();
+		} catch (Exception e) {
+			Logger.log(LOGTAG, e);
+			halted = true;
+		}
+		Logger.log(LOGTAG, "EQFLEET TERMINATED", ConsoleColor.YELLOW);
     }
 
 }

@@ -45,7 +45,7 @@ public class Lwjgl3Launcher {
     private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {
         Lwjgl3ApplicationConfiguration configuration = new Lwjgl3ApplicationConfiguration();
         configuration.setTitle("Equilibrium");
-        configuration.setForegroundFPS(60);
+        configuration.setForegroundFPS(144);
         configuration.setResizable(false);
         configuration.setWindowedMode((int)windowSize.x, (int)windowSize.y);
         configuration.setHdpiMode(HdpiMode.Pixels);

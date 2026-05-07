@@ -31,7 +31,8 @@ public class MiningProjectileRenderer {
 			model.transform.idt();
 		    model.transform.translate(projectile.position.x, projectile.position.y, 0);
 		    model.transform.rotate(0, 0, 1, projectile.direction.angleDeg() - 90f);
-		    model.transform.scale(1f, 1f, 1f);
+		    float damageScaleModifier = 0.75f * (float) (Math.log10(projectile.ship.weapon.damage) + 1f);
+		    model.transform.scale(damageScaleModifier, damageScaleModifier, damageScaleModifier);
 			ModelRenderer.render(camera, model);
 		}
 	}

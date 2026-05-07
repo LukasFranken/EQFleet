@@ -26,7 +26,7 @@ public class MiningProjectileProcessor extends ProjectileProcessor<MiningProject
 	private void updateMiningProjectile(MiningGameState state, MiningProjectile projectile, long progressionMS) {
 		for (Asteroid asteroid : state.entityData.asteroids) {
 			if (checkHit(projectile, asteroid)) {
-				asteroidProcessor.damageAsteroid(asteroid, projectile.ship);
+				asteroidProcessor.damageAsteroid(state, asteroid, projectile.ship);
 				projectile.flaggedForDestroy = true;
 			}
 		}
@@ -39,7 +39,6 @@ public class MiningProjectileProcessor extends ProjectileProcessor<MiningProject
 		projectile.lifetimeMS = ship.weapon.lifetimeMS;
 		projectile.position = ship.position.cpy();
 		projectile.direction = ship.direction.cpy();
-		System.out.println(ship.radius);
 		projectile.position.add(projectile.direction.cpy().scl(ship.radius));
 		projectile.speed = ship.weapon.speed;
 		state.entityData.projectiles.add(projectile);

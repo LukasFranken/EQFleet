@@ -24,12 +24,14 @@ public class MiningHudRenderer {
     private CargoHudElement cargoHud;
     private MobileInputHud mobileInputHud;
 	
-	public void init() {
-		engineHud = new EngineHudElement();
+    public MiningHudRenderer() {
+    	engineHud = new EngineHudElement();
 		energyHud = new EnergyHudElement();
 		cargoHud = new CargoHudElement();
-		
 		recallButton = new ColorButton("RECALL");
+	}
+    
+	public void init() {
 		recallButton.setColor(new Color(0.5f, 0f, 0f, 0.5f));
 		recallButton.setDownColor(new Color());
 		recallButton.setHoverColor(new Color());

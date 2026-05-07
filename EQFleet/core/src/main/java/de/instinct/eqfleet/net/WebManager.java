@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 import de.instinct.api.auth.dto.TokenVerificationResponse;
 import de.instinct.api.core.API;
 import de.instinct.api.core.logging.LoggingHook;
+import de.instinct.engine_api.core.EngineAPI;
 import de.instinct.eqfleet.GlobalStaticData;
 import de.instinct.eqfleet.PreferenceManager;
 import de.instinct.eqfleet.net.model.ConnectionStatus;
@@ -66,6 +67,7 @@ public class WebManager {
 
     private static void initializeAPI() {
     	API.authKey = "";
+    	EngineAPI.authKey = "";
     	API.setLoggingHook(new LoggingHook() {
 			
 			@Override
@@ -75,12 +77,14 @@ public class WebManager {
 			
 		});
         API.initialize(GlobalStaticData.configuration);
+        EngineAPI.initialize(GlobalStaticData.configuration);
 	}
     
     public static void register() {
     	String authKey = API.authentication().register();
     	PreferenceManager.save("authkey", authKey);
     	API.authKey = authKey;
+    	EngineAPI.authKey = authKey;
     	status = ConnectionStatus.ONLINE;
     }
     
@@ -89,6 +93,7 @@ public class WebManager {
     		TokenVerificationResponse response = API.authentication().verify(authKey);
         	if (response == TokenVerificationResponse.VERIFIED) {
     			API.authKey = authKey;
+    			EngineAPI.authKey = authKey;
     			PreferenceManager.save("authkey", authKey);
     			status = ConnectionStatus.ONLINE;
     			Logger.log(LOGTAG, "Logged in", ConsoleColor.GREEN);
@@ -143,6 +148,7 @@ public class WebManager {
 		if (ping == -1) {
 			status = ConnectionStatus.OFFLINE;
 			API.authKey = "";
+			EngineAPI.authKey = "";
 			Logger.log(LOGTAG, "Disconnected", ConsoleColor.RED);
 		} else {
 			if (status == ConnectionStatus.OFFLINE) {

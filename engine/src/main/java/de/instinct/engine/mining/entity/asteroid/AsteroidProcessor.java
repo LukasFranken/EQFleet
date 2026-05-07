@@ -35,10 +35,11 @@ public class AsteroidProcessor extends EntityProcessor {
 		state.entityData.asteroids.add(asteroid);
 	}
 
-	public void damageAsteroid(Asteroid asteroid, MiningPlayerShip ship) {
+	public void damageAsteroid(MiningGameState state, Asteroid asteroid, MiningPlayerShip ship) {
 		asteroid.currentHealth -= ship.weapon.damage;
 		if (asteroid.currentHealth <= 0) {
 			cargoProcessor.addCargo(ship, asteroid.resourceType, asteroid.resourceAmount);
+			state.minedAsteroids += 1;
 			asteroid.flaggedForDestroy = true;
 		}
 	}

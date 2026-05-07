@@ -16,12 +16,12 @@ public class Mining extends Scene {
 	@Override
 	public void init() {
 		renderer = new MiningRenderer();
-		renderer.init();
 		inputManager = new MiningInputManager();
 	}
 
 	@Override
 	public void open() {
+		renderer.init();
 		switch (MiningModel.mode) {
 		case ONLINE:
 			driver = new MiningOnlineDriver();

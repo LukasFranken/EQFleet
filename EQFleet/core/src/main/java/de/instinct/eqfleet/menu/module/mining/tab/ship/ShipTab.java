@@ -1,8 +1,8 @@
-package de.instinct.eqfleet.menu.module.mining.tab;
+package de.instinct.eqfleet.menu.module.mining.tab.ship;
 
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
 
-public class ShopTab extends Component {
+public class ShipTab extends Component {
 
 	@Override
 	protected void updateComponent() {
