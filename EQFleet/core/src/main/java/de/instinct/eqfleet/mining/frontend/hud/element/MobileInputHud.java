@@ -17,12 +17,12 @@ public class MobileInputHud extends Component {
 	
 	public MobileInputHud() {
 		super();
-		joystick = new CustomJoystick(GraphicsUtil.screenBounds().width - 160, 150, 80);
+		joystick = new CustomJoystick(GraphicsUtil.screenBounds().width - 80, 180, 80);
     	shootButton = new ColorButton("FIRE");
     	shootButton.setColor(new Color(Color.GRAY));
     	shootButton.getColor().a = 0.5f;
     	shootButton.getLabel().setColor(Color.RED);
-    	shootButton.setBounds(320, 250, 60, 40);
+    	shootButton.setBounds(20, 150, 60, 60);
     	shootButton.setDownAction(new Action() {
 			
 			@Override
