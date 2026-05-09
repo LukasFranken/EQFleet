@@ -18,7 +18,6 @@ import de.instinct.eqlibgdxutils.rendering.ui.component.passive.label.Label;
 import de.instinct.eqlibgdxutils.rendering.ui.component.passive.loadingbar.types.rectangular.subtypes.PlainRectangularLoadingBar;
 import de.instinct.eqlibgdxutils.rendering.ui.core.Border;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontType;
-import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.configs.shapes.EQRectangle;
@@ -105,13 +104,13 @@ public class ProfileHeaderComponent extends Component {
 		
 		nameBorder = EQRectangle.builder()
 				.bounds(nameBounds)
-				.color(new Color(SkinManager.skinColor))
+				.color(new Color(Color.GRAY))
 				.glowConfig(EQGlowConfig.builder().build())
 				.thickness(1f)
 				.build();
 		rankBorder = EQRectangle.builder()
 				.bounds(rankBounds)
-				.color(new Color(SkinManager.skinColor))
+				.color(new Color(Color.GRAY))
 				.glowConfig(EQGlowConfig.builder().build())
 				.thickness(1f)
 				.build();

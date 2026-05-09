@@ -32,6 +32,7 @@ GENERAL:
   x game
   
 MINING GAME:
+- autosell ores until 
 - buy all upgrades to enable next stage ship
  -> unlocks more upgrades for a partial reset (prestige)
  -> start with core upgrade tab
