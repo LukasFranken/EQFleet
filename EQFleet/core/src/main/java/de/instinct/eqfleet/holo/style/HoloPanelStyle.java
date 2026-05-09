@@ -9,16 +9,16 @@ import lombok.Data;
 public class HoloPanelStyle {
 	
 	@Default
-	private float bevelSize = 8f;
+	private float bevelSize = 10f;
 	
 	@Default
 	private float softness = 1f;
 	
 	@Default
-	private float fillAlpha = 0.45f;
+	private float fillAlpha = 0.30f;
 	
 	@Default
-	private float reflectionStrength = 0.12f;
+	private float reflectionStrength = 0.07f;
 	
 	@Default
 	private float borderSize = 0.5f;

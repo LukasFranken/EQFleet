@@ -32,6 +32,7 @@ GENERAL:
   x game
   
 MINING GAME:
+- autosell ores until 
 - buy all upgrades to enable next stage ship
  -> unlocks more upgrade options
 - fix first open intro locked bug
