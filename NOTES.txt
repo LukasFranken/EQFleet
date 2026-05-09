@@ -33,7 +33,9 @@ GENERAL:
   
 MINING GAME:
 - buy all upgrades to enable next stage ship
- -> unlocks more upgrade options
+ -> unlocks more upgrades for a partial reset (prestige)
+ -> start with core upgrade tab
+ -> core unlocks features
 - fix first open intro locked bug
 - create mining profile in meta
 - shift to boost
