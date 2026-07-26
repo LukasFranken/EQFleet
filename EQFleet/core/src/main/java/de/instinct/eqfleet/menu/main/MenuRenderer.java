@@ -12,8 +12,6 @@ import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.api.core.modules.MenuModule;
 import de.instinct.api.core.modules.ModuleUnlockRequirement;
-import de.instinct.eqfleet.ApplicationMode;
-import de.instinct.eqfleet.GlobalStaticData;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.common.components.tab.TabBar;
 import de.instinct.eqfleet.menu.common.components.tab.TabButton;
@@ -54,14 +52,11 @@ public class MenuRenderer extends BaseModuleRenderer {
 		
 		moduleTabAssociations = new LinkedHashMap<>();
 		moduleTabAssociations.put(MenuModule.MINING, MenuTab.FLAGSHIP);
-		moduleTabAssociations.put(MenuModule.CONSTRUCTION, MenuTab.FLAGSHIP);
-		moduleTabAssociations.put(MenuModule.SHIPYARD, MenuTab.FLAGSHIP);
-		moduleTabAssociations.put(MenuModule.STARMAP, MenuTab.FLAGSHIP);
-		moduleTabAssociations.put(MenuModule.PLAY, MenuTab.FLAGSHIP);
+		moduleTabAssociations.put(MenuModule.CONQUEST, MenuTab.FLAGSHIP);
 		
+		moduleTabAssociations.put(MenuModule.STORAGE, MenuTab.STATION);
 		moduleTabAssociations.put(MenuModule.FORGE, MenuTab.STATION);
 		moduleTabAssociations.put(MenuModule.MARKET, MenuTab.STATION);
-		moduleTabAssociations.put(MenuModule.SHOP, MenuTab.STATION);
 		
 		moduleTabAssociations.put(MenuModule.SETTINGS, MenuTab.COMMANDER);
 		moduleTabAssociations.put(MenuModule.PROFILE, MenuTab.COMMANDER);
@@ -171,7 +166,6 @@ public class MenuRenderer extends BaseModuleRenderer {
 		if (moduleButtons != null) {
 			int i = 0;
 			for (MenuModule module : moduleButtons.keySet()) {
-				if (module == MenuModule.PLAY && GlobalStaticData.mode != ApplicationMode.DEV) continue;
 				if (moduleTabAssociations.get(module) != MenuModel.currentTab) continue;
 				if (MenuModel.unlockedModules.getEnabledModules().contains(module)) {
 					renderModuleButton(module, i);

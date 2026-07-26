@@ -16,9 +16,14 @@ public class ModuleManager {
 		String preferenceLoadedModules = PreferenceManager.load("initialmodule");
 		moduleOpenMessages = new ArrayList<>();
 		moduleOpenMessages.add(InitialModuleOpenMessage.builder()
-				.module(MenuModule.STARMAP)
+				.module(MenuModule.MINING)
+				.message("Mine asteroids,\ngather resources,\nearn credits and\nupgrade your ship!")
+				.opened(preferenceLoadedModules.contains(MenuModule.CONQUEST.toString()))
+				.build());
+		moduleOpenMessages.add(InitialModuleOpenMessage.builder()
+				.module(MenuModule.CONQUEST)
 				.message("Prepare for battle\nand conquer the galaxy!\n\n ...and more.")
-				.opened(preferenceLoadedModules.contains(MenuModule.STARMAP.toString()))
+				.opened(preferenceLoadedModules.contains(MenuModule.CONQUEST.toString()))
 				.build());
 		moduleOpenMessages.add(InitialModuleOpenMessage.builder()
 				.module(MenuModule.PROFILE)
@@ -31,21 +36,6 @@ public class ModuleManager {
 				.opened(preferenceLoadedModules.contains(MenuModule.SETTINGS.toString()))
 				.build());
 		moduleOpenMessages.add(InitialModuleOpenMessage.builder()
-				.module(MenuModule.SHIPYARD)
-				.message("Build and equip your first ship")
-				.opened(preferenceLoadedModules.contains(MenuModule.SHIPYARD.toString()))
-				.build());
-		moduleOpenMessages.add(InitialModuleOpenMessage.builder()
-				.module(MenuModule.SHOP)
-				.message("Time to put your\nhard earned credits to use")
-				.opened(preferenceLoadedModules.contains(MenuModule.SHOP.toString()))
-				.build());
-		moduleOpenMessages.add(InitialModuleOpenMessage.builder()
-				.module(MenuModule.CONSTRUCTION)
-				.message("Build and upgrade your\ninfrastructure\n\nConstruction mode unlocked!")
-				.opened(preferenceLoadedModules.contains(MenuModule.CONSTRUCTION.toString()))
-				.build());
-		moduleOpenMessages.add(InitialModuleOpenMessage.builder()
 				.module(MenuModule.SOCIAL)
 				.message("Connect with other commanders,\ngroup up, form alliances.\n\nThe universe is too vast to\nconquer it alone!")
 				.opened(preferenceLoadedModules.contains(MenuModule.SOCIAL.toString()))
@@ -54,6 +44,16 @@ public class ModuleManager {
 				.module(MenuModule.MARKET)
 				.message("Trade resources with\nother commanders")
 				.opened(preferenceLoadedModules.contains(MenuModule.MARKET.toString()))
+				.build());
+		moduleOpenMessages.add(InitialModuleOpenMessage.builder()
+				.module(MenuModule.STORAGE)
+				.message("Store your resources safely\nin your station storage")
+				.opened(preferenceLoadedModules.contains(MenuModule.STORAGE.toString()))
+				.build());
+		moduleOpenMessages.add(InitialModuleOpenMessage.builder()
+				.module(MenuModule.FORGE)
+				.message("Create sophisticated goods\nfrom your resources")
+				.opened(preferenceLoadedModules.contains(MenuModule.FORGE.toString()))
 				.build());
 	}
 	
