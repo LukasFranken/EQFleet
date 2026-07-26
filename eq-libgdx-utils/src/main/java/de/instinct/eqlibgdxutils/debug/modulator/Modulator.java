@@ -92,12 +92,14 @@ public class Modulator {
 			
 			@Override
 			public void execute() {
-				if (activeCategory == null) {
-					activeCategory = (String) modulations.keySet().toArray()[hoveredIndex];
-					selectButton.getLabel().setText("<");
-				} else {
-					activeCategory = null;
-					selectButton.getLabel().setText(">");
+				if (modulations.size() > 0) {
+					if (activeCategory == null) {
+						activeCategory = (String) modulations.keySet().toArray()[hoveredIndex];
+						selectButton.getLabel().setText("<");
+					} else {
+						activeCategory = null;
+						selectButton.getLabel().setText(">");
+					}
 				}
 			}
 			

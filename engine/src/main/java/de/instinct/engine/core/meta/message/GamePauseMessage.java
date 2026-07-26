@@ -1,4 +1,4 @@
-package de.instinct.engine.fleet.net.messages;
+package de.instinct.engine.core.meta.message;
 
 import de.instinct.engine.core.net.NetworkMessage;
 import lombok.ToString;

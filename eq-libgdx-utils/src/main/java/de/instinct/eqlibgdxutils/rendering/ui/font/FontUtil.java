@@ -1,6 +1,8 @@
 package de.instinct.eqlibgdxutils.rendering.ui.font;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
@@ -16,12 +18,81 @@ import de.instinct.eqlibgdxutils.GraphicsUtil;
 
 public class FontUtil {
 	
-	private static Map<FontType, BitmapFont> fonts;
+	public static Map<FontType, BitmapFont> fonts;
 	private static SpriteBatch batch;
 	private static GlyphLayout layout;
 
 	public static void init() {
-		init(FontConfiguration.builder().build());
+		List<FontTypeConfiguration> defaultFontTypes = new ArrayList<>();
+		defaultFontTypes.add(FontTypeConfiguration.builder()
+				.type(FontType.GALACTIC)
+				.name("source")
+				.size(64)
+				.build());
+		defaultFontTypes.add(FontTypeConfiguration.builder()
+				.type(FontType.MONSTROUS)
+				.name("source")
+				.size(48)
+				.build());
+		defaultFontTypes.add(FontTypeConfiguration.builder()
+				.type(FontType.GIANT)
+				.name("source")
+				.size(32)
+				.build());
+		defaultFontTypes.add(FontTypeConfiguration.builder()
+				.type(FontType.LARGE)
+				.name("source")
+				.size(24)
+				.build());
+		defaultFontTypes.add(FontTypeConfiguration.builder()
+				.type(FontType.NORMAL)
+				.name("source")
+				.size(16)
+				.build());
+		defaultFontTypes.add(FontTypeConfiguration.builder()
+				.type(FontType.BOLD)
+				.name("source")
+				.size(16)
+				.build());
+		defaultFontTypes.add(FontTypeConfiguration.builder()
+				.type(FontType.MEDIUM)
+				.name("source")
+				.size(12)
+				.build());
+		defaultFontTypes.add(FontTypeConfiguration.builder()
+				.type(FontType.MEDIUM_BOLD)
+				.name("source")
+				.size(12)
+				.build());
+		defaultFontTypes.add(FontTypeConfiguration.builder()
+				.type(FontType.SMALL)
+				.name("source")
+				.size(10)
+				.build());
+		defaultFontTypes.add(FontTypeConfiguration.builder()
+				.type(FontType.SMALL_BOLD)
+				.name("source")
+				.size(10)
+				.build());
+		defaultFontTypes.add(FontTypeConfiguration.builder()
+				.type(FontType.TINY)
+				.name("source")
+				.size(8)
+				.build());
+		defaultFontTypes.add(FontTypeConfiguration.builder()
+				.type(FontType.MICRO_BOLD)
+				.name("source")
+				.size(7)
+				.build());
+		defaultFontTypes.add(FontTypeConfiguration.builder()
+				.type(FontType.MICRO)
+				.name("source")
+				.size(7)
+				.build());
+		
+		init(FontConfiguration.builder()
+				.fontTypes(defaultFontTypes)
+				.build());
 	}
 	
 	public static void init(FontConfiguration newConfiguration) {

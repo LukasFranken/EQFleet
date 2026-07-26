@@ -1,4 +1,4 @@
-package de.instinct.engine.fleet.net.data;
+package de.instinct.engine.core.player.data;
 
 import lombok.ToString;
 

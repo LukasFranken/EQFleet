@@ -3,7 +3,7 @@ package de.instinct.engine.core.meta;
 import java.util.List;
 
 import de.instinct.engine.core.data.GameState;
-import de.instinct.engine.fleet.net.data.PlayerConnectionStatus;
+import de.instinct.engine.core.player.data.PlayerConnectionStatus;
 
 public class MetaProcessor {
 

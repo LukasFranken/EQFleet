@@ -12,12 +12,12 @@ import de.instinct.engine.core.data.GameState;
 import de.instinct.engine.core.entity.projectile.Projectile;
 import de.instinct.engine.core.meta.data.MetaData;
 import de.instinct.engine.core.meta.data.PauseData;
+import de.instinct.engine.core.meta.message.GamePauseMessage;
 import de.instinct.engine.core.order.GameOrder;
+import de.instinct.engine.core.order.data.OrderData;
 import de.instinct.engine.core.order.types.GamePauseOrder;
+import de.instinct.engine.core.player.data.PlayerConnectionStatus;
 import de.instinct.engine.core.player.data.PlayerData;
-import de.instinct.engine.fleet.net.data.PlayerConnectionStatus;
-import de.instinct.engine.fleet.net.messages.GamePauseMessage;
-import de.instinct.engine.fleet.order.data.OrderData;
 
 public abstract class KryoRegistrator {
 	

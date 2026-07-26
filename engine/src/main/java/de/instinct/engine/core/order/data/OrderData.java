@@ -1,4 +1,4 @@
-package de.instinct.engine.fleet.order.data;
+package de.instinct.engine.core.order.data;
 
 import java.util.List;
 import java.util.Queue;

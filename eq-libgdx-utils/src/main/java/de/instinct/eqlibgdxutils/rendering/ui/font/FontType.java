@@ -2,6 +2,8 @@ package de.instinct.eqlibgdxutils.rendering.ui.font;
 
 public enum FontType {
 	
+	GALACTIC,
+	MONSTROUS,
 	GIANT,
 	LARGE,
 	NORMAL,
