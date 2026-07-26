@@ -17,26 +17,19 @@ import de.instinct.eqfleet.menu.common.architecture.BaseModule;
 import de.instinct.eqfleet.menu.common.architecture.BaseModuleRenderer;
 import de.instinct.eqfleet.menu.main.message.MenuMessage;
 import de.instinct.eqfleet.menu.main.message.types.OpenModuleMessage;
-import de.instinct.eqfleet.menu.module.construction.Construction;
-import de.instinct.eqfleet.menu.module.construction.ConstructionRenderer;
+import de.instinct.eqfleet.menu.module.conquest.Conquest;
+import de.instinct.eqfleet.menu.module.conquest.ConquestRenderer;
 import de.instinct.eqfleet.menu.module.core.ModuleManager;
 import de.instinct.eqfleet.menu.module.mining.MiningMenu;
 import de.instinct.eqfleet.menu.module.mining.MiningMenuRenderer;
 import de.instinct.eqfleet.menu.module.play.Play;
 import de.instinct.eqfleet.menu.module.play.PlayModel;
-import de.instinct.eqfleet.menu.module.play.PlayRenderer;
 import de.instinct.eqfleet.menu.module.profile.Profile;
 import de.instinct.eqfleet.menu.module.profile.ProfileRenderer;
 import de.instinct.eqfleet.menu.module.settings.Settings;
 import de.instinct.eqfleet.menu.module.settings.SettingsRenderer;
-import de.instinct.eqfleet.menu.module.ship.Shipyard;
-import de.instinct.eqfleet.menu.module.ship.ShipyardRenderer;
-import de.instinct.eqfleet.menu.module.shop.Shop;
-import de.instinct.eqfleet.menu.module.shop.ShopRenderer;
 import de.instinct.eqfleet.menu.module.social.Social;
 import de.instinct.eqfleet.menu.module.social.SocialRenderer;
-import de.instinct.eqfleet.menu.module.starmap.Starmap;
-import de.instinct.eqfleet.menu.module.starmap.StarmapRenderer;
 import de.instinct.eqfleet.net.WebManager;
 import de.instinct.eqfleet.net.model.ConnectionStatus;
 import de.instinct.eqfleet.scene.Scene;
@@ -68,21 +61,13 @@ public class Menu extends Scene {
 		
 		MenuModel.renderers.put(MenuModule.PROFILE, new ProfileRenderer());
 		MenuModel.renderers.put(MenuModule.SETTINGS, new SettingsRenderer());
-		MenuModel.renderers.put(MenuModule.STARMAP, new StarmapRenderer());
-		MenuModel.renderers.put(MenuModule.SHIPYARD, new ShipyardRenderer());
-		MenuModel.renderers.put(MenuModule.CONSTRUCTION, new ConstructionRenderer());
-		MenuModel.renderers.put(MenuModule.SHOP, new ShopRenderer());
-		MenuModel.renderers.put(MenuModule.PLAY, new PlayRenderer());
+		MenuModel.renderers.put(MenuModule.CONQUEST, new ConquestRenderer());
 		MenuModel.renderers.put(MenuModule.SOCIAL, new SocialRenderer());
 		MenuModel.renderers.put(MenuModule.MINING, new MiningMenuRenderer());
 		
-		MenuModel.modules.put(MenuModule.PLAY, new Play());
 		MenuModel.modules.put(MenuModule.PROFILE, new Profile());
 		MenuModel.modules.put(MenuModule.SETTINGS, new Settings());
-		MenuModel.modules.put(MenuModule.SHIPYARD, new Shipyard());
-		MenuModel.modules.put(MenuModule.CONSTRUCTION, new Construction());
-		MenuModel.modules.put(MenuModule.SHOP, new Shop());
-		MenuModel.modules.put(MenuModule.STARMAP, new Starmap());
+		MenuModel.modules.put(MenuModule.CONQUEST, new Conquest());
 		MenuModel.modules.put(MenuModule.SOCIAL, new Social());
 		MenuModel.modules.put(MenuModule.MINING, new MiningMenu());
 		
@@ -162,7 +147,6 @@ public class Menu extends Scene {
 			WebManager.enqueue(
 				    () -> API.meta().modules(API.authKey),
 				    modulesResult -> {
-				    	modulesResult.getEnabledModules().add(MenuModule.PLAY);
 				    	processModulesResult(modulesResult);
 				    }
 			);
@@ -171,7 +155,6 @@ public class Menu extends Scene {
 			offlineModulesResult.setEnabledModules(new ArrayList<>());
 			offlineModulesResult.getEnabledModules().add(MenuModule.SETTINGS);
 			offlineModulesResult.getEnabledModules().add(MenuModule.MINING);
-			offlineModulesResult.getEnabledModules().add(MenuModule.PLAY);
 			processModulesResult(offlineModulesResult);
 		}
 	}

@@ -3,6 +3,7 @@ VERIFY:
 
 
 GENERAL:
+- test+live environment
 - adjust all maps
  -> GALAXY CHECKLIST
   ? 1
