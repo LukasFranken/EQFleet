@@ -5,9 +5,9 @@ import com.badlogic.gdx.math.Vector2;
 
 import de.instinct.eqlibgdxutils.InputUtil;
 import de.instinct.eqlibgdxutils.MultitouchInputUtil;
-import de.instinct.eqlibgdxutils.PlatformUtil;
 import de.instinct.eqlibgdxutils.debug.console.Console;
 import de.instinct.eqlibgdxutils.generic.Action;
+import de.instinct.eqlibgdxutils.platform.PlatformUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
 import de.instinct.eqlibgdxutils.rendering.ui.module.hover.HoverInfo;
 import de.instinct.eqlibgdxutils.rendering.ui.popup.PopupRenderer;

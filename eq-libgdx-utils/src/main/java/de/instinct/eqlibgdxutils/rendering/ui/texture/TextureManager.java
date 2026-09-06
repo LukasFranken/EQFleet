@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.eqlibgdxutils.GraphicsUtil;
-import de.instinct.eqlibgdxutils.PreferenceUtil;
+import de.instinct.eqlibgdxutils.platform.preference.Preferences;
 import de.instinct.eqlibgdxutils.rendering.GlobalRenderingConfiguration;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.draw.TextureDrawMode;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.draw.TextureRenderer;
@@ -27,7 +27,7 @@ public class TextureManager {
 		textureRenderer = new TextureRenderer();
 		textureLoader = new TextureLoader();
 		colorTextureLoader = new ColorTextureLoader();
-		String glowString = PreferenceUtil.load("glow");
+		String glowString = Preferences.load("glow");
 		if (glowString.contentEquals("")) {
     		GlobalRenderingConfiguration.defaultGlowRadius = 0;
     	} else {

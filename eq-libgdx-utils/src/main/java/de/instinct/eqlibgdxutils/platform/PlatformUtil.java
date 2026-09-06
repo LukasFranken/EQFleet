@@ -1,4 +1,4 @@
-package de.instinct.eqlibgdxutils;
+package de.instinct.eqlibgdxutils.platform;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;

@@ -1,4 +1,4 @@
-package de.instinct.eqlibgdxutils.engine.cursor;
+package de.instinct.eqlibgdxutils.platform.cursor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Cursor;

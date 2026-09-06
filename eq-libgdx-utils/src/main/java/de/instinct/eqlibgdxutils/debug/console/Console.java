@@ -11,8 +11,6 @@ import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.InputUtil;
-import de.instinct.eqlibgdxutils.PlatformUtil;
-import de.instinct.eqlibgdxutils.PreferenceUtil;
 import de.instinct.eqlibgdxutils.StringUtils;
 import de.instinct.eqlibgdxutils.debug.logging.LogLine;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
@@ -20,6 +18,8 @@ import de.instinct.eqlibgdxutils.debug.metrics.Metric;
 import de.instinct.eqlibgdxutils.debug.metrics.MetricUtil;
 import de.instinct.eqlibgdxutils.debug.modulator.Modulator;
 import de.instinct.eqlibgdxutils.debug.profiler.Profiler;
+import de.instinct.eqlibgdxutils.platform.PlatformUtil;
+import de.instinct.eqlibgdxutils.platform.preference.Preferences;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.button.ColorButton;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.LimitedInputField;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.model.TextfieldActionHandler;
@@ -146,7 +146,7 @@ public class Console {
 	
 	public static void loadFilter() {
 		tagFilter = new ArrayList<>();
-		String filterString = PreferenceUtil.load("console_tag_filter");
+		String filterString = Preferences.load("console_tag_filter");
 		for (String tag : filterString.split(";")) {
 			if (!tag.isEmpty()) {
 				Console.getTagFilter().add(tag);
@@ -166,7 +166,7 @@ public class Console {
 			}
 			filterString += tag;
 		}
-		PreferenceUtil.save("console_tag_filter", filterString);
+		Preferences.save("console_tag_filter", filterString);
 	}
 	
 	public static List<String> getTagFilter() {

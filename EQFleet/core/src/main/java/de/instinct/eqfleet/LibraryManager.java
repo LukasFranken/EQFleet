@@ -27,7 +27,7 @@ public class LibraryManager {
 	public static void init() {
 		Console.init();
     	Console.addCommands(new EQFleetCommandLoader().getCommands());
-    	PreferenceManager.init();
+    	Preferences.init("eqfleet");
     	GraphicsUtil.init(new Vector2(400, 900));
     	TextureManager.init();
     	SkinManager.init();
@@ -38,7 +38,7 @@ public class LibraryManager {
         PopupRenderer.init();
         Console.build();
         AccelerometerUtil.init();
-        String mode = PreferenceManager.load("mode");
+        String mode = Preferences.load("mode");
         if (!mode.contentEquals("")) {
         	GlobalStaticData.mode = ApplicationMode.valueOf(mode);
         }

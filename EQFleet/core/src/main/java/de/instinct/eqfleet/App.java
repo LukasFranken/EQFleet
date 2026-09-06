@@ -1,10 +1,14 @@
 package de.instinct.eqfleet;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import de.instinct.eqfleet.audio.AudioConfiguration;
 import de.instinct.eqfleet.audio.AudioManager;
 import de.instinct.eqfleet.background.BackgroundRenderer;
 import de.instinct.eqfleet.holo.HoloRenderer;
@@ -40,7 +44,9 @@ public class App extends ApplicationAdapter {
     		Logger.config.setTimeFormat(LoggingTimeFormat.TIME_ONLY);
         	Logger.log(LOGTAG, "Welcome to EQFLEET v" + VERSION, ConsoleColor.YELLOW);
     		LibraryManager.init();
-        	AudioManager.init();
+    		
+        	AudioManager.init(loadAudioConfiguration());
+        	
         	LanguageManager.init();
         	Gdx.input.setInputProcessor(new InputMultiplexer());
         	WebManager.init();
@@ -64,6 +70,37 @@ public class App extends ApplicationAdapter {
 		}
     }
 	
+	private AudioConfiguration loadAudioConfiguration() {
+		List<String> availableRadioTracks = new ArrayList<>();
+		availableRadioTracks.add("eqspace1");
+		availableRadioTracks.add("eqspace2");
+		availableRadioTracks.add("eqspace3");
+		availableRadioTracks.add("eqspace4");
+		availableRadioTracks.add("infinite_future");
+		availableRadioTracks.add("to_the_stars");
+		availableRadioTracks.add("to_the_stars_funk");
+		availableRadioTracks.add("to_the_stars_ambient");
+		availableRadioTracks.add("to_the_stars_disco");
+		availableRadioTracks.add("to_the_stars_70s");
+		availableRadioTracks.add("to_the_stars_synth");
+		availableRadioTracks.add("to_the_stars_western");
+		availableRadioTracks.add("to_the_stars_orchestral");
+		availableRadioTracks.add("to_the_stars_violin");
+		availableRadioTracks.add("to_the_stars_military");
+		
+		List<String> availableNonRadioTracks = new ArrayList<>();
+		availableNonRadioTracks.add("to_the_stars_short");
+		
+		return AudioConfiguration.builder()
+				.musicVolume(PreferenceManager.loadFloat("music_volume", 0.3f))
+				.voiceVolume(PreferenceManager.loadFloat("voice_volume", 0.3f))
+				.sfxVolume(PreferenceManager.loadFloat("sfx_volume", 0.3f))
+				.radioMode(PreferenceManager.loadBoolean("radio_mode", true))
+				.availableRadioTracks(availableRadioTracks)
+				.availableNonRadioTracks(availableNonRadioTracks)
+				.build();
+	}
+
 	@Override
     public void render() {
 		long startNanoTime = System.nanoTime();

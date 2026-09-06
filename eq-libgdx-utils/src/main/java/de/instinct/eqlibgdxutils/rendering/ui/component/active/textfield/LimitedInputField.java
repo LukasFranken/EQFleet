@@ -12,7 +12,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 import de.instinct.eqlibgdxutils.GraphicsUtil;
 import de.instinct.eqlibgdxutils.InputUtil;
-import de.instinct.eqlibgdxutils.PlatformUtil;
+import de.instinct.eqlibgdxutils.platform.PlatformUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.component.Component;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.model.EnableConditionHandler;
 import de.instinct.eqlibgdxutils.rendering.ui.component.active.textfield.model.InputFieldProcessor;

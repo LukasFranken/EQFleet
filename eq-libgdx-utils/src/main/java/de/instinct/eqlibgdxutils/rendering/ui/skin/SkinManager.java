@@ -2,9 +2,9 @@ package de.instinct.eqlibgdxutils.rendering.ui.skin;
 
 import com.badlogic.gdx.graphics.Color;
 
-import de.instinct.eqlibgdxutils.PreferenceUtil;
 import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
+import de.instinct.eqlibgdxutils.platform.preference.Preferences;
 
 public class SkinManager {
 	
@@ -16,7 +16,7 @@ public class SkinManager {
 	public static Color darkestSkinColor = new Color(0.3f, 0f, 0f, 1f);
 	
 	public static void init() {
-		String skinString = PreferenceUtil.load("skin");
+		String skinString = Preferences.load("skin");
 		skin = SkinColor.RED;
     	if (!skinString.contentEquals("")) {
     		try {

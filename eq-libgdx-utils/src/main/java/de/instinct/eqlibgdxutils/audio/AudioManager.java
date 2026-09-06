@@ -1,9 +1,7 @@
-package de.instinct.eqfleet.audio;
+package de.instinct.eqlibgdxutils.audio;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -12,14 +10,15 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 
-import de.instinct.eqfleet.PreferenceManager;
 import de.instinct.eqlibgdxutils.MathUtil;
 import de.instinct.eqlibgdxutils.StringUtils;
+import de.instinct.eqlibgdxutils.audio.config.AudioConfiguration;
 import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
 import de.instinct.eqlibgdxutils.generic.cache.Cache;
 import de.instinct.eqlibgdxutils.generic.cache.model.LoadSequence;
 import de.instinct.eqlibgdxutils.net.ObjectJSONMapper;
+import de.instinct.eqlibgdxutils.platform.preference.Preferences;
 
 public class AudioManager {
 
@@ -77,20 +76,20 @@ public class AudioManager {
 			}
 		});
 
-		String musicVolumePrefString = PreferenceManager.load("musicvolume");
+		String musicVolumePrefString = Preferences.load("musicvolume");
 		if (!musicVolumePrefString.isEmpty()) userMusicVolume = Float.parseFloat(musicVolumePrefString);
 
-		String voiceVolumePrefString = PreferenceManager.load("voicevolume");
+		String voiceVolumePrefString = Preferences.load("voicevolume");
 		if (!voiceVolumePrefString.isEmpty()) userVoiceVolume = Float.parseFloat(voiceVolumePrefString);
 
-		String sfxVolumePrefString = PreferenceManager.load("sfxvolume");
+		String sfxVolumePrefString = Preferences.load("sfxvolume");
 		if (!sfxVolumePrefString.isEmpty()) userSfxVolume = Float.parseFloat(sfxVolumePrefString);
 
-		for (String tag : config.getAvailableRadioTracks()) {
+		for (String tag : config.getInternalAudioConfiguration().getAvailableRadioTracks()) {
 			musics.get(tag);
 		}
 		
-		for (String tag : config.getAvailableNonRadioTracks()) {
+		for (String tag : config.getInternalAudioConfiguration().getAvailableNonRadioTracks()) {
 			musics.get(tag);
 		}
 	}
@@ -102,7 +101,7 @@ public class AudioManager {
 		if (next == null) return;
 
 		next.setLooping(loop);
-		lastPlayedRadioTrackIdx = config.getAvailableRadioTracks().indexOf(tag);
+		lastPlayedRadioTrackIdx = config.getInternalAudioConfiguration().getAvailableRadioTracks().indexOf(tag);
 
 		if (currentMusic == null) {
 			currentMusic = next;
@@ -165,13 +164,13 @@ public class AudioManager {
 					queuedInMusic = null;
 					Logger.log(LOGTAG, "Updating music to queued in", ConsoleColor.YELLOW);
 				} else {
-					if (availableRadioTracks.size() > 0) {
+					if (config.getInternalAudioConfiguration().getAvailableRadioTracks().size() > 0) {
 						int idx = -1;
 						do {
-							idx = RNG.nextInt(config.getAvailableRadioTracks().size());
-							if (availableRadioTracks.size() == 1) break;
+							idx = RNG.nextInt(config.getInternalAudioConfiguration().getAvailableRadioTracks().size());
+							if (config.getInternalAudioConfiguration().getAvailableRadioTracks().size() == 1) break;
 						} while (idx == lastPlayedRadioTrackIdx);
-						String tag = config.getAvailableRadioTracks().get(idx);
+						String tag = config.getInternalAudioConfiguration().getAvailableRadioTracks().get(idx);
 						lastPlayedRadioTrackIdx = idx;
 						next = musics.get(tag);
 						Logger.log(LOGTAG, "Updating music to random: " + tag, ConsoleColor.YELLOW);
@@ -291,14 +290,14 @@ public class AudioManager {
 	}
 
 	public static void saveUserMusicVolume(float currentValue) {
-		PreferenceManager.save("musicvolume", StringUtils.format(currentValue, 2));
+		Preferences.save("musicvolume", StringUtils.format(currentValue, 2));
 	}
 
 	public static void saveUserVoiceVolume(float currentValue) {
-		PreferenceManager.save("voicevolume", StringUtils.format(currentValue, 2));
+		Preferences.save("voicevolume", StringUtils.format(currentValue, 2));
 	}
 
 	public static void saveUserSfxVolume(float currentValue) {
-		PreferenceManager.save("sfxvolume", StringUtils.format(currentValue, 2));
+		Preferences.save("sfxvolume", StringUtils.format(currentValue, 2));
 	}
 }
