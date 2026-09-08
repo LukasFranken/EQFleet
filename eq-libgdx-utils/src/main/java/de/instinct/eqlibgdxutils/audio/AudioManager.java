@@ -265,6 +265,12 @@ public class AudioManager {
 		if (sfx != null) sfx.play(0.5f * userSfxVolume * volumeRng, 1f * pitchRng, 1f * panRng);
 	}
 
+    /** Plays with an explicit pitch, without random pitch variation. */
+    public static void playSfx(String tag, float pitch) {
+        Sound sfx = sfxs.get(tag);
+        if (sfx != null) sfx.play(0.5f * userSfxVolume, pitch, 0f);
+    }
+
 	public static void stopAllSfx() {
 		for (Sound sfx : sfxs.getAllLoadedElements()) sfx.stop();
 	}
