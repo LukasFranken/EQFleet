@@ -57,7 +57,7 @@ public class Label extends Component {
 		String[] lines = text.split("\n");
 		float maxWidth = 0;
 		for (String line : lines) {
-			float width = FontUtil.getFontTextWidthPx(line.length(), type);
+			float width = FontUtil.getFontTextWidthPx(line, type);
 			if (width > maxWidth) {
 				maxWidth = width;
 			}

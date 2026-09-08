@@ -11,6 +11,7 @@ import de.instinct.eqlibgdxutils.platform.preference.Preferences;
 import de.instinct.eqlibgdxutils.rendering.ui.font.FontUtil;
 import de.instinct.eqlibgdxutils.rendering.ui.popup.PopupRenderer;
 import de.instinct.eqlibgdxutils.rendering.ui.skin.SkinManager;
+import de.instinct.eqlibgdxutils.rendering.ui.texture.TextureManager;
 import de.instinct.eqlibgdxutils.rendering.ui.texture.shape.Shapes;
 
 public class LibraryManager {
@@ -27,6 +28,7 @@ public class LibraryManager {
     	CursorUtil.setCursor("cursor", Hotspot.TOPLEFT);
         Console.build();
         AccelerometerUtil.init();
+        TextureManager.init();
 	}
 	
 	public static void update() {

@@ -230,6 +230,11 @@ public class FontUtil {
 		return layout;
 	}
 	
+    /** Measures proportional glyph advances and kerning rather than estimating from character count. */
+    public static float getFontTextWidthPx(String text, FontType type) {
+        return new GlyphLayout(fonts.get(type), text).width / GraphicsUtil.getScaleFactor();
+    }
+
 	public static float getFontTextWidthPx(int length) {
 		return getFontTextWidthPx(length, FontType.NORMAL);
 	}

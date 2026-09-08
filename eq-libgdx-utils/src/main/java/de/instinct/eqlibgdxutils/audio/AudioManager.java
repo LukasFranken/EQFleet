@@ -77,13 +77,28 @@ public class AudioManager {
 		});
 
 		String musicVolumePrefString = Preferences.load("musicvolume");
-		if (!musicVolumePrefString.isEmpty()) userMusicVolume = Float.parseFloat(musicVolumePrefString);
+		if (!musicVolumePrefString.isEmpty()) {
+			userMusicVolume = Float.parseFloat(musicVolumePrefString);
+			Logger.log(LOGTAG, "Loaded user music volume: " + userMusicVolume, ConsoleColor.YELLOW);
+		} else {
+			Logger.log(LOGTAG, "Loaded default music volume: " + userMusicVolume, ConsoleColor.YELLOW);
+		}
 
 		String voiceVolumePrefString = Preferences.load("voicevolume");
-		if (!voiceVolumePrefString.isEmpty()) userVoiceVolume = Float.parseFloat(voiceVolumePrefString);
+		if (!voiceVolumePrefString.isEmpty()) {
+			userVoiceVolume = Float.parseFloat(voiceVolumePrefString);
+			Logger.log(LOGTAG, "Loaded user voice volume: " + userVoiceVolume, ConsoleColor.YELLOW);
+		} else {
+			Logger.log(LOGTAG, "Loaded default voice volume: " + userVoiceVolume, ConsoleColor.YELLOW);
+		}
 
 		String sfxVolumePrefString = Preferences.load("sfxvolume");
-		if (!sfxVolumePrefString.isEmpty()) userSfxVolume = Float.parseFloat(sfxVolumePrefString);
+		if (!sfxVolumePrefString.isEmpty()) {
+			userSfxVolume = Float.parseFloat(sfxVolumePrefString);
+			Logger.log(LOGTAG, "Loaded user voice volume: " + userSfxVolume, ConsoleColor.YELLOW);
+		} else {
+			Logger.log(LOGTAG, "Loaded default voice volume: " + userSfxVolume, ConsoleColor.YELLOW);
+		}
 
 		for (String tag : config.getInternalAudioConfiguration().getAvailableRadioTracks()) {
 			musics.get(tag);
