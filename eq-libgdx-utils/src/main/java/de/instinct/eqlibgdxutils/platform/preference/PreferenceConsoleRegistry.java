@@ -56,7 +56,7 @@ public class PreferenceConsoleRegistry {
 		List<Command> commands = new ArrayList<>();
 		commands.add(command(base + "all", base + "all", "list all preferences", message -> {
 			if (!message.equalsIgnoreCase(base + "all")) { usage(base + "all"); return; }
-			log(String.join(",", store.keys()));
+			log(de.instinct.eqlibgdxutils.StringUtils.join(",", store.keys()));
 		}));
 		commands.add(command(base + "load=", base + "load=<key>", "load the preference with the given key", message -> {
 			String key = message.substring((base + "load=").length()).trim();

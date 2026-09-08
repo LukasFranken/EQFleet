@@ -5,7 +5,7 @@ import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.Base64;
+import com.badlogic.gdx.utils.Base64Coder;
 import java.util.Date;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
@@ -14,6 +14,18 @@ import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.exceptions.EncryptionOperationNotPossibleException;
 
 public class StringUtils {
+
+    /** Portable equivalent of String.join for runtime libraries without Java 8 APIs. */
+    public static String join(String delimiter, Iterable<String> values) {
+        StringBuilder result = new StringBuilder();
+        boolean first = true;
+        for (String value : values) {
+            if (!first) result.append(delimiter);
+            result.append(value);
+            first = false;
+        }
+        return result.toString();
+    }
 
 	private static final int MESSAGE_MAX_LENGTH = 500;
 
@@ -89,11 +101,15 @@ public class StringUtils {
             outputStream.write(buffer, 0, count);
         }
         deflater.end();
-        return Base64.getEncoder().encodeToString(outputStream.toByteArray());
+        return new String(Base64Coder.encode(outputStream.toByteArray()));
     }
 
     public static String decompress(String compressedText) {
-        byte[] data = Base64.getDecoder().decode(compressedText);
+        // java.util.Base64 accepted unpadded input; preserve that behavior with libGDX's codec.
+        String padded = compressedText;
+        if (padded.length() % 4 == 2) padded += "==";
+        else if (padded.length() % 4 == 3) padded += "=";
+        byte[] data = Base64Coder.decode(padded);
         Inflater inflater = new Inflater();
         inflater.setInput(data);
 

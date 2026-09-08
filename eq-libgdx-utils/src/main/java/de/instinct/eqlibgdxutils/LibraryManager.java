@@ -30,12 +30,14 @@ public class LibraryManager {
 	}
 	
 	public static void update() {
+        FontUtil.update();
 		InputUtil.update();
 		AccelerometerUtil.update();
 	}
 	
 	public static void dispose() {
         Console.dispose();
+        FontUtil.dispose();
         Shapes.dispose();
 	}
 

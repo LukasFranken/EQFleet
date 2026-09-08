@@ -34,6 +34,7 @@ public class GraphicsUtil {
 	}
 	
 	public static Rectangle physicalBounds() {
+        physicalBounds.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		return physicalBounds;
 	}
 	
