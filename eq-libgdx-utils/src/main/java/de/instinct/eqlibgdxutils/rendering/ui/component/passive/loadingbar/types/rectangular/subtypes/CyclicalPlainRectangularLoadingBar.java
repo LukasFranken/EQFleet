@@ -25,7 +25,7 @@ public class CyclicalPlainRectangularLoadingBar extends PlainRectangularLoadingB
 	@Override
 	protected void renderLabel() {
 		if (isOverRateThreshold()) {
-			setCustomDescriptor(StringUtils.format(getRate() / getMaxValue(), 2) + "/s");
+			setCustomDescriptor(StringUtils.formatBigNumber(getRate() / getMaxValue()) + "/s");
 		}
 		super.renderLabel();
 	}

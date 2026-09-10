@@ -60,8 +60,12 @@ public class StringUtils {
 	    return result;
 	}
 
+    public static String barLabelFormat(float value, float maxValue) {
+        return formatBigNumber(value) + " / " + formatBigNumber(maxValue);
+    }
+
 	public static String barLabelFormat(double value, double maxValue) {
-		return format(value, 2) + " / " + format(maxValue, 2);
+		return formatBigNumber(value) + " / " + formatBigNumber(maxValue);
 	}
 
 	public static String limitWithAppendix(String message) {
@@ -157,38 +161,45 @@ public class StringUtils {
 		return key;
 	}
 
-	public static String formatBigNumber(long value) {
-	    return formatBigNumber(value, 2);
-	}
-	
-	public static String formatBigNumber(long value, int decimals) {
-	    if (value < 1000) {
-	        return String.valueOf(value);
-	    }
+    private static final String[] BIG_NUMBER_SUFFIXES = {"", "K", "M", "B", "T", "Q"};
+    private static final ThreadLocal<DecimalFormat> BIG_NUMBER_FORMAT = new ThreadLocal<DecimalFormat>() {
+        @Override protected DecimalFormat initialValue() {
+            DecimalFormat format = new DecimalFormat("0", new java.text.DecimalFormatSymbols(java.util.Locale.US));
+            format.setGroupingUsed(false);
+            format.setRoundingMode(RoundingMode.HALF_UP);
+            return format;
+        }
+    };
 
-	    if (value < 1_000_000) {
-	    	return cleanDecimal(String.format("%." + decimals + "f K", value / 1_000.0).replace(',', '.')).replace(" ", "");
-	    }
+    /** Compact magnitude, at most two decimals, and no negative zero or locale-dependent separator. */
+    public static String formatBigNumber(long value) { return formatBigNumber(value, 2); }
+    public static String formatBigNumber(long value, int decimals) { return formatBigNumber((double) value, decimals); }
+    public static String formatBigNumber(float value) { return formatBigNumber(value, 2); }
+    public static String formatBigNumber(float value, int decimals) {
+        // Preserve the intended decimal representation when widening a float.
+        return formatBigNumber(Double.parseDouble(Float.toString(value)), decimals);
+    }
+    public static String formatBigNumber(double value) { return formatBigNumber(value, 2); }
+    public static String formatBigNumber(double value, int decimals) {
+        if (decimals < 0) throw new IllegalArgumentException("Decimal count must be nonnegative");
+        if (Double.isNaN(value) || Double.isInfinite(value)) return String.valueOf(value);
+        double magnitude = Math.abs(value);
+        int suffix = 0;
+        while (magnitude >= 1000 && suffix < BIG_NUMBER_SUFFIXES.length - 1) {
+            magnitude /= 1000;
+            suffix++;
+        }
+        DecimalFormat format = BIG_NUMBER_FORMAT.get();
+        format.setMaximumFractionDigits(decimals);
+        String number = format.format(java.math.BigDecimal.valueOf(magnitude));
+        // Rounding at a suffix boundary should produce 1M rather than 1000K.
+        if ("1000".equals(number) && suffix < BIG_NUMBER_SUFFIXES.length - 1) {
+            suffix++;
+            number = format.format(java.math.BigDecimal.valueOf(magnitude / 1000));
+        }
+        return (value < 0 && !"0".equals(number) ? "-" : "") + number + BIG_NUMBER_SUFFIXES[suffix];
+    }
 
-	    if (value < 1_000_000_000) {
-	        return cleanDecimal(String.format("%." + decimals + "f M", value / 1_000_000.0).replace(',', '.')).replace(" ", "");
-	    }
-
-	    if (value < 1_000_000_000_000L) {
-	        return cleanDecimal(String.format("%." + decimals + "f B", value / 1_000_000_000.0).replace(',', '.')).replace(" ", "");
-	    }
-	    
-	    if (value < 1_000_000_000_000_000L) {
-	        return cleanDecimal(String.format("%." + decimals + "f T", value / 1_000_000_000_000.0).replace(',', '.')).replace(" ", "");
-	    }
-	    
-	    if (value < 1_000_000_000_000_000_000L) {
-	        return cleanDecimal(String.format("%." + decimals + "f Q", value / 1_000_000_000_000_000.0).replace(',', '.')).replace(" ", "");
-	    }
-
-	    return "";
-	}
-	
 	public static String getSpacer(int length) {
 		spacer.delete(0, spacer.length());
 		for (int i = 0; i < length; i++) {
