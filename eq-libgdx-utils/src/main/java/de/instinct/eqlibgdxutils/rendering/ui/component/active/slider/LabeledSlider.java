@@ -31,7 +31,7 @@ public class LabeledSlider extends Component {
 		labelBorder.setSize(1f);
 		label.setBorder(labelBorder);
 		labelSliderMargin = 10f;
-		labelInnerMargin = 10f;
+		labelInnerMargin = 30f;
 	}
 	
 	@Override
