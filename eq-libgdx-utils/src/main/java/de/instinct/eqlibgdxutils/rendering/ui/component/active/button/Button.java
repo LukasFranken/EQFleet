@@ -35,6 +35,18 @@ public abstract class Button extends Component {
         enabled = true;
     }
 
+    /** Disabling cancels pointer capture and transient interaction colors immediately. */
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+        if (!enabled) clearInteraction();
+    }
+
+    private void clearInteraction() {
+        down = false;
+        hovered = false;
+        activePointer = -1;
+    }
+
     @Override
     public void updateComponent() {
     	boolean blockedByConsole = !consoleBypass && Console.isActive();
@@ -66,6 +78,8 @@ public abstract class Button extends Component {
                     activePointer = -1;
                 }
             }
+        } else {
+            clearInteraction();
         }
         updateButton();
     }
