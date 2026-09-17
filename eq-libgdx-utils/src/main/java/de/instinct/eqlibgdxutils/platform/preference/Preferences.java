@@ -18,5 +18,9 @@ public final class Preferences {
 	public static void save(String key, String value) {
 		store.save(key, value);
 	}
+
+	public static java.util.Map<String, ?> getAll() { return store.getAll(); }
+	public static void replaceAll(java.util.Map<String, String> values) { store.replaceAll(values); }
+	public static void setChangeListener(Runnable listener) { store.setChangeListener(listener); }
 	
 }

@@ -12,6 +12,19 @@ import com.badlogic.gdx.Preferences;
 public class PreferenceStore {
 	
 	private final Preferences preferences;
+	private Runnable changeListener;
+
+	public void setChangeListener(Runnable listener) { changeListener = listener; }
+	private void changed() { if (changeListener != null) changeListener.run(); }
+
+	/** Replace a complete string-based save in one flush and notification. */
+	public void replaceAll(Map<String, String> values) {
+		preferences.clear();
+		for (Map.Entry<String, String> entry : values.entrySet())
+			preferences.putString(entry.getKey(), entry.getValue());
+		preferences.flush();
+		changed();
+	}
 	
 	public PreferenceStore(String storeName) {
 		this.preferences = Objects.requireNonNull(openStore(storeName), "preferences");
@@ -75,6 +88,7 @@ public class PreferenceStore {
 		Objects.requireNonNull(value, "value");
 		preferences.putString(key, value);
 		preferences.flush();
+		changed();
 	}
 
 	public void save(String key, boolean value) {
@@ -112,12 +126,14 @@ public class PreferenceStore {
 		if (!contains(key)) return false;
 		preferences.remove(key);
 		preferences.flush();
+		changed();
 		return true;
 	}
 
 	public void deleteAll() {
 		preferences.clear();
 		preferences.flush();
+		changed();
 	}
 
 }
