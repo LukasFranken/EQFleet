@@ -9,15 +9,16 @@
 	<description>A collection of personal, useful libgdx code</description>
 
 	<dependencies>
+        <dependency><groupId>games.rednblack.miniaudio</groupId><artifactId>miniaudio</artifactId><version>0.8</version></dependency>
 		<dependency>
 			<groupId>com.badlogicgames.gdx</groupId>
 			<artifactId>gdx</artifactId>
-			<version>1.14.0</version>
+			<version>1.14.2</version>
 		</dependency>
 		<dependency>
             <groupId>com.badlogicgames.gdx</groupId>
             <artifactId>gdx-freetype</artifactId>
-            <version>1.14.0</version>
+            <version>1.14.2</version>
         </dependency>
 		<dependency>
 			<groupId>org.jasypt</groupId>

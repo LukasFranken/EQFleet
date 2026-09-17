@@ -6,8 +6,10 @@ import java.util.Map;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
+import games.rednblack.miniaudio.MASound;
+import games.rednblack.miniaudio.MiniAudio;
+import com.badlogic.gdx.LifecycleListener;
+
 import com.badlogic.gdx.files.FileHandle;
 
 import de.instinct.eqlibgdxutils.MathUtil;
@@ -22,19 +24,38 @@ import de.instinct.eqlibgdxutils.platform.preference.Preferences;
 
 public class AudioManager {
 
-	private static final String LOGTAG = "AUDIO";
+	private static MiniAudio engine;
+    private static MiniAudioAssets assets;
+    private static Object androidAssets;
+    private static boolean paused;
+    private static final LifecycleListener LIFECYCLE = new LifecycleListener() {
+        public void pause() { AudioManager.pause(); }
+        public void resume() { AudioManager.resume(); }
+        public void dispose() { AudioManager.dispose(); }
+    };
 
-	private static Music currentMusic;
-	private static Music transitionedInMusic;
-	private static Music queuedInMusic;
+    /** Android launchers must supply their AssetManager before init. */
+    public static void setAndroidAssets(Object assets) { androidAssets = assets; }
+    public static void pause() {
+        if (engine != null && !paused) { engine.stopEngine(); paused = true; }
+    }
+    public static void resume() {
+        if (engine != null && paused) { engine.startEngine(); paused = false; }
+    }
+
+    private static final String LOGTAG = "AUDIO";
+
+	private static MASound currentMusic;
+	private static MASound transitionedInMusic;
+	private static MASound queuedInMusic;
 	
-	private static Sound currentVoice;
+	private static MiniAudioClip currentVoice;
 
 	private static Map<String, AudioMetaData> voiceMetaDatas;
 
-	private static Cache<Sound> voices;
-	private static Cache<Sound> sfxs;
-	private static Cache<Music> musics;
+	private static Cache<MiniAudioClip> voices;
+	private static Cache<MiniAudioClip> sfxs;
+	private static Cache<MASound> musics;
 
 	private static float targetMusicVolume = 0.4f;
 	private static final float swapDuration = 5f;
@@ -52,27 +73,33 @@ public class AudioManager {
 	private static AudioConfiguration config;
 
 	public static void init(AudioConfiguration config) {
-		AudioManager.config = config;
+		dispose();
+        engine = new MiniAudio();
+        assets = new MiniAudioAssets();
+        if (androidAssets != null) engine.setupAndroid(androidAssets);
+        paused = false;
+        Gdx.app.addLifecycleListener(LIFECYCLE);
+        AudioManager.config = config;
 		voiceMetaDatas = new HashMap<>();
 
-		musics = new Cache<>(new LoadSequence<Music>() {
+		musics = new Cache<>(new LoadSequence<MASound>() {
 			@Override
-			public Music execute(String tag) {
-				return Gdx.audio.newMusic(Gdx.files.internal("audio/music/" + tag + ".mp3"));
+			public MASound execute(String tag) {
+				return engine.createSound(assets.resolve("audio/music/" + tag + ".mp3"), (short) (MASound.Flags.MA_SOUND_FLAG_STREAM | MASound.Flags.MA_SOUND_FLAG_NO_SPATIALIZATION), null);
 			}
 		});
 
-		voices = new Cache<>(new LoadSequence<Sound>() {
+		voices = new Cache<>(new LoadSequence<MiniAudioClip>() {
 			@Override
-			public Sound execute(String tag) {
-				return Gdx.audio.newSound(Gdx.files.internal("audio/voice/" + tag + ".mp3"));
+			public MiniAudioClip execute(String tag) {
+				return new MiniAudioClip(engine, assets.resolve("audio/voice/" + tag + ".mp3"));
 			}
 		});
 
-		sfxs = new Cache<>(new LoadSequence<Sound>() {
+		sfxs = new Cache<>(new LoadSequence<MiniAudioClip>() {
 			@Override
-			public Sound execute(String tag) {
-				return Gdx.audio.newSound(Gdx.files.internal("audio/sfx/" + tag + ".mp3"));
+			public MiniAudioClip execute(String tag) {
+				return new MiniAudioClip(engine, assets.resolve("audio/sfx/" + tag + ".mp3"));
 			}
 		});
 
@@ -112,10 +139,17 @@ public class AudioManager {
 	public static void playMusic(String tag, boolean loop) {
 		Logger.log(LOGTAG, "Loading music: " + tag, ConsoleColor.YELLOW);
 
-		Music next = musics.get(tag);
+		MASound next = musics.get(tag);
 		if (next == null) return;
 
-		next.setLooping(loop);
+		if (next == currentMusic || next == transitionedInMusic) {
+            next.setLooping(loop);
+            if (!next.isPlaying()) { next.seekTo(0f); next.play(); }
+            return;
+        }
+        if (transitionedInMusic != null) transitionedInMusic.stop();
+        next.seekTo(0f);
+        next.setLooping(loop);
 		lastPlayedRadioTrackIdx = config.getInternalAudioConfiguration().getAvailableRadioTracks().indexOf(tag);
 
 		if (currentMusic == null) {
@@ -142,7 +176,7 @@ public class AudioManager {
 	public static void queueMusic(String tag) {
 		Logger.log(LOGTAG, "Queuing music: " + tag, ConsoleColor.YELLOW);
 
-		Music next = musics.get(tag);
+		MASound next = musics.get(tag);
 		if (next == null) return;
 
 		queuedInMusic = next;
@@ -171,9 +205,10 @@ public class AudioManager {
 	}
 
 	public static void update() {
-		if (radioMode) {
+        if (engine == null || paused) return;
+		if (radioMode && transitionedInMusic == null) {
 			if (currentMusic == null || !currentMusic.isPlaying()) {
-				Music next = null;
+				MASound next = null;
 				if (queuedInMusic != null) {
 					next = queuedInMusic;
 					queuedInMusic = null;
@@ -195,6 +230,7 @@ public class AudioManager {
 				currentMusic = next;
 				currentMusic.setVolume(targetMusicVolume * userMusicVolume);
 				currentMusic.setLooping(false);
+                currentMusic.seekTo(0f);
 				currentMusic.play();
 			}
 		}
@@ -218,13 +254,13 @@ public class AudioManager {
 	}
 	
 	public static void skipTrack() {
-		currentMusic.stop();
+        if (currentMusic != null) currentMusic.stop();
 	}
 
 	public static void playVoice(String category, String tag) {
 		String categoryPath = category;
 		if (!category.contentEquals("")) categoryPath += "/";
-		Sound voice = voices.get(categoryPath + tag);
+		MiniAudioClip voice = voices.get(categoryPath + tag);
 		if (voice != null) {
 			if (currentVoice != null) currentVoice.stop();
 			voice.play(1f * userVoiceVolume * (category.contains("tutorial") ? 0.7f : 1f));
@@ -253,12 +289,12 @@ public class AudioManager {
 		if (!category.contentEquals("")) categoryPath += "/";
 		FileHandle fh = Gdx.files.internal(categoryPath + "metadata.json");
 		AudioMetaData metaData = ObjectJSONMapper.mapJSON(new String(fh.readBytes(), StandardCharsets.UTF_8), AudioMetaData.class);
-		voiceMetaDatas.put(categoryPath, metaData);
+		voiceMetaDatas.put(category, metaData);
 		return metaData;
 	}
 
 	public static void playSfx(String tag) {
-		Sound sfx = sfxs.get(tag);
+		MiniAudioClip sfx = sfxs.get(tag);
 		float volumeRng = 0.8f + (RNG.nextFloat() * 0.4f);
 		float pitchRng = 0.8f + (RNG.nextFloat() * 0.4f);
 		float panRng = 0.8f + (RNG.nextFloat() * 0.4f);
@@ -267,22 +303,32 @@ public class AudioManager {
 
     /** Plays with an explicit pitch, without random pitch variation. */
     public static void playSfx(String tag, float pitch) {
-        Sound sfx = sfxs.get(tag);
+        MiniAudioClip sfx = sfxs.get(tag);
         if (sfx != null) sfx.play(0.5f * userSfxVolume, pitch, 0f);
     }
 
 	public static void stopAllSfx() {
-		for (Sound sfx : sfxs.getAllLoadedElements()) sfx.stop();
+		for (MiniAudioClip sfx : sfxs.getAllLoadedElements()) sfx.stop();
 	}
 
 	public static void stopAllVoices() {
-		for (Sound voice : voices.getAllLoadedElements()) voice.stop();
+		for (MiniAudioClip voice : voices.getAllLoadedElements()) voice.stop();
 	}
 
 	public static void dispose() {
-		for (Sound sfx : sfxs.getAllLoadedElements()) sfx.dispose();
-		for (Sound voice : voices.getAllLoadedElements()) voice.dispose();
-		for (Music music : musics.getAllLoadedElements()) music.dispose();
+        if (engine == null) return;
+        Gdx.app.removeLifecycleListener(LIFECYCLE);
+        stop();
+		for (MiniAudioClip sfx : sfxs.getAllLoadedElements()) sfx.dispose();
+		for (MiniAudioClip voice : voices.getAllLoadedElements()) voice.dispose();
+		for (MASound music : musics.getAllLoadedElements()) music.dispose();
+        engine.dispose();
+        assets.dispose();
+        assets = null;
+        engine = null;
+        currentVoice = null;
+        queuedInMusic = null;
+        lastPlayedRadioTrackIdx = -1;
 	}
 
 	public static void updateUserMusicVolume(float newValue) {

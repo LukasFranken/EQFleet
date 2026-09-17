@@ -1,11 +1,7 @@
 package de.instinct.eqlibgdxutils;
 
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 
 import de.instinct.eqlibgdxutils.debug.logging.ConsoleColor;
 import de.instinct.eqlibgdxutils.debug.logging.Logger;
@@ -14,18 +10,24 @@ public class FileManager {
 	
 	private static final String LOGTAG = "FileManager";
 
-	private static Path getAppDirectoryPath() {
-        return Paths.get("").toAbsolutePath();
+	private static File resolve(String fileName) {
+        return new File(fileName).getAbsoluteFile();
     }
-    
+
     public static String loadFile(String fileName) {
         try {
-            Path filePath = getAppDirectoryPath().resolve(fileName);
-            if (!Files.exists(filePath)) {
+            File filePath = resolve(fileName);
+            if (!filePath.exists()) {
                 Logger.log(LOGTAG, "File not found: " + filePath, ConsoleColor.RED);
                 return null;
             }
-            return new String(Files.readAllBytes(filePath), StandardCharsets.UTF_8);
+            try (InputStream input = new FileInputStream(filePath);
+                    ByteArrayOutputStream bytes = new ByteArrayOutputStream()) {
+                byte[] buffer = new byte[8192];
+                int count;
+                while ((count = input.read(buffer)) != -1) bytes.write(buffer, 0, count);
+                return new String(bytes.toByteArray(), StandardCharsets.UTF_8);
+            }
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -34,10 +36,13 @@ public class FileManager {
     
     public static void saveFile(String fileName, String content) {
         try {
-            Path filePath = getAppDirectoryPath().resolve(fileName);
-            Files.createDirectories(filePath.getParent());
-            Files.write(filePath, content.getBytes(StandardCharsets.UTF_8), 
-                    StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+            File filePath = resolve(fileName);
+            File parent = filePath.getParentFile();
+            if (!parent.isDirectory() && !parent.mkdirs() && !parent.isDirectory())
+                throw new IOException("Cannot create directory: " + parent);
+            try (OutputStream output = new FileOutputStream(filePath)) {
+                output.write(content.getBytes(StandardCharsets.UTF_8));
+            }
             Logger.log(LOGTAG, "File saved: " + filePath, ConsoleColor.YELLOW);
         } catch (IOException e) {
             e.printStackTrace();
