@@ -57,7 +57,7 @@ public abstract class Button extends Component {
         	}
             if (activePointer == -1) {
                 for (int i = 0; i < 10; i++) {
-                    if (MultitouchInputUtil.isTouched(i)) {
+                    if (MultitouchInputUtil.isPressed(i)) {
                     	Vector2 touchPos = MultitouchInputUtil.getVirtualTouchPosition(i);
                         if (getBounds().contains(touchPos.x, touchPos.y)) {
                             activePointer = i;
@@ -72,7 +72,8 @@ public abstract class Button extends Component {
                 if (!MultitouchInputUtil.isTouched(activePointer)) {
                 	if (down) {
                         down = false;
-                        if (action != null) action.execute();
+                        Vector2 releasePos = MultitouchInputUtil.getVirtualTouchPosition(activePointer);
+                        if (releasePos != null && getBounds().contains(releasePos) && action != null) action.execute();
                     }
                     if (upAction != null) upAction.execute();
                     activePointer = -1;

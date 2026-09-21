@@ -21,7 +21,7 @@ public class MultitouchInputUtil {
                 state.update(Gdx.input.getX(i), Gdx.graphics.getHeight() - Gdx.input.getY(i), true);
             } else {
                 if (touchStates.containsKey(i)) {
-                    touchStates.get(i).update(0, 0, false);
+                    touchStates.get(i).update(Gdx.input.getX(i), Gdx.graphics.getHeight() - Gdx.input.getY(i), false);
                 }
             }
         }
@@ -61,6 +61,12 @@ public class MultitouchInputUtil {
         private boolean released;
 
         public void update(float x, float y, boolean isTouched) {
+            // Include the release frame: the pointer may move and release between updates.
+            if (isTouched || touched) {
+                position.set(x, y);
+                virtualPosition.set(x, y);
+                GraphicsUtil.translateToVirtual(virtualPosition);
+            }
             if (isTouched) {
                 if (!touched) {
                     pressed = true;
@@ -69,9 +75,6 @@ public class MultitouchInputUtil {
                 }
                 touched = true;
                 released = false;
-                position.set(x, y);
-                virtualPosition.set(x, y);
-                GraphicsUtil.translateToVirtual(virtualPosition);
             } else {
                 if (touched) {
                     released = true;
