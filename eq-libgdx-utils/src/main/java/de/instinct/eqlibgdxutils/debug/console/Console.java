@@ -36,6 +36,9 @@ public class Console {
 	
 	private static CommandProcessor commandProcessor;
 	
+	private static boolean showProfiler = true;
+	private static boolean showModulator = true;
+	
 	private static int tapSize = 100;
 	private static int metricsHeight = 200;
 	private static int profilerHeight = 200;
@@ -144,6 +147,11 @@ public class Console {
 		loadFilter();
 	}
 	
+	public static void toggleModules() {
+		showProfiler = !showProfiler;
+		showModulator = !showModulator;
+	}
+	
 	public static void loadFilter() {
 		tagFilter = new ArrayList<>();
 		String filterString = Preferences.load("console_tag_filter");
@@ -216,8 +224,8 @@ public class Console {
 					.filled(true)
 					.build());
 			MetricUtil.render();
-			Profiler.render();
-			Modulator.render();
+			if (showProfiler) Profiler.render();
+			if (showModulator) Modulator.render();
 			renderLogs();
 			renderConsoleInput();
 		}
@@ -244,7 +252,7 @@ public class Console {
 		logsBounds.set(logPanelMargin, 
 					consoleInputHeight + logPanelMargin + borderMargin, 
 					GraphicsUtil.screenBounds().getWidth() - (logPanelMargin * 2), 
-					GraphicsUtil.screenBounds().getHeight() - consoleInputHeight - metricsHeight - profilerHeight - modulatorHeight - (logPanelMargin * 3) - borderMargin);
+					GraphicsUtil.screenBounds().getHeight() - consoleInputHeight - metricsHeight - (showProfiler ? profilerHeight : 0) - (showModulator ? modulatorHeight : 0) - (logPanelMargin * 3) - borderMargin);
 		Shapes.draw(logsContainerShape);
 		
 		int logLineHorizontalMargin = 5;
@@ -362,6 +370,10 @@ public class Console {
 		Profiler.dispose();
 		Modulator.dispose();
 		commandTextField.dispose();
+	}
+
+	public static String isModulesVisible() {
+		return "Profiler: " + (showProfiler ? "Visible" : "Hidden") + ", Modulator: " + (showModulator ? "Visible" : "Hidden");
 	}
 
 }

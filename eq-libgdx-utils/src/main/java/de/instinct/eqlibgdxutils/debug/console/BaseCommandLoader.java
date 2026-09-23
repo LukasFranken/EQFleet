@@ -119,6 +119,20 @@ public class BaseCommandLoader implements CommandLoader {
 					
 				})
 				.build());
+		baseCommands.add(Command.builder()
+				.method("togglemodules")
+				.logMethod("togglemodules")
+				.description("toggles the visibility of the modules in the console like modulator and profiler")
+				.action(new CommandAction() {
+					
+					@Override
+					public void execute(String message) {
+						Console.toggleModules();
+						Logger.log("Command", "Modules visibility toggled to: " + Console.isModulesVisible());
+					}
+					
+				})
+				.build());
 		return baseCommands;
 	}
 
