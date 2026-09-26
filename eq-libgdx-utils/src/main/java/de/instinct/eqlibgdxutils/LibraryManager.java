@@ -5,6 +5,7 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.math.Vector2;
 
 import de.instinct.eqlibgdxutils.debug.console.Console;
+import de.instinct.eqlibgdxutils.debug.profiler.Profiler;
 import de.instinct.eqlibgdxutils.platform.cursor.CursorUtil;
 import de.instinct.eqlibgdxutils.platform.cursor.Hotspot;
 import de.instinct.eqlibgdxutils.platform.preference.Preferences;
@@ -32,9 +33,14 @@ public class LibraryManager {
 	}
 	
 	public static void update() {
+		Profiler.startFrame("LIBRARY");
         FontUtil.update();
+        Profiler.checkpoint("LIBRARY", "Font");
 		InputUtil.update();
+		Profiler.checkpoint("LIBRARY", "Input");
 		AccelerometerUtil.update();
+		Profiler.checkpoint("LIBRARY", "Accelerometer");
+        Profiler.endFrame("LIBRARY");
 	}
 	
 	public static void dispose() {
